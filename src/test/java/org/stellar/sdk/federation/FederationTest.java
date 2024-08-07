@@ -5,19 +5,21 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 import org.stellar.sdk.SslCertificateUtils;
 import org.stellar.sdk.federation.exception.MalformedAddressException;
 
 public class FederationTest {
   @Test
-  public void testResolveAddressSuccess() throws IOException {
+  public void testResolveAddressSuccess() throws IOException, InterruptedException {
     SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
@@ -41,16 +43,27 @@ public class FederationTest {
     mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
 
     FederationResponse response = new Federation(client).resolveAddress("bob*" + domain);
+
+    RecordedRequest stellarTomlRequest = mockWebServer.takeRequest();
+    assertEquals("GET", stellarTomlRequest.getMethod());
+    assertEquals("/.well-known/stellar.toml", stellarTomlRequest.getPath());
+
+    RecordedRequest federationRequest = mockWebServer.takeRequest();
+    assertEquals("GET", federationRequest.getMethod());
+    String expectedPath = "/federation?type=name&q=bob*" + URLEncoder.encode(domain, "UTF-8");
+    assertEquals(expectedPath, federationRequest.getPath());
+
     assertEquals(response.getStellarAddress(), "bob*" + domain);
     assertEquals(
         response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
     assertNull(response.getMemoType());
     assertNull(response.getMemo());
+
     mockWebServer.close();
   }
 
   @Test
-  public void testResolveAddressSuccessWithMemo() throws IOException {
+  public void testResolveAddressSuccessWithMemo() throws IOException, InterruptedException {
     SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
@@ -75,6 +88,16 @@ public class FederationTest {
     mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
 
     FederationResponse response = new Federation(client).resolveAddress("bob*" + domain);
+
+    RecordedRequest stellarTomlRequest = mockWebServer.takeRequest();
+    assertEquals("GET", stellarTomlRequest.getMethod());
+    assertEquals("/.well-known/stellar.toml", stellarTomlRequest.getPath());
+
+    RecordedRequest federationRequest = mockWebServer.takeRequest();
+    assertEquals("GET", federationRequest.getMethod());
+    String expectedPath = "/federation?type=name&q=bob*" + URLEncoder.encode(domain, "UTF-8");
+    assertEquals(expectedPath, federationRequest.getPath());
+
     assertEquals(response.getStellarAddress(), "bob*" + domain);
     assertEquals(
         response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
@@ -84,7 +107,7 @@ public class FederationTest {
   }
 
   @Test
-  public void testResolveAddressNotFound() throws IOException {
+  public void testResolveAddressNotFound() throws IOException, InterruptedException {
     SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
@@ -107,11 +130,21 @@ public class FederationTest {
     assertThrows(
         org.stellar.sdk.federation.exception.NotFoundException.class,
         () -> new Federation(client).resolveAddress("bob*" + domain));
+
+    RecordedRequest stellarTomlRequest = mockWebServer.takeRequest();
+    assertEquals("GET", stellarTomlRequest.getMethod());
+    assertEquals("/.well-known/stellar.toml", stellarTomlRequest.getPath());
+
+    RecordedRequest federationRequest = mockWebServer.takeRequest();
+    assertEquals("GET", federationRequest.getMethod());
+    String expectedPath = "/federation?type=name&q=bob*" + URLEncoder.encode(domain, "UTF-8");
+    assertEquals(expectedPath, federationRequest.getPath());
+
     mockWebServer.close();
   }
 
   @Test
-  public void testResolveAccountIdSuccess() throws IOException {
+  public void testResolveAccountIdSuccess() throws IOException, InterruptedException {
     SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
@@ -137,7 +170,17 @@ public class FederationTest {
     FederationResponse response =
         new Federation(client)
             .resolveAccountId("GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY", domain);
-    assertEquals(response.getStellarAddress(), "bob*" + domain);
+
+    RecordedRequest stellarTomlRequest = mockWebServer.takeRequest();
+    assertEquals("GET", stellarTomlRequest.getMethod());
+    assertEquals("/.well-known/stellar.toml", stellarTomlRequest.getPath());
+
+    RecordedRequest federationRequest = mockWebServer.takeRequest();
+    assertEquals("GET", federationRequest.getMethod());
+    String expectedPath =
+        "/federation?type=id&q=GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY";
+    assertEquals(expectedPath, federationRequest.getPath());
+
     assertEquals(
         response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
     assertNull(response.getMemoType());
@@ -146,7 +189,7 @@ public class FederationTest {
   }
 
   @Test
-  public void testResolveAccountIdSuccessWithMemo() throws IOException {
+  public void testResolveAccountIdSuccessWithMemo() throws IOException, InterruptedException {
     SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
@@ -172,6 +215,17 @@ public class FederationTest {
     FederationResponse response =
         new Federation(client)
             .resolveAccountId("GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY", domain);
+
+    RecordedRequest stellarTomlRequest = mockWebServer.takeRequest();
+    assertEquals("GET", stellarTomlRequest.getMethod());
+    assertEquals("/.well-known/stellar.toml", stellarTomlRequest.getPath());
+
+    RecordedRequest federationRequest = mockWebServer.takeRequest();
+    assertEquals("GET", federationRequest.getMethod());
+    String expectedPath =
+        "/federation?type=id&q=GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY";
+    assertEquals(expectedPath, federationRequest.getPath());
+
     assertEquals(response.getStellarAddress(), "bob*" + domain);
     assertEquals(
         response.getAccountId(), "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY");
@@ -181,7 +235,7 @@ public class FederationTest {
   }
 
   @Test
-  public void testResolveAccountIdNotFound() throws IOException {
+  public void testResolveAccountIdNotFound() throws IOException, InterruptedException {
     SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
@@ -207,6 +261,17 @@ public class FederationTest {
             new Federation(client)
                 .resolveAccountId(
                     "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY", domain));
+
+    RecordedRequest stellarTomlRequest = mockWebServer.takeRequest();
+    assertEquals("GET", stellarTomlRequest.getMethod());
+    assertEquals("/.well-known/stellar.toml", stellarTomlRequest.getPath());
+
+    RecordedRequest federationRequest = mockWebServer.takeRequest();
+    assertEquals("GET", federationRequest.getMethod());
+    String expectedPath =
+        "/federation?type=id&q=GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY";
+    assertEquals(expectedPath, federationRequest.getPath());
+
     mockWebServer.shutdown();
     mockWebServer.close();
   }
