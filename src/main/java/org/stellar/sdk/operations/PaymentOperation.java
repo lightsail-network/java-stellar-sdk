@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,8 +30,8 @@ public class PaymentOperation extends Operation {
   /** Asset to send to the destination account. */
   @NonNull private final Asset asset;
 
-  /** Amount of the asset to send. */
-  @NonNull private final String amount;
+  /** Amount of the asset to send. (max of 7 decimal places). */
+  @NonNull private final BigDecimal amount;
 
   /**
    * Construct a new {@link PaymentOperation} object from the {@link PaymentOp} XDR object.
@@ -41,7 +42,7 @@ public class PaymentOperation extends Operation {
   public static PaymentOperation fromXdr(PaymentOp op) {
     String destination = StrKey.encodeMuxedAccount(op.getDestination());
     Asset asset = Asset.fromXdr(op.getAsset());
-    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    BigDecimal amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     return new PaymentOperation(destination, asset, amount);
   }
 

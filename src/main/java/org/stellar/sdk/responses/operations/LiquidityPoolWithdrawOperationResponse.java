@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.AssetAmount;
+import org.stellar.sdk.responses.AssetAmount;
 
 /**
  * Represents LiquidityPoolWithdraw operation response.

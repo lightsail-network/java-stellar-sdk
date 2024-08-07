@@ -3,7 +3,7 @@ package org.stellar.sdk.responses.effects;
 import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.stellar.sdk.AssetAmount;
+import org.stellar.sdk.responses.AssetAmount;
 
 /**
  * Represents liquidity_pool_trade effect response.

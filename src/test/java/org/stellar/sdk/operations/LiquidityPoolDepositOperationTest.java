@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.stellar.sdk.Asset.create;
 
+import java.math.BigDecimal;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetAmount;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.LiquidityPool;
 import org.stellar.sdk.Price;
@@ -22,8 +22,8 @@ public class LiquidityPoolDepositOperationTest {
 
   @Test
   public void testLiquidityPoolDepositOperationValid() {
-    String maxAmountA = "1000";
-    String maxAmountB = "2000";
+    BigDecimal maxAmountA = BigDecimal.valueOf(1000);
+    BigDecimal maxAmountB = BigDecimal.valueOf(2000);
     Price minPrice = Price.fromString("0.01");
     Price maxPrice = Price.fromString("0.02");
     LiquidityPoolDepositOperation operation =
@@ -54,16 +54,13 @@ public class LiquidityPoolDepositOperationTest {
 
   @Test
   public void testConstructorPairs() {
-    String maxAmountA = "1000";
-    String maxAmountB = "2000";
+    BigDecimal maxAmountA = BigDecimal.valueOf(1000);
+    BigDecimal maxAmountB = BigDecimal.valueOf(2000);
     Price minPrice = Price.fromString("0.01");
     Price maxPrice = Price.fromString("0.02");
     LiquidityPoolDepositOperation operation =
         new LiquidityPoolDepositOperation(
-            new AssetAmount(nativeAsset, maxAmountA),
-            new AssetAmount(creditAsset, maxAmountB),
-            minPrice,
-            maxPrice);
+            nativeAsset, maxAmountA, creditAsset, maxAmountB, minPrice, maxPrice);
     operation.setSourceAccount(source.getAccountId());
 
     org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
@@ -84,20 +81,17 @@ public class LiquidityPoolDepositOperationTest {
 
   @Test
   public void testConstructorPairsMisorderedAssets() {
-    String maxAmountA = "1000";
-    String maxAmountB = "2000";
+    BigDecimal maxAmountA = BigDecimal.valueOf(1000);
+    BigDecimal maxAmountB = BigDecimal.valueOf(2000);
     Price minPrice = Price.fromString("0.01");
     Price maxPrice = Price.fromString("0.02");
     try {
       new LiquidityPoolDepositOperation(
-              new AssetAmount(creditAsset, maxAmountB),
-              new AssetAmount(nativeAsset, maxAmountA),
-              minPrice,
-              maxPrice)
+              creditAsset, maxAmountB, nativeAsset, maxAmountA, minPrice, maxPrice)
           .setSourceAccount(source.getAccountId());
       fail();
     } catch (RuntimeException e) {
-      assertEquals("AssetA must be < AssetB", e.getMessage());
+      assertEquals("Assets are not in lexicographic order", e.getMessage());
     }
   }
 }

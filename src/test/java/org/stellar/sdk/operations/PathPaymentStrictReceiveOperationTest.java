@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum12;
@@ -32,9 +33,9 @@ public class PathPaymentStrictReceiveOperationTest {
         KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ");
 
     Asset sendAsset = new AssetTypeNative();
-    String sendMax = "0.0001";
+    BigDecimal sendMax = new BigDecimal("0.0001");
     Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer.getAccountId());
-    String destAmount = "0.0001";
+    BigDecimal destAmount = new BigDecimal("0.0001");
     Asset[] path = {
       new AssetTypeCreditAlphaNum4("USD", pathIssuer1.getAccountId()),
       new AssetTypeCreditAlphaNum12("TESTTEST", pathIssuer2.getAccountId())
@@ -85,9 +86,9 @@ public class PathPaymentStrictReceiveOperationTest {
         KeyPair.fromSecretSeed("SBOBVZUN6WKVMI6KIL2GHBBEETEV6XKQGILITNH6LO6ZA22DBMSDCPAG");
 
     Asset sendAsset = new AssetTypeNative();
-    String sendMax = "0.0001";
+    BigDecimal sendMax = new BigDecimal("0.0001");
     Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer.getAccountId());
-    String destAmount = "0.0001";
+    BigDecimal destAmount = new BigDecimal("0.0001");
 
     PathPaymentStrictReceiveOperation operation =
         PathPaymentStrictReceiveOperation.builder()
@@ -131,9 +132,9 @@ public class PathPaymentStrictReceiveOperationTest {
         KeyPair.fromSecretSeed("SBOBVZUN6WKVMI6KIL2GHBBEETEV6XKQGILITNH6LO6ZA22DBMSDCPAG");
 
     Asset sendAsset = new AssetTypeNative();
-    String sendMax = "0.0001";
+    BigDecimal sendMax = new BigDecimal("0.0001");
     Asset destAsset = new AssetTypeCreditAlphaNum4("USD", issuer.getAccountId());
-    String destAmount = "0.0001";
+    BigDecimal destAmount = new BigDecimal("0.0001");
 
     PathPaymentStrictReceiveOperation operation =
         PathPaymentStrictReceiveOperation.builder()

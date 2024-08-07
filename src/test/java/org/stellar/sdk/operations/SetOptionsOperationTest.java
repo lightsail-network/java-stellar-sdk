@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.math.BigDecimal;
 import org.junit.Test;
 import org.stellar.sdk.Account;
 import org.stellar.sdk.KeyPair;
@@ -169,7 +170,7 @@ public class SetOptionsOperationTest {
             .addOperation(
                 CreateAccountOperation.builder()
                     .destination(destination.getAccountId())
-                    .startingBalance("2000")
+                    .startingBalance(BigDecimal.valueOf(2000))
                     .build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)
             .setBaseFee(Transaction.MIN_BASE_FEE)

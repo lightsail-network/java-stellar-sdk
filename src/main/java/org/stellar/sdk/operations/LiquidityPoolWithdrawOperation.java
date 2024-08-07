@@ -1,12 +1,13 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.AssetAmount;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.LiquidityPool;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.Hash;
@@ -25,24 +26,28 @@ import org.stellar.sdk.xdr.OperationType;
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public class LiquidityPoolWithdrawOperation extends Operation {
-  /** The liquidity pool ID. * */
+  /** The liquidity pool ID. */
   @NonNull private final String liquidityPoolID;
 
-  /** Amount of pool shares to withdraw. * */
-  @NonNull private final String amount;
+  /** Amount of pool shares to withdraw (max of 7 decimal places). */
+  @NonNull private final BigDecimal amount;
 
-  /** Minimum amount of first asset to withdraw. * */
-  @NonNull private final String minAmountA;
+  /** Minimum amount of first asset to withdraw (max of 7 decimal places). */
+  @NonNull private final BigDecimal minAmountA;
 
-  /** Minimum amount of second asset to withdraw. * */
-  @NonNull private final String minAmountB;
+  /** Minimum amount of second asset to withdraw (max of 7 decimal places). */
+  @NonNull private final BigDecimal minAmountB;
 
   public LiquidityPoolWithdrawOperation(
-      @NonNull AssetAmount a, @NonNull AssetAmount b, @NonNull String amount) {
-    this.liquidityPoolID = new LiquidityPool(a.getAsset(), b.getAsset()).getLiquidityPoolId();
+      @NonNull Asset assetA,
+      @NonNull BigDecimal minAmountA,
+      @NonNull Asset assetB,
+      @NonNull BigDecimal minAmountB,
+      @NonNull BigDecimal amount) {
+    this.liquidityPoolID = new LiquidityPool(assetA, assetB).getLiquidityPoolId();
     this.amount = amount;
-    this.minAmountA = a.getAmount();
-    this.minAmountB = b.getAmount();
+    this.minAmountA = minAmountA;
+    this.minAmountB = minAmountB;
   }
 
   /**
@@ -55,9 +60,9 @@ public class LiquidityPoolWithdrawOperation extends Operation {
   public static LiquidityPoolWithdrawOperation fromXdr(LiquidityPoolWithdrawOp op) {
     String liquidityPoolID =
         Util.bytesToHex(op.getLiquidityPoolID().getPoolID().getHash()).toLowerCase();
-    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
-    String minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64());
-    String minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64());
+    BigDecimal amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    BigDecimal minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64());
+    BigDecimal minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64());
     return new LiquidityPoolWithdrawOperation(liquidityPoolID, amount, minAmountA, minAmountB);
   }
 

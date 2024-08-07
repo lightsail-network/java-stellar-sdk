@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -28,8 +29,8 @@ import org.stellar.sdk.xdr.OperationType;
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public class CreateClaimableBalanceOperation extends Operation {
-  /* The amount of the asset. */
-  @NonNull private final String amount;
+  /* The amount of the asset (max of 7 decimal places). */
+  @NonNull private final BigDecimal amount;
   /* The asset for the claimable balance. */
   @NonNull private final Asset asset;
   /* The list of claimants for the claimable balance. */
@@ -44,7 +45,7 @@ public class CreateClaimableBalanceOperation extends Operation {
    */
   public static CreateClaimableBalanceOperation fromXdr(CreateClaimableBalanceOp op) {
     Asset asset = Asset.fromXdr(op.getAsset());
-    String amount = Operation.fromXdrAmount(op.getAmount().getInt64());
+    BigDecimal amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     List<Claimant> claimants = new ArrayList<>();
     for (org.stellar.sdk.xdr.Claimant c : op.getClaimants()) {
       claimants.add(
