@@ -39,7 +39,7 @@ import org.stellar.sdk.TimeBounds
 import org.stellar.sdk.Transaction
 import org.stellar.sdk.TransactionBuilder
 import org.stellar.sdk.TransactionPreconditions
-import org.stellar.sdk.federation.FederationServer
+import org.stellar.sdk.federation.Federation
 import org.stellar.sdk.scval.Scv
 import org.stellar.sdk.xdr.ContractExecutable
 import org.stellar.sdk.xdr.ContractExecutableType
@@ -151,8 +151,7 @@ private fun testSDK(): String {
         }
 
         // Test Federation
-        val fedResp =
-            FederationServer.createForDomain("lobstr.co").resolveAddress("example*lobstr.co")
+        val fedResp = Federation().resolveAddress("example*lobstr.co")
         if (fedResp == null || fedResp.accountId == null) {
             throw Exception("Query Federation failed")
         }

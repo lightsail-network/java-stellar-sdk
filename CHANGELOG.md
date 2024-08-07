@@ -74,6 +74,7 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
     - `PaymentOperation.amount`
 - refactor!: `TransactionPreconditions#TransactionPreconditions(LedgerBounds, Long, BigInteger, long, List, TimeBounds)` has been removed, use `TransactionPreconditions#TransactionPreconditions(TimeBounds, LedgerBounds, Long, BigInteger, long, List)` instead.
 - refactor: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
+- refactor!: The `Federation` has been refactored, please use `Federation#resolveAddress(String)` and `Federation#resolveAccountId(String, String)` now.
 
 ## 0.44.0
 ### Update
