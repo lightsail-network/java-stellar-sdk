@@ -79,7 +79,7 @@ public class SorobanServerTest {
   private final Gson gson = new Gson();
 
   @Test
-  public void testGetAccount() throws IOException, SorobanRpcException, AccountNotFoundException {
+  public void testGetAccount() throws IOException {
     String accountId = "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54";
     String json =
         "{\n"
@@ -133,8 +133,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetAccountMuxed()
-      throws IOException, SorobanRpcException, AccountNotFoundException {
+  public void testGetAccountMuxed() throws IOException {
     String accountId = "MDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIAAAAAAAAAPCIBOR2";
     String json =
         "{\n"
@@ -188,8 +187,7 @@ public class SorobanServerTest {
   }
 
   @Test(expected = AccountNotFoundException.class)
-  public void testGetAccountNotFoundThrows()
-      throws IOException, SorobanRpcException, AccountNotFoundException {
+  public void testGetAccountNotFoundThrows() throws IOException {
     String accountId = "GBG6OSICP2YJ5ROY4HBGNSVRQDCQ4RYPFFUH6I6BI7LHYNW2CM7AJVBE";
     String json =
         "{\n"

@@ -10,7 +10,7 @@ import org.stellar.sdk.operations.Operation;
 public class InflationDecodeTest {
 
   @Test
-  public void testDecodeInflationOperation() throws Exception {
+  public void testDecodeInflationOperation() {
     org.stellar.sdk.Transaction tx =
         (org.stellar.sdk.Transaction)
             org.stellar.sdk.Transaction.fromEnvelopeXdr(

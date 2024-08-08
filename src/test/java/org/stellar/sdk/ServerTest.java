@@ -191,11 +191,11 @@ public class ServerTest {
         + "}";
   }
 
-  Transaction buildTransaction() throws IOException {
+  Transaction buildTransaction() {
     return buildTransaction(Network.PUBLIC);
   }
 
-  Transaction buildTransaction(Network network) throws IOException {
+  Transaction buildTransaction(Network network) {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -223,7 +223,7 @@ public class ServerTest {
   }
 
   @Test
-  public void testSubmitTransactionSuccess() throws IOException, AccountRequiresMemoException {
+  public void testSubmitTransactionSuccess() throws IOException {
     MockWebServer mockWebServer = new MockWebServer();
     mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(successResponse));
     mockWebServer.start();
@@ -241,7 +241,7 @@ public class ServerTest {
   }
 
   @Test
-  public void testSubmitTransactionFail() throws IOException, AccountRequiresMemoException {
+  public void testSubmitTransactionFail() throws IOException {
     MockWebServer mockWebServer = new MockWebServer();
     mockWebServer.enqueue(new MockResponse().setResponseCode(400).setBody(failureResponse));
     mockWebServer.start();
@@ -270,7 +270,7 @@ public class ServerTest {
   }
 
   @Test
-  public void testSubmitTransactionTimeout() throws IOException, AccountRequiresMemoException {
+  public void testSubmitTransactionTimeout() throws IOException {
     MockWebServer mockWebServer = new MockWebServer();
     mockWebServer.enqueue(
         new MockResponse()
@@ -305,8 +305,7 @@ public class ServerTest {
   }
 
   @Test(expected = RequestTimeoutException.class)
-  public void testSubmitTransactionTimeoutWithoutResponse()
-      throws IOException, AccountRequiresMemoException {
+  public void testSubmitTransactionTimeoutWithoutResponse() throws IOException {
     MockWebServer mockWebServer = new MockWebServer();
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");

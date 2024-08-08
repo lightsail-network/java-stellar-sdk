@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -26,7 +25,7 @@ import org.stellar.sdk.xdr.TransactionEnvelope;
 public class Sep10ChallengeTest {
 
   @Test
-  public void testChallenge() throws InvalidSep10ChallengeException {
+  public void testChallenge() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
 
@@ -152,8 +151,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionValidSignedByServer()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionValidSignedByServer() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -181,8 +179,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionAcceptsBothV0AndV1()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionAcceptsBothV0AndV1() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -226,8 +223,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionRejectsMuxedServer()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionRejectsMuxedServer() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -258,8 +254,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionRejectsMuxedClient()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionRejectsMuxedClient() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -305,8 +300,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionValidSignedByServerAndClient()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionValidSignedByServerAndClient() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -336,7 +330,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidNotSignedByServer() throws IOException {
+  public void testReadChallengeTransactionInvalidNotSignedByServer() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -386,8 +380,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidCorrupted()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionInvalidCorrupted() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -415,8 +408,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidServerAccountIDMismatch()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionInvalidServerAccountIDMismatch() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
 
@@ -445,7 +437,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidSeqNoNotZero() throws IOException {
+  public void testReadChallengeTransactionInvalidSeqNoNotZero() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -492,7 +484,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidTimeboundsInfinite() throws IOException {
+  public void testReadChallengeTransactionInvalidTimeboundsInfinite() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -539,8 +531,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidTimeBoundsTooEarly()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionInvalidTimeBoundsTooEarly() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
 
@@ -569,8 +560,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionGracePeriod()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionGracePeriod() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
 
@@ -598,8 +588,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidTimeBoundsTooLate()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionInvalidTimeBoundsTooLate() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
 
@@ -628,7 +617,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidOperationWrongType() throws IOException {
+  public void testReadChallengeTransactionInvalidOperationWrongType() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -665,7 +654,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidOperationNoSourceAccount() throws IOException {
+  public void testReadChallengeTransactionInvalidOperationNoSourceAccount() {
     KeyPair server = KeyPair.random();
     String domainName = "example.com";
     String webAuthDomain = "example.com";
@@ -707,7 +696,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDataValueWrongEncodedLength() throws IOException {
+  public void testReadChallengeTransactionInvalidDataValueWrongEncodedLength() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -753,7 +742,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDataValueCorruptBase64() throws IOException {
+  public void testReadChallengeTransactionInvalidDataValueCorruptBase64() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -799,7 +788,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDataValueWrongByteLength() throws IOException {
+  public void testReadChallengeTransactionInvalidDataValueWrongByteLength() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -846,7 +835,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDataValueIsNull() throws IOException {
+  public void testReadChallengeTransactionInvalidDataValueIsNull() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -888,8 +877,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testReadChallengeTransactionValidAdditionalManageDataOpsWithSourceAccountSetToServerAccount()
-          throws IOException, InvalidSep10ChallengeException {
+      testReadChallengeTransactionValidAdditionalManageDataOpsWithSourceAccountSetToServerAccount() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -940,8 +928,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testReadChallengeTransactionInvalidAdditionalManageDataOpsWithoutSourceAccountSetToServerAccount()
-          throws IOException {
+      testReadChallengeTransactionInvalidAdditionalManageDataOpsWithoutSourceAccountSetToServerAccount() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -992,8 +979,8 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidAdditionalManageDataOpsWithSourceAccountSetToNull()
-      throws IOException {
+  public void
+      testReadChallengeTransactionInvalidAdditionalManageDataOpsWithSourceAccountSetToNull() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -1040,7 +1027,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidAdditionalOpsOfOtherTypes() throws IOException {
+  public void testReadChallengeTransactionInvalidAdditionalOpsOfOtherTypes() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -1087,8 +1074,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionValidMultipleDomainNames()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testReadChallengeTransactionValidMultipleDomainNames() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -1121,7 +1107,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDomainNamesMismatch() throws IOException {
+  public void testReadChallengeTransactionInvalidDomainNamesMismatch() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -1157,8 +1143,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDomainNamesEmpty()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testReadChallengeTransactionInvalidDomainNamesEmpty() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -1193,8 +1178,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidDomainNamesNull()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testReadChallengeTransactionInvalidDomainNamesNull() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -1229,8 +1213,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionValidWebAuthDomainNotEqualHomeDomain()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testReadChallengeTransactionValidWebAuthDomainNotEqualHomeDomain() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -1257,7 +1240,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidWebAuthDomainMismatch() throws IOException {
+  public void testReadChallengeTransactionInvalidWebAuthDomainMismatch() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -1292,8 +1275,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidWebAuthDomainOperationValueIsNull()
-      throws IOException {
+  public void testReadChallengeTransactionInvalidWebAuthDomainOperationValueIsNull() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -1345,8 +1327,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testReadChallengeTransactionValidWebAuthDomainAllowSubsequentManageDataOperationsToHaveNullValue()
-          throws IOException, InvalidSep10ChallengeException {
+      testReadChallengeTransactionValidWebAuthDomainAllowSubsequentManageDataOperationsToHaveNullValue() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -1403,8 +1384,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionValidMemoId()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testReadChallengeTransactionValidMemoId() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     Network network = Network.TESTNET;
@@ -1441,7 +1421,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidNotMemoId() throws IOException {
+  public void testReadChallengeTransactionInvalidNotMemoId() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -1488,7 +1468,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionRejectFeeBumpTransaction() throws IOException {
+  public void testReadChallengeTransactionRejectFeeBumpTransaction() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -1535,7 +1515,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionRejectMuxedClientAccountId() throws IOException {
+  public void testReadChallengeTransactionRejectMuxedClientAccountId() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -1582,7 +1562,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testReadChallengeTransactionInvalidNoSignature() throws IOException {
+  public void testReadChallengeTransactionInvalidNoSignature() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     String domainName = "example.com";
@@ -1626,7 +1606,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testChallengeWithClientDomain() throws InvalidSep10ChallengeException {
+  public void testChallengeWithClientDomain() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     KeyPair clientDomainSigner = KeyPair.random();
@@ -1724,8 +1704,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeWithClientDomain()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testVerifyChallengeWithClientDomain() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     KeyPair clientDomainSigner = KeyPair.random();
@@ -1775,8 +1754,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeWithClientDomainMissingSignature()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testVerifyChallengeWithClientDomainMissingSignature() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();
     KeyPair clientDomainSigner = KeyPair.random();
@@ -1821,7 +1799,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdInvalidNotSignedByServer() throws IOException {
+  public void testVerifyChallengeTransactionThresholdInvalidNotSignedByServer() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -1884,8 +1862,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdValidServerAndClientKeyMeetingThreshold()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testVerifyChallengeTransactionThresholdValidServerAndClientKeyMeetingThreshold() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -1921,8 +1898,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdValidMultipleDomainNames()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testVerifyChallengeTransactionThresholdValidMultipleDomainNames() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -1959,8 +1935,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testVerifyChallengeTransactionThresholdValidServerAndMultipleClientKeyMeetingThreshold()
-          throws IOException, InvalidSep10ChallengeException {
+      testVerifyChallengeTransactionThresholdValidServerAndMultipleClientKeyMeetingThreshold() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -2008,8 +1983,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testVerifyChallengeTransactionThresholdValidServerAndMultipleClientKeyMeetingThresholdSomeUnused()
-          throws IOException, InvalidSep10ChallengeException {
+      testVerifyChallengeTransactionThresholdValidServerAndMultipleClientKeyMeetingThresholdSomeUnused() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -2052,8 +2026,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionWithAccountIdNonCompliantWithEd25519()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testVerifyChallengeTransactionWithAccountIdNonCompliantWithEd25519() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -2092,8 +2065,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testVerifyChallengeTransactionThresholdValidServerAndMultipleClientKeyMeetingThresholdSomeUnusedIgnorePreauthTxHashAndXHash()
-          throws IOException, InvalidSep10ChallengeException {
+      testVerifyChallengeTransactionThresholdValidServerAndMultipleClientKeyMeetingThresholdSomeUnusedIgnorePreauthTxHashAndXHash() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -2144,8 +2116,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testVerifyChallengeTransactionThresholdInvalidServerAndMultipleClientKeyNotMeetingThreshold()
-          throws InvalidSep10ChallengeException, IOException {
+      testVerifyChallengeTransactionThresholdInvalidServerAndMultipleClientKeyNotMeetingThreshold() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2189,8 +2160,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdInvalidClientKeyUnrecognized()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionThresholdInvalidClientKeyUnrecognized() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -2236,8 +2206,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdInvalidNoSigners()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionThresholdInvalidNoSigners() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -2278,8 +2247,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdInvalidNoPublicKeySigners()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionThresholdInvalidNoPublicKeySigners() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2329,8 +2297,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionThresholdWeightsAddToMoreThan8Bits()
-      throws IOException, InvalidSep10ChallengeException {
+  public void testVerifyChallengeTransactionThresholdWeightsAddToMoreThan8Bits() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -2371,7 +2338,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersInvalidServer() throws IOException {
+  public void testVerifyChallengeTransactionSignersInvalidServer() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2435,8 +2402,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersValidServerAndClientMasterKey()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersValidServerAndClientMasterKey() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     Network network = Network.TESTNET;
@@ -2467,8 +2433,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersValidMultipleDomainNames()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersValidMultipleDomainNames() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     Network network = Network.TESTNET;
@@ -2499,8 +2464,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersInvalidServerAndNoClient()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersInvalidServerAndNoClient() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2539,8 +2503,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersInvalidServerAndClientKeyUnrecognized()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersInvalidServerAndClientKeyUnrecognized() {
     Network network = Network.TESTNET;
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
@@ -2584,8 +2547,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersValidServerAndMultipleClientSigners()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersValidServerAndMultipleClientSigners() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2627,8 +2589,8 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersValidServerAndMultipleClientSignersReverseOrder()
-      throws InvalidSep10ChallengeException, IOException {
+  public void
+      testVerifyChallengeTransactionSignersValidServerAndMultipleClientSignersReverseOrder() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2670,8 +2632,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersValidServerAndClientSignersNotMasterKey()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersValidServerAndClientSignersNotMasterKey() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2705,8 +2666,8 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersValidServerAndClientSignersIgnoresServerSigner()
-      throws InvalidSep10ChallengeException, IOException {
+  public void
+      testVerifyChallengeTransactionSignersValidServerAndClientSignersIgnoresServerSigner() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2741,8 +2702,8 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersInvalidServerNoClientSignersIgnoresServerSigner()
-      throws InvalidSep10ChallengeException, IOException {
+  public void
+      testVerifyChallengeTransactionSignersInvalidServerNoClientSignersIgnoresServerSigner() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2777,8 +2738,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersValidIgnorePreauthTxHashAndXHash()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersValidIgnorePreauthTxHashAndXHash() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2821,8 +2781,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testVerifyChallengeTransactionSignersInvalidServerAndClientSignersFailsDuplicateSignatures()
-          throws InvalidSep10ChallengeException, IOException {
+      testVerifyChallengeTransactionSignersInvalidServerAndClientSignersFailsDuplicateSignatures() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2859,8 +2818,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersInvalidServerAndClientSignersFailsSignerSeed()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersInvalidServerAndClientSignersFailsSignerSeed() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2897,8 +2855,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersInvalidNoSignersNull()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersInvalidNoSignersNull() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2933,8 +2890,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionSignersInvalidNoSignersEmptySet()
-      throws InvalidSep10ChallengeException, IOException {
+  public void testVerifyChallengeTransactionSignersInvalidNoSignersEmptySet() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     KeyPair signerClient1 = KeyPair.random();
@@ -2970,8 +2926,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testVerifyChallengeTransactionValidAdditionalManageDataOpsWithSourceAccountSetToServerAccount()
-          throws IOException, InvalidSep10ChallengeException {
+      testVerifyChallengeTransactionValidAdditionalManageDataOpsWithSourceAccountSetToServerAccount() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     String domainName = "example.com";
@@ -3027,8 +2982,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testVerifyChallengeTransactionInvalidAdditionalManageDataOpsWithoutSourceAccountSetToServerAccount()
-          throws IOException {
+      testVerifyChallengeTransactionInvalidAdditionalManageDataOpsWithoutSourceAccountSetToServerAccount() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     String domainName = "example.com";
@@ -3087,8 +3041,7 @@ public class Sep10ChallengeTest {
 
   @Test
   public void
-      testVerifyChallengeTransactionInvalidAdditionalManageDataOpsWithSourceAccountSetToNull()
-          throws IOException {
+      testVerifyChallengeTransactionInvalidAdditionalManageDataOpsWithSourceAccountSetToNull() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     String domainName = "example.com";
@@ -3142,7 +3095,7 @@ public class Sep10ChallengeTest {
   }
 
   @Test
-  public void testVerifyChallengeTransactionInvalidAdditionalOpsOfOtherTypes() throws IOException {
+  public void testVerifyChallengeTransactionInvalidAdditionalOpsOfOtherTypes() {
     KeyPair server = KeyPair.random();
     KeyPair masterClient = KeyPair.random();
     String domainName = "example.com";

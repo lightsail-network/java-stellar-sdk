@@ -79,7 +79,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderMemoText() throws Exception {
+  public void testBuilderMemoText() throws IOException {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -114,7 +114,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderTimeBounds() throws FormatException, IOException {
+  public void testBuilderTimeBounds() throws IOException {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -173,7 +173,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderBaseFee() throws Exception {
+  public void testBuilderBaseFee() throws IOException {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -207,7 +207,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderBaseFeeThrows() throws FormatException {
+  public void testBuilderBaseFeeThrows() {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -250,7 +250,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderRequiresTimeoutOrTimeBounds() throws IOException {
+  public void testBuilderRequiresTimeoutOrTimeBounds() {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     try {
       new TransactionBuilder(account, Network.TESTNET)
@@ -268,7 +268,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderTimeoutNegative() throws IOException {
+  public void testBuilderTimeoutNegative() {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     try {
       new TransactionBuilder(account, Network.TESTNET)
@@ -538,7 +538,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderFailsWhenTooManyExtraSigners() throws IOException {
+  public void testBuilderFailsWhenTooManyExtraSigners() {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
 
     try {
@@ -567,7 +567,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderUsesAccountSequence() throws IOException {
+  public void testBuilderUsesAccountSequence() {
     Account account = new Account(KeyPair.random().getAccountId(), 3L);
     Transaction transaction =
         new TransactionBuilder(account, Network.TESTNET)
@@ -594,7 +594,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderFailsWhenNoTimeBoundsOrTimeoutSet() throws IOException {
+  public void testBuilderFailsWhenNoTimeBoundsOrTimeoutSet() {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     try {
       new TransactionBuilder(account, Network.TESTNET)
@@ -613,7 +613,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderFailsWhenTimeBoundsAndTimeoutBothSet() throws IOException {
+  public void testBuilderFailsWhenTimeBoundsAndTimeoutBothSet() {
     Account account = new Account(KeyPair.random().getAccountId(), 2908908335136768L);
     try {
       new TransactionBuilder(account, Network.TESTNET)
@@ -824,7 +824,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testBuilderSuccessPublic() throws FormatException, IOException {
+  public void testBuilderSuccessPublic() {
 
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
@@ -857,7 +857,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testNoOperations() throws FormatException, IOException {
+  public void testNoOperations() {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -877,7 +877,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testTryingToAddMemoTwice() throws FormatException, IOException {
+  public void testTryingToAddMemoTwice() {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
