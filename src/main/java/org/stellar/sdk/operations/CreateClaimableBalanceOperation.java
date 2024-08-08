@@ -100,4 +100,14 @@ public class CreateClaimableBalanceOperation extends Operation {
       return op;
     }
   }
+
+  public abstract static class CreateClaimableBalanceOperationBuilder<
+          C extends CreateClaimableBalanceOperation,
+          B extends CreateClaimableBalanceOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B amount(@NonNull BigDecimal amount) {
+      this.amount = Operation.formatAmountScale(amount);
+      return self();
+    }
+  }
 }

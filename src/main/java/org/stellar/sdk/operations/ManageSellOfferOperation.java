@@ -79,4 +79,13 @@ public class ManageSellOfferOperation extends Operation {
 
     return body;
   }
+
+  public abstract static class ManageSellOfferOperationBuilder<
+          C extends ManageSellOfferOperation, B extends ManageSellOfferOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B amount(@NonNull BigDecimal amount) {
+      this.amount = Operation.formatAmountScale(amount);
+      return self();
+    }
+  }
 }

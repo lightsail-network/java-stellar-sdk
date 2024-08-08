@@ -112,4 +112,19 @@ public class PathPaymentStrictReceiveOperation extends Operation {
       return op;
     }
   }
+
+  public abstract static class PathPaymentStrictReceiveOperationBuilder<
+          C extends PathPaymentStrictReceiveOperation,
+          B extends PathPaymentStrictReceiveOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B sendMax(@NonNull BigDecimal sendMax) {
+      this.sendMax = sendMax;
+      return self();
+    }
+
+    public B destAmount(@NonNull BigDecimal destAmount) {
+      this.destAmount = destAmount;
+      return self();
+    }
+  }
 }

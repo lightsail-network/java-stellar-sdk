@@ -60,4 +60,14 @@ public class ClaimClaimableBalanceOperation extends Operation {
     body.setClaimClaimableBalanceOp(op);
     return body;
   }
+
+  public abstract static class ClaimClaimableBalanceOperationBuilder<
+          C extends ClaimClaimableBalanceOperation,
+          B extends ClaimClaimableBalanceOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B balanceId(@NonNull String balanceId) {
+      this.balanceId = balanceId.toLowerCase();
+      return self();
+    }
+  }
 }

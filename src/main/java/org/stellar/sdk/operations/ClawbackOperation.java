@@ -77,4 +77,13 @@ public class ClawbackOperation extends Operation {
       return op;
     }
   }
+
+  public abstract static class ClawbackOperationBuilder<
+          C extends ClawbackOperation, B extends ClawbackOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B amount(@NonNull BigDecimal amount) {
+      this.amount = Operation.formatAmountScale(amount);
+      return self();
+    }
+  }
 }

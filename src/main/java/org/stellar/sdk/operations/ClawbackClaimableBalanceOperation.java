@@ -62,4 +62,14 @@ public class ClawbackClaimableBalanceOperation extends Operation {
     body.setClawbackClaimableBalanceOp(op);
     return body;
   }
+
+  public abstract static class ClawbackClaimableBalanceOperationBuilder<
+          C extends ClawbackClaimableBalanceOperation,
+          B extends ClawbackClaimableBalanceOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B balanceId(@NonNull String balanceId) {
+      this.balanceId = balanceId.toLowerCase();
+      return self();
+    }
+  }
 }
