@@ -1,6 +1,7 @@
 package org.stellar.sdk.exception;
 
-import java.util.Optional;
+import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Exception thrown when too many requests were sent to the Horizon server.
@@ -9,18 +10,12 @@ import java.util.Optional;
  *     target="_blank">Rate Limiting</a>
  */
 public class TooManyRequestsException extends NetworkException {
-  private final Integer retryAfter;
 
-  public TooManyRequestsException(Integer retryAfter) {
+  /** Number of seconds a client should wait before sending requests again */
+  @Getter @Nullable private final Integer retryAfter;
+
+  public TooManyRequestsException(@Nullable Integer retryAfter) {
     super("The rate limit for the requesting IP address is over its allowed limit.", 429, null);
     this.retryAfter = retryAfter;
-  }
-
-  /**
-   * Returns number of seconds a client should wait before sending requests again, or -1 this time
-   * is unknown.
-   */
-  public Optional<Integer> getRetryAfter() {
-    return Optional.ofNullable(retryAfter);
   }
 }

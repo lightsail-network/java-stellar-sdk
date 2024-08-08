@@ -1,6 +1,7 @@
 package org.stellar.sdk.exception;
 
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.responses.Problem;
 import org.stellar.sdk.responses.SubmitTransactionAsyncResponse;
 
@@ -11,7 +12,7 @@ import org.stellar.sdk.responses.SubmitTransactionAsyncResponse;
 @Getter
 public class BadResponseException extends NetworkException {
   /** The parsed problem details, if available. */
-  private final Problem problem;
+  @Nullable private final Problem problem;
 
   /**
    * The parsed async transaction submission problem details.
@@ -20,7 +21,7 @@ public class BadResponseException extends NetworkException {
    * Transaction Asynchronously" API endpoint and the server returned an error response. In other
    * cases, it will be null.
    */
-  private final SubmitTransactionAsyncResponse submitTransactionAsyncProblem;
+  @Nullable private final SubmitTransactionAsyncResponse submitTransactionAsyncProblem;
 
   /**
    * Constructs a new BadRequestException.
@@ -31,9 +32,9 @@ public class BadResponseException extends NetworkException {
    */
   public BadResponseException(
       int code,
-      String body,
-      Problem problem,
-      SubmitTransactionAsyncResponse submitTransactionAsyncProblem) {
+      @Nullable String body,
+      @Nullable Problem problem,
+      @Nullable SubmitTransactionAsyncResponse submitTransactionAsyncProblem) {
     super("Bad Response.", code, body);
     this.problem = problem;
     this.submitTransactionAsyncProblem = submitTransactionAsyncProblem;

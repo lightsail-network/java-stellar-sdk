@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import lombok.NonNull;
 import lombok.Value;
 
-// TODO: recheck the func
 /** Represents an entity who is eligible to claim the claimable balance. */
 @Value
 public class Claimant {

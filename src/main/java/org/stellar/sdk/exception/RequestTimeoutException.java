@@ -1,6 +1,7 @@
 package org.stellar.sdk.exception;
 
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.responses.Problem;
 
 /**
@@ -16,7 +17,7 @@ import org.stellar.sdk.responses.Problem;
 @Getter
 public class RequestTimeoutException extends NetworkException {
   /** The parsed problem details, if available. */
-  private final Problem problem;
+  @Nullable private final Problem problem;
 
   /**
    * Constructs a new BadRequestException.
