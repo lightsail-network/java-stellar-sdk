@@ -55,10 +55,10 @@ public class TradesRequestBuilder extends RequestBuilder {
    *
    * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/trades/">Trades for
    *     Liquidity Pool</a>
-   * @param liquidityPoolID Liquidity pool for which to get trades
+   * @param liquidityPoolId Liquidity pool for which to get trades
    */
-  public TradesRequestBuilder forLiquidityPool(String liquidityPoolID) {
-    this.setSegments("liquidity_pools", String.valueOf(liquidityPoolID), "trades");
+  public TradesRequestBuilder forLiquidityPool(String liquidityPoolId) {
+    this.setSegments("liquidity_pools", String.valueOf(liquidityPoolId), "trades");
     return this;
   }
 

@@ -56,10 +56,10 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *
    * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/effects/">Effects for
    *     Liquidity Pool</a>
-   * @param liquidityPoolID Liquidity pool for which to get effects
+   * @param liquidityPoolId Liquidity pool for which to get effects
    */
-  public EffectsRequestBuilder forLiquidityPool(String liquidityPoolID) {
-    this.setSegments("liquidity_pools", liquidityPoolID, "effects");
+  public EffectsRequestBuilder forLiquidityPool(String liquidityPoolId) {
+    this.setSegments("liquidity_pools", liquidityPoolId, "effects");
     return this;
   }
 

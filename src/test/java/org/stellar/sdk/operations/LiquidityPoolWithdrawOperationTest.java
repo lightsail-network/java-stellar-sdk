@@ -17,7 +17,7 @@ public class LiquidityPoolWithdrawOperationTest {
   Asset nativeAsset = create("native");
   Asset creditAsset =
       create(null, "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
-  String liquidityPoolID = new LiquidityPool(nativeAsset, creditAsset).getLiquidityPoolId();
+  String liquidityPoolId = new LiquidityPool(nativeAsset, creditAsset).getLiquidityPoolId();
 
   @Test
   public void testLiquidityPoolWithdrawOperationValid() {
@@ -29,7 +29,7 @@ public class LiquidityPoolWithdrawOperationTest {
     BigDecimal formattedMinAmountB = new BigDecimal("2000.0000000");
     LiquidityPoolWithdrawOperation operation =
         LiquidityPoolWithdrawOperation.builder()
-            .liquidityPoolID(liquidityPoolID)
+            .liquidityPoolId(liquidityPoolId)
             .amount(amount)
             .minAmountA(minAmountA)
             .minAmountB(minAmountB)
@@ -41,7 +41,7 @@ public class LiquidityPoolWithdrawOperationTest {
         (LiquidityPoolWithdrawOperation) Operation.fromXdr(xdr);
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
-    assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+    assertEquals(liquidityPoolId, parsedOperation.getLiquidityPoolId());
     assertEquals(formattedAmount, parsedOperation.getAmount());
     assertEquals(formattedMinAmountA, parsedOperation.getMinAmountA());
     assertEquals(formattedMinAmountB, parsedOperation.getMinAmountB());
@@ -61,7 +61,7 @@ public class LiquidityPoolWithdrawOperationTest {
     BigDecimal formattedMinAmountB = new BigDecimal("2000.0000000");
     LiquidityPoolWithdrawOperation operation =
         LiquidityPoolWithdrawOperation.builder()
-            .liquidityPoolID(liquidityPoolID.toUpperCase())
+            .liquidityPoolId(liquidityPoolId.toUpperCase())
             .amount(amount)
             .minAmountA(minAmountA)
             .minAmountB(minAmountB)
@@ -73,7 +73,7 @@ public class LiquidityPoolWithdrawOperationTest {
         (LiquidityPoolWithdrawOperation) Operation.fromXdr(xdr);
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
-    assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+    assertEquals(liquidityPoolId, parsedOperation.getLiquidityPoolId());
     assertEquals(formattedAmount, parsedOperation.getAmount());
     assertEquals(formattedMinAmountA, parsedOperation.getMinAmountA());
     assertEquals(formattedMinAmountB, parsedOperation.getMinAmountB());
@@ -101,7 +101,7 @@ public class LiquidityPoolWithdrawOperationTest {
         (LiquidityPoolWithdrawOperation) Operation.fromXdr(xdr);
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
-    assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+    assertEquals(liquidityPoolId, parsedOperation.getLiquidityPoolId());
     assertEquals(formattedAmount, parsedOperation.getAmount());
     assertEquals(formattedMinAmountA, parsedOperation.getMinAmountA());
     assertEquals(formattedMinAmountB, parsedOperation.getMinAmountB());

@@ -109,10 +109,10 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @see <a
    *     href="https://developers.stellar.org/api/resources/liquiditypools/transactions/">Transactions
    *     for Liquidity Pool</a>
-   * @param liquidityPoolID Liquidity pool for which to get transactions
+   * @param liquidityPoolId Liquidity pool for which to get transactions
    */
-  public TransactionsRequestBuilder forLiquidityPool(String liquidityPoolID) {
-    this.setSegments("liquidity_pools", liquidityPoolID, "transactions");
+  public TransactionsRequestBuilder forLiquidityPool(String liquidityPoolId) {
+    this.setSegments("liquidity_pools", liquidityPoolId, "transactions");
     return this;
   }
 
