@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
-import org.stellar.sdk.exception.FormatException;
 import org.stellar.sdk.operations.BumpSequenceOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.ExtendFootprintTTLOperation;
@@ -50,7 +49,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 public class TransactionTest {
 
   @Test
-  public void testParseV0Transaction() throws FormatException, IOException {
+  public void testParseV0Transaction() throws IOException {
 
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
@@ -136,7 +135,7 @@ public class TransactionTest {
   }
 
   @Test
-  public void testSha256HashSigning() throws FormatException {
+  public void testSha256HashSigning() {
     KeyPair source =
         KeyPair.fromAccountId("GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB");
     KeyPair destination =
@@ -175,7 +174,7 @@ public class TransactionTest {
   }
 
   @Test
-  public void testToBase64EnvelopeXdrBuilderNoSignatures() throws FormatException, IOException {
+  public void testToBase64EnvelopeXdrBuilderNoSignatures() {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
@@ -211,7 +210,7 @@ public class TransactionTest {
   }
 
   @Test
-  public void testConstructorWithSorobanData() throws IOException {
+  public void testConstructorWithSorobanData() {
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 

@@ -1,13 +1,15 @@
 package org.stellar.sdk.xdr;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import junit.framework.TestCase;
 import org.junit.Test;
 
-public class PaddingTest extends TestCase {
+public class PaddingTest {
   @Test
-  public void testString() throws IOException {
+  public void testString() {
     byte[] bytes = {0, 0, 0, 2, 'a', 'b', 1, 0};
 
     try {
@@ -19,7 +21,7 @@ public class PaddingTest extends TestCase {
   }
 
   @Test
-  public void testVarOpaque() throws IOException {
+  public void testVarOpaque() {
     byte[] bytes = {0, 0, 0, 2, 'a', 'b', 1, 0};
 
     try {

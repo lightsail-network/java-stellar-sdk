@@ -12,7 +12,7 @@ import org.stellar.sdk.xdr.MuxedAccount;
 
 public class StrKeyTest {
   @Test
-  public void testDecodeEncode() throws FormatException {
+  public void testDecodeEncode() {
 
     String seed = "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE";
     byte[] secret = StrKey.decodeCheck(StrKey.VersionByte.SEED, seed.toCharArray());

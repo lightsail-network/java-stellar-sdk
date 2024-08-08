@@ -46,7 +46,7 @@ public class KeyPairTest {
   }
 
   @Test
-  public void testVerifyTrue() throws Exception {
+  public void testVerifyTrue() {
     String sig =
         "587d4b472eeef7d07aafcd0b049640b0bb3f39784118c2e2b73a04fa2f64c9c538b4b2d0f5335e968a480021fdc23e98c0ddf424cb15d8131df8cb6c4bb58309";
     String data = "hello world";
@@ -55,7 +55,7 @@ public class KeyPairTest {
   }
 
   @Test
-  public void testVerifyFalse() throws Exception {
+  public void testVerifyFalse() {
     String badSig =
         "687d4b472eeef7d07aafcd0b049640b0bb3f39784118c2e2b73a04fa2f64c9c538b4b2d0f5335e968a480021fdc23e98c0ddf424cb15d8131df8cb6c4bb58309";
     byte[] corrupt = {0x00};
@@ -66,7 +66,7 @@ public class KeyPairTest {
   }
 
   @Test
-  public void testFromSecretSeed() throws Exception {
+  public void testFromSecretSeed() {
     Map<String, String> keypairs = new HashMap<String, String>();
     keypairs.put(
         "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE",
@@ -93,7 +93,7 @@ public class KeyPairTest {
   }
 
   @Test
-  public void testCanSign() throws Exception {
+  public void testCanSign() {
     KeyPair keypair;
     keypair = KeyPair.fromSecretSeed("SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE");
     assertTrue(keypair.canSign());

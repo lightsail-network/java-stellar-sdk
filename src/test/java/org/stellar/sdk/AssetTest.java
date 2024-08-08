@@ -8,7 +8,6 @@ import static org.stellar.sdk.Asset.create;
 import static org.stellar.sdk.Asset.createNativeAsset;
 import static org.stellar.sdk.Asset.createNonNativeAsset;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -214,7 +213,7 @@ public class AssetTest {
   }
 
   @Test
-  public void testGetContractId() throws IOException {
+  public void testGetContractId() {
     // native + testnet
     assertEquals(
         "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
