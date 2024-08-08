@@ -12,12 +12,12 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Price;
-import org.stellar.sdk.exception.FormatException;
+import org.stellar.sdk.exception.StrKeyException;
 
 public class ManageSellOfferOperationTest {
 
   @Test
-  public void testManageSellOfferOperation() throws IOException, FormatException {
+  public void testManageSellOfferOperation() throws IOException, StrKeyException {
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source =
         KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
@@ -63,7 +63,7 @@ public class ManageSellOfferOperationTest {
   }
 
   @Test
-  public void testManageSellOfferOperationWithConstructorPrice() throws FormatException {
+  public void testManageSellOfferOperationWithConstructorPrice() throws StrKeyException {
     // See https://github.com/stellar/java-stellar-sdk/issues/292
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source =

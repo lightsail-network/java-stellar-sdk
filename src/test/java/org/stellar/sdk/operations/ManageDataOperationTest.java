@@ -7,11 +7,11 @@ import static org.junit.Assert.assertNull;
 import java.io.IOException;
 import org.junit.Test;
 import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.exception.FormatException;
+import org.stellar.sdk.exception.StrKeyException;
 
 public class ManageDataOperationTest {
   @Test
-  public void testManageDataOperation() throws IOException, FormatException {
+  public void testManageDataOperation() throws IOException, StrKeyException {
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source =
         KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
@@ -36,7 +36,7 @@ public class ManageDataOperationTest {
   }
 
   @Test
-  public void testManageDataOperationEmptyValue() throws IOException, FormatException {
+  public void testManageDataOperationEmptyValue() throws IOException, StrKeyException {
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source =
         KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");
