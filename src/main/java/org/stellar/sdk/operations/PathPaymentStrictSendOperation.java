@@ -103,14 +103,17 @@ public class PathPaymentStrictSendOperation extends Operation {
     return body;
   }
 
-  public static abstract class PathPaymentStrictSendOperationBuilder<C extends PathPaymentStrictSendOperation, B extends PathPaymentStrictSendOperationBuilder<C, B>> extends OperationBuilder<C, B> {
+  public abstract static class PathPaymentStrictSendOperationBuilder<
+          C extends PathPaymentStrictSendOperation,
+          B extends PathPaymentStrictSendOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
     public B sendAmount(@NonNull BigDecimal sendAmount) {
       this.sendAmount = Operation.formatAmountScale(sendAmount);
       return self();
     }
 
     public B destMin(@NonNull BigDecimal destMin) {
-      this.destMin =Operation.formatAmountScale(destMin);
+      this.destMin = Operation.formatAmountScale(destMin);
       return self();
     }
   }

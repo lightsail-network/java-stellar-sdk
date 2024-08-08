@@ -20,6 +20,7 @@ public class ClawbackOperationTest {
         new AssetTypeCreditAlphaNum4(
             "DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
     BigDecimal amt = BigDecimal.valueOf(100);
+    BigDecimal formattedAmt = new BigDecimal("100.0000000");
     ClawbackOperation operation =
         ClawbackOperation.builder()
             .from(accountId)
@@ -35,7 +36,7 @@ public class ClawbackOperationTest {
     ClawbackOperation parsedOperation = (ClawbackOperation) Operation.fromXdr(xdr);
     assertEquals(accountId, parsedOperation.getFrom());
     assertEquals(asset, parsedOperation.getAsset());
-    assertEquals(amt, parsedOperation.getAmount());
+    assertEquals(formattedAmt, parsedOperation.getAmount());
 
     assertEquals(source, parsedOperation.getSourceAccount());
     assertEquals(operation, parsedOperation);

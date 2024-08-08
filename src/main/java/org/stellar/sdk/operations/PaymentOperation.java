@@ -66,9 +66,11 @@ public class PaymentOperation extends Operation {
     return body;
   }
 
-  public static abstract class PaymentOperationBuilder<C extends PaymentOperation, B extends PaymentOperationBuilder<C, B>> extends OperationBuilder<C, B> {
+  public abstract static class PaymentOperationBuilder<
+          C extends PaymentOperation, B extends PaymentOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
     public B amount(@NonNull BigDecimal amount) {
-      this.amount =Operation.formatAmountScale(amount);
+      this.amount = Operation.formatAmountScale(amount);
       return self();
     }
   }

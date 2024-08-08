@@ -42,8 +42,8 @@ public class LiquidityPoolDepositOperationTest {
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
-    assertEquals(maxAmountA, parsedOperation.getMaxAmountA());
-    assertEquals(maxAmountB, parsedOperation.getMaxAmountB());
+    assertEquals(new BigDecimal("1000.0000000"), parsedOperation.getMaxAmountA());
+    assertEquals(new BigDecimal("2000.0000000"), parsedOperation.getMaxAmountB());
     assertEquals(minPrice, parsedOperation.getMinPrice());
     assertEquals(maxPrice, parsedOperation.getMaxPrice());
 
@@ -69,8 +69,8 @@ public class LiquidityPoolDepositOperationTest {
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
-    assertEquals(maxAmountA, parsedOperation.getMaxAmountA());
-    assertEquals(maxAmountB, parsedOperation.getMaxAmountB());
+    assertEquals(new BigDecimal("1000.0000000"), parsedOperation.getMaxAmountA());
+    assertEquals(new BigDecimal("2000.0000000"), parsedOperation.getMaxAmountB());
     assertEquals(minPrice, parsedOperation.getMinPrice());
     assertEquals(maxPrice, parsedOperation.getMaxPrice());
 

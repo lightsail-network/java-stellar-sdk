@@ -81,7 +81,10 @@ public class RevokeClaimableBalanceSponsorshipOperation extends Operation {
     return body;
   }
 
-  public static abstract class RevokeClaimableBalanceSponsorshipOperationBuilder<C extends RevokeClaimableBalanceSponsorshipOperation, B extends RevokeClaimableBalanceSponsorshipOperationBuilder<C, B>> extends OperationBuilder<C, B> {
+  public abstract static class RevokeClaimableBalanceSponsorshipOperationBuilder<
+          C extends RevokeClaimableBalanceSponsorshipOperation,
+          B extends RevokeClaimableBalanceSponsorshipOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
     public B balanceId(@NonNull String balanceId) {
       this.balanceId = balanceId.toLowerCase();
       return self();

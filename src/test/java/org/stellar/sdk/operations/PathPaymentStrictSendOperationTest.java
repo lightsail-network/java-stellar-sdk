@@ -64,9 +64,9 @@ public class PathPaymentStrictSendOperationTest {
     assertTrue(parsedOperation.getSendAsset() instanceof AssetTypeNative);
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(destination.getAccountId(), parsedOperation.getDestination());
-    assertEquals(sendAmount, parsedOperation.getSendAmount());
+    assertEquals(new BigDecimal("0.0001000"), parsedOperation.getSendAmount());
     assertTrue(parsedOperation.getDestAsset() instanceof AssetTypeCreditAlphaNum4);
-    assertEquals(destMin, parsedOperation.getDestMin());
+    assertEquals(new BigDecimal("0.0009000"), parsedOperation.getDestMin());
     assertArrayEquals(path, parsedOperation.getPath());
 
     assertEquals(
@@ -119,9 +119,9 @@ public class PathPaymentStrictSendOperationTest {
     assertTrue(parsedOperation.getSendAsset() instanceof AssetTypeNative);
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(destination.getAccountId(), parsedOperation.getDestination());
-    assertEquals(sendAmount, parsedOperation.getSendAmount());
+    assertEquals(new BigDecimal("0.0001000"), parsedOperation.getSendAmount());
     assertTrue(parsedOperation.getDestAsset() instanceof AssetTypeCreditAlphaNum4);
-    assertEquals(destMin, parsedOperation.getDestMin());
+    assertEquals(new BigDecimal("0.0009000"), parsedOperation.getDestMin());
     assertEquals(0, parsedOperation.getPath().length);
 
     assertEquals(

@@ -64,9 +64,9 @@ public class PathPaymentStrictReceiveOperationTest {
     assertTrue(parsedOperation.getSendAsset() instanceof AssetTypeNative);
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(destination.getAccountId(), parsedOperation.getDestination());
-    assertEquals(sendMax, parsedOperation.getSendMax());
+    assertEquals(new BigDecimal("0.0001000"), parsedOperation.getSendMax());
     assertTrue(parsedOperation.getDestAsset() instanceof AssetTypeCreditAlphaNum4);
-    assertEquals(destAmount, parsedOperation.getDestAmount());
+    assertEquals(new BigDecimal("0.0001000"), parsedOperation.getDestAmount());
     assertArrayEquals(path, parsedOperation.getPath());
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAIAAAAAAAAAAAAAA+gAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAABVVNEAAAAAACNlYd30HdCuLI54eyYjyX/fDyH9IJWIr/hKDcXKQbq1QAAAAAAAAPoAAAAAgAAAAFVU0QAAAAAACoIKnpnw8rtrfxa276dFZo1C19mDqWXtG4ufhWrLUd1AAAAAlRFU1RURVNUAAAAAAAAAABE/ttVl8BLV0csW/xgXtbXOVf1lMyDluMiafl0IDVFIg==",
@@ -112,9 +112,9 @@ public class PathPaymentStrictReceiveOperationTest {
     assertTrue(parsedOperation.getSendAsset() instanceof AssetTypeNative);
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(destination.getAccountId(), parsedOperation.getDestination());
-    assertEquals(sendMax, parsedOperation.getSendMax());
+    assertEquals(new BigDecimal("0.0001000"), parsedOperation.getSendMax());
     assertTrue(parsedOperation.getDestAsset() instanceof AssetTypeCreditAlphaNum4);
-    assertEquals(destAmount, parsedOperation.getDestAmount());
+    assertEquals(new BigDecimal("0.0001000"), parsedOperation.getDestAmount());
     assertEquals(0, parsedOperation.getPath().length);
 
     assertEquals(

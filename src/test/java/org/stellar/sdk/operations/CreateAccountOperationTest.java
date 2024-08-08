@@ -19,6 +19,7 @@ public class CreateAccountOperationTest {
     // print(op.to_xdr_object().to_xdr())
     String source = "GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW";
     BigDecimal startingBalance = new BigDecimal("10.25");
+
     String destination = "GDOHZOZMMKIV7NJ566WB745WPLK46KFPSJSHITRBRB6QPT4DI5UJ7NO6";
     CreateAccountOperation op =
         CreateAccountOperation.builder()
