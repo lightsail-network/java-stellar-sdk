@@ -3,7 +3,6 @@ package org.stellar.sdk;
 import lombok.Getter;
 import org.stellar.sdk.xdr.AccountFlags;
 
-// TODO: move to operations?
 /**
  * AccountFlag is the <code>enum</code> that can be used in {@link
  * org.stellar.sdk.operations.SetOptionsOperation}.
