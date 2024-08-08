@@ -83,20 +83,18 @@ public abstract class RequestBuilder {
     return this;
   }
 
-  // TODO: return void
   /**
    * Sets a parameter consisting of a comma separated list of assets on the request.
    *
    * @param name the name of the query parameter
    * @param assets the list of assets to be serialized into the query parameter value
    */
-  public RequestBuilder setAssetsParameter(String name, List<Asset> assets) {
+  public void setAssetsParameter(String name, List<Asset> assets) {
     List<String> assetStrings = new ArrayList<>();
     for (Asset asset : assets) {
       assetStrings.add(encodeAsset(asset));
     }
     uriBuilder.setQueryParameter(name, String.join(",", assetStrings));
-    return this;
   }
 
   /**
@@ -105,9 +103,8 @@ public abstract class RequestBuilder {
    * @param name the name of the query parameter
    * @param asset the asset to be serialized into the query parameter value
    */
-  public RequestBuilder setAssetParameter(String name, Asset asset) {
+  public void setAssetParameter(String name, Asset asset) {
     uriBuilder.setQueryParameter(name, encodeAsset(asset));
-    return this;
   }
 
   private String encodeAsset(Asset asset) {
@@ -183,7 +180,7 @@ public abstract class RequestBuilder {
     return responseHandler.handleResponse(response);
   }
 
-  String getAssetType(Asset asset) {
+  static String getAssetType(Asset asset) {
     String assetType;
     switch (asset.getType()) {
       case ASSET_TYPE_NATIVE:
