@@ -18,7 +18,7 @@ public class LiquidityPoolDepositOperationTest {
   Asset nativeAsset = create("native");
   Asset creditAsset =
       create(null, "ABC", "GCRA6COW27CY5MTKIA7POQ2326C5ABYCXODBN4TFF5VL4FMBRHOT3YHU");
-  String liquidityPoolID = new LiquidityPool(nativeAsset, creditAsset).getLiquidityPoolId();
+  String liquidityPoolId = new LiquidityPool(nativeAsset, creditAsset).getLiquidityPoolId();
 
   @Test
   public void testLiquidityPoolDepositOperationValid() {
@@ -28,7 +28,7 @@ public class LiquidityPoolDepositOperationTest {
     Price maxPrice = Price.fromString("0.02");
     LiquidityPoolDepositOperation operation =
         LiquidityPoolDepositOperation.builder()
-            .liquidityPoolID(liquidityPoolID)
+            .liquidityPoolId(liquidityPoolId)
             .maxAmountA(maxAmountA)
             .maxAmountB(maxAmountB)
             .minPrice(minPrice)
@@ -41,7 +41,7 @@ public class LiquidityPoolDepositOperationTest {
         (LiquidityPoolDepositOperation) Operation.fromXdr(xdr);
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
-    assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+    assertEquals(liquidityPoolId, parsedOperation.getLiquidityPoolId());
     assertEquals(new BigDecimal("1000.0000000"), parsedOperation.getMaxAmountA());
     assertEquals(new BigDecimal("2000.0000000"), parsedOperation.getMaxAmountB());
     assertEquals(minPrice, parsedOperation.getMinPrice());
@@ -60,7 +60,7 @@ public class LiquidityPoolDepositOperationTest {
     Price maxPrice = Price.fromString("0.02");
     LiquidityPoolDepositOperation operation =
         LiquidityPoolDepositOperation.builder()
-            .liquidityPoolID(liquidityPoolID.toUpperCase())
+            .liquidityPoolId(liquidityPoolId.toUpperCase())
             .maxAmountA(maxAmountA)
             .maxAmountB(maxAmountB)
             .minPrice(minPrice)
@@ -73,7 +73,7 @@ public class LiquidityPoolDepositOperationTest {
         (LiquidityPoolDepositOperation) Operation.fromXdr(xdr);
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
-    assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+    assertEquals(liquidityPoolId, parsedOperation.getLiquidityPoolId());
     assertEquals(new BigDecimal("1000.0000000"), parsedOperation.getMaxAmountA());
     assertEquals(new BigDecimal("2000.0000000"), parsedOperation.getMaxAmountB());
     assertEquals(minPrice, parsedOperation.getMinPrice());
@@ -100,7 +100,7 @@ public class LiquidityPoolDepositOperationTest {
         (LiquidityPoolDepositOperation) Operation.fromXdr(xdr);
 
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
-    assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+    assertEquals(liquidityPoolId, parsedOperation.getLiquidityPoolId());
     assertEquals(new BigDecimal("1000.0000000"), parsedOperation.getMaxAmountA());
     assertEquals(new BigDecimal("2000.0000000"), parsedOperation.getMaxAmountB());
     assertEquals(minPrice, parsedOperation.getMinPrice());

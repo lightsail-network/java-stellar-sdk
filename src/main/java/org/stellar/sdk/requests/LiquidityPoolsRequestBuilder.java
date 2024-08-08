@@ -44,7 +44,7 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
   /**
    * Requests <code>GET /liquidity_pools/{liquidity_pool_id}</code>
    *
-   * @param liquidityPoolID Liquidity Pool to fetch
+   * @param liquidityPoolId Liquidity Pool to fetch
    * @return {@link LiquidityPoolResponse}
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
@@ -56,8 +56,8 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
    *     Pool Details</a>
    */
-  public LiquidityPoolResponse liquidityPool(String liquidityPoolID) {
-    this.setSegments("liquidity_pools", liquidityPoolID);
+  public LiquidityPoolResponse liquidityPool(String liquidityPoolId) {
+    this.setSegments("liquidity_pools", liquidityPoolId);
     return this.liquidityPool(this.buildUri());
   }
 

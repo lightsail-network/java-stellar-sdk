@@ -40,7 +40,7 @@ public abstract class Asset implements Comparable<Asset> {
   }
 
   /**
-   * <p>Creates Asset for Alpha4/Alpha12/Native
+   * Creates Asset for Alpha4/Alpha12/Native
    *
    * @param type the type of asset. 'native' will generate its respective asset sub-class, if null
    *     or any other value will attempt to derive the asset sub-class from code and issuer.

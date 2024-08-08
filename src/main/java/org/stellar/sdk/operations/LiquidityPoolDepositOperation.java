@@ -28,7 +28,7 @@ import org.stellar.sdk.xdr.OperationType;
 @SuperBuilder(toBuilder = true)
 public class LiquidityPoolDepositOperation extends Operation {
   /** The liquidity pool ID. */
-  @NonNull private final String liquidityPoolID;
+  @NonNull private final String liquidityPoolId;
 
   /** Maximum amount of first asset to deposit (max of 7 decimal places). */
   @NonNull private final BigDecimal maxAmountA;
@@ -49,7 +49,7 @@ public class LiquidityPoolDepositOperation extends Operation {
       @NonNull BigDecimal maxAmountB,
       @NonNull Price minPrice,
       @NonNull Price maxPrice) {
-    this.liquidityPoolID = new LiquidityPool(assetA, assetB).getLiquidityPoolId();
+    this.liquidityPoolId = new LiquidityPool(assetA, assetB).getLiquidityPoolId();
     this.maxAmountA = maxAmountA;
     this.maxAmountB = maxAmountB;
     this.minPrice = minPrice;
@@ -64,21 +64,21 @@ public class LiquidityPoolDepositOperation extends Operation {
    * @return {@link LiquidityPoolDepositOperation} object
    */
   public static LiquidityPoolDepositOperation fromXdr(LiquidityPoolDepositOp op) {
-    String liquidityPoolID =
+    String liquidityPoolId =
         Util.bytesToHex(op.getLiquidityPoolID().getPoolID().getHash()).toLowerCase();
     BigDecimal maxAmountA = Operation.fromXdrAmount(op.getMaxAmountA().getInt64());
     BigDecimal maxAmountB = Operation.fromXdrAmount(op.getMaxAmountB().getInt64());
     Price minPrice = Price.fromXdr(op.getMinPrice());
     Price maxPrice = Price.fromXdr(op.getMaxPrice());
     return new LiquidityPoolDepositOperation(
-        liquidityPoolID, maxAmountA, maxAmountB, minPrice, maxPrice);
+        liquidityPoolId, maxAmountA, maxAmountB, minPrice, maxPrice);
   }
 
   @Override
   OperationBody toOperationBody() {
     LiquidityPoolDepositOp op = new LiquidityPoolDepositOp();
     op.setLiquidityPoolID(
-        new org.stellar.sdk.xdr.PoolID(new Hash(Util.hexToBytes(this.getLiquidityPoolID()))));
+        new org.stellar.sdk.xdr.PoolID(new Hash(Util.hexToBytes(this.getLiquidityPoolId()))));
     op.setMaxAmountA(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getMaxAmountA())));
     op.setMaxAmountB(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getMaxAmountB())));
     op.setMinPrice(this.getMinPrice().toXdr());
@@ -94,8 +94,8 @@ public class LiquidityPoolDepositOperation extends Operation {
           C extends LiquidityPoolDepositOperation,
           B extends LiquidityPoolDepositOperationBuilder<C, B>>
       extends OperationBuilder<C, B> {
-    public B liquidityPoolID(@NonNull String liquidityPoolID) {
-      this.liquidityPoolID = liquidityPoolID.toLowerCase();
+    public B liquidityPoolId(@NonNull String liquidityPoolId) {
+      this.liquidityPoolId = liquidityPoolId.toLowerCase();
       return self();
     }
 

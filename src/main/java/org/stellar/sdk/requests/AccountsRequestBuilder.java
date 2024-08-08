@@ -116,11 +116,11 @@ public class AccountsRequestBuilder extends RequestBuilder {
   /**
    * Returns all accounts who have trustlines to the specified liquidity pool.
    *
-   * @param liquidityPoolID Liquidity Pool ID
+   * @param liquidityPoolId Liquidity Pool ID
    * @return current {@link AccountsRequestBuilder} instance
    * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
-  public AccountsRequestBuilder forLiquidityPool(String liquidityPoolID) {
+  public AccountsRequestBuilder forLiquidityPool(String liquidityPoolId) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
       throw new IllegalArgumentException("cannot set both asset and liquidity_pool");
     }
@@ -130,7 +130,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
     if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
       throw new IllegalArgumentException("cannot set both sponsor and liquidity_pool");
     }
-    uriBuilder.setQueryParameter(LIQUIDITY_POOL_PARAMETER_NAME, liquidityPoolID);
+    uriBuilder.setQueryParameter(LIQUIDITY_POOL_PARAMETER_NAME, liquidityPoolId);
     return this;
   }
 

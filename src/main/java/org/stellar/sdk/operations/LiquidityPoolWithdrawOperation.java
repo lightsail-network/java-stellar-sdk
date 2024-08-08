@@ -27,7 +27,7 @@ import org.stellar.sdk.xdr.OperationType;
 @SuperBuilder(toBuilder = true)
 public class LiquidityPoolWithdrawOperation extends Operation {
   /** The liquidity pool ID. */
-  @NonNull private final String liquidityPoolID;
+  @NonNull private final String liquidityPoolId;
 
   /** Amount of pool shares to withdraw (max of 7 decimal places). */
   @NonNull private final BigDecimal amount;
@@ -44,7 +44,7 @@ public class LiquidityPoolWithdrawOperation extends Operation {
       @NonNull Asset assetB,
       @NonNull BigDecimal minAmountB,
       @NonNull BigDecimal amount) {
-    this.liquidityPoolID = new LiquidityPool(assetA, assetB).getLiquidityPoolId();
+    this.liquidityPoolId = new LiquidityPool(assetA, assetB).getLiquidityPoolId();
     this.amount = amount;
     this.minAmountA = minAmountA;
     this.minAmountB = minAmountB;
@@ -58,19 +58,19 @@ public class LiquidityPoolWithdrawOperation extends Operation {
    * @return {@link LiquidityPoolWithdrawOperation} object
    */
   public static LiquidityPoolWithdrawOperation fromXdr(LiquidityPoolWithdrawOp op) {
-    String liquidityPoolID =
+    String liquidityPoolId =
         Util.bytesToHex(op.getLiquidityPoolID().getPoolID().getHash()).toLowerCase();
     BigDecimal amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     BigDecimal minAmountA = Operation.fromXdrAmount(op.getMinAmountA().getInt64());
     BigDecimal minAmountB = Operation.fromXdrAmount(op.getMinAmountB().getInt64());
-    return new LiquidityPoolWithdrawOperation(liquidityPoolID, amount, minAmountA, minAmountB);
+    return new LiquidityPoolWithdrawOperation(liquidityPoolId, amount, minAmountA, minAmountB);
   }
 
   @Override
   OperationBody toOperationBody() {
     LiquidityPoolWithdrawOp op = new LiquidityPoolWithdrawOp();
     op.setLiquidityPoolID(
-        new org.stellar.sdk.xdr.PoolID(new Hash(Util.hexToBytes(this.getLiquidityPoolID()))));
+        new org.stellar.sdk.xdr.PoolID(new Hash(Util.hexToBytes(this.getLiquidityPoolId()))));
     op.setAmount(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getAmount())));
     op.setMinAmountA(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getMinAmountA())));
     op.setMinAmountB(new org.stellar.sdk.xdr.Int64(Operation.toXdrAmount(this.getMinAmountB())));
@@ -85,8 +85,8 @@ public class LiquidityPoolWithdrawOperation extends Operation {
           C extends LiquidityPoolWithdrawOperation,
           B extends LiquidityPoolWithdrawOperationBuilder<C, B>>
       extends OperationBuilder<C, B> {
-    public B liquidityPoolID(@NonNull String liquidityPoolID) {
-      this.liquidityPoolID = liquidityPoolID.toLowerCase();
+    public B liquidityPoolId(@NonNull String liquidityPoolId) {
+      this.liquidityPoolId = liquidityPoolId.toLowerCase();
       return self();
     }
 
