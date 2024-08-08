@@ -40,9 +40,6 @@ public abstract class Asset implements Comparable<Asset> {
   }
 
   /**
-   * Deprecated: Use {@link Asset#createNonNativeAsset(String, String)} or {@link
-   * Asset#createNativeAsset()} instead.
-   *
    * <p>Creates Asset for Alpha4/Alpha12/Native
    *
    * @param type the type of asset. 'native' will generate its respective asset sub-class, if null
@@ -51,7 +48,6 @@ public abstract class Asset implements Comparable<Asset> {
    * @param issuer the asset issuer or null
    * @return Asset
    */
-  @Deprecated
   public static Asset create(String type, String code, String issuer) {
     if (type == null) {
       return createNonNativeAsset(code, issuer);
