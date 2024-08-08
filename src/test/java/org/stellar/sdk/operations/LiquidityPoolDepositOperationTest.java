@@ -53,6 +53,38 @@ public class LiquidityPoolDepositOperationTest {
   }
 
   @Test
+  public void testLiquidityPoolDepositOperation_UpperLiquidityPoolId() {
+    BigDecimal maxAmountA = BigDecimal.valueOf(1000);
+    BigDecimal maxAmountB = BigDecimal.valueOf(2000);
+    Price minPrice = Price.fromString("0.01");
+    Price maxPrice = Price.fromString("0.02");
+    LiquidityPoolDepositOperation operation =
+        LiquidityPoolDepositOperation.builder()
+            .liquidityPoolID(liquidityPoolID.toUpperCase())
+            .maxAmountA(maxAmountA)
+            .maxAmountB(maxAmountB)
+            .minPrice(minPrice)
+            .maxPrice(maxPrice)
+            .sourceAccount(source.getAccountId())
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    LiquidityPoolDepositOperation parsedOperation =
+        (LiquidityPoolDepositOperation) Operation.fromXdr(xdr);
+
+    assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
+    assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+    assertEquals(new BigDecimal("1000.0000000"), parsedOperation.getMaxAmountA());
+    assertEquals(new BigDecimal("2000.0000000"), parsedOperation.getMaxAmountB());
+    assertEquals(minPrice, parsedOperation.getMinPrice());
+    assertEquals(maxPrice, parsedOperation.getMaxPrice());
+
+    assertEquals(
+        "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAABb5NUX4ubtAgBk7zCsrbB/oCH2ADwtupaNB0FyfhxedxwAAAAJUC+QAAAAABKgXyAAAAAABAAAAZAAAAAEAAAAy",
+        operation.toXdrBase64());
+  }
+
+  @Test
   public void testConstructorPairs() {
     BigDecimal maxAmountA = BigDecimal.valueOf(1000);
     BigDecimal maxAmountB = BigDecimal.valueOf(2000);

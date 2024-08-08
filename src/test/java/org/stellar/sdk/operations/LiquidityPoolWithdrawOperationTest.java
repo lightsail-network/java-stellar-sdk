@@ -52,6 +52,38 @@ public class LiquidityPoolWithdrawOperationTest {
   }
 
   @Test
+  public void testLiquidityPoolWithdrawOperation_UpperLiquidityPoolId() {
+    BigDecimal amount = BigDecimal.valueOf(5);
+    BigDecimal minAmountA = BigDecimal.valueOf(1000);
+    BigDecimal minAmountB = BigDecimal.valueOf(2000);
+    BigDecimal formattedAmount = new BigDecimal("5.0000000");
+    BigDecimal formattedMinAmountA = new BigDecimal("1000.0000000");
+    BigDecimal formattedMinAmountB = new BigDecimal("2000.0000000");
+    LiquidityPoolWithdrawOperation operation =
+        LiquidityPoolWithdrawOperation.builder()
+            .liquidityPoolID(liquidityPoolID.toUpperCase())
+            .amount(amount)
+            .minAmountA(minAmountA)
+            .minAmountB(minAmountB)
+            .sourceAccount(source.getAccountId())
+            .build();
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    LiquidityPoolWithdrawOperation parsedOperation =
+        (LiquidityPoolWithdrawOperation) Operation.fromXdr(xdr);
+
+    assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
+    assertEquals(liquidityPoolID, parsedOperation.getLiquidityPoolID());
+    assertEquals(formattedAmount, parsedOperation.getAmount());
+    assertEquals(formattedMinAmountA, parsedOperation.getMinAmountA());
+    assertEquals(formattedMinAmountB, parsedOperation.getMinAmountB());
+
+    assertEquals(
+        "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAABf5NUX4ubtAgBk7zCsrbB/oCH2ADwtupaNB0FyfhxedxwAAAAAC+vCAAAAAAlQL5AAAAAAEqBfIAA==",
+        operation.toXdrBase64());
+  }
+
+  @Test
   public void testConstructorPairs() {
     BigDecimal amount = BigDecimal.valueOf(5);
     BigDecimal minAmountA = BigDecimal.valueOf(1000);

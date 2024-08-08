@@ -74,6 +74,26 @@ public class RevokeSponsorshipOperationTest {
   }
 
   @Test
+  public void testRevokeClaimableBalanceSponsorshipOperation_UpperBalanceId() {
+    String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
+    String balanceId = "00000000550e14acbdafcd3089289363b3b0c8bec9b4edd87298c690655b4b2456d68ba0";
+    RevokeClaimableBalanceSponsorshipOperation operation =
+        RevokeClaimableBalanceSponsorshipOperation.builder()
+            .balanceId(balanceId.toUpperCase())
+            .sourceAccount(source)
+            .build();
+    assertEquals(
+        "AAAAAQAAAAA037UdsRiULYrlHjmXWb6CiMKM2fNCa/ONGxK3rOkvTwAAABIAAAAAAAAABAAAAABVDhSsva/NMIkok2OzsMi+ybTt2HKYxpBlW0skVtaLoA==",
+        operation.toXdrBase64());
+
+    org.stellar.sdk.xdr.Operation xdr = operation.toXdr();
+    RevokeClaimableBalanceSponsorshipOperation parsedOperation =
+        (RevokeClaimableBalanceSponsorshipOperation) Operation.fromXdr(xdr);
+    assertEquals(balanceId, parsedOperation.getBalanceId());
+    assertEquals(source, parsedOperation.getSourceAccount());
+  }
+
+  @Test
   public void testRevokeOfferSponsorshipOperation() {
     String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
     String seller = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
