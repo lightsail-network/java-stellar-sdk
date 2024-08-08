@@ -89,5 +89,20 @@ public class LiquidityPoolWithdrawOperation extends Operation {
       this.liquidityPoolID = liquidityPoolID.toLowerCase();
       return self();
     }
+
+    public B amount(@NonNull BigDecimal amount) {
+      this.amount = Operation.formatAmountScale(amount);
+      return self();
+    }
+
+    public B minAmountA(@NonNull BigDecimal minAmountA) {
+      this.minAmountA = Operation.formatAmountScale(minAmountA);
+      return self();
+    }
+
+    public B minAmountB(@NonNull BigDecimal minAmountB) {
+      this.minAmountB = Operation.formatAmountScale(minAmountB);
+      return self();
+    }
   }
 }

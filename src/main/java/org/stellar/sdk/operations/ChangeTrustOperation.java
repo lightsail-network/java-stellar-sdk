@@ -61,4 +61,13 @@ public class ChangeTrustOperation extends Operation {
     body.setChangeTrustOp(op);
     return body;
   }
+
+  public abstract static class ChangeTrustOperationBuilder<
+          C extends ChangeTrustOperation, B extends ChangeTrustOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B limit(@NonNull BigDecimal limit) {
+      this.limit = Operation.formatAmountScale(limit);
+      return self();
+    }
+  }
 }

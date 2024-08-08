@@ -69,4 +69,14 @@ public class CreatePassiveSellOfferOperation extends Operation {
 
     return body;
   }
+
+  public abstract static class CreatePassiveSellOfferOperationBuilder<
+          C extends CreatePassiveSellOfferOperation,
+          B extends CreatePassiveSellOfferOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B amount(@NonNull BigDecimal amount) {
+      this.amount = Operation.formatAmountScale(amount);
+      return self();
+    }
+  }
 }

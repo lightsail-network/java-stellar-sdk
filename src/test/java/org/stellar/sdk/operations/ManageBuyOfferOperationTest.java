@@ -49,7 +49,7 @@ public class ManageBuyOfferOperationTest {
     assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
     assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
     assertEquals(parsedOperation.getBuying(), buying);
-    assertEquals(amount, parsedOperation.getAmount());
+    assertEquals(new BigDecimal("0.0000100"), parsedOperation.getAmount());
     assertEquals(new Price(5333399, 6250000), parsedOperation.getPrice());
     assertEquals(priceObj.getNumerator(), 5333399);
     assertEquals(priceObj.getDenominator(), 6250000);

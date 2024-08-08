@@ -2,6 +2,7 @@ package org.stellar.sdk.operations;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -29,7 +30,16 @@ public abstract class Operation {
   }
 
   protected static BigDecimal fromXdrAmount(long value) {
-    return BigDecimal.valueOf(value).divide(Operation.ONE);
+    return BigDecimal.valueOf(value).divide(Operation.ONE).setScale(7, RoundingMode.UNNECESSARY);
+  }
+
+  protected static BigDecimal formatAmountScale(BigDecimal value) {
+    int scale = value.scale();
+    if (scale <= 7) {
+      return value.setScale(7, RoundingMode.UNNECESSARY);
+    } else {
+      throw new IllegalArgumentException("The scale of the value must be less than or equal to 7");
+    }
   }
 
   /** Generates Operation XDR object. */

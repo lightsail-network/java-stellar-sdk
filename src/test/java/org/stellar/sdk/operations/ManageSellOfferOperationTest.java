@@ -28,6 +28,7 @@ public class ManageSellOfferOperationTest {
     Asset selling = new AssetTypeNative();
     Asset buying = create(null, "USD", issuer.getAccountId());
     BigDecimal amount = new BigDecimal("0.00001");
+    BigDecimal formattedAmount = new BigDecimal("0.0000100");
     String price = "0.85334384"; // n=5333399 d=6250000
     Price priceObj = Price.fromString(price);
     long offerId = 1;
@@ -50,7 +51,7 @@ public class ManageSellOfferOperationTest {
     assertTrue(parsedOperation.getSelling() instanceof AssetTypeNative);
     assertTrue(parsedOperation.getBuying() instanceof AssetTypeCreditAlphaNum4);
     assertTrue(parsedOperation.getBuying().equals(buying));
-    assertEquals(amount, parsedOperation.getAmount());
+    assertEquals(formattedAmount, parsedOperation.getAmount());
     assertEquals(new Price(5333399, 6250000), parsedOperation.getPrice());
     assertEquals(priceObj.getNumerator(), 5333399);
     assertEquals(priceObj.getDenominator(), 6250000);

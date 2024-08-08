@@ -102,4 +102,19 @@ public class PathPaymentStrictSendOperation extends Operation {
     body.setPathPaymentStrictSendOp(op);
     return body;
   }
+
+  public abstract static class PathPaymentStrictSendOperationBuilder<
+          C extends PathPaymentStrictSendOperation,
+          B extends PathPaymentStrictSendOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B sendAmount(@NonNull BigDecimal sendAmount) {
+      this.sendAmount = Operation.formatAmountScale(sendAmount);
+      return self();
+    }
+
+    public B destMin(@NonNull BigDecimal destMin) {
+      this.destMin = Operation.formatAmountScale(destMin);
+      return self();
+    }
+  }
 }

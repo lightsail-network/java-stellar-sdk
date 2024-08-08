@@ -87,4 +87,42 @@ public class OperationTest {
         new BigDecimal("101401671144.6800155")
             .compareTo(Operation.fromXdrAmount(1014016711446800155L)));
   }
+
+  @Test
+  public void testFormatAmountScale_ScaleLessThan7() {
+    BigDecimal value = new BigDecimal("1.23");
+    BigDecimal expected = new BigDecimal("1.2300000");
+    BigDecimal actual = Operation.formatAmountScale(value);
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testFormatAmountScale_ScaleEqualTo7() {
+    BigDecimal value = new BigDecimal("2.3456789");
+    BigDecimal expected = new BigDecimal("2.3456789");
+    BigDecimal actual = Operation.formatAmountScale(value);
+    assertEquals(expected, actual);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testFormatAmountScale_ScaleGreaterThan7() {
+    BigDecimal value = new BigDecimal("3.45678901");
+    Operation.formatAmountScale(value);
+  }
+
+  @Test
+  public void testFormatAmountScale_ScaleZero() {
+    BigDecimal value = new BigDecimal("5");
+    BigDecimal expected = new BigDecimal("5.0000000");
+    BigDecimal actual = Operation.formatAmountScale(value);
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testFormatAmountScale_ScaleNegative() {
+    BigDecimal value = new BigDecimal("100");
+    BigDecimal expected = new BigDecimal("100.0000000");
+    BigDecimal actual = Operation.formatAmountScale(value);
+    assertEquals(expected, actual);
+  }
 }

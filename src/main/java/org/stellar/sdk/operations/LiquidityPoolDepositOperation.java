@@ -90,14 +90,22 @@ public class LiquidityPoolDepositOperation extends Operation {
     return body;
   }
 
-  // TODO: add test
-  // TODO: equal? toXdr?
   public abstract static class LiquidityPoolDepositOperationBuilder<
           C extends LiquidityPoolDepositOperation,
-          B extends LiquidityPoolDepositOperation.LiquidityPoolDepositOperationBuilder<C, B>>
+          B extends LiquidityPoolDepositOperationBuilder<C, B>>
       extends OperationBuilder<C, B> {
     public B liquidityPoolID(@NonNull String liquidityPoolID) {
       this.liquidityPoolID = liquidityPoolID.toLowerCase();
+      return self();
+    }
+
+    public B maxAmountA(@NonNull BigDecimal maxAmountA) {
+      this.maxAmountA = Operation.formatAmountScale(maxAmountA);
+      return self();
+    }
+
+    public B maxAmountB(@NonNull BigDecimal maxAmountB) {
+      this.maxAmountB = Operation.formatAmountScale(maxAmountB);
       return self();
     }
   }

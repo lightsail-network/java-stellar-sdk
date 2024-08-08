@@ -21,7 +21,7 @@ public class PaymentOperationTest {
 
     Asset asset = new AssetTypeNative();
     BigDecimal amount = BigDecimal.valueOf(1000);
-
+    BigDecimal formattedAmount = new BigDecimal("1000.0000000");
     PaymentOperation operation =
         PaymentOperation.builder()
             .destination(destination.getAccountId())
@@ -37,7 +37,7 @@ public class PaymentOperationTest {
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assertEquals(destination.getAccountId(), parsedOperation.getDestination());
     assertTrue(parsedOperation.getAsset() instanceof AssetTypeNative);
-    assertEquals(amount, parsedOperation.getAmount());
+    assertEquals(formattedAmount, parsedOperation.getAmount());
 
     assertEquals(
         "AAAAAQAAAAC7JAuE3XvquOnbsgv2SRztjuk4RoBVefQ0rlrFMMQvfAAAAAEAAAAA7eBSYbzcL5UKo7oXO24y1ckX+XuCtkDsyNHOp1n1bxAAAAAAAAAAAlQL5AA=",

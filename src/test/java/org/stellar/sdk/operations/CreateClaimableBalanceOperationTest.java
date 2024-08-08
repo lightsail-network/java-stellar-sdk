@@ -37,6 +37,7 @@ public class CreateClaimableBalanceOperationTest {
         new AssetTypeCreditAlphaNum4(
             "DEMO", "GCWPICV6IV35FQ2MVZSEDLORHEMMIAODRQPVDEIKZOW2GC2JGGDCXVVV");
     BigDecimal amt = BigDecimal.valueOf(100);
+    BigDecimal formattedAmt = new BigDecimal("100.0000000");
     List<Claimant> claimants =
         Arrays.asList(
             new Claimant(
@@ -62,7 +63,7 @@ public class CreateClaimableBalanceOperationTest {
         (CreateClaimableBalanceOperation) Operation.fromXdr(xdr);
     assertEquals(claimants, parsedOperation.getClaimants());
     assertEquals(asset, parsedOperation.getAsset());
-    assertEquals(amt, parsedOperation.getAmount());
+    assertEquals(formattedAmt, parsedOperation.getAmount());
 
     assertEquals(source, parsedOperation.getSourceAccount());
     assertEquals(operation, parsedOperation);

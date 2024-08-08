@@ -57,4 +57,13 @@ public class CreateAccountOperation extends Operation {
     body.setCreateAccountOp(op);
     return body;
   }
+
+  public abstract static class CreateAccountOperationBuilder<
+          C extends CreateAccountOperation, B extends CreateAccountOperationBuilder<C, B>>
+      extends OperationBuilder<C, B> {
+    public B startingBalance(@NonNull BigDecimal startingBalance) {
+      this.startingBalance = Operation.formatAmountScale(startingBalance);
+      return self();
+    }
+  }
 }

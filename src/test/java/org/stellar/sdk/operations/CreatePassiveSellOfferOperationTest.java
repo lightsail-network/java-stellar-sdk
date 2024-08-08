@@ -25,6 +25,7 @@ public class CreatePassiveSellOfferOperationTest {
     Asset selling = new AssetTypeNative();
     Asset buying = create(null, "USD", issuer.getAccountId());
     BigDecimal amount = new BigDecimal("0.00001");
+    BigDecimal formattedAmount = new BigDecimal("0.0000100");
     String price = "2.93850088"; // n=36731261 d=12500000
     Price priceObj = Price.fromString(price);
 
@@ -41,7 +42,7 @@ public class CreatePassiveSellOfferOperationTest {
     assertTrue(operation.getBuying() instanceof AssetTypeCreditAlphaNum4);
     Assert.assertEquals(operation.getBuying(), buying);
     Assert.assertEquals(operation.getSelling(), selling);
-    Assert.assertEquals(amount, operation.getAmount());
+    Assert.assertEquals(formattedAmount, operation.getAmount());
     Assert.assertEquals(new Price(36731261, 12500000), operation.getPrice());
     Assert.assertEquals(priceObj.getNumerator(), 36731261);
     Assert.assertEquals(priceObj.getDenominator(), 12500000);
