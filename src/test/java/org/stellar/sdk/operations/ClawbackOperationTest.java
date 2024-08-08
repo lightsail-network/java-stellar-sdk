@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum4;
-import org.stellar.sdk.exception.FormatException;
+import org.stellar.sdk.exception.StrKeyException;
 
 public class ClawbackOperationTest {
   @Test
@@ -43,7 +43,7 @@ public class ClawbackOperationTest {
   }
 
   @Test
-  public void testMuxedClawbackOperation() throws FormatException {
+  public void testMuxedClawbackOperation() throws StrKeyException {
     String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
     String from = "MDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKAAAAAAMV7V2XYGQO";
 
@@ -75,7 +75,7 @@ public class ClawbackOperationTest {
   }
 
   @Test
-  public void testMixedMuxedClawbackOperation() throws IOException, FormatException {
+  public void testMixedMuxedClawbackOperation() throws IOException, StrKeyException {
     String source = "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK";
     String from = "GDQNY3PBOJOKYZSRMK2S7LHHGWZIUISD4QORETLMXEWXBI7KFZZMKTL3";
 

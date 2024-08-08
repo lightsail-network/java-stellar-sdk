@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
-import org.stellar.sdk.exception.FormatException;
-import org.stellar.sdk.exception.UnexpectedException;
+import org.stellar.sdk.exception.StrKeyException;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -132,7 +131,7 @@ public class StrKey {
       char[] encoded = encodeCheck(VersionByte.SIGNED_PAYLOAD, record.toByteArray());
       return String.valueOf(encoded);
     } catch (Exception ex) {
-      throw new FormatException(ex.getMessage());
+      throw new StrKeyException("encode signed payload failed", ex);
     }
   }
 
@@ -152,7 +151,7 @@ public class StrKey {
       return new SignedPayloadSigner(
           xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
     } catch (Exception ex) {
-      throw new FormatException(ex.getMessage());
+      throw new StrKeyException("decode signed payload failed", ex);
     }
   }
 
@@ -204,7 +203,7 @@ public class StrKey {
         return String.valueOf(
             encodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.getEd25519().getUint256()));
       default:
-        throw new IllegalArgumentException("invalid discriminant");
+        throw new StrKeyException("invalid discriminant");
     }
   }
 
@@ -231,7 +230,7 @@ public class StrKey {
     try {
       publicKey.setEd25519(Uint256.fromXdrByteArray(decodeEd25519PublicKey(data)));
     } catch (IOException e) {
-      throw new IllegalArgumentException("invalid address: " + data, e);
+      throw new StrKeyException("invalid address: " + data, e);
     }
     accountID.setAccountID(publicKey);
     return accountID;
@@ -247,7 +246,7 @@ public class StrKey {
     MuxedAccount muxed = new MuxedAccount();
 
     if (data.isEmpty()) {
-      throw new IllegalArgumentException("address is empty");
+      throw new StrKeyException("address is empty");
     }
     switch (decodeVersionByte(data)) {
       case ACCOUNT_ID:
@@ -255,7 +254,7 @@ public class StrKey {
         try {
           muxed.setEd25519(Uint256.fromXdrByteArray(decodeEd25519PublicKey(data)));
         } catch (IOException e) {
-          throw new IllegalArgumentException("invalid address: " + data, e);
+          throw new StrKeyException("invalid address: " + data, e);
         }
         break;
       case MUXED:
@@ -268,12 +267,12 @@ public class StrKey {
           med.setEd25519(Uint256.decode(input));
           med.setId(new Uint64(XdrUnsignedHyperInteger.decode(input)));
         } catch (IOException e) {
-          throw new IllegalArgumentException("invalid address: " + data, e);
+          throw new StrKeyException("invalid address: " + data, e);
         }
         muxed.setMed25519(med);
         break;
       default:
-        throw new FormatException("Version byte is invalid");
+        throw new StrKeyException("Version byte is invalid");
     }
     return muxed;
   }
@@ -284,7 +283,7 @@ public class StrKey {
     byte decodedVersionByte = decoded[0];
     Optional<VersionByte> versionByteOptional = VersionByte.findByValue(decodedVersionByte);
     if (!versionByteOptional.isPresent()) {
-      throw new FormatException("Version byte is invalid");
+      throw new StrKeyException("Version byte is invalid");
     }
     return versionByteOptional.get();
   }
@@ -345,8 +344,8 @@ public class StrKey {
       Arrays.fill(unpaddedEncodedBytes, (byte) 0);
 
       return charsEncoded;
-    } catch (IOException e) {
-      throw new UnexpectedException(e);
+    } catch (Exception e) {
+      throw new StrKeyException("Encode StrKey failed", e);
     }
   }
 
@@ -359,14 +358,14 @@ public class StrKey {
     // The minimal binary decoded length is 3 bytes (version byte and 2-byte CRC) which,
     // in unpadded base32 (since each character provides 5 bits) corresponds to ceiling(8*3/5) = 5
     if (bytes.length < 5) {
-      throw new IllegalArgumentException("Encoded char array must have a length of at least 5.");
+      throw new StrKeyException("Encoded char array must have a length of at least 5.");
     }
 
     int leftoverBits = (bytes.length * 5) % 8;
     // 1. Make sure there is no full unused leftover byte at the end
     //   (i.e. there shouldn't be 5 or more leftover bits)
     if (leftoverBits >= 5) {
-      throw new IllegalArgumentException("Encoded char array has leftover character.");
+      throw new StrKeyException("Encoded char array has leftover character.");
     }
 
     if (leftoverBits > 0) {
@@ -375,7 +374,7 @@ public class StrKey {
 
       byte leftoverBitsMask = (byte) (0x0f >> (4 - leftoverBits));
       if ((decodedLastChar & leftoverBitsMask) != 0) {
-        throw new IllegalArgumentException("Unused bits should be set to 0.");
+        throw new StrKeyException("Unused bits should be set to 0.");
       }
     }
 
@@ -386,13 +385,13 @@ public class StrKey {
     byte[] checksum = Arrays.copyOfRange(decoded, decoded.length - 2, decoded.length);
 
     if (decodedVersionByte != versionByte.getValue()) {
-      throw new FormatException("Version byte is invalid");
+      throw new StrKeyException("Version byte is invalid");
     }
 
     byte[] expectedChecksum = StrKey.calculateChecksum(payload);
 
     if (!Arrays.equals(expectedChecksum, checksum)) {
-      throw new FormatException("Checksum invalid");
+      throw new StrKeyException("Checksum invalid");
     }
 
     if (VersionByte.SEED.getValue() == decodedVersionByte) {
@@ -400,7 +399,6 @@ public class StrKey {
       Arrays.fill(decoded, (byte) 0);
       Arrays.fill(payload, (byte) 0);
     }
-
     return data;
   }
 
@@ -478,7 +476,7 @@ public class StrKey {
     // Apache commons codec Base32 class will auto remove the illegal characters, this is
     // what we don't want, so we need to check the data before decoding
     if (!isInAlphabet(data)) {
-      throw new IllegalArgumentException("Invalid base32 encoded string");
+      throw new StrKeyException("Invalid base32 encoded string");
     }
     return base32Codec.decode(data);
   }

@@ -16,13 +16,13 @@ import org.stellar.sdk.Transaction;
 import org.stellar.sdk.TransactionBuilder;
 import org.stellar.sdk.TransactionPreconditions;
 import org.stellar.sdk.Util;
-import org.stellar.sdk.exception.FormatException;
+import org.stellar.sdk.exception.StrKeyException;
 import org.stellar.sdk.xdr.SignerKey;
 
 public class SetOptionsOperationTest {
 
   @Test
-  public void testSetOptionsOperation() throws FormatException {
+  public void testSetOptionsOperation() throws StrKeyException {
     // GC5SIC4E3V56VOHJ3OZAX5SJDTWY52JYI2AFK6PUGSXFVRJQYQXXZBZF
     KeyPair source =
         KeyPair.fromSecretSeed("SC4CGETADVYTCR5HEAVZRB3DZQY5Y4J7RFNJTRA6ESMHIPEZUSTE2QDK");

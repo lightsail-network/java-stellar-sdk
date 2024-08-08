@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.stellar.sdk.exception.FormatException;
+import org.stellar.sdk.exception.StrKeyException;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
@@ -26,7 +26,7 @@ public class StrKeyTest {
     try {
       StrKey.decodeCheck(StrKey.VersionByte.SEED, address.toCharArray());
       fail();
-    } catch (FormatException e) {
+    } catch (StrKeyException e) {
     }
   }
 
@@ -72,7 +72,7 @@ public class StrKeyTest {
     try {
       StrKey.decodeVersionByte("INVALIDBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6INVALID");
       fail();
-    } catch (FormatException e) {
+    } catch (StrKeyException e) {
       assertEquals("Version byte is invalid", e.getMessage());
     }
   }
@@ -250,7 +250,7 @@ public class StrKeyTest {
     try {
       StrKey.decodeCheck(StrKey.VersionByte.ACCOUNT_ID, "".toCharArray());
       fail();
-    } catch (Exception e) {
+    } catch (StrKeyException e) {
       assertEquals("Encoded char array must have a length of at least 5.", e.getMessage());
     }
   }
@@ -262,7 +262,7 @@ public class StrKeyTest {
           StrKey.VersionByte.ACCOUNT_ID,
           "GA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQHE55".toCharArray());
       fail();
-    } catch (Exception e) {
+    } catch (StrKeyException e) {
       assertEquals("Checksum invalid", e.getMessage());
     }
   }
@@ -274,7 +274,7 @@ public class StrKeyTest {
           StrKey.VersionByte.ACCOUNT_ID,
           "GA3D5KRYM6CB7OWOOOORR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQHES5".toCharArray());
       fail();
-    } catch (Exception e) {
+    } catch (StrKeyException e) {
       assertEquals("Unused bits should be set to 0.", e.getMessage());
     }
   }
@@ -311,14 +311,14 @@ public class StrKeyTest {
     try {
       StrKey.encodeToXDRMuxedAccount("XBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG");
       fail();
-    } catch (FormatException e) {
+    } catch (StrKeyException e) {
       assertEquals("Version byte is invalid", e.getMessage());
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount("MBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG");
       fail();
-    } catch (FormatException e) {
+    } catch (StrKeyException e) {
       assertEquals("Checksum invalid", e.getMessage());
     }
 
@@ -326,87 +326,87 @@ public class StrKeyTest {
       StrKey.encodeToXDRMuxedAccount(
           "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUR");
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount("GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZA");
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount("G47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVP2I");
       fail();
-    } catch (FormatException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount(
           "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLKA");
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount(
           "M47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ");
       fail();
-    } catch (FormatException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount(
           "M47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ");
       fail();
-    } catch (FormatException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount(
           "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUK");
       fail();
-    } catch (FormatException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount(
           "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUO");
       fail();
-    } catch (FormatException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount("");
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount("SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO");
       fail();
-    } catch (FormatException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount(
           "MCEO75Y6YKE53HM6N46IJYH3LK3YYFZ4QWGNUKCSSIQSH3KOAD7BEAAAAAAAAAAAPNT2W___");
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount(
           "MDWZCOEQRODFCH6ISYQPWY67L3ULLWS5ISXYYL5GH43W7YFMTLB64AAAAAAAAAAAAHGLW===");
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (StrKeyException ignored) {
     }
 
     try {
       StrKey.encodeToXDRMuxedAccount(
           " MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK");
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (StrKeyException ignored) {
     }
   }
 
