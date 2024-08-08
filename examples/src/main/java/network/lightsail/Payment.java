@@ -1,14 +1,16 @@
 package network.lightsail;
 
-import static org.stellar.sdk.AbstractTransaction.MIN_BASE_FEE;
+import static org.stellar.sdk.Transaction.MIN_BASE_FEE;
 
-import org.stellar.sdk.AssetTypeNative;
+import java.math.BigDecimal;
+import org.stellar.sdk.Asset;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Memo;
 import org.stellar.sdk.Network;
 import org.stellar.sdk.Server;
 import org.stellar.sdk.Transaction;
 import org.stellar.sdk.TransactionBuilder;
+import org.stellar.sdk.TransactionBuilderAccount;
 import org.stellar.sdk.exception.BadRequestException;
 import org.stellar.sdk.exception.BadResponseException;
 import org.stellar.sdk.exception.NetworkException;
@@ -38,8 +40,8 @@ public class Payment {
     PaymentOperation paymentOperation =
         PaymentOperation.builder()
             .destination(destination)
-            .asset(new AssetTypeNative())
-            .amount("350.1234567")
+            .asset(Asset.createNativeAsset())
+            .amount(new BigDecimal("350.1234567"))
             .build();
 
     // Build the transaction
