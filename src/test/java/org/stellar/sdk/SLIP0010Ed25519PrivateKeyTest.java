@@ -113,7 +113,8 @@ public final class SLIP0010Ed25519PrivateKeyTest {
 
   private static String deriveEd25519PrivateKey(final String seed, final int... indexes) {
     try {
-      return Util.bytesToHex(SLIP10.deriveEd25519PrivateKey(Util.hexToBytes(seed), indexes)).toLowerCase();
+      return Util.bytesToHex(SLIP10.deriveEd25519PrivateKey(Util.hexToBytes(seed), indexes))
+          .toLowerCase();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
