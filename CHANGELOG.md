@@ -76,6 +76,9 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 - refactor: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
 - refactor!: The `Federation` has been refactored, please use `Federation#resolveAddress(String)` and `Federation#resolveAccountId(String, String)` now.
 - refactor!: `FormatException` has been renamed to `StrKeyException`. When encode or decode strkey fails, `StrKeyFormatException` will be thrown.
+- chore: bump dependencies.
+- refactor!: `KeyPair.getSecretSeed` returns `null` if the keypair does not contain a secret key.
+- refactor!: due to the lack of maintenance for `net.i2p.crypto:eddsa`, we have migrated to `org.bouncycastle:bcprov-jdk18on`. The constructor of `KeyPair` has changed, but you generally won't be affected by this change.
 
 ## 0.44.0
 ### Update
