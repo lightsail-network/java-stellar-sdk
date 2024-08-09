@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Claimant;
 
 /**
  * Represents a claimable balance response.

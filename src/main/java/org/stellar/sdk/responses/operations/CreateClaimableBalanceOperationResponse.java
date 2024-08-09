@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.Claimant;
+import org.stellar.sdk.responses.Claimant;
 
 /**
  * Represents CreateClaimableBalance operation response.
