@@ -3,7 +3,7 @@
 ## Pending
 
 ## 1.0.0-alpha0
-We are thrilled to announce the release of version 1.0.0-alpha0 for our project, 
+We are thrilled to announce the release of version 1.0.0-alpha0 for java-stellar-sdk, 
 which has been in development for nearly a decade. This release marks a significant milestone in our journey, 
 as we have made substantial changes and improvements to enhance the functionality and usability of our software.
 
