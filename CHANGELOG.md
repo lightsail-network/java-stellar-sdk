@@ -103,6 +103,9 @@ continued engagement as we shape the future of this project together.
 - refactor!: `TransactionPreconditions#TransactionPreconditions(LedgerBounds, Long, BigInteger, long, List, TimeBounds)` has been removed, use `TransactionPreconditions#TransactionPreconditions(TimeBounds, LedgerBounds, Long, BigInteger, long, List)` instead.
 - refactor!: The `Federation` has been refactored, please use `Federation#resolveAddress(String)` and `Federation#resolveAccountId(String, String)` now.
 - refactor!: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
+- chore: bump dependencies.
+- refactor!: `KeyPair.getSecretSeed` returns `null` if the keypair does not contain a secret key.
+- refactor!: due to the lack of maintenance for `net.i2p.crypto:eddsa`, we have migrated to `org.bouncycastle:bcprov-jdk18on`. The constructor of `KeyPair` has changed, but you generally won't be affected by this change.
 
 ## 0.44.0
 ### Update

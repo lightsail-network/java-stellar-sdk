@@ -27,10 +27,11 @@ public class KeyPairTest {
 
   @Test
   public void testInvalidPublicKey() {
+
     try {
       KeyPair.fromAccountId("GAH6H2XPCZS27WMKPTZJPTDN7JMBCDHTLU5WQP7TUI2ORA2M5FY5DHNU");
       fail();
-    } catch (RuntimeException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("Public key is invalid", e.getMessage());
     }
   }
@@ -67,7 +68,7 @@ public class KeyPairTest {
 
   @Test
   public void testFromSecretSeed() {
-    Map<String, String> keypairs = new HashMap<String, String>();
+    Map<String, String> keypairs = new HashMap<>();
     keypairs.put(
         "SDJHRQF4GCMIIKAAAQ6IHY42X73FQFLHUULAPSKKD4DFDM7UXWWCRHBE",
         "GCZHXL5HXQX5ABDM26LHYRCQZ5OJFHLOPLZX47WEBP3V2PF5AVFK2A5D");
@@ -107,9 +108,9 @@ public class KeyPairTest {
         KeyPair.fromAccountId("GDEAOZWTVHQZGGJY6KG4NAGJQ6DXATXAJO3AMW7C4IXLKMPWWB4FDNFZ");
     String data = "hello world";
     try {
-      byte[] sig = keypair.sign(data.getBytes());
+      keypair.sign(data.getBytes());
       fail();
-    } catch (RuntimeException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals(
           "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.",
           e.getMessage());
