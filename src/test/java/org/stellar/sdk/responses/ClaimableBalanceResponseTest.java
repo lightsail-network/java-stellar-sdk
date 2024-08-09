@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeNative;
-import org.stellar.sdk.Claimant;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.xdr.TimePoint;
