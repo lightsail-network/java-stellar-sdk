@@ -1,7 +1,5 @@
 # Changelog
 
-As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
-
 ## Pending
 
 ## 1.0.0-alpha0
@@ -23,7 +21,7 @@ Moving forward, we will be adopting semantic versioning starting from the offici
 This means that breaking changes will only be introduced in major version updates, providing more 
 stability and predictability for our users.
 
-It's important to note that this is an alpha release and should not be used in production environments. 
+It's important to note that **this is an alpha release and should not be used in production environments**. 
 The purpose of this release is to gather feedback, identify and address any remaining issues, 
 and ensure the stability and reliability of the software before the official release.
 
@@ -46,6 +44,7 @@ continued engagement as we shape the future of this project together.
 - fix: fix the issue where invoking `SorobanServer.prepareTransaction` for transactions that have already set `SorobanData` could result in unexpected high fees.
 - chore: Display the original definition in the XDR class documentation.
 - chore: add some examples, you can find them in the `examples` directory.
+- chore: bump dependencies.
 
 ### Breaking changes
 - refactor!: Refactored the handling of exceptions.
@@ -57,6 +56,8 @@ continued engagement as we shape the future of this project together.
     - In the previous code, there were instances where `RuntimeException` was directly thrown. We have now replaced these with more appropriate exceptions such as `IllegalArgumentException`.
 - refactor!: removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
 - refactor!: moved the Operation classes to the `org.stellar.sdk.operations` package.
+- refactor!: `KeyPair.getSecretSeed` returns `null` if the keypair does not contain a secret key.
+- refactor!: due to the lack of maintenance for `net.i2p.crypto:eddsa`, we have migrated to `org.bouncycastle:bcprov-jdk18on`. The constructor of `KeyPair` has changed, but you generally won't be affected by this change.
 - refactor!: refactor asset classes. `LiquidityPoolParameters`, `LiquidityPoolConstantProductParameters`, `AssetTypePoolShare`, `LiquidityPoolShareChangeTrustAsset` and `LiquidityPoolShareTrustLineAsset` have been removed. Use `ChangeTrustAsset` and `TrustLineAsset` instead.
 - refactor!: `Server.submitTransactionXdr` and `Server.submitTransaction` now return `TransactionResponse` instead of `SubmitTransactionResponse`. An exception will be thrown when the transaction submission fails. Please refer to the documentation for more information.
 - refactor!: `Server.root()` now returns `RootRequestBuilder`.
@@ -103,9 +104,6 @@ continued engagement as we shape the future of this project together.
 - refactor!: `TransactionPreconditions#TransactionPreconditions(LedgerBounds, Long, BigInteger, long, List, TimeBounds)` has been removed, use `TransactionPreconditions#TransactionPreconditions(TimeBounds, LedgerBounds, Long, BigInteger, long, List)` instead.
 - refactor!: The `Federation` has been refactored, please use `Federation#resolveAddress(String)` and `Federation#resolveAccountId(String, String)` now.
 - refactor!: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
-- chore: bump dependencies.
-- refactor!: `KeyPair.getSecretSeed` returns `null` if the keypair does not contain a secret key.
-- refactor!: due to the lack of maintenance for `net.i2p.crypto:eddsa`, we have migrated to `org.bouncycastle:bcprov-jdk18on`. The constructor of `KeyPair` has changed, but you generally won't be affected by this change.
 
 ## 0.44.0
 ### Update
