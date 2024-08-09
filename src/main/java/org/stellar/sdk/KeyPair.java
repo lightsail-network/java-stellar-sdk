@@ -30,7 +30,6 @@ import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
-// TODO: docs
 /** Holds a Stellar keypair. */
 @EqualsAndHashCode
 public class KeyPair {
@@ -177,6 +176,7 @@ public class KeyPair {
     return publicKey.getAbyte();
   }
 
+  /** Returns the signature hint for this keypair. */
   public SignatureHint getSignatureHint() {
     try {
       ByteArrayOutputStream publicKeyBytesStream = new ByteArrayOutputStream();
@@ -193,6 +193,7 @@ public class KeyPair {
     }
   }
 
+  /** Returns the XDR {@link PublicKey} for this keypair. */
   public PublicKey getXdrPublicKey() {
     PublicKey publicKey = new PublicKey();
     publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
@@ -202,12 +203,14 @@ public class KeyPair {
     return publicKey;
   }
 
+  /** Returns the XDR {@link AccountID} for this keypair. */
   public AccountID getXdrAccountId() {
     AccountID accountID = new AccountID();
     accountID.setAccountID(getXdrPublicKey());
     return accountID;
   }
 
+  /** Returns the XDR {@link SignerKey} for this keypair. */
   public SignerKey getXdrSignerKey() {
     SignerKey signerKey = new SignerKey();
     signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519);
@@ -217,10 +220,22 @@ public class KeyPair {
     return signerKey;
   }
 
+  /**
+   * Creates a new KeyPair from an XDR {@link PublicKey}.
+   *
+   * @param key The XDR {@link PublicKey} object.
+   * @return KeyPair
+   */
   public static KeyPair fromXdrPublicKey(PublicKey key) {
     return KeyPair.fromPublicKey(key.getEd25519().getUint256());
   }
 
+  /**
+   * Creates a new KeyPair from an XDR {@link SignerKey}.
+   *
+   * @param key The XDR {@link SignerKey} object.
+   * @return KeyPair
+   */
   public static KeyPair fromXdrSignerKey(SignerKey key) {
     return KeyPair.fromPublicKey(key.getEd25519().getUint256());
   }
