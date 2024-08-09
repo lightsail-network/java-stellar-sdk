@@ -3,22 +3,61 @@
 As this project is pre 1.0, breaking changes may happen for minor version bumps. A breaking change will get clearly notified in this log.
 
 ## Pending
+
+## 1.0.0-alpha0
+We are thrilled to announce the release of version 1.0.0-alpha0 for our project, 
+which has been in development for nearly a decade. This release marks a significant milestone in our journey, 
+as we have made substantial changes and improvements to enhance the functionality and usability of our software.
+
+Please be aware that this release introduces breaking changes. We understand that this may cause inconvenience, 
+but we believe these changes are necessary to rectify past design decisions and lay a solid foundation for the 
+project's future. We have been cautious about introducing breaking changes in previous releases, 
+but we feel this is the right time to make these important adjustments.
+
+If you encounter any issues or have questions regarding the changes, please don't hesitate to submit an 
+issue on our GitHub repository. Alternatively, you can reach out to me directly on 
+[the Stellar Dev Discord server](https://discord.com/channels/897514728459468821/1082043640140017664). 
+We value your feedback and are committed to addressing any concerns you may have.
+
+Moving forward, we will be adopting semantic versioning starting from the official release of this version. 
+This means that breaking changes will only be introduced in major version updates, providing more 
+stability and predictability for our users.
+
+It's important to note that this is an alpha release and should not be used in production environments. 
+The purpose of this release is to gather feedback, identify and address any remaining issues, 
+and ensure the stability and reliability of the software before the official release.
+
+We appreciate your understanding and support as we work towards delivering a more robust and efficient solution. 
+Thank you for being a part of our community, and we look forward to your 
+continued engagement as we shape the future of this project together.
+
 ### Update
-- chore: display the original definition in the XDR class document.
+
+- feat: add support for Soroban PRC's `getTransactions` and `getFeeStats` API.
+- feat: add support for Horizon's `transaction_async` API.
+- feat: optimize `RequestTimeoutException`, when a timeout occurs, if the server returns some information, you can read them.
+- feat: add `Asset.createNonNativeAsset(String, String)` and `Asset.createNativeAsset()`.
+- feat: add `MuxedAccount` class to represent a multiplexed account on Stellar's network.
+- feat: Add `Server.loadAccount` to load the `Account` object used for building transactions, supporting `MuxedAccount`.
+- feat: Add support for `MuxedAccount` to `SorobanServer.getAccount`.
+- feat: `FeeBumpTransaction` supports transactions that include Soroban operations.
 - feat: added a series of functions to parse xdr in the response.
-- refactor: removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
-- refactor!: move the Operation classes to the `org.stellar.sdk.operations` package.
+- fix: When calling `TransactionBuilder.build()`, the Soroban resource fee will be included in the `fee` of the built transaction.
+- fix: fix the issue where invoking `SorobanServer.prepareTransaction` for transactions that have already set `SorobanData` could result in unexpected high fees.
 - chore: Display the original definition in the XDR class documentation.
-- feat: Added a series of functions to parse XDR in the response.
-- refactor: Removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`. Consequently, `NetworkMismatchException` has been removed.
-- refactor!: Moved the Operation classes to the `org.stellar.sdk.operations` package.
+- chore: add some examples, you can find them in the `examples` directory.
+
+### Breaking changes
 - refactor!: Refactored the handling of exceptions.
     - Moved the Exception classes to the `org.stellar.sdk.exception` and `org.stellar.sdk.federation.exception` packages.
-    - Now all exceptions inherit from `SdkException`, and `SdkException` inherits from `RuntimeException`. Please refer to the following link to understand why we use unchecked exceptions: [Why unchecked exceptions?](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/handling-exceptions.html#why-unchecked-exceptions)
+    - Most of the exceptions inherit from `SdkException`, and `SdkException` inherits from `RuntimeException`. Please refer to the following link to understand why we use unchecked exceptions: [Why unchecked exceptions?](https://github.com/lightsail-network/java-stellar-sdk/blob/master/src/main/java/org/stellar/sdk/exception/package-info.java)
+    - Renamed `SorobanRpcErrorResponse` to `SorobanRpcException`.
+    - `FormatException` has been renamed to `StrKeyException`. When encode or decode strkey fails, `StrKeyFormatException` will be thrown.
     - Detailed the possible exceptions that may be thrown in the documentation.
     - In the previous code, there were instances where `RuntimeException` was directly thrown. We have now replaced these with more appropriate exceptions such as `IllegalArgumentException`.
-    - Except for StrKey, `FormatException` will no longer be thrown, and `IllegalArgumentException` will be used instead.
-    - Renamed `SorobanRpcErrorResponse` to `SorobanRpcException`.
+- refactor!: removed the check for network passphrase in `Server`, which means we will no longer verify if the network passphrase of transactions matches that of the `Server`, `NetworkMismatchException` has been removed.
+- refactor!: moved the Operation classes to the `org.stellar.sdk.operations` package.
+- refactor!: refactor asset classes. `LiquidityPoolParameters`, `LiquidityPoolConstantProductParameters`, `AssetTypePoolShare`, `LiquidityPoolShareChangeTrustAsset` and `LiquidityPoolShareTrustLineAsset` have been removed. Use `ChangeTrustAsset` and `TrustLineAsset` instead.
 - refactor!: `Server.submitTransactionXdr` and `Server.submitTransaction` now return `TransactionResponse` instead of `SubmitTransactionResponse`. An exception will be thrown when the transaction submission fails. Please refer to the documentation for more information.
 - refactor!: `Server.root()` now returns `RootRequestBuilder`.
 - refactor!: In `AllowTrustOperation`, `authorizeToMaintainLiabilities` has been removed and the type of `authorize` has been changed to `TrustLineEntryFlag`. Please refer to the documentation for details.
@@ -31,7 +70,6 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   ```
 - refactor!: `TransactionBuilder.IncrementedSequenceNumberFunc` has been removed.
 - refactor!: `Transaction.Builder` has been removed, use `TransactionBuilder` instead.
-- refactor!: refactor asset classes. `LiquidityPoolParameters`, `LiquidityPoolConstantProductParameters`, `AssetTypePoolShare`, `LiquidityPoolShareChangeTrustAsset` and `LiquidityPoolShareTrustLineAsset` have been removed. Use `ChangeTrustAsset` and `TrustLineAsset` instead.
 - refactor!: `Asset.getType()` returns `org.stellar.sdk.xdr.AssetType` instead of `String`.
 - refactor!: `FeeBumpTransaction.Builder` has been removed, use `FeeBumpTransaction#createWithBaseFee(String, long, Transaction)` or `FeeBumpTransaction#createWithFee(String, long, Transaction)` instead.
 - refactor!: `FeeBumpTransaction.getFeeAccount` has been removed, use `FeeBumpTransaction.getFeeSource` instead.
@@ -44,18 +82,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
   - Removed some methods.
   - Some field names have been changed to maintain consistency with the Horizon API.
   - Removed all functions that return `Optional` value.
-- refactor!: remove `rateLimitLimit`, `rateLimitRemaining`, and `rateLimitReset` from the `Response`.
-- feat: add `MuxedAccount` class to represent a multiplexed account on Stellar's network.
-- feat: Add `Server.loadAccount` to load the `Account` object used for building transactions, supporting `MuxedAccount`.
-- feat: Add support for `MuxedAccount` to `SorobanServer.getAccount`.
-- feat: `FeeBumpTransaction` supports transactions that include Soroban operations.
-- refactor: `TransactionBuilder#TransactionBuilder(Transaction)` has been removed, because the TransactionBuilder constructed from the transaction may be inconsistent with what the user expects.
-- fix: When calling `TransactionBuilder.build()`, the Soroban resource fee will be included in the `fee` of the built transaction.
-- fix: fix the issue where invoking `SorobanServer.prepareTransaction` for transactions that have already set `SorobanData` could result in unexpected high fees.
-- feat: add support for Soroban PRC's `getTransactions` and `getFeeStats` API.
-- feat: add support for Horizon's 'transaction_async' API.
-- feat: optimize `RequestTimeoutException`, when a timeout occurs, if the server returns some information, you can read them.
-- feat: add `Asset.createNonNativeAsset(String, String)` and `Asset.createNativeAsset()`.
+- refactor!: remove `rateLimitLimit`, `rateLimitRemaining`, and `rateLimitReset` from the `Response`. Horizon does not return these fields.
+- refactor!: `TransactionBuilder#TransactionBuilder(Transaction)` has been removed, because the TransactionBuilder constructed from the transaction may be inconsistent with what the user expects.
 - refactor!: remove `LiquidityPoolID`. Use `String` to represent the liquidity pool ID.
 - refactor!: `LiquidityPoolWithdrawOperation#LiquidityPoolWithdrawOperation(AssetAmount, AssetAmount, String)` has been removed. Use `LiquidityPoolWithdrawOperation#LiquidityPoolWithdrawOperation(Asset, BigDecimal, Asset, BigDecimal, BigDecimal)` instead.
 - refactor!: `LiquidityPoolDepositOperation#LiquidityPoolDepositOperation(AssetAmount, AssetAmount, Price, Price)` has been removed. Use `LiquidityPoolDepositOperation#LiquidityPoolDepositOperation(Asset, BigDecimal, Asset, BigDecimal, Price, Price)` instead.
@@ -73,9 +101,8 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
     - `PathPaymentStrictSendOperation.sendAmount` and `PathPaymentStrictSendOperation.destMin`
     - `PaymentOperation.amount`
 - refactor!: `TransactionPreconditions#TransactionPreconditions(LedgerBounds, Long, BigInteger, long, List, TimeBounds)` has been removed, use `TransactionPreconditions#TransactionPreconditions(TimeBounds, LedgerBounds, Long, BigInteger, long, List)` instead.
-- refactor: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
 - refactor!: The `Federation` has been refactored, please use `Federation#resolveAddress(String)` and `Federation#resolveAccountId(String, String)` now.
-- refactor!: `FormatException` has been renamed to `StrKeyException`. When encode or decode strkey fails, `StrKeyFormatException` will be thrown.
+- refactor!: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
 
 ## 0.44.0
 ### Update
