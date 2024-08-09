@@ -73,7 +73,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp-sse:4.11.0")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("net.i2p.crypto:eddsa:0.3.0")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
     implementation("commons-codec:commons-codec:1.16.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0-alpha03")
