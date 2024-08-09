@@ -36,9 +36,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
     implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("net.i2p.crypto:eddsa:0.3.0")
-    implementation("commons-codec:commons-codec:1.16.0")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
+    implementation("commons-codec:commons-codec:1.17.1")
 
     testImplementation("org.mockito:mockito-core:5.9.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")

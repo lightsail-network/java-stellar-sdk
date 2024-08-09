@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import net.i2p.crypto.eddsa.Utils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -114,7 +113,7 @@ public final class SLIP0010Ed25519PrivateKeyTest {
 
   private static String deriveEd25519PrivateKey(final String seed, final int... indexes) {
     try {
-      return Utils.bytesToHex(SLIP10.deriveEd25519PrivateKey(Utils.hexToBytes(seed), indexes));
+      return Util.bytesToHex(SLIP10.deriveEd25519PrivateKey(Util.hexToBytes(seed), indexes)).toLowerCase();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

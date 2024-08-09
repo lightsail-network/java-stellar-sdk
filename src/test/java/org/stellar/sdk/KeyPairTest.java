@@ -27,10 +27,11 @@ public class KeyPairTest {
 
   @Test
   public void testInvalidPublicKey() {
+
     try {
       KeyPair.fromAccountId("GAH6H2XPCZS27WMKPTZJPTDN7JMBCDHTLU5WQP7TUI2ORA2M5FY5DHNU");
       fail();
-    } catch (RuntimeException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("Public key is invalid", e.getMessage());
     }
   }
