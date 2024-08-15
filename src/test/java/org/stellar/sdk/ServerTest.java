@@ -257,8 +257,14 @@ public class ServerTest {
           e.getProblem().getExtras().getResultXdr(),
           "AAAAAAAAAGT/////AAAAAQAAAAAAAAAB////+wAAAAA=");
       assertEquals(
+          e.getProblem().getExtras().getResultXdr(),
+          e.getProblem().getExtras().parseResultXdr().toXdrBase64());
+      assertEquals(
           e.getProblem().getExtras().getEnvelopeXdr(),
           "AAAAAK4Pg4OEkjGmSN0AN37K/dcKyKPT2DC90xvjjawKp136AAAAZAAKsZQAAAABAAAAAAAAAAEAAAAJSmF2YSBGVFchAAAAAAAAAQAAAAAAAAABAAAAAG9wfBI7rRYoBlX3qRa0KOnI75W5BaPU6NbyKmm2t71MAAAAAAAAAAABMS0AAAAAAAAAAAEKp136AAAAQOWEjL+Sm+WP2puE9dLIxWlOibIEOz8PsXyG77jOCVdHZfQvkgB49Mu5wqKCMWWIsDSLFekwUsLaunvmXrpyBwQ=");
+      assertEquals(
+          e.getProblem().getExtras().getEnvelopeXdr(),
+          e.getProblem().getExtras().parseEnvelopeXdr().toXdrBase64());
       assertEquals(
           e.getProblem().getExtras().getResultCodes().getTransactionResultCode(), "tx_failed");
       assertEquals(

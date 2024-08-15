@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.stellar.sdk.Util;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.TransactionResult;
 
 /** Represents an error response. */
 @Value
@@ -37,6 +40,26 @@ public class Problem extends Response {
 
     @SerializedName("result_codes")
     ResultCodes resultCodes;
+
+    /**
+     * Parses the {@code envelopeXdr} field from a string to an {@link
+     * org.stellar.sdk.xdr.TransactionEnvelope} object.
+     *
+     * @return the parsed {@link org.stellar.sdk.xdr.TransactionEnvelope} object
+     */
+    public TransactionEnvelope parseEnvelopeXdr() {
+      return Util.parseXdr(envelopeXdr, TransactionEnvelope::fromXdrBase64);
+    }
+
+    /**
+     * Parses the {@code resultXdr} field from a string to an {@link
+     * org.stellar.sdk.xdr.TransactionResult} object.
+     *
+     * @return the parsed {@link org.stellar.sdk.xdr.TransactionResult} object
+     */
+    public TransactionResult parseResultXdr() {
+      return Util.parseXdr(resultXdr, TransactionResult::fromXdrBase64);
+    }
 
     /**
      * Contains result codes for this transaction.
