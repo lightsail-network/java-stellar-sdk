@@ -1,0 +1,39 @@
+{
+  "jsonrpc": "2.0",
+  "id": "198cb1a8-9104-4446-a269-88bf000c2721",
+  "result": {
+    "events": [
+      {
+        "type": "contract",
+        "ledger": "107",
+        "ledgerClosedAt": "2023-07-28T14:57:02Z",
+        "contractId": "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K",
+        "id": "0000000459561504768-0000000000",
+        "pagingToken": "0000000459561504768-0000000000",
+        "topic": [
+          "AAAADwAAAAdDT1VOVEVSAA==",
+          "AAAADwAAAAlpbmNyZW1lbnQAAAA="
+        ],
+        "value": "AAAAAwAAAAQ=",
+        "inSuccessfulContractCall": true,
+        "txHash": "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d"
+      },
+      {
+        "type": "contract",
+        "ledger": "109",
+        "ledgerClosedAt": "2023-07-28T14:57:04Z",
+        "contractId": "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K",
+        "id": "0000000468151439360-0000000000",
+        "pagingToken": "0000000468151439360-0000000000",
+        "topic": [
+          "AAAADwAAAAdDT1VOVEVSAA==",
+          "AAAADwAAAAlpbmNyZW1lbnQAAAA="
+        ],
+        "value": "AAAAAwAAAAU=",
+        "inSuccessfulContractCall": true,
+        "txHash": "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d"
+      }
+    ],
+    "latestLedger": "187"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "id": "198cb1a8-9104-4446-a269-88bf000c2721",
+  "error": {
+    "code": -32601,
+    "message": "method not found",
+    "data": "mockTest"
+  }
+}
