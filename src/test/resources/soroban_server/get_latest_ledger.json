@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "id": "198cb1a8-9104-4446-a269-88bf000c2721",
+  "result": {
+    "id": "e73d7654b72daa637f396669182c6072549736a9e3b6fcb8e685adb61f8c910a",
+    "protocolVersion": "20",
+    "sequence": 24170
+  }
+}

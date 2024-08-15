@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "id": "198cb1a8-9104-4446-a269-88bf000c2721",
+  "result": {
+    "friendbotUrl": "http://localhost:8000/friendbot",
+    "passphrase": "Standalone Network ; February 2017",
+    "protocolVersion": "20"
+  }
+}
