@@ -4,10 +4,10 @@ plugins {
     id("signing")
     id("maven-publish")
     id("project-report")
-    id("com.diffplug.spotless") version "6.24.0"
-    id("com.github.ben-manes.versions") version "0.50.0"
-    id("io.freefair.lombok") version "8.4"
-    id("com.gradleup.nmcp") version "0.0.4"
+    id("com.diffplug.spotless") version "6.25.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
+    id("io.freefair.lombok") version "8.7.1"
+    id("com.gradleup.nmcp") version "0.0.9"
 }
 
 group = "network.lightsail"
@@ -40,11 +40,11 @@ dependencies {
     implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
     implementation("commons-codec:commons-codec:1.17.1")
 
-    testImplementation("org.mockito:mockito-core:5.9.0")
+    testImplementation("org.mockito:mockito-core:5.12.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.bouncycastle:bcpkix-jdk18on:1.78.1")  // mock https
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.10.1")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
