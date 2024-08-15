@@ -38,8 +38,6 @@ import org.stellar.sdk.requests.sorobanrpc.GetTransactionsRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
-import org.stellar.sdk.responses.ClaimableBalanceResponse;
-import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.responses.sorobanrpc.GetEventsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetFeeStatsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
@@ -805,7 +803,8 @@ public class SorobanServerTest {
 
   @Test
   public void testSimulateTransactionWithResourceLeeway() throws IOException, SorobanRpcException {
-    String filePath = "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
+    String filePath =
+        "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     Transaction transaction = buildSorobanTransaction(null, null);
     BigInteger cpuInstructions = BigInteger.valueOf(20000L);
@@ -872,7 +871,8 @@ public class SorobanServerTest {
   @Test
   public void testPrepareTransaction()
       throws IOException, SorobanRpcException, PrepareTransactionException {
-    String filePath = "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
+    String filePath =
+        "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
 
     Transaction transaction = buildSorobanTransaction(null, null);
@@ -938,7 +938,8 @@ public class SorobanServerTest {
   @Test
   public void testPrepareTransactionWithSorobanData()
       throws IOException, SorobanRpcException, PrepareTransactionException {
-    String filePath = "src/test/resources/soroban_server/prepare_transaction_with_soroban_data.json";
+    String filePath =
+        "src/test/resources/soroban_server/prepare_transaction_with_soroban_data.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     // soroban data will be overwritten
     LedgerKey ledgerKey =
@@ -1031,7 +1032,8 @@ public class SorobanServerTest {
   @Test
   public void testPrepareTransactionWithAuth()
       throws IOException, SorobanRpcException, PrepareTransactionException {
-    String filePath = "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
+    String filePath =
+        "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     // origin auth will not be overwritten
     CreateContractArgs createContractArgs =
