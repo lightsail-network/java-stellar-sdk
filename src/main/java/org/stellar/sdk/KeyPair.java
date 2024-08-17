@@ -133,6 +133,9 @@ public class KeyPair {
    * Finds the KeyPair for the path m/44'/148'/accountNumber' using the method described in <a href=
    * "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0005.md">SEP-0005</a>.
    *
+   * <p>You can generate a BIP39 seed using a library like <a
+   * href="https://github.com/lightsail-network/mnemonic4j">mnemonic4j</a>.
+   *
    * @param bip39Seed The output of BIP0039
    * @param accountNumber The number of the account
    * @return KeyPair with secret
