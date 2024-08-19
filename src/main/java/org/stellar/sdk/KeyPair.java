@@ -34,22 +34,12 @@ public class KeyPair {
   }
 
   /**
-   * Creates a new KeyPair without a private key. Useful to simply verify a signature from a given
-   * public address.
-   *
-   * @param publicKey The public key for this KeyPair.
-   */
-  public KeyPair(@NonNull Ed25519PublicKeyParameters publicKey) {
-    this(publicKey, null);
-  }
-
-  /**
    * Creates a new KeyPair from the given public and private keys.
    *
    * @param publicKey The public key for this KeyPair.
    * @param privateKey The private key for this KeyPair or null if you want a public key only
    */
-  public KeyPair(
+  private KeyPair(
       @NonNull Ed25519PublicKeyParameters publicKey,
       @Nullable Ed25519PrivateKeyParameters privateKey) {
     this.publicKey = publicKey;

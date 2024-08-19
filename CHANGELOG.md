@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update
+- refactor!: remove the constructor from `KeyPair`, use `KeyPair.fromSecretSeed` or `KeyPair.fromAccountId` instead.
+
 ## 1.0.0-alpha0
 We are thrilled to announce the release of version 1.0.0-alpha0 for java-stellar-sdk, 
 which has been in development for nearly a decade. This release marks a significant milestone in our journey, 
