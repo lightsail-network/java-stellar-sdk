@@ -76,8 +76,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # minSdk and targetSdk, see ${project_root}/android_test/app/build.gradle.kts
-        # TODO: Investigate why it is unstable on API 33.
         emulator: [
           { api-level: 24, target: google_apis },
           { api-level: 34, target: playstore }
@@ -107,7 +105,7 @@ jobs:
           target: ${{ matrix.emulator.target }}
           script: ./gradlew connectedCheck
           arch: x86_64
-          profile: 'pixel_2'
+          profile: 'Nexus 6'
 
 
   deploy-gh-releases:
