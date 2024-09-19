@@ -77,7 +77,7 @@ jobs:
       fail-fast: false
       matrix:
         emulator: [
-          { api-level: 24, target: google_apis },
+          { api-level: 29, target: google_apis },
           { api-level: 34, target: playstore }
         ]
     steps:
@@ -105,7 +105,7 @@ jobs:
           target: ${{ matrix.emulator.target }}
           script: ./gradlew connectedCheck
           arch: x86_64
-          profile: 'Nexus 6'
+          profile: 'pixel_2'
 
 
   deploy-gh-releases:
