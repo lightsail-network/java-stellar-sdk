@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import lombok.Value;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.EnvelopeType;
@@ -92,7 +93,8 @@ public class Auth {
             throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
           }
           byte[] payload = Util.hash(data);
-          return signer.sign(payload);
+          byte[] signature = signer.sign(payload);
+          return new Signature(signer.getPublicKey(), signature);
         };
 
     return authorizeEntry(entry, entrySigner, validUntilLedgerSeq, network);
@@ -184,8 +186,8 @@ public class Auth {
                     .signatureExpirationLedger(addressCredentials.getSignatureExpirationLedger())
                     .build())
             .build();
-    byte[] signature = signer.sign(preimage);
-    byte[] publicKey = Address.fromSCAddress(addressCredentials.getAddress()).getBytes();
+
+    Signature signature = signer.sign(preimage);
 
     byte[] data;
     try {
@@ -194,7 +196,7 @@ public class Auth {
       throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
     }
     byte[] payload = Util.hash(data);
-    if (!KeyPair.fromPublicKey(publicKey).verify(payload, signature)) {
+    if (!KeyPair.fromPublicKey(signature.publicKey).verify(payload, signature.signature)) {
       throw new IllegalArgumentException("signature does not match payload");
     }
 
@@ -205,8 +207,8 @@ public class Auth {
         Scv.toMap(
             new LinkedHashMap<SCVal, SCVal>() {
               {
-                put(Scv.toSymbol("public_key"), Scv.toBytes(publicKey));
-                put(Scv.toSymbol("signature"), Scv.toBytes(signature));
+                put(Scv.toSymbol("public_key"), Scv.toBytes(signature.getPublicKey()));
+                put(Scv.toSymbol("signature"), Scv.toBytes(signature.getSignature()));
               }
             });
     addressCredentials.setSignature(Scv.toVec(Collections.singleton(sigScVal)));
@@ -244,7 +246,8 @@ public class Auth {
         preimage -> {
           try {
             byte[] payload = Util.hash(preimage.toXdrByteArray());
-            return signer.sign(payload);
+            byte[] signature = signer.sign(payload);
+            return new Signature(signer.getPublicKey(), signature);
           } catch (IOException e) {
             throw new UnexpectedException(e);
           }
@@ -303,8 +306,15 @@ public class Auth {
     return authorizeEntry(entry, signer, validUntilLedgerSeq, network);
   }
 
+  /** A signature, consisting of a public key and a signature. */
+  @Value
+  public static class Signature {
+    byte[] publicKey;
+    byte[] signature;
+  }
+
   /** An interface for signing a {@link HashIDPreimage} to produce a signature. */
   public interface Signer {
-    byte[] sign(HashIDPreimage preimage);
+    Signature sign(HashIDPreimage preimage);
   }
 }
