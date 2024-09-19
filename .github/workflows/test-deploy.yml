@@ -77,7 +77,7 @@ jobs:
       fail-fast: false
       matrix:
         emulator: [
-          { api-level: 29, target: google_apis },
+          { api-level: 28, target: google_apis },
           { api-level: 34, target: playstore }
         ]
     steps:
