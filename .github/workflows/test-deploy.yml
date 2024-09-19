@@ -100,17 +100,14 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
       - name: run tests
-        uses: Wandalen/wretry.action@master
-        with:
-          attempt_limit: 3 # android test is not stable, let's retry it
-          action: reactivecircus/android-emulator-runner@v2
-          with: |
-            working-directory: ./android_test
-            api-level: ${{ matrix.emulator.api-level }}
-            target: ${{ matrix.emulator.target }}
-            script: ./gradlew connectedCheck
-            arch: x86_64
-            profile: 'pixel_2'
+        uses: reactivecircus/android-emulator-runner@v2
+        with: |
+          working-directory: ./android_test
+          api-level: ${{ matrix.emulator.api-level }}
+          target: ${{ matrix.emulator.target }}
+          script: ./gradlew connectedCheck
+          arch: x86_64
+          profile: 'pixel_2'
 
 
   deploy-gh-releases:
