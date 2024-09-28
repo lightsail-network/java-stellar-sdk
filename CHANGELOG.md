@@ -5,6 +5,7 @@
 ### Update
 - refactor!: remove the constructor from `KeyPair`, use `KeyPair.fromSecretSeed` or `KeyPair.fromAccountId` instead.
 - fix!: fix bug with signing auth entries in multi-sig scenarios.
+- feat!: support constructors in contract creation via `InvokeHostFunctionOperation.createContractOperationBuilder`, the signature of the function has been changed.
 
 ## 1.0.0-alpha0
 We are thrilled to announce the release of version 1.0.0-alpha0 for java-stellar-sdk, 
