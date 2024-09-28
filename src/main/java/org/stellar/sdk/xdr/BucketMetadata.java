@@ -25,6 +25,8 @@ import org.stellar.sdk.Base64Factory;
  *     {
  *     case 0:
  *         void;
+ *     case 1:
+ *         BucketListType bucketListType;
  *     }
  *     ext;
  * };
@@ -69,6 +71,8 @@ public class BucketMetadata implements XdrElement {
    *     {
    *     case 0:
    *         void;
+   *     case 1:
+   *         BucketListType bucketListType;
    *     }
    * </pre>
    */
@@ -78,11 +82,15 @@ public class BucketMetadata implements XdrElement {
   @Builder(toBuilder = true)
   public static class BucketMetadataExt implements XdrElement {
     private Integer discriminant;
+    private BucketListType bucketListType;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
       stream.writeInt(discriminant);
       switch (discriminant) {
         case 0:
+          break;
+        case 1:
+          bucketListType.encode(stream);
           break;
       }
     }
@@ -93,6 +101,9 @@ public class BucketMetadata implements XdrElement {
       decodedBucketMetadataExt.setDiscriminant(discriminant);
       switch (decodedBucketMetadataExt.getDiscriminant()) {
         case 0:
+          break;
+        case 1:
+          decodedBucketMetadataExt.bucketListType = BucketListType.decode(stream);
           break;
       }
       return decodedBucketMetadataExt;

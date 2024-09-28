@@ -15,7 +15,7 @@ xdr/Stellar-contract-config-setting.x
 # xdrgen commit to use, see https://github.com/stellar/xdrgen
 XDRGEN_COMMIT=6d4d47b4bc6815e26a52d62fd6613cfb56676d4b
 # stellar-xdr commit to use, see https://github.com/stellar/stellar-xdr
-XDRNEXT_COMMIT=1a04392432dacc0092caaeae22a600ea1af3c6a5
+XDR_COMMIT=529d5176f24c73eeccfa5eba481d4e89c19b1181
 
 .PHONY: xdr xdr-clean xdr-update
 
@@ -31,7 +31,7 @@ xdr-generate: $(XDRS)
 	./gradlew :spotlessApply
 
 xdr/%.x:
-	curl -Lsf -o $@ https://raw.githubusercontent.com/stellar/stellar-xdr/$(XDRNEXT_COMMIT)/$(@F)
+	curl -Lsf -o $@ https://raw.githubusercontent.com/stellar/stellar-xdr/$(XDR_COMMIT)/$(@F)
 
 xdr-clean:
 	rm xdr/*.x || true

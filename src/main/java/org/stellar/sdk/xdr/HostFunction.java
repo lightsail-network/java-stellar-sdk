@@ -23,6 +23,8 @@ import org.stellar.sdk.Base64Factory;
  *     CreateContractArgs createContract;
  * case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
  *     opaque wasm&lt;&gt;;
+ * case HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
+ *     CreateContractArgsV2 createContractV2;
  * };
  * </pre>
  */
@@ -35,6 +37,7 @@ public class HostFunction implements XdrElement {
   private InvokeContractArgs invokeContract;
   private CreateContractArgs createContract;
   private byte[] wasm;
+  private CreateContractArgsV2 createContractV2;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -49,6 +52,9 @@ public class HostFunction implements XdrElement {
         int wasmSize = wasm.length;
         stream.writeInt(wasmSize);
         stream.write(getWasm(), 0, wasmSize);
+        break;
+      case HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
+        createContractV2.encode(stream);
         break;
     }
   }
@@ -68,6 +74,9 @@ public class HostFunction implements XdrElement {
         int wasmSize = stream.readInt();
         decodedHostFunction.wasm = new byte[wasmSize];
         stream.read(decodedHostFunction.wasm, 0, wasmSize);
+        break;
+      case HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
+        decodedHostFunction.createContractV2 = CreateContractArgsV2.decode(stream);
         break;
     }
     return decodedHostFunction;

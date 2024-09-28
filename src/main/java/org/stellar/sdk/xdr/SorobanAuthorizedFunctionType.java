@@ -14,13 +14,15 @@ import org.stellar.sdk.Base64Factory;
  * enum SorobanAuthorizedFunctionType
  * {
  *     SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN = 0,
- *     SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1
+ *     SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN = 1,
+ *     SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN = 2
  * };
  * </pre>
  */
 public enum SorobanAuthorizedFunctionType implements XdrElement {
   SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN(0),
-  SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN(1);
+  SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN(1),
+  SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN(2);
 
   private final int value;
 
@@ -39,6 +41,8 @@ public enum SorobanAuthorizedFunctionType implements XdrElement {
         return SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN;
       case 1:
         return SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN;
+      case 2:
+        return SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }

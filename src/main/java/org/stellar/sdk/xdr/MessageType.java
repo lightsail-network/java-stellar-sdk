@@ -42,7 +42,12 @@ import org.stellar.sdk.Base64Factory;
  *     SEND_MORE_EXTENDED = 20,
  *
  *     FLOOD_ADVERT = 18,
- *     FLOOD_DEMAND = 19
+ *     FLOOD_DEMAND = 19,
+ *
+ *     TIME_SLICED_SURVEY_REQUEST = 21,
+ *     TIME_SLICED_SURVEY_RESPONSE = 22,
+ *     TIME_SLICED_SURVEY_START_COLLECTING = 23,
+ *     TIME_SLICED_SURVEY_STOP_COLLECTING = 24
  * };
  * </pre>
  */
@@ -66,7 +71,11 @@ public enum MessageType implements XdrElement {
   SEND_MORE(16),
   SEND_MORE_EXTENDED(20),
   FLOOD_ADVERT(18),
-  FLOOD_DEMAND(19);
+  FLOOD_DEMAND(19),
+  TIME_SLICED_SURVEY_REQUEST(21),
+  TIME_SLICED_SURVEY_RESPONSE(22),
+  TIME_SLICED_SURVEY_START_COLLECTING(23),
+  TIME_SLICED_SURVEY_STOP_COLLECTING(24);
 
   private final int value;
 
@@ -121,6 +130,14 @@ public enum MessageType implements XdrElement {
         return FLOOD_ADVERT;
       case 19:
         return FLOOD_DEMAND;
+      case 21:
+        return TIME_SLICED_SURVEY_REQUEST;
+      case 22:
+        return TIME_SLICED_SURVEY_RESPONSE;
+      case 23:
+        return TIME_SLICED_SURVEY_START_COLLECTING;
+      case 24:
+        return TIME_SLICED_SURVEY_STOP_COLLECTING;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }

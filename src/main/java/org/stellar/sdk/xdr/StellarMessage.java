@@ -46,6 +46,20 @@ import org.stellar.sdk.Base64Factory;
  * case SURVEY_RESPONSE:
  *     SignedSurveyResponseMessage signedSurveyResponseMessage;
  *
+ * case TIME_SLICED_SURVEY_REQUEST:
+ *     SignedTimeSlicedSurveyRequestMessage signedTimeSlicedSurveyRequestMessage;
+ *
+ * case TIME_SLICED_SURVEY_RESPONSE:
+ *     SignedTimeSlicedSurveyResponseMessage signedTimeSlicedSurveyResponseMessage;
+ *
+ * case TIME_SLICED_SURVEY_START_COLLECTING:
+ *     SignedTimeSlicedSurveyStartCollectingMessage
+ *         signedTimeSlicedSurveyStartCollectingMessage;
+ *
+ * case TIME_SLICED_SURVEY_STOP_COLLECTING:
+ *     SignedTimeSlicedSurveyStopCollectingMessage
+ *         signedTimeSlicedSurveyStopCollectingMessage;
+ *
  * // SCP
  * case GET_SCP_QUORUMSET:
  *     uint256 qSetHash;
@@ -84,6 +98,10 @@ public class StellarMessage implements XdrElement {
   private TransactionEnvelope transaction;
   private SignedSurveyRequestMessage signedSurveyRequestMessage;
   private SignedSurveyResponseMessage signedSurveyResponseMessage;
+  private SignedTimeSlicedSurveyRequestMessage signedTimeSlicedSurveyRequestMessage;
+  private SignedTimeSlicedSurveyResponseMessage signedTimeSlicedSurveyResponseMessage;
+  private SignedTimeSlicedSurveyStartCollectingMessage signedTimeSlicedSurveyStartCollectingMessage;
+  private SignedTimeSlicedSurveyStopCollectingMessage signedTimeSlicedSurveyStopCollectingMessage;
   private Uint256 qSetHash;
   private SCPQuorumSet qSet;
   private SCPEnvelope envelope;
@@ -134,6 +152,18 @@ public class StellarMessage implements XdrElement {
         break;
       case SURVEY_RESPONSE:
         signedSurveyResponseMessage.encode(stream);
+        break;
+      case TIME_SLICED_SURVEY_REQUEST:
+        signedTimeSlicedSurveyRequestMessage.encode(stream);
+        break;
+      case TIME_SLICED_SURVEY_RESPONSE:
+        signedTimeSlicedSurveyResponseMessage.encode(stream);
+        break;
+      case TIME_SLICED_SURVEY_START_COLLECTING:
+        signedTimeSlicedSurveyStartCollectingMessage.encode(stream);
+        break;
+      case TIME_SLICED_SURVEY_STOP_COLLECTING:
+        signedTimeSlicedSurveyStopCollectingMessage.encode(stream);
         break;
       case GET_SCP_QUORUMSET:
         qSetHash.encode(stream);
@@ -207,6 +237,22 @@ public class StellarMessage implements XdrElement {
       case SURVEY_RESPONSE:
         decodedStellarMessage.signedSurveyResponseMessage =
             SignedSurveyResponseMessage.decode(stream);
+        break;
+      case TIME_SLICED_SURVEY_REQUEST:
+        decodedStellarMessage.signedTimeSlicedSurveyRequestMessage =
+            SignedTimeSlicedSurveyRequestMessage.decode(stream);
+        break;
+      case TIME_SLICED_SURVEY_RESPONSE:
+        decodedStellarMessage.signedTimeSlicedSurveyResponseMessage =
+            SignedTimeSlicedSurveyResponseMessage.decode(stream);
+        break;
+      case TIME_SLICED_SURVEY_START_COLLECTING:
+        decodedStellarMessage.signedTimeSlicedSurveyStartCollectingMessage =
+            SignedTimeSlicedSurveyStartCollectingMessage.decode(stream);
+        break;
+      case TIME_SLICED_SURVEY_STOP_COLLECTING:
+        decodedStellarMessage.signedTimeSlicedSurveyStopCollectingMessage =
+            SignedTimeSlicedSurveyStopCollectingMessage.decode(stream);
         break;
       case GET_SCP_QUORUMSET:
         decodedStellarMessage.qSetHash = Uint256.decode(stream);

@@ -21,6 +21,8 @@ import org.stellar.sdk.Base64Factory;
  *     TopologyResponseBodyV0 topologyResponseBodyV0;
  * case SURVEY_TOPOLOGY_RESPONSE_V1:
  *     TopologyResponseBodyV1 topologyResponseBodyV1;
+ * case SURVEY_TOPOLOGY_RESPONSE_V2:
+ *     TopologyResponseBodyV2 topologyResponseBodyV2;
  * };
  * </pre>
  */
@@ -32,6 +34,7 @@ public class SurveyResponseBody implements XdrElement {
   private SurveyMessageResponseType discriminant;
   private TopologyResponseBodyV0 topologyResponseBodyV0;
   private TopologyResponseBodyV1 topologyResponseBodyV1;
+  private TopologyResponseBodyV2 topologyResponseBodyV2;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -41,6 +44,9 @@ public class SurveyResponseBody implements XdrElement {
         break;
       case SURVEY_TOPOLOGY_RESPONSE_V1:
         topologyResponseBodyV1.encode(stream);
+        break;
+      case SURVEY_TOPOLOGY_RESPONSE_V2:
+        topologyResponseBodyV2.encode(stream);
         break;
     }
   }
@@ -55,6 +61,9 @@ public class SurveyResponseBody implements XdrElement {
         break;
       case SURVEY_TOPOLOGY_RESPONSE_V1:
         decodedSurveyResponseBody.topologyResponseBodyV1 = TopologyResponseBodyV1.decode(stream);
+        break;
+      case SURVEY_TOPOLOGY_RESPONSE_V2:
+        decodedSurveyResponseBody.topologyResponseBodyV2 = TopologyResponseBodyV2.decode(stream);
         break;
     }
     return decodedSurveyResponseBody;

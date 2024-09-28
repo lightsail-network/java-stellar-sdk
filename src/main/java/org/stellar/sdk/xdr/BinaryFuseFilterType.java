@@ -8,23 +8,25 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
 /**
- * SurveyMessageCommandType's original definition in the XDR file is:
+ * BinaryFuseFilterType's original definition in the XDR file is:
  *
  * <pre>
- * enum SurveyMessageCommandType
+ * enum BinaryFuseFilterType
  * {
- *     SURVEY_TOPOLOGY = 0,
- *     TIME_SLICED_SURVEY_TOPOLOGY = 1
+ *     BINARY_FUSE_FILTER_8_BIT = 0,
+ *     BINARY_FUSE_FILTER_16_BIT = 1,
+ *     BINARY_FUSE_FILTER_32_BIT = 2
  * };
  * </pre>
  */
-public enum SurveyMessageCommandType implements XdrElement {
-  SURVEY_TOPOLOGY(0),
-  TIME_SLICED_SURVEY_TOPOLOGY(1);
+public enum BinaryFuseFilterType implements XdrElement {
+  BINARY_FUSE_FILTER_8_BIT(0),
+  BINARY_FUSE_FILTER_16_BIT(1),
+  BINARY_FUSE_FILTER_32_BIT(2);
 
   private final int value;
 
-  SurveyMessageCommandType(int value) {
+  BinaryFuseFilterType(int value) {
     this.value = value;
   }
 
@@ -32,13 +34,15 @@ public enum SurveyMessageCommandType implements XdrElement {
     return value;
   }
 
-  public static SurveyMessageCommandType decode(XdrDataInputStream stream) throws IOException {
+  public static BinaryFuseFilterType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0:
-        return SURVEY_TOPOLOGY;
+        return BINARY_FUSE_FILTER_8_BIT;
       case 1:
-        return TIME_SLICED_SURVEY_TOPOLOGY;
+        return BINARY_FUSE_FILTER_16_BIT;
+      case 2:
+        return BINARY_FUSE_FILTER_32_BIT;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -48,12 +52,12 @@ public enum SurveyMessageCommandType implements XdrElement {
     stream.writeInt(value);
   }
 
-  public static SurveyMessageCommandType fromXdrBase64(String xdr) throws IOException {
+  public static BinaryFuseFilterType fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static SurveyMessageCommandType fromXdrByteArray(byte[] xdr) throws IOException {
+  public static BinaryFuseFilterType fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
