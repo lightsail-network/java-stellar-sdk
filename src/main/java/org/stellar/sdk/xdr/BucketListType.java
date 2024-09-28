@@ -8,23 +8,25 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
 /**
- * SurveyMessageCommandType's original definition in the XDR file is:
+ * BucketListType's original definition in the XDR file is:
  *
  * <pre>
- * enum SurveyMessageCommandType
+ * enum BucketListType
  * {
- *     SURVEY_TOPOLOGY = 0,
- *     TIME_SLICED_SURVEY_TOPOLOGY = 1
+ *     LIVE = 0,
+ *     HOT_ARCHIVE = 1,
+ *     COLD_ARCHIVE = 2
  * };
  * </pre>
  */
-public enum SurveyMessageCommandType implements XdrElement {
-  SURVEY_TOPOLOGY(0),
-  TIME_SLICED_SURVEY_TOPOLOGY(1);
+public enum BucketListType implements XdrElement {
+  LIVE(0),
+  HOT_ARCHIVE(1),
+  COLD_ARCHIVE(2);
 
   private final int value;
 
-  SurveyMessageCommandType(int value) {
+  BucketListType(int value) {
     this.value = value;
   }
 
@@ -32,13 +34,15 @@ public enum SurveyMessageCommandType implements XdrElement {
     return value;
   }
 
-  public static SurveyMessageCommandType decode(XdrDataInputStream stream) throws IOException {
+  public static BucketListType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
       case 0:
-        return SURVEY_TOPOLOGY;
+        return LIVE;
       case 1:
-        return TIME_SLICED_SURVEY_TOPOLOGY;
+        return HOT_ARCHIVE;
+      case 2:
+        return COLD_ARCHIVE;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -48,12 +52,12 @@ public enum SurveyMessageCommandType implements XdrElement {
     stream.writeInt(value);
   }
 
-  public static SurveyMessageCommandType fromXdrBase64(String xdr) throws IOException {
+  public static BucketListType fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static SurveyMessageCommandType fromXdrByteArray(byte[] xdr) throws IOException {
+  public static BucketListType fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);

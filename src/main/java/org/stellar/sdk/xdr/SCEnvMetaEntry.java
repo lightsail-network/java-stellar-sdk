@@ -18,7 +18,10 @@ import org.stellar.sdk.Base64Factory;
  * union SCEnvMetaEntry switch (SCEnvMetaKind kind)
  * {
  * case SC_ENV_META_KIND_INTERFACE_VERSION:
- *     uint64 interfaceVersion;
+ *     struct {
+ *         uint32 protocol;
+ *         uint32 preRelease;
+ *     } interfaceVersion;
  * };
  * </pre>
  */
@@ -28,7 +31,7 @@ import org.stellar.sdk.Base64Factory;
 @Builder(toBuilder = true)
 public class SCEnvMetaEntry implements XdrElement {
   private SCEnvMetaKind discriminant;
-  private Uint64 interfaceVersion;
+  private SCEnvMetaEntryInterfaceVersion interfaceVersion;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -45,7 +48,7 @@ public class SCEnvMetaEntry implements XdrElement {
     decodedSCEnvMetaEntry.setDiscriminant(discriminant);
     switch (decodedSCEnvMetaEntry.getDiscriminant()) {
       case SC_ENV_META_KIND_INTERFACE_VERSION:
-        decodedSCEnvMetaEntry.interfaceVersion = Uint64.decode(stream);
+        decodedSCEnvMetaEntry.interfaceVersion = SCEnvMetaEntryInterfaceVersion.decode(stream);
         break;
     }
     return decodedSCEnvMetaEntry;
@@ -60,5 +63,49 @@ public class SCEnvMetaEntry implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
+  }
+
+  /**
+   * SCEnvMetaEntryInterfaceVersion's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct {
+   *         uint32 protocol;
+   *         uint32 preRelease;
+   *     }
+   * </pre>
+   */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
+  public static class SCEnvMetaEntryInterfaceVersion implements XdrElement {
+    private Uint32 protocol;
+    private Uint32 preRelease;
+
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      protocol.encode(stream);
+      preRelease.encode(stream);
+    }
+
+    public static SCEnvMetaEntryInterfaceVersion decode(XdrDataInputStream stream)
+        throws IOException {
+      SCEnvMetaEntryInterfaceVersion decodedSCEnvMetaEntryInterfaceVersion =
+          new SCEnvMetaEntryInterfaceVersion();
+      decodedSCEnvMetaEntryInterfaceVersion.protocol = Uint32.decode(stream);
+      decodedSCEnvMetaEntryInterfaceVersion.preRelease = Uint32.decode(stream);
+      return decodedSCEnvMetaEntryInterfaceVersion;
+    }
+
+    public static SCEnvMetaEntryInterfaceVersion fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static SCEnvMetaEntryInterfaceVersion fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
   }
 }

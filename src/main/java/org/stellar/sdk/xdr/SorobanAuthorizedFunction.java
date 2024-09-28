@@ -19,8 +19,18 @@ import org.stellar.sdk.Base64Factory;
  * {
  * case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
  *     InvokeContractArgs contractFn;
+ * // This variant of auth payload for creating new contract instances
+ * // doesn't allow specifying the constructor arguments, creating contracts
+ * // with constructors that take arguments is only possible by authorizing
+ * // `SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN`
+ * // (protocol 22+).
  * case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
  *     CreateContractArgs createContractHostFn;
+ * // This variant of auth payload for creating new contract instances
+ * // is only accepted in and after protocol 22. It allows authorizing the
+ * // contract constructor arguments.
+ * case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
+ *     CreateContractArgsV2 createContractV2HostFn;
  * };
  * </pre>
  */
@@ -32,6 +42,7 @@ public class SorobanAuthorizedFunction implements XdrElement {
   private SorobanAuthorizedFunctionType discriminant;
   private InvokeContractArgs contractFn;
   private CreateContractArgs createContractHostFn;
+  private CreateContractArgsV2 createContractV2HostFn;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -41,6 +52,9 @@ public class SorobanAuthorizedFunction implements XdrElement {
         break;
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
         createContractHostFn.encode(stream);
+        break;
+      case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
+        createContractV2HostFn.encode(stream);
         break;
     }
   }
@@ -55,6 +69,10 @@ public class SorobanAuthorizedFunction implements XdrElement {
         break;
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
         decodedSorobanAuthorizedFunction.createContractHostFn = CreateContractArgs.decode(stream);
+        break;
+      case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
+        decodedSorobanAuthorizedFunction.createContractV2HostFn =
+            CreateContractArgsV2.decode(stream);
         break;
     }
     return decodedSorobanAuthorizedFunction;

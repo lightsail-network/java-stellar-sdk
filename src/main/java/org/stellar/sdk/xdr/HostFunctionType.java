@@ -15,14 +15,16 @@ import org.stellar.sdk.Base64Factory;
  * {
  *     HOST_FUNCTION_TYPE_INVOKE_CONTRACT = 0,
  *     HOST_FUNCTION_TYPE_CREATE_CONTRACT = 1,
- *     HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2
+ *     HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM = 2,
+ *     HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2 = 3
  * };
  * </pre>
  */
 public enum HostFunctionType implements XdrElement {
   HOST_FUNCTION_TYPE_INVOKE_CONTRACT(0),
   HOST_FUNCTION_TYPE_CREATE_CONTRACT(1),
-  HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM(2);
+  HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM(2),
+  HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2(3);
 
   private final int value;
 
@@ -43,6 +45,8 @@ public enum HostFunctionType implements XdrElement {
         return HOST_FUNCTION_TYPE_CREATE_CONTRACT;
       case 2:
         return HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM;
+      case 3:
+        return HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
