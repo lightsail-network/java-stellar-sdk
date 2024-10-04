@@ -21,6 +21,7 @@ import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
 import org.stellar.sdk.xdr.ContractIDPreimageType;
 import org.stellar.sdk.xdr.CreateContractArgs;
+import org.stellar.sdk.xdr.CreateContractArgsV2;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.HostFunction;
 import org.stellar.sdk.xdr.HostFunctionType;
@@ -91,14 +92,18 @@ public class InvokeHostFunctionOperation extends Operation {
    *
    * @param wasmId The hex-encoded wasm id to use for contract creation.
    * @param address The address to use to derive the contract ID.
+   * @param constructorArgs The optional parameters to pass to the constructor of this contract.
    * @param salt The 32-byte salt to use to derive the contract ID, if null, a random salt will be
    *     generated.
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
-      String wasmId, Address address, @Nullable byte[] salt) {
+      String wasmId,
+      Address address,
+      @Nullable Collection<SCVal> constructorArgs,
+      @Nullable byte[] salt) {
     byte[] wasmIdBytes = Util.hexToBytes(wasmId);
-    return createContractOperationBuilder(wasmIdBytes, address, salt);
+    return createContractOperationBuilder(wasmIdBytes, address, constructorArgs, salt);
   }
 
   /**
@@ -108,12 +113,16 @@ public class InvokeHostFunctionOperation extends Operation {
    *
    * @param wasmId The wasm id to use for contract creation.
    * @param address The address to use to derive the contract ID.
+   * @param constructorArgs The optional parameters to pass to the constructor of this contract.
    * @param salt The 32-byte salt to use to derive the contract ID, if null, a random salt will be
    *     generated.
    * @return {@link InvokeHostFunctionOperationBuilder}
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
-      byte[] wasmId, Address address, @Nullable byte[] salt) {
+      byte[] wasmId,
+      Address address,
+      @Nullable Collection<SCVal> constructorArgs,
+      @Nullable byte[] salt) {
     if (salt == null) {
       salt = new byte[32];
       new SecureRandom().nextBytes(salt);
@@ -125,8 +134,8 @@ public class InvokeHostFunctionOperation extends Operation {
       throw new IllegalArgumentException("\"wasmId\" must be 32 bytes long");
     }
 
-    CreateContractArgs createContractArgs =
-        CreateContractArgs.builder()
+    CreateContractArgsV2 createContractArgs =
+        CreateContractArgsV2.builder()
             .contractIDPreimage(
                 ContractIDPreimage.builder()
                     .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
@@ -141,11 +150,13 @@ public class InvokeHostFunctionOperation extends Operation {
                     .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_WASM)
                     .wasm_hash(new Hash(wasmId))
                     .build())
+            .constructorArgs(
+                constructorArgs != null ? constructorArgs.toArray(new SCVal[0]) : new SCVal[0])
             .build();
     HostFunction hostFunction =
         HostFunction.builder()
-            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
-            .createContract(createContractArgs)
+            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2)
+            .createContractV2(createContractArgs)
             .build();
     return builder().hostFunction(hostFunction);
   }
