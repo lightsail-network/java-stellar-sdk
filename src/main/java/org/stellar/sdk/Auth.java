@@ -94,7 +94,7 @@ public class Auth {
           }
           byte[] payload = Util.hash(data);
           byte[] signature = signer.sign(payload);
-          return new Signature(signer.getPublicKey(), signature);
+          return new Signature(signer.getAccountId(), signature);
         };
 
     return authorizeEntry(entry, entrySigner, validUntilLedgerSeq, network);
@@ -196,7 +196,8 @@ public class Auth {
       throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
     }
     byte[] payload = Util.hash(data);
-    if (!KeyPair.fromPublicKey(signature.publicKey).verify(payload, signature.signature)) {
+    KeyPair kp = KeyPair.fromAccountId(signature.publicKey);
+    if (!kp.verify(payload, signature.signature)) {
       throw new IllegalArgumentException("signature does not match payload");
     }
 
@@ -207,7 +208,7 @@ public class Auth {
         Scv.toMap(
             new LinkedHashMap<SCVal, SCVal>() {
               {
-                put(Scv.toSymbol("public_key"), Scv.toBytes(signature.getPublicKey()));
+                put(Scv.toSymbol("public_key"), Scv.toBytes(kp.getPublicKey()));
                 put(Scv.toSymbol("signature"), Scv.toBytes(signature.getSignature()));
               }
             });
@@ -247,7 +248,7 @@ public class Auth {
           try {
             byte[] payload = Util.hash(preimage.toXdrByteArray());
             byte[] signature = signer.sign(payload);
-            return new Signature(signer.getPublicKey(), signature);
+            return new Signature(signer.getAccountId(), signature);
           } catch (IOException e) {
             throw new UnexpectedException(e);
           }
@@ -309,7 +310,7 @@ public class Auth {
   /** A signature, consisting of a public key and a signature. */
   @Value
   public static class Signature {
-    byte[] publicKey;
+    String publicKey;
     byte[] signature;
   }
 

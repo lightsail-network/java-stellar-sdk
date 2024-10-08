@@ -220,7 +220,7 @@ public class AuthTest {
           }
           byte[] payload = Util.hash(data);
           byte[] signature = signer.sign(payload);
-          return new Auth.Signature(signer.getPublicKey(), signature);
+          return new Auth.Signature(signer.getAccountId(), signature);
         };
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
@@ -321,7 +321,7 @@ public class AuthTest {
           }
           byte[] payload = Util.hash(data);
           byte[] signature = signer.sign(payload);
-          return new Auth.Signature(signer.getPublicKey(), signature);
+          return new Auth.Signature(signer.getAccountId(), signature);
         };
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
@@ -455,7 +455,7 @@ public class AuthTest {
         preimage -> {
           byte[] invalidData = new byte[20];
           byte[] signature = signer.sign(invalidData);
-          return new Auth.Signature(signer.getPublicKey(), signature);
+          return new Auth.Signature(signer.getAccountId(), signature);
         };
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
@@ -565,7 +565,7 @@ public class AuthTest {
           }
           byte[] payload = Util.hash(data);
           byte[] signature = signer.sign(payload);
-          return new Auth.Signature(signer.getPublicKey(), signature);
+          return new Auth.Signature(signer.getAccountId(), signature);
         };
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
@@ -720,7 +720,7 @@ public class AuthTest {
           }
           byte[] payload = Util.hash(data);
           byte[] signature = signer.sign(payload);
-          return new Auth.Signature(signer.getPublicKey(), signature);
+          return new Auth.Signature(signer.getAccountId(), signature);
         };
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
