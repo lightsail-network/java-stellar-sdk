@@ -6,15 +6,19 @@ import lombok.Value;
 /**
  * Response for JSON-RPC method getNetwork.
  *
- * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork"
+ * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo"
  *     target="_blank">getNetwork documentation</a>
  */
 @AllArgsConstructor
 @Value
-public class GetNetworkResponse {
-  String friendbotUrl;
+public class GetVersionInfoResponse {
+  String version;
 
-  String passphrase;
+  String commitHash;
+
+  String buildTimestamp;
+
+  String captiveCoreVersion;
 
   Integer protocolVersion;
 }

@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.SCVal;
 /**
  * Response for JSON-RPC method getEvents.
  *
- * @see <a href="https://soroban.stellar.org/api/methods/getEvents#returns"
+ * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents"
  *     target="_blank">getEvents documentation</a>
  */
 @Value

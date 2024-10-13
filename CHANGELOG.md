@@ -50,6 +50,7 @@ continued engagement as we shape the future of this project together.
 - chore: Display the original definition in the XDR class documentation.
 - chore: add some examples, you can find them in the `examples` directory.
 - chore: bump dependencies.
+- feat: add support for Soroban PRC's `getVersionInfo` API.
 
 ### Breaking changes
 - refactor!: Refactored the handling of exceptions.

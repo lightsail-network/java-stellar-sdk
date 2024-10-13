@@ -5,7 +5,7 @@ import lombok.Value;
 /**
  * Response for JSON-RPC method getLatestLedger.
  *
- * @see <a href="https://soroban.stellar.org/api/methods/getLatestLedger#returns"
+ * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLatestLedger"
  *     target="_blank">getLatestLedger documentation</a>
  */
 @Value
