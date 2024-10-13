@@ -45,6 +45,7 @@ import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.xdr.ContractDataDurability;
@@ -694,6 +695,45 @@ public class SorobanServerTest {
     assertEquals(resp.getFriendbotUrl(), "http://localhost:8000/friendbot");
     assertEquals(resp.getPassphrase(), "Standalone Network ; February 2017");
     assertEquals(resp.getProtocolVersion().longValue(), 20L);
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testGetVersionInfo() throws IOException, SorobanRpcException {
+    String filePath = "src/test/resources/soroban_server/get_version_info.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<Void> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<Void>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("getVersionInfo")) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    GetVersionInfoResponse resp = server.getVersionInfo();
+    assertEquals(resp.getVersion(), "21.1.0");
+    assertEquals(resp.getCommitHash(), "fcd2f0523f04279bae4502f3e3fa00ca627e6f6a");
+    assertEquals(resp.getBuildTimestamp(), "2024-05-10T11:18:38");
+    assertEquals(
+        resp.getCaptiveCoreVersion(),
+        "stellar-core 21.0.0.rc2 (c6f474133738ae5f6d11b07963ca841909210273)");
+    assertEquals(resp.getProtocolVersion().intValue(), 21);
     server.close();
     mockWebServer.close();
   }
