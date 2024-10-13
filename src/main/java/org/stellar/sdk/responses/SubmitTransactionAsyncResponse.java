@@ -19,7 +19,7 @@ public class SubmitTransactionAsyncResponse {
   @SerializedName("tx_status")
   TransactionStatus txStatus;
 
-  @SerializedName("errorResultXdr") // inconsistency
+  @SerializedName("error_result_xdr")
   String errorResultXdr;
 
   /**

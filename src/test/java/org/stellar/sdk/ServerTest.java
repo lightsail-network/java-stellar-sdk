@@ -382,7 +382,7 @@ public class ServerTest {
   public void testSubmitTransactionAsyncError() throws IOException {
     String resp =
         "{\n"
-            + "  \"errorResultXdr\": \"AAAAAAAAAGT////7AAAAAA==\",\n"
+            + "  \"error_result_xdr\": \"AAAAAAAAAGT////7AAAAAA==\",\n"
             + "  \"tx_status\": \"ERROR\",\n"
             + "  \"hash\": \"2634d2cf5adcbd3487d1df042166eef53830115844fdde1588828667bf93ff42\"\n"
             + "}";
