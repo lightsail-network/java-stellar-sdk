@@ -2,10 +2,27 @@
 
 ## Pending
 
+## 1.0.0-beta0
+
+**This is the first release that supports Protocol 22**. While the network has not upgraded yet, 
+you can start integrating the new features into your codebase if you want a head start.
+
+The following are the changes since version 1.0.0-alpha0. If you are upgrading from an older version, 
+please also refer to the change logs of previous versions, **especially 1.0.0-alpha0**.
+
 ### Update
+- feat: support constructors in contract creation via `InvokeHostFunctionOperation.createContractOperationBuilder`.
+- feat: add support for Soroban PRC's `getVersionInfo` API.
+- feat: add `txHash` to `GetTransactionResponse` and `GetTransactionsResponse.Transaction`.
+
+### Breaking changes
 - refactor!: remove the constructor from `KeyPair`, use `KeyPair.fromSecretSeed` or `KeyPair.fromAccountId` instead.
 - fix!: fix bug with signing auth entries in multi-sig scenarios.
 - feat!: support constructors in contract creation via `InvokeHostFunctionOperation.createContractOperationBuilder`, the signature of the function has been changed.
+- refactor!: remove `amount` and `numAccounts` from `AssetResponse`.
+- refactor!: remove `cost` from `SimulateTransactionResponse`, the correct resource costs can now be retrieved from the `transactionData`.
+- refactor!: remove `pagingToken` from `GetEventsResponse.EventInfo`, use `GetEventsResponse.cursor` instead.
+- refactor!: The `protocolVersion` in the response is now represented as an `Integer`.
 
 ## 1.0.0-alpha0
 We are thrilled to announce the release of version 1.0.0-alpha0 for java-stellar-sdk, 
@@ -50,11 +67,6 @@ continued engagement as we shape the future of this project together.
 - chore: Display the original definition in the XDR class documentation.
 - chore: add some examples, you can find them in the `examples` directory.
 - chore: bump dependencies.
-- feat: add support for Soroban PRC's `getVersionInfo` API.
-- refactor!: remove `amount` and `numAccounts` from `AssetResponse`.
-- refactor!: remove `cost` from `SimulateTransactionResponse`, the correct resource costs can now be retrieved from the `transactionData`.
-- refactor!: remove `pagingToken` from `GetEventsResponse.EventInfo`, use `GetEventsResponse.cursor` instead.
-- feat: add `txHash` to `GetTransactionResponse` and `GetTransactionsResponse.Transaction`.
 
 ### Breaking changes
 - refactor!: Refactored the handling of exceptions.
