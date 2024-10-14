@@ -16,10 +16,6 @@
         "xdr": "AAAAAwAAABQ="
       }
     ],
-    "cost": {
-      "cpuInsns": "1646885",
-      "memBytes": "1296481"
-    },
     "stateChanges": [
       {
         "type": "created",

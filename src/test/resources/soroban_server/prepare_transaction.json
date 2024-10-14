@@ -9,10 +9,6 @@
       "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ="
     ],
     "results": [],
-    "cost": {
-      "cpuInsns": "1646885",
-      "memBytes": "1296481"
-    },
     "latestLedger": "14245"
   }
 }

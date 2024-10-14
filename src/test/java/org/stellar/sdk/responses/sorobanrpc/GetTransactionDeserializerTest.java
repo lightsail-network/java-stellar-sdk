@@ -24,6 +24,9 @@ public class GetTransactionDeserializerTest {
     assertEquals(
         getTransactionResponse.getResult().getStatus(),
         GetTransactionResponse.GetTransactionStatus.SUCCESS);
+    assertEquals(
+        getTransactionResponse.getResult().getTxHash(),
+        "171359fff0edbf0a9d9d11014d0407486ff9f6a6e8f7673f97244acccb355b2d");
     assertEquals(getTransactionResponse.getResult().getLatestLedger().longValue(), 79289L);
     assertEquals(
         getTransactionResponse.getResult().getLatestLedgerCloseTime().longValue(), 1690387240L);
@@ -66,6 +69,9 @@ public class GetTransactionDeserializerTest {
     assertEquals(
         getTransactionResponse.getResult().getStatus(),
         GetTransactionResponse.GetTransactionStatus.FAILED);
+    assertEquals(
+        getTransactionResponse.getResult().getTxHash(),
+        "171359fff0edbf0a9d9d11014d0407486ff9f6a6e8f7673f97244acccb355b2d");
     assertEquals(getTransactionResponse.getResult().getLatestLedger().longValue(), 79289L);
     assertEquals(
         getTransactionResponse.getResult().getLatestLedgerCloseTime().longValue(), 1690387240L);

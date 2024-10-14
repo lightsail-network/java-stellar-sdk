@@ -22,6 +22,8 @@ public class GetEventsDeserializerTest {
             .fromJson(json, new TypeToken<SorobanRpcResponse<GetEventsResponse>>() {}.getType());
     assertEquals(getEventsResponse.getResult().getLatestLedger().longValue(), 169L);
     assertEquals(getEventsResponse.getResult().getEvents().size(), 3);
+    assertEquals(getEventsResponse.getResult().getCursor(), "0000000463856472064-0000000000");
+
     GetEventsResponse.EventInfo eventInfo0 = getEventsResponse.getResult().getEvents().get(0);
     assertEquals(eventInfo0.getType(), EventFilterType.CONTRACT);
     assertEquals(eventInfo0.getLedger().intValue(), 108);
@@ -29,7 +31,6 @@ public class GetEventsDeserializerTest {
     assertEquals(
         eventInfo0.getContractId(), "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K");
     assertEquals(eventInfo0.getId(), "0000000463856472064-0000000000");
-    assertEquals(eventInfo0.getPagingToken(), "0000000463856472064-0000000000");
     assertEquals(eventInfo0.getTopic().size(), 2);
     assertEquals(eventInfo0.getTopic().get(0), "AAAADwAAAAdDT1VOVEVSAA==");
     assertEquals(eventInfo0.getTopic().get(1), "AAAADwAAAAlpbmNyZW1lbnQAAAA=");

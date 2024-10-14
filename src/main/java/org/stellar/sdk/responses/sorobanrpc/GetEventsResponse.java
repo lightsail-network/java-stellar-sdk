@@ -20,6 +20,8 @@ public class GetEventsResponse {
 
   Long latestLedger;
 
+  String cursor;
+
   @Value
   public static class EventInfo {
     EventFilterType type;
@@ -31,8 +33,6 @@ public class GetEventsResponse {
     String contractId;
 
     String id;
-
-    String pagingToken;
 
     /** The elements inside can be parsed as {@link org.stellar.sdk.xdr.SCVal} objects. */
     List<String> topic;

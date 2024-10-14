@@ -23,9 +23,6 @@ public class AssetResponse extends Response implements Pageable {
   @SerializedName("contract_id")
   String contractId;
 
-  @SerializedName("num_accounts")
-  Integer numAccounts;
-
   @SerializedName("num_claimable_balances")
   Integer numClaimableBalances;
 
@@ -37,9 +34,6 @@ public class AssetResponse extends Response implements Pageable {
 
   @SerializedName("num_archived_contracts")
   Integer numArchivedContracts;
-
-  @SerializedName("amount")
-  String amount;
 
   @SerializedName("accounts")
   AssetResponse.Accounts accounts;

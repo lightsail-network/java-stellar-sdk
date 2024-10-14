@@ -44,6 +44,7 @@ import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
@@ -500,7 +501,10 @@ public class SorobanServerTest {
 
     HttpUrl baseUrl = mockWebServer.url("");
     SorobanServer server = new SorobanServer(baseUrl.toString());
-    server.getTransaction(hash);
+    GetTransactionResponse tx = server.getTransaction(hash);
+    assertEquals(tx.getStatus(), GetTransactionResponse.GetTransactionStatus.SUCCESS);
+    assertEquals(
+        tx.getTxHash(), "8faa3e6bb29d9d8469bbcabdbfd800f3be1899f4736a3a2fa83cd58617c072fe");
 
     server.close();
     mockWebServer.close();
@@ -552,6 +556,9 @@ public class SorobanServerTest {
     assertEquals(
         resp.getTransactions().get(0).getStatus(),
         GetTransactionsResponse.TransactionStatus.FAILED);
+    assertEquals(
+        resp.getTransactions().get(0).getTxHash(),
+        "171359fff0edbf0a9d9d11014d0407486ff9f6a6e8f7673f97244acccb355b2d");
     assertEquals(resp.getTransactions().get(0).getApplicationOrder().longValue(), 1L);
     assertEquals(resp.getTransactions().get(0).getFeeBump(), false);
     assertEquals(
@@ -569,6 +576,9 @@ public class SorobanServerTest {
     assertEquals(
         resp.getTransactions().get(3).getStatus(),
         GetTransactionsResponse.TransactionStatus.SUCCESS);
+    assertEquals(
+        resp.getTransactions().get(0).getTxHash(),
+        "171359fff0edbf0a9d9d11014d0407486ff9f6a6e8f7673f97244acccb355b2d");
     assertEquals(resp.getTransactions().get(3).getApplicationOrder().longValue(), 4L);
     assertEquals(resp.getTransactions().get(3).getFeeBump(), false);
     assertEquals(
@@ -642,6 +652,7 @@ public class SorobanServerTest {
     SorobanServer server = new SorobanServer(baseUrl.toString());
     GetEventsResponse resp = server.getEvents(getEventsRequest);
     assertEquals(resp.getLatestLedger().longValue(), 187L);
+    assertEquals(resp.getCursor(), "0000000468151439360-0000000000");
     assertEquals(resp.getEvents().size(), 2);
     assertEquals(resp.getEvents().get(0).getType(), EventFilterType.CONTRACT);
     assertEquals(resp.getEvents().get(0).getLedger().longValue(), 107L);
@@ -650,7 +661,6 @@ public class SorobanServerTest {
         resp.getEvents().get(0).getContractId(),
         "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K");
     assertEquals(resp.getEvents().get(0).getId(), "0000000459561504768-0000000000");
-    assertEquals(resp.getEvents().get(0).getPagingToken(), "0000000459561504768-0000000000");
     assertEquals(resp.getEvents().get(0).getTopic().size(), 2);
     assertEquals(resp.getEvents().get(0).getTopic().get(0), "AAAADwAAAAdDT1VOVEVSAA==");
     assertEquals(resp.getEvents().get(0).getTopic().get(1), "AAAADwAAAAlpbmNyZW1lbnQAAAA=");
@@ -826,8 +836,6 @@ public class SorobanServerTest {
         resp.getResults().get(0).getAuth().get(0),
         "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
     assertEquals(resp.getResults().get(0).getXdr(), "AAAAAwAAABQ=");
-    assertEquals(resp.getCost().getCpuInstructions().longValue(), 1646885L);
-    assertEquals(resp.getCost().getMemoryBytes().longValue(), 1296481L);
     assertEquals(resp.getStateChanges().size(), 1);
     assertEquals(resp.getStateChanges().get(0).getType(), "created");
     assertEquals(
@@ -902,8 +910,6 @@ public class SorobanServerTest {
         resp.getResults().get(0).getAuth().get(0),
         "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
     assertEquals(resp.getResults().get(0).getXdr(), "AAAAAwAAABQ=");
-    assertEquals(resp.getCost().getCpuInstructions().longValue(), 1646885L);
-    assertEquals(resp.getCost().getMemoryBytes().longValue(), 1296481L);
     server.close();
     mockWebServer.close();
   }
