@@ -27,6 +27,7 @@ public class GetTransactionsResponse {
   @Value
   public static class Transaction {
     TransactionStatus status;
+    String txHash;
     Integer applicationOrder;
     Boolean feeBump;
 

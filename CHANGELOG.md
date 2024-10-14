@@ -54,6 +54,7 @@ continued engagement as we shape the future of this project together.
 - refactor!: remove `amount` and `numAccounts` from `AssetResponse`.
 - refactor!: remove `cost` from `SimulateTransactionResponse`, the correct resource costs can now be retrieved from the `transactionData`.
 - refactor!: remove `pagingToken` from `GetEventsResponse.EventInfo`, use `GetEventsResponse.cursor` instead.
+- feat: add `txHash` to `GetTransactionResponse` and `GetTransactionsResponse.Transaction`.
 
 ### Breaking changes
 - refactor!: Refactored the handling of exceptions.

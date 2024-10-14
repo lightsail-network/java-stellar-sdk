@@ -44,6 +44,7 @@ import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
@@ -500,7 +501,10 @@ public class SorobanServerTest {
 
     HttpUrl baseUrl = mockWebServer.url("");
     SorobanServer server = new SorobanServer(baseUrl.toString());
-    server.getTransaction(hash);
+    GetTransactionResponse tx = server.getTransaction(hash);
+    assertEquals(tx.getStatus(), GetTransactionResponse.GetTransactionStatus.SUCCESS);
+    assertEquals(
+        tx.getTxHash(), "8faa3e6bb29d9d8469bbcabdbfd800f3be1899f4736a3a2fa83cd58617c072fe");
 
     server.close();
     mockWebServer.close();
@@ -552,6 +556,9 @@ public class SorobanServerTest {
     assertEquals(
         resp.getTransactions().get(0).getStatus(),
         GetTransactionsResponse.TransactionStatus.FAILED);
+    assertEquals(
+        resp.getTransactions().get(0).getTxHash(),
+        "171359fff0edbf0a9d9d11014d0407486ff9f6a6e8f7673f97244acccb355b2d");
     assertEquals(resp.getTransactions().get(0).getApplicationOrder().longValue(), 1L);
     assertEquals(resp.getTransactions().get(0).getFeeBump(), false);
     assertEquals(
@@ -569,6 +576,9 @@ public class SorobanServerTest {
     assertEquals(
         resp.getTransactions().get(3).getStatus(),
         GetTransactionsResponse.TransactionStatus.SUCCESS);
+    assertEquals(
+        resp.getTransactions().get(0).getTxHash(),
+        "171359fff0edbf0a9d9d11014d0407486ff9f6a6e8f7673f97244acccb355b2d");
     assertEquals(resp.getTransactions().get(3).getApplicationOrder().longValue(), 4L);
     assertEquals(resp.getTransactions().get(3).getFeeBump(), false);
     assertEquals(

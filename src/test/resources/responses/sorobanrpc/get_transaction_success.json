@@ -3,6 +3,7 @@
   "id": "198cb1a8-9104-4446-a269-88bf000c2721",
   "result": {
     "status": "SUCCESS",
+    "txHash": "171359fff0edbf0a9d9d11014d0407486ff9f6a6e8f7673f97244acccb355b2d",
     "latestLedger": "79289",
     "latestLedgerCloseTime": "1690387240",
     "oldestLedger": "77850",

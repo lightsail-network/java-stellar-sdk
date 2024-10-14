@@ -16,6 +16,8 @@ import org.stellar.sdk.xdr.TransactionResult;
 public class GetTransactionResponse {
   GetTransactionStatus status;
 
+  String txHash;
+
   Long latestLedger;
 
   Long latestLedgerCloseTime;
