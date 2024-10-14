@@ -8,7 +8,7 @@
 you can start integrating the new features into your codebase if you want a head start.
 
 The following are the changes since version 1.0.0-alpha0. If you are upgrading from an older version, 
-please also refer to the change logs of previous versions, **especially 1.0.0-alpha0**.
+please also refer to the change logs of previous versions, **especially [1.0.0-alpha0](https://github.com/lightsail-network/java-stellar-sdk/releases/tag/1.0.0-alpha0)**.
 
 ### Update
 - feat: support constructors in contract creation via `InvokeHostFunctionOperation.createContractOperationBuilder`.
@@ -25,7 +25,7 @@ please also refer to the change logs of previous versions, **especially 1.0.0-al
 - refactor!: The `protocolVersion` in the response is now represented as an `Integer`.
 
 ## 1.0.0-alpha0
-We are thrilled to announce the release of version 1.0.0-alpha0 for java-stellar-sdk, 
+We are thrilled to announce the release of version 1.0.0-beta0 for java-stellar-sdk, 
 which has been in development for nearly a decade. This release marks a significant milestone in our journey, 
 as we have made substantial changes and improvements to enhance the functionality and usability of our software.
 
