@@ -40,7 +40,7 @@ public class RootResponse extends Response {
   Integer currentProtocolVersion;
 
   @SerializedName("supported_protocol_version")
-  Long supportedProtocolVersion;
+  Integer supportedProtocolVersion;
 
   @SerializedName("core_supported_protocol_version")
   Integer coreSupportedProtocolVersion;
