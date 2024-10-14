@@ -23,12 +23,10 @@ public class AssetResponseTest {
         "USDC_GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN_credit_alphanum4");
     assertEquals(
         assetResponse.getContractId(), "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75");
-    assertEquals(assetResponse.getNumAccounts().intValue(), 918786);
     assertEquals(assetResponse.getNumClaimableBalances().intValue(), 415);
     assertEquals(assetResponse.getNumLiquidityPools().intValue(), 384);
     assertEquals(assetResponse.getNumContracts().intValue(), 24);
     assertEquals(assetResponse.getNumArchivedContracts().intValue(), 1);
-    assertEquals(assetResponse.getAmount(), "196141192.6091517");
     assertEquals(assetResponse.getAccounts().getAuthorized().intValue(), 918786);
     assertEquals(assetResponse.getAccounts().getAuthorizedToMaintainLiabilities().intValue(), 0);
     assertEquals(assetResponse.getAccounts().getUnauthorized().intValue(), 0);

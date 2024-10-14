@@ -51,8 +51,6 @@ public class PagesTest {
     TypeToken<Page<AssetResponse>> type = new TypeToken<Page<AssetResponse>>() {};
     Page<AssetResponse> page = GsonSingleton.getInstance().fromJson(json, type.getType());
     assertEquals(3, page.getRecords().size());
-    assertEquals(25, page.getRecords().get(0).getNumAccounts().intValue());
-    assertEquals(1, page.getRecords().get(1).getNumAccounts().intValue());
   }
 
   @Test

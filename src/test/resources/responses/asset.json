@@ -9,12 +9,10 @@
   "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
   "paging_token": "USDC_GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN_credit_alphanum4",
   "contract_id": "CCW67TSZV3SSS2HXMBQ5JFGCKJNXKZM7UQUWUZPUTHXSTZLEO7SJMI75",
-  "num_accounts": 918786,
   "num_claimable_balances": 415,
   "num_liquidity_pools": 384,
   "num_contracts": 24,
   "num_archived_contracts": 1,
-  "amount": "196141192.6091517",
   "accounts": {
     "authorized": 918786,
     "authorized_to_maintain_liabilities": 0,

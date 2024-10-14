@@ -51,6 +51,7 @@ continued engagement as we shape the future of this project together.
 - chore: add some examples, you can find them in the `examples` directory.
 - chore: bump dependencies.
 - feat: add support for Soroban PRC's `getVersionInfo` API.
+- refactor!: remove `amount` and `numAccounts` from `AssetResponse`.
 
 ### Breaking changes
 - refactor!: Refactored the handling of exceptions.
