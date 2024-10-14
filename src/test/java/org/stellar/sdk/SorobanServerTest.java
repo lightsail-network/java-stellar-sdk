@@ -826,8 +826,6 @@ public class SorobanServerTest {
         resp.getResults().get(0).getAuth().get(0),
         "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
     assertEquals(resp.getResults().get(0).getXdr(), "AAAAAwAAABQ=");
-    assertEquals(resp.getCost().getCpuInstructions().longValue(), 1646885L);
-    assertEquals(resp.getCost().getMemoryBytes().longValue(), 1296481L);
     assertEquals(resp.getStateChanges().size(), 1);
     assertEquals(resp.getStateChanges().get(0).getType(), "created");
     assertEquals(
@@ -902,8 +900,6 @@ public class SorobanServerTest {
         resp.getResults().get(0).getAuth().get(0),
         "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
     assertEquals(resp.getResults().get(0).getXdr(), "AAAAAwAAABQ=");
-    assertEquals(resp.getCost().getCpuInstructions().longValue(), 1646885L);
-    assertEquals(resp.getCost().getMemoryBytes().longValue(), 1296481L);
     server.close();
     mockWebServer.close();
   }

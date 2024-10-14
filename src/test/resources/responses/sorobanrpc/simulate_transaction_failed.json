@@ -6,10 +6,6 @@
     "transactionData": "",
     "events": null,
     "minResourceFee": "0",
-    "cost": {
-      "cpuInsns": "0",
-      "memBytes": "0"
-    },
     "latestLedger": "898"
   }
 }

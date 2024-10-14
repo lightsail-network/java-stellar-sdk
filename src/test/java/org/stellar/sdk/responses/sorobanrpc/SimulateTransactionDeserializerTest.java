@@ -42,8 +42,6 @@ public class SimulateTransactionDeserializerTest {
         data.getResults().get(0).getAuth().get(0),
         "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
     assertEquals(data.getResults().get(0).getXdr(), "AAAAAwAAAAo=");
-    assertEquals(data.getCost().getCpuInstructions().longValue(), 1274180L);
-    assertEquals(data.getCost().getMemoryBytes().longValue(), 162857L);
     assertEquals(data.getStateChanges().size(), 1);
     assertEquals(data.getStateChanges().get(0).getType(), "created");
     assertEquals(
@@ -85,8 +83,6 @@ public class SimulateTransactionDeserializerTest {
     assertEquals(data.getTransactionData(), "");
     assertNull(data.getEvents());
     assertEquals(data.getMinResourceFee().longValue(), 0L);
-    assertEquals(data.getCost().getCpuInstructions().longValue(), 0L);
-    assertEquals(data.getCost().getMemoryBytes().longValue(), 0L);
     assertEquals(data.getLatestLedger().longValue(), 898L);
     assertNull(data.parseTransactionData());
     assertNull(data.parseEvents());

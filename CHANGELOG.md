@@ -52,6 +52,7 @@ continued engagement as we shape the future of this project together.
 - chore: bump dependencies.
 - feat: add support for Soroban PRC's `getVersionInfo` API.
 - refactor!: remove `amount` and `numAccounts` from `AssetResponse`.
+- refactor!: remove `cost` from `SimulateTransactionResponse`, the correct resource costs can now be retrieved from the `transactionData`.
 
 ### Breaking changes
 - refactor!: Refactored the handling of exceptions.

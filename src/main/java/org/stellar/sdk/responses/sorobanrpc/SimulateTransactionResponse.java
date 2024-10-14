@@ -1,7 +1,5 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
-import com.google.gson.annotations.SerializedName;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Value;
@@ -43,8 +41,6 @@ public class SimulateTransactionResponse {
   // invokeHostFunctionOperation
   // is supported per transaction.
   List<SimulateHostFunctionResult> results;
-
-  SimulateTransactionCost cost;
 
   RestorePreamble restorePreamble;
 
@@ -100,15 +96,6 @@ public class SimulateTransactionResponse {
     public SCVal parseXdr() {
       return Util.parseXdr(xdr, SCVal::fromXdrBase64);
     }
-  }
-
-  @Value
-  public static class SimulateTransactionCost {
-    @SerializedName("cpuInsns")
-    BigInteger cpuInstructions;
-
-    @SerializedName("memBytes")
-    BigInteger memoryBytes;
   }
 
   @Value
