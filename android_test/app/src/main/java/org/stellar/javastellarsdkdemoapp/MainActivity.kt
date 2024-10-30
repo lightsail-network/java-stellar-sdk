@@ -152,11 +152,12 @@ private fun testSDK(): String {
         }
 
         // Test Federation
-        val fedResp =
-            FederationServer.createForDomain("lobstr.co").resolveAddress("example*lobstr.co")
-        if (fedResp == null || fedResp.accountId == null) {
-            throw Exception("Query Federation failed")
-        }
+        // Disable the test: https://stackoverflow.com/questions/64844311/certpathvalidatorexception-connecting-to-a-lets-encrypt-host-on-android-m-or-ea
+        // val fedResp =
+        //     FederationServer.createForDomain("lobstr.co").resolveAddress("example*lobstr.co")
+        // if (fedResp == null || fedResp.accountId == null) {
+        //     throw Exception("Query Federation failed")
+        // }
 
         // build and parse transaction
         val source: KeyPair =
