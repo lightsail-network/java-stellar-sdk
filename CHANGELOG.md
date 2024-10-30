@@ -4,6 +4,10 @@ As this project is pre 1.0, breaking changes may happen for minor version bumps.
 
 ## Pending
 
+## 0.44.1
+### Update
+- fix: fix `SSEStream` unpredictably throws unwanted `IOException("Canceled")`. ([#650](https://github.com/lightsail-network/java-stellar-sdk/pull/650))
+
 ## 0.44.0
 ### Update
 - feat: add support for Soroban-RPC v21. ([#593](https://github.com/lightsail-network/java-stellar-sdk/pull/593))
