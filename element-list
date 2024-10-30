@@ -1,13 +1,9 @@
 org.stellar.sdk
-org.stellar.sdk.exception
 org.stellar.sdk.federation
-org.stellar.sdk.federation.exception
-org.stellar.sdk.operations
 org.stellar.sdk.requests
 org.stellar.sdk.requests.sorobanrpc
 org.stellar.sdk.responses
 org.stellar.sdk.responses.effects
-org.stellar.sdk.responses.gson
 org.stellar.sdk.responses.operations
 org.stellar.sdk.responses.sorobanrpc
 org.stellar.sdk.scval
