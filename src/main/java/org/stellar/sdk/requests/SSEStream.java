@@ -45,6 +45,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   private EventSource eventSource = null;
   private final Lock lock = new ReentrantLock();
   private final long reconnectTimeout;
+  private final AtomicLong currentListenerId = new AtomicLong(0);
 
   private SSEStream(
       final OkHttpClient okHttpClient,
@@ -83,6 +84,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
               }
 
               try {
+                // TODO: use Executors.newSingleThreadScheduledExecutor() instead
                 Thread.sleep(200);
                 if (serverSideClosed.get() || clientSideClosed.get()) {
                   // don't restart until true again
@@ -116,6 +118,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     if (eventSource != null) {
       eventSource.cancel();
     }
+    long newListenerId = currentListenerId.incrementAndGet();
     eventSource =
         doStreamRequest(
             this,
@@ -129,11 +132,13 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
               public void closed(EventSource source) {
                 serverSideClosed.set(true);
               }
-            });
+            },
+            newListenerId);
   }
 
   public void close() {
     isStopped.set(true);
+    currentListenerId.incrementAndGet(); // Prevent any future EventSource
     if (eventSource != null) {
       eventSource.cancel();
     }
@@ -168,7 +173,8 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
       final Class<T> responseClass,
       final EventListener<T> listener,
       String url,
-      final CloseListener closeListener) {
+      final CloseListener closeListener,
+      long listenerId) {
 
     Request.Builder builder =
         new Request.Builder()
@@ -183,7 +189,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
         new RealEventSource(
             request,
             new StellarEventSourceListener<T>(
-                stream, closeListener, responseClass, requestBuilder, listener));
+                stream, closeListener, responseClass, requestBuilder, listener, listenerId));
     eventSource.connect(okHttpClient);
     return eventSource;
   }
@@ -200,22 +206,28 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     private final Class<T> responseClass;
     private final RequestBuilder requestBuilder;
     private final EventListener<T> listener;
+    private final long listenerId;
 
     StellarEventSourceListener(
         SSEStream<T> stream,
         CloseListener closeListener,
         Class<T> responseClass,
         RequestBuilder requestBuilder,
-        EventListener<T> listener) {
+        EventListener<T> listener,
+        long listenerId) {
       this.stream = stream;
       this.closeListener = closeListener;
       this.responseClass = responseClass;
       this.requestBuilder = requestBuilder;
       this.listener = listener;
+      this.listenerId = listenerId;
     }
 
     @Override
     public void onClosed(EventSource eventSource) {
+      if (listenerId != stream.currentListenerId.get()) {
+        return;
+      }
       if (closeListener != null) {
         closeListener.closed(eventSource);
       }
@@ -227,6 +239,9 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     @Override
     public void onFailure(
         EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
+      if (listenerId != stream.currentListenerId.get()) {
+        return;
+      }
       Optional<Integer> code = Optional.empty();
       if (response != null) {
         code = Optional.of(response.code());
@@ -248,6 +263,9 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     @Override
     public void onEvent(
         EventSource eventSource, @Nullable String id, @Nullable String type, String data) {
+      if (listenerId != stream.currentListenerId.get()) {
+        return;
+      }
       // Update the timestamp of the last received event.
       stream.latestEventTime.set(System.currentTimeMillis());
 

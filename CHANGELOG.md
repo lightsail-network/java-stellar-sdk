@@ -127,6 +127,10 @@ continued engagement as we shape the future of this project together.
 - refactor!: The `Federation` has been refactored, please use `Federation#resolveAddress(String)` and `Federation#resolveAccountId(String, String)` now.
 - refactor!: Set the default value of `TransactionPreconditions.extraSigners` to `new ArrayList<>()`, it is not nullable.
 
+## 0.44.1
+### Update
+- fix: fix `SSEStream` unpredictably throws unwanted `IOException("Canceled")`. ([#650](https://github.com/lightsail-network/java-stellar-sdk/pull/650))
+
 ## 0.44.0
 ### Update
 - feat: add support for Soroban-RPC v21. ([#593](https://github.com/lightsail-network/java-stellar-sdk/pull/593))
