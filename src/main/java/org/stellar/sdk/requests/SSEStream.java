@@ -88,6 +88,8 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     if (currentEventSource != null) {
       currentEventSource.cancel();
     }
+    // we cancelled the current event source, the `lastEventId` will not change anymore,
+    // so we can safely restart with the same `lastEventId`
     long newListenerId = currentListenerId.incrementAndGet();
     eventSource.set(
         doStreamRequest(
