@@ -84,11 +84,11 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   }
 
   private void restart() {
-    long newListenerId = currentListenerId.incrementAndGet();
     EventSource currentEventSource = eventSource.get();
     if (currentEventSource != null) {
       currentEventSource.cancel();
     }
+    long newListenerId = currentListenerId.incrementAndGet();
     eventSource.set(
         doStreamRequest(
             this,
