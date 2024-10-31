@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update
+- refactor: refactor `SSEStream`, make it more reliable.
+
 ## 1.0.0-beta0
 
 **This is the first release that supports Protocol 22**. While the network has not upgraded yet, 

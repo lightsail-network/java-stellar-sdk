@@ -1,12 +1,11 @@
-package org.stellar.sdk;
+package org.stellar.sdk.requests;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.stellar.sdk.requests.EventListener;
-import org.stellar.sdk.requests.SSEStream;
+import org.stellar.sdk.Server;
 import org.stellar.sdk.responses.LedgerResponse;
 
 public class StreamingSmokeTest {

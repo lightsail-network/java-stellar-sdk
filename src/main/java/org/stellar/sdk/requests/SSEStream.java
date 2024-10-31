@@ -3,14 +3,12 @@ package org.stellar.sdk.requests;
 import java.io.Closeable;
 import java.net.SocketException;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,6 +16,7 @@ import okhttp3.Response;
 import okhttp3.internal.sse.RealEventSource;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.responses.Pageable;
@@ -25,25 +24,17 @@ import org.stellar.sdk.responses.gson.GsonSingleton;
 
 public class SSEStream<T extends org.stellar.sdk.responses.Response> implements Closeable {
   static final long DEFAULT_RECONNECT_TIMEOUT = 15 * 1000L;
+
   private final OkHttpClient okHttpClient;
   private final RequestBuilder requestBuilder;
   private final Class<T> responseClass;
   private final EventListener<T> listener;
   private final AtomicBoolean isStopped = new AtomicBoolean(false);
-  private final AtomicBoolean serverSideClosed =
-      new AtomicBoolean(true); // make sure we start correctly
-
-  // When the client closes the connection itself, it will be set to true.
-  // This is for handling cases where the SSE (Server-Sent Events) does not
-  // receive a response for a long time.
-  // If the server requests us to close the connection, we will set serverSideClosed to true.
-  private final AtomicBoolean clientSideClosed = new AtomicBoolean(true);
-  private final AtomicLong latestEventTime =
-      new AtomicLong(0); // The timestamp of the last received event.
-  private final AtomicReference<String> lastEventId = new AtomicReference<String>(null);
-  private final ExecutorService executorService;
-  private EventSource eventSource = null;
-  private final Lock lock = new ReentrantLock();
+  private final AtomicBoolean isClosed = new AtomicBoolean(true);
+  private final AtomicLong latestEventTime = new AtomicLong(0);
+  private final AtomicReference<String> lastEventId = new AtomicReference<>(null);
+  private final ScheduledExecutorService executorService;
+  private final AtomicReference<EventSource> eventSource = new AtomicReference<>(null);
   private final long reconnectTimeout;
   private final AtomicLong currentListenerId = new AtomicLong(0);
 
@@ -60,7 +51,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     this.listener = listener;
     this.reconnectTimeout = reconnectTimeout;
 
-    executorService = Executors.newSingleThreadExecutor();
+    executorService = Executors.newSingleThreadScheduledExecutor();
     requestBuilder.buildUri(); // call this once to add the segments
   }
 
@@ -69,45 +60,23 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
       throw new IllegalStateException("Already stopped");
     }
 
-    executorService.submit(
-        new Runnable() {
-          @Override
-          public void run() {
+    executorService.scheduleWithFixedDelay(
+        () -> {
+          if (System.currentTimeMillis() - latestEventTime.get() > reconnectTimeout) {
             latestEventTime.set(System.currentTimeMillis());
+            isClosed.compareAndSet(false, true);
+          }
 
-            while (!isStopped.get()) {
-              if (System.currentTimeMillis() - latestEventTime.get() > reconnectTimeout) {
-                // Check if the client has not received any event for a long time.
-                // If so, we will close the connection and restart it.
-                latestEventTime.set(System.currentTimeMillis());
-                clientSideClosed.set(true);
-              }
-
-              try {
-                // TODO: use Executors.newSingleThreadScheduledExecutor() instead
-                Thread.sleep(200);
-                if (serverSideClosed.get() || clientSideClosed.get()) {
-                  // don't restart until true again
-                  serverSideClosed.set(false);
-                  clientSideClosed.set(false);
-                  if (!isStopped.get()) {
-                    lock.lock();
-                    try {
-                      // check again if somebody called close in between
-                      if (!isStopped.get()) {
-                        restart();
-                      }
-                    } finally {
-                      lock.unlock();
-                    }
-                  }
-                }
-              } catch (InterruptedException e) {
-                throw new IllegalStateException("interrupted", e);
-              }
+          if (isClosed.get()) {
+            isClosed.compareAndSet(true, false);
+            if (!isStopped.get()) {
+              restart();
             }
           }
-        });
+        },
+        0,
+        200,
+        TimeUnit.MILLISECONDS);
   }
 
   public String lastPagingToken() {
@@ -115,11 +84,14 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
   }
 
   private void restart() {
-    if (eventSource != null) {
-      eventSource.cancel();
+    EventSource currentEventSource = eventSource.get();
+    if (currentEventSource != null) {
+      currentEventSource.cancel();
     }
+    // we cancelled the current event source, the `lastEventId` will not change anymore,
+    // so we can safely restart with the same `lastEventId`
     long newListenerId = currentListenerId.incrementAndGet();
-    eventSource =
+    eventSource.set(
         doStreamRequest(
             this,
             okHttpClient,
@@ -127,43 +99,45 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
             responseClass,
             listener,
             requestBuilder.uriBuilder.build().toString(),
-            new CloseListener() {
-              @Override
-              public void closed(EventSource source) {
-                serverSideClosed.set(true);
-              }
-            },
-            newListenerId);
+            source -> isClosed.compareAndSet(false, true),
+            newListenerId));
   }
 
+  @Override
   public void close() {
-    isStopped.set(true);
-    currentListenerId.incrementAndGet(); // Prevent any future EventSource
-    if (eventSource != null) {
-      eventSource.cancel();
+    if (isStopped.compareAndSet(false, true)) {
+      EventSource currentEventSource = eventSource.get();
+      if (currentEventSource != null) {
+        currentEventSource.cancel();
+      }
+      executorService.shutdownNow();
     }
-    executorService.shutdownNow();
   }
 
   static <T extends org.stellar.sdk.responses.Response> SSEStream<T> create(
-      final OkHttpClient okHttpClient,
-      final RequestBuilder requestBuilder,
-      final Class<T> responseClass,
-      final EventListener<T> listener,
-      final long reconnectTimeout) {
+      OkHttpClient okHttpClient,
+      RequestBuilder requestBuilder,
+      Class<T> responseClass,
+      EventListener<T> listener,
+      long reconnectTimeout) {
     SSEStream<T> stream =
-        new SSEStream<T>(okHttpClient, requestBuilder, responseClass, listener, reconnectTimeout);
+        new SSEStream<>(okHttpClient, requestBuilder, responseClass, listener, reconnectTimeout);
     stream.start();
     return stream;
   }
 
   private static String addIdentificationQueryParameter(String url) {
-    HttpUrl.Builder urlBuilder =
-        HttpUrl.parse(url)
-            .newBuilder()
-            .addQueryParameter("X-Client-Name", "java-stellar-sdk")
-            .addQueryParameter("X-Client-Version", Util.getSdkVersion());
-    return urlBuilder.build().toString();
+    HttpUrl parsedUrl = HttpUrl.parse(url);
+    if (parsedUrl == null) {
+      throw new IllegalArgumentException("Invalid URL: " + url);
+    }
+
+    return parsedUrl
+        .newBuilder()
+        .addQueryParameter("X-Client-Name", "java-stellar-sdk")
+        .addQueryParameter("X-Client-Version", Util.getSdkVersion())
+        .build()
+        .toString();
   }
 
   private static <T extends org.stellar.sdk.responses.Response> EventSource doStreamRequest(
@@ -188,7 +162,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     RealEventSource eventSource =
         new RealEventSource(
             request,
-            new StellarEventSourceListener<T>(
+            new StellarEventSourceListener<>(
                 stream, closeListener, responseClass, requestBuilder, listener, listenerId));
     eventSource.connect(okHttpClient);
     return eventSource;
@@ -200,8 +174,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
 
   private static class StellarEventSourceListener<T extends org.stellar.sdk.responses.Response>
       extends EventSourceListener {
-
-    private SSEStream<T> stream;
+    private final SSEStream<T> stream;
     private final CloseListener closeListener;
     private final Class<T> responseClass;
     private final RequestBuilder requestBuilder;
@@ -224,8 +197,8 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     }
 
     @Override
-    public void onClosed(EventSource eventSource) {
-      if (listenerId != stream.currentListenerId.get()) {
+    public void onClosed(@NotNull EventSource eventSource) {
+      if (stream.isStopped.get() || listenerId != stream.currentListenerId.get()) {
         return;
       }
       if (closeListener != null) {
@@ -234,12 +207,12 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     }
 
     @Override
-    public void onOpen(EventSource eventSource, Response response) {}
+    public void onOpen(@NotNull EventSource eventSource, @NotNull Response response) {}
 
     @Override
     public void onFailure(
-        EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
-      if (listenerId != stream.currentListenerId.get()) {
+        @NotNull EventSource eventSource, @Nullable Throwable t, @Nullable Response response) {
+      if (stream.isStopped.get() || listenerId != stream.currentListenerId.get()) {
         return;
       }
       Optional<Integer> code = Optional.empty();
@@ -262,8 +235,11 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
 
     @Override
     public void onEvent(
-        EventSource eventSource, @Nullable String id, @Nullable String type, String data) {
-      if (listenerId != stream.currentListenerId.get()) {
+        @NotNull EventSource eventSource,
+        @Nullable String id,
+        @Nullable String type,
+        @NotNull String data) {
+      if (stream.isStopped.get() || listenerId != stream.currentListenerId.get()) {
         return;
       }
       // Update the timestamp of the last received event.
