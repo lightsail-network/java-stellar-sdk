@@ -31,6 +31,7 @@ public class GetEventsDeserializerTest {
     assertEquals(
         eventInfo0.getContractId(), "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K");
     assertEquals(eventInfo0.getId(), "0000000463856472064-0000000000");
+    assertEquals(eventInfo0.getPagingToken(), "0000000463856472064-0000000000");
     assertEquals(eventInfo0.getTopic().size(), 2);
     assertEquals(eventInfo0.getTopic().get(0), "AAAADwAAAAdDT1VOVEVSAA==");
     assertEquals(eventInfo0.getTopic().get(1), "AAAADwAAAAlpbmNyZW1lbnQAAAA=");
