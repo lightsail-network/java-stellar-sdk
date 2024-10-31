@@ -1,18 +1,19 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Value;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
 import org.stellar.sdk.xdr.SCVal;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Response for JSON-RPC method getEvents.
  *
  * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents"
- *     target="_blank">getEvents documentation</a>
+ * target="_blank">getEvents documentation</a>
  */
 @Value
 public class GetEventsResponse {
@@ -34,10 +35,20 @@ public class GetEventsResponse {
 
     String id;
 
-    /** The elements inside can be parsed as {@link org.stellar.sdk.xdr.SCVal} objects. */
+    /**
+     * The field may will be removed in the next version of the protocol. It remains for backward.
+     * It is recommended to use {@link #cursor} instead.
+     */
+    String pagingToken;
+
+    /**
+     * The elements inside can be parsed as {@link org.stellar.sdk.xdr.SCVal} objects.
+     */
     List<String> topic;
 
-    /** The field can be parsed as {@link org.stellar.sdk.xdr.SCVal} object. */
+    /**
+     * The field can be parsed as {@link org.stellar.sdk.xdr.SCVal} object.
+     */
     String value;
 
     Boolean inSuccessfulContractCall;
@@ -56,8 +67,8 @@ public class GetEventsResponse {
         return null;
       }
       return topic.stream()
-          .map(t -> Util.parseXdr(t, SCVal::fromXdrBase64))
-          .collect(Collectors.toList());
+              .map(t -> Util.parseXdr(t, SCVal::fromXdrBase64))
+              .collect(Collectors.toList());
     }
 
     /**

@@ -9,6 +9,7 @@
         "ledgerClosedAt": "2023-07-23T14:47:01Z",
         "contractId": "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K",
         "id": "0000000463856472064-0000000000",
+        "pagingToken": "0000000463856472064-0000000000",
         "topic": [
           "AAAADwAAAAdDT1VOVEVSAA==",
           "AAAADwAAAAlpbmNyZW1lbnQAAAA="
@@ -23,6 +24,7 @@
         "ledgerClosedAt": "2023-07-23T14:47:04Z",
         "contractId": "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K",
         "id": "0000000476741373952-0000000000",
+        "pagingToken": "0000000476741373952-0000000000",
         "topic": [
           "AAAADwAAAAdDT1VOVEVSAA==",
           "AAAADwAAAAlpbmNyZW1lbnQAAAA="
@@ -37,6 +39,7 @@
         "ledgerClosedAt": "2023-07-23T14:47:07Z",
         "contractId": "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K",
         "id": "0000000489626275840-0000000000",
+        "pagingToken": "0000000489626275840-0000000000",
         "topic": [
           "AAAADwAAAAdDT1VOVEVSAA==",
           "AAAADwAAAAlpbmNyZW1lbnQAAAA="
