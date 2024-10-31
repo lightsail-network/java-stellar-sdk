@@ -2,6 +2,11 @@
 
 ## Pending
 
+## 1.0.0-beta1
+
+The following are the changes since version 1.0.0-beta0. If you are upgrading from an older version,
+please also refer to the change logs of previous versions, **especially [1.0.0-alpha0](https://github.com/lightsail-network/java-stellar-sdk/releases/tag/1.0.0-alpha0)**.
+
 ### Update
 - refactor: refactor `SSEStream`, make it more reliable.
 
