@@ -34,6 +34,12 @@ public class GetEventsResponse {
 
     String id;
 
+    /**
+     * The field may will be removed in the next version of the protocol. It remains for backward.
+     * It is recommended to use {@link #cursor} instead.
+     */
+    String pagingToken;
+
     /** The elements inside can be parsed as {@link org.stellar.sdk.xdr.SCVal} objects. */
     List<String> topic;
 

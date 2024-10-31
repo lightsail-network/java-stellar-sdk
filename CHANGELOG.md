@@ -9,6 +9,7 @@ please also refer to the change logs of previous versions, **especially [1.0.0-a
 
 ### Update
 - refactor: refactor `SSEStream`, make it more reliable.
+- refactor: add `pagingToken` back to `GetEventsResponse.EventInfo`. This is to ensure compatibility with older versions of Soroban-RPC. We still recommend using the `GetEventsResponse.cursor` field after upgrading Soroban-RPC.
 
 ## 1.0.0-beta0
 
