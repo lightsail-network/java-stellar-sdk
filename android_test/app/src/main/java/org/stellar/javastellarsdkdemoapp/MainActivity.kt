@@ -151,11 +151,14 @@ private fun testSDK(): String {
         }
 
         // Test Federation
-        // Disable the test: https://stackoverflow.com/questions/64844311/certpathvalidatorexception-connecting-to-a-lets-encrypt-host-on-android-m-or-ea
-        // val fedResp = Federation().resolveAddress("example*lobstr.co")
-        // if (fedResp == null || fedResp.accountId == null) {
-        //    throw Exception("Query Federation failed")
-        // }
+        // Not enabled if Android SDK version is less than 26,
+        // see https://stackoverflow.com/questions/64844311/certpathvalidatorexception-connecting-to-a-lets-encrypt-host-on-android-m-or-ea
+        if (Build.VERSION.SDK_INT >= 26) {
+            val fedResp = Federation().resolveAddress("example*lobstr.co")
+            if (fedResp == null || fedResp.accountId == null) {
+                throw Exception("Query Federation failed")
+            }
+        }
 
         // build and parse transaction
         val source: KeyPair =
