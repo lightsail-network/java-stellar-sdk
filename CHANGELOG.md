@@ -8,8 +8,8 @@ The following are the changes since version 1.0.0-beta0. If you are upgrading fr
 please also refer to the change logs of previous versions, **especially [1.0.0-alpha0](https://github.com/lightsail-network/java-stellar-sdk/releases/tag/1.0.0-alpha0)**.
 
 ### Update
-- refactor: refactor `SSEStream`, make it more reliable.
-- refactor: add `pagingToken` back to `GetEventsResponse.EventInfo`. This is to ensure compatibility with older versions of Soroban-RPC. We still recommend using the `GetEventsResponse.cursor` field after upgrading Soroban-RPC.
+- refactor: refactor `SSEStream`, make it more reliable. ([#652](https://github.com/stellar/java-stellar-sdk/pull/652))
+- refactor: add `pagingToken` back to `GetEventsResponse.EventInfo`. This is to ensure compatibility with older versions of Soroban-RPC. We still recommend using the `GetEventsResponse.cursor` field after upgrading Soroban-RPC. ([#655](https://github.com/stellar/java-stellar-sdk/pull/655))
 
 ## 1.0.0-beta0
 
