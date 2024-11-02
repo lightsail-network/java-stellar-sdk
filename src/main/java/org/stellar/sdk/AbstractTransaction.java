@@ -30,7 +30,7 @@ public abstract class AbstractTransaction {
    *     href="https://developers.stellar.org/docs/learn/fundamentals/fees-resource-limits-metering#inclusion-fee"
    *     target="_blank">Fees</a>
    */
-  public static final int MIN_BASE_FEE = 100;
+  public static final long MIN_BASE_FEE = 100;
 
   AbstractTransaction(@NonNull Network network) {
     this.network = network;
