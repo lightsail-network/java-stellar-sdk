@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update
+refactor!: change the type of `AbstractTransaction.MIN_BASE_FEE` from `int` to `long`. ([#657](https://github.com/stellar/java-stellar-sdk/pull/657))
+
 ## 1.0.0-beta1
 
 The following are the changes since version 1.0.0-beta0. If you are upgrading from an older version,

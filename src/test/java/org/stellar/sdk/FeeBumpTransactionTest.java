@@ -31,7 +31,7 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class FeeBumpTransactionTest {
 
-  private Transaction createInnerTransaction(int baseFee, Network network) {
+  private Transaction createInnerTransaction(long baseFee, Network network) {
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");
 
@@ -57,7 +57,7 @@ public class FeeBumpTransactionTest {
     return createInnerTransaction(Transaction.MIN_BASE_FEE, Network.TESTNET);
   }
 
-  private Transaction createInnerTransaction(int baseFee) {
+  private Transaction createInnerTransaction(long baseFee) {
     return createInnerTransaction(baseFee, Network.TESTNET);
   }
 
