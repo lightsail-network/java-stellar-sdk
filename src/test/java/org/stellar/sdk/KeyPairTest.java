@@ -110,7 +110,7 @@ public class KeyPairTest {
     try {
       keypair.sign(data.getBytes());
       fail();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalStateException e) {
       assertEquals(
           "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.",
           e.getMessage());
