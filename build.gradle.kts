@@ -6,7 +6,7 @@ plugins {
     id("project-report")
     id("com.diffplug.spotless") version "6.25.0"
     id("com.github.ben-manes.versions") version "0.51.0"
-    id("io.freefair.lombok") version "8.7.1"
+    id("io.freefair.lombok") version "8.10.2"
     id("com.gradleup.nmcp") version "0.0.9"
 }
 
@@ -37,14 +37,14 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
     implementation("com.google.code.gson:gson:2.11.0")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.79")
     implementation("commons-codec:commons-codec:1.17.1")
 
-    testImplementation("org.mockito:mockito-core:5.12.0")
+    testImplementation("org.mockito:mockito-core:5.14.2")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.78.1")  // mock https
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.0")
+    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.79")  // mock https
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
