@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import lombok.NonNull;
-import org.stellar.sdk.exception.AssetCodeLengthInvalidException;
 import org.stellar.sdk.xdr.*;
 
 /**
@@ -18,12 +17,12 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
    *
    * @param code Asset code
    * @param issuer Asset issuer
-   * @throws AssetCodeLengthInvalidException when code is invalid
+   * @throws IllegalArgumentException when code is invalid
    */
   public AssetTypeCreditAlphaNum12(String code, String issuer) {
     super(code, issuer);
     if (code.length() < 5 || code.length() > 12) {
-      throw new AssetCodeLengthInvalidException();
+      throw new IllegalArgumentException("The length of code must be between 5 and 12 characters.");
     }
   }
 

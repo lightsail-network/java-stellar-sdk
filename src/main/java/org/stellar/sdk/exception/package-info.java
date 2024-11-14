@@ -2,9 +2,32 @@
  * Exceptions that can be thrown by the Stellar SDK.
  *
  * <p>The base exception class is {@link org.stellar.sdk.exception.SdkException}, which extends
- * {@link java.lang.RuntimeException}. Most exceptions thrown by the SDK extend {@link
- * org.stellar.sdk.exception.SdkException}, while some extend {@link
- * java.lang.IllegalArgumentException} directly.
+ * {@link java.lang.RuntimeException}. All custom exceptions defined in the SDK extend {@link
+ * org.stellar.sdk.exception.SdkException}. The SDK may also throw standard Java runtime exceptions
+ * such as {@link java.lang.IllegalArgumentException} where appropriate.
+ *
+ * <p>The exception hierarchy is as follows:
+ *
+ * <ul>
+ *   <li>{@link org.stellar.sdk.exception.SdkException}
+ *       <ul>
+ *         <li>{@link org.stellar.sdk.exception.AccountRequiresMemoException}
+ *         <li>{@link org.stellar.sdk.exception.InvalidSep10ChallengeException}
+ *         <li>{@link org.stellar.sdk.exception.PrepareTransactionException}
+ *         <li>{@link org.stellar.sdk.exception.UnexpectedException}
+ *         <li>{@link org.stellar.sdk.exception.NetworkException}
+ *             <ul>
+ *               <li>{@link org.stellar.sdk.exception.AccountNotFoundException}
+ *               <li>{@link org.stellar.sdk.exception.BadRequestException}
+ *               <li>{@link org.stellar.sdk.exception.BadResponseException}
+ *               <li>{@link org.stellar.sdk.exception.ConnectionErrorException}
+ *               <li>{@link org.stellar.sdk.exception.RequestTimeoutException}
+ *               <li>{@link org.stellar.sdk.exception.SorobanRpcException}
+ *               <li>{@link org.stellar.sdk.exception.TooManyRequestsException}
+ *               <li>{@link org.stellar.sdk.exception.UnknownResponseException}
+ *             </ul>
+ *       </ul>
+ * </ul>
  *
  * <p>The Stellar SDK uses unchecked exceptions (extending {@code RuntimeException}) for the
  * following reasons:
@@ -27,6 +50,5 @@
  *
  * @see org.stellar.sdk.exception.SdkException
  * @see java.lang.RuntimeException
- * @see java.lang.IllegalArgumentException
  */
 package org.stellar.sdk.exception;
