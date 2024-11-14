@@ -318,7 +318,7 @@ public class StrKeyTest {
       StrKey.encodeToXDRMuxedAccount("MBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG");
       fail();
     } catch (IllegalArgumentException e) {
-      assertEquals("Checksum invalid", e.getMessage());
+      assertEquals("Invalid data length, expected 40 bytes, got 32", e.getMessage());
     }
 
     try {

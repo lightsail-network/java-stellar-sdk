@@ -27,6 +27,7 @@ public abstract class Asset implements Comparable<Asset> {
    *
    * @param canonicalForm Canonical string representation of an Alpha4 or Alpha12 asset
    * @return Asset or throws IllegalArgumentException if not Alpha4 or Alpha12 asset code
+   * @throws IllegalArgumentException if the asset string is invalid
    */
   public static Asset create(String canonicalForm) {
     if (canonicalForm.equals("native")) {
@@ -114,6 +115,7 @@ public abstract class Asset implements Comparable<Asset> {
    * @param code The asset code.
    * @param issuer The issuer account ID.
    * @return Asset (alphanum4 or alphanum12)
+   * @throws AssetCodeLengthInvalidException if the asset code is invalid
    */
   public static Asset createNonNativeAsset(@NonNull String code, @NonNull String issuer) {
     if (!code.isEmpty() && code.length() <= 4) {

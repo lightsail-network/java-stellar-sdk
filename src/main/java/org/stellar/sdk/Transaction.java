@@ -324,7 +324,7 @@ public class Transaction extends AbstractTransaction {
       v0Envelope.setSignatures(signatures);
       xdr.setV0(v0Envelope);
     } else {
-      throw new IllegalArgumentException("invalid envelope type: " + this.envelopeType);
+      throw new IllegalStateException("invalid envelope type: " + this.envelopeType);
     }
 
     return xdr;

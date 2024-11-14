@@ -64,15 +64,16 @@ public class TransactionPreconditions {
   /**
    * Validates the preconditions.
    *
-   * @throws IllegalArgumentException if the preconditions are invalid
+   * @throws IllegalStateException if the preconditions are invalid
    */
+  // TODO: check valid
   public void isValid() {
     if (timeBounds == null) {
-      throw new IllegalArgumentException("Invalid preconditions, must define timebounds");
+      throw new IllegalStateException("Invalid preconditions, must define timebounds");
     }
 
     if (extraSigners.size() > MAX_EXTRA_SIGNERS_COUNT) {
-      throw new IllegalArgumentException(
+      throw new IllegalStateException(
           "Invalid preconditions, too many extra signers, can only have up to "
               + MAX_EXTRA_SIGNERS_COUNT);
     }

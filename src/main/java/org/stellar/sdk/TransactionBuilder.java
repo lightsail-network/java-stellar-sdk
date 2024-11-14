@@ -91,7 +91,7 @@ public class TransactionBuilder {
    */
   public TransactionBuilder addMemo(@NonNull Memo memo) {
     if (this.memo != null) {
-      throw new IllegalArgumentException("Memo has been already added.");
+      throw new IllegalStateException("Memo has been already added.");
     }
     this.memo = memo;
     return this;
@@ -154,7 +154,7 @@ public class TransactionBuilder {
   public Transaction build() {
     // ensure that the preconditions are valid
     if (preconditions.getTimeBounds() != null && txTimeout != null) {
-      throw new IllegalArgumentException(
+      throw new IllegalStateException(
           "Can not set both TransactionPreconditions.timeBounds and timeout.");
     }
 
@@ -170,11 +170,11 @@ public class TransactionBuilder {
     preconditions.isValid();
 
     if (baseFee == null) {
-      throw new IllegalArgumentException("baseFee has to be set. you must call setBaseFee().");
+      throw new IllegalStateException("baseFee has to be set. you must call setBaseFee().");
     }
 
     if (network == null) {
-      throw new IllegalArgumentException("network has to be set. you must call setNetwork().");
+      throw new IllegalStateException("network has to be set. you must call setNetwork().");
     }
 
     long sequenceNumber = sourceAccount.getIncrementedSequenceNumber();

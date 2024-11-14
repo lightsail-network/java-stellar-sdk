@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 import org.jetbrains.annotations.Nullable;
+import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerFootprint;
@@ -143,7 +144,7 @@ public class SorobanDataBuilder {
     try {
       return SorobanTransactionData.fromXdrByteArray(data.toXdrByteArray());
     } catch (IOException e) {
-      throw new IllegalArgumentException("Copy SorobanData failed, please report this bug.", e);
+      throw new UnexpectedException("Copy SorobanData failed, please report this bug.", e);
     }
   }
 
