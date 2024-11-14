@@ -3,7 +3,8 @@
 ## Pending
 
 ### Update
-refactor!: change the type of `AbstractTransaction.MIN_BASE_FEE` from `int` to `long`. ([#657](https://github.com/stellar/java-stellar-sdk/pull/657))
+- refactor!: change the type of `AbstractTransaction.MIN_BASE_FEE` from `int` to `long`. ([#657](https://github.com/stellar/java-stellar-sdk/pull/657))
+- feat: add support for Soroban PRC's `getLedgers` API interface.
 
 ## 1.0.0-beta1
 

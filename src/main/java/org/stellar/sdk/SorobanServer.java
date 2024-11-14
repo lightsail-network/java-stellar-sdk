@@ -30,6 +30,7 @@ import org.stellar.sdk.requests.ClientIdentificationInterceptor;
 import org.stellar.sdk.requests.ResponseHandler;
 import org.stellar.sdk.requests.sorobanrpc.GetEventsRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetLedgerEntriesRequest;
+import org.stellar.sdk.requests.sorobanrpc.GetLedgersRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetTransactionsRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
@@ -40,6 +41,7 @@ import org.stellar.sdk.responses.sorobanrpc.GetFeeStatsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetLedgersResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
@@ -297,7 +299,7 @@ public class SorobanServer implements Closeable {
    * can paginate as long as the pages fall within the history retention of their corresponding RPC
    * provider.
    *
-   * @param getTransactionsRequest The {@link GetEventsRequest} to use for the request.
+   * @param getTransactionsRequest The {@link GetTransactionsRequest} to use for the request.
    * @return A {@link GetTransactionsResponse} object containing the transactions that match the
    *     request.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
@@ -315,6 +317,29 @@ public class SorobanServer implements Closeable {
         "getTransactions",
         getTransactionsRequest,
         new TypeToken<SorobanRpcResponse<GetTransactionsResponse>>() {});
+  }
+
+  /**
+   * Gets a detailed list of ledgers starting from the user specified starting point that you can
+   * paginate as long as the pages fall within the history retention of their corresponding RPC
+   * provider.
+   *
+   * @param getLedgersRequest The {@link GetEventsRequest} to use for the request.
+   * @return A {@link GetLedgersResponse} object containing the ledgers that match the request.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkError
+   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @throws RequestTimeoutException If the request timed out.
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgers"
+   *     target="_blank">getLedgers documentation</a>
+   */
+  public GetLedgersResponse getLedgers(GetLedgersRequest getLedgersRequest) {
+    return this.sendRequest(
+        "getLedgers",
+        getLedgersRequest,
+        new TypeToken<SorobanRpcResponse<GetLedgersResponse>>() {});
   }
 
   /**
