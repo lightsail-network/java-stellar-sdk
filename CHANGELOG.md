@@ -7,6 +7,7 @@
 - feat: add support for Soroban PRC's `getLedgers` API interface.
 - refactor!: if seed is not present, calling `Keypair.sign` throws IllegalStateException.
 - refactor!: `StrKeyException` has been removed, use `IllegalArgumentException` instead. When you call functions like `Keypair.fromAccountId`, this exception will also be thrown if invalid data is passed in.
+- refactor!: `AssetCodeLengthInvalidException` has been removed, use `IllegalArgumentException` instead.
 - fix: fix the data validation of `StrKey` class.
 
 ## 1.0.0-beta1

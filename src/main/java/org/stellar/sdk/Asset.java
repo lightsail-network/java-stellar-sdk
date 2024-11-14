@@ -2,7 +2,6 @@ package org.stellar.sdk;
 
 import java.io.IOException;
 import lombok.NonNull;
-import org.stellar.sdk.exception.AssetCodeLengthInvalidException;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.AssetType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -115,7 +114,7 @@ public abstract class Asset implements Comparable<Asset> {
    * @param code The asset code.
    * @param issuer The issuer account ID.
    * @return Asset (alphanum4 or alphanum12)
-   * @throws AssetCodeLengthInvalidException if the asset code is invalid
+   * @throws IllegalArgumentException if the asset code is invalid
    */
   public static Asset createNonNativeAsset(@NonNull String code, @NonNull String issuer) {
     if (!code.isEmpty() && code.length() <= 4) {
@@ -123,7 +122,7 @@ public abstract class Asset implements Comparable<Asset> {
     } else if (code.length() >= 5 && code.length() <= 12) {
       return new AssetTypeCreditAlphaNum12(code, issuer);
     } else {
-      throw new AssetCodeLengthInvalidException();
+      throw new IllegalArgumentException("The length of code must be between 1 and 12 characters.");
     }
   }
 
