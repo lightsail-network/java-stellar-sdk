@@ -33,6 +33,7 @@ import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.requests.sorobanrpc.EventFilterType;
 import org.stellar.sdk.requests.sorobanrpc.GetEventsRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetLedgerEntriesRequest;
+import org.stellar.sdk.requests.sorobanrpc.GetLedgersRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetTransactionsRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
@@ -43,6 +44,7 @@ import org.stellar.sdk.responses.sorobanrpc.GetFeeStatsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetLedgersResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
@@ -600,6 +602,61 @@ public class SorobanServerTest {
     assertEquals(resp.getTransactions().get(0).getLedger().longValue(), 1888539L);
     assertEquals(resp.getTransactions().get(1).getCreatedAt().longValue(), 1717166042L);
 
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testGetLedgers() throws IOException, SorobanRpcException {
+    String filePath = "src/test/resources/soroban_server/get_ledgers.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    GetLedgersRequest.PaginationOptions paginationOptions =
+        GetLedgersRequest.PaginationOptions.builder().limit(2L).build();
+    GetLedgersRequest getLedgersRequest =
+        GetLedgersRequest.builder().startLedger(10L).pagination(paginationOptions).build();
+
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<GetLedgersRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<GetLedgersRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("getLedgers")
+                && sorobanRpcRequest.getParams().equals(getLedgersRequest)) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    GetLedgersResponse resp = server.getLedgers(getLedgersRequest);
+    assertEquals(resp.getLatestLedger().longValue(), 113L);
+    assertEquals(resp.getLatestLedgerCloseTime().longValue(), 1731554518L);
+    assertEquals(resp.getOldestLedger().longValue(), 8L);
+    assertEquals(resp.getOldestLedgerCloseTime().longValue(), 1731554412L);
+    assertEquals(resp.getCursor(), "11");
+    assertEquals(resp.getLedgers().size(), 2);
+    assertEquals(
+        resp.getLedgers().get(0).getHash(),
+        "59ccafc5641a44826608a882da10b08f585b2b614be91976ade3927d4422413d");
+    assertEquals(resp.getLedgers().get(0).getSequence().longValue(), 10L);
+    assertEquals(resp.getLedgers().get(0).getLedgerCloseTime().longValue(), 1731554414L);
+    assertEquals(
+        resp.getLedgers().get(0).getHeaderXdr(),
+        resp.getLedgers().get(0).parseHeaderXdr().toXdrBase64());
+    assertEquals(
+        resp.getLedgers().get(0).getMetadataXdr(),
+        resp.getLedgers().get(0).parseMetadataXdr().toXdrBase64());
     server.close();
     mockWebServer.close();
   }

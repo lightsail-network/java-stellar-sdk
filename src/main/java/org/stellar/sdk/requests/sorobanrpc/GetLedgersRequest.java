@@ -5,14 +5,14 @@ import lombok.NonNull;
 import lombok.Value;
 
 /**
- * Request for JSON-RPC method getTransactions.
+ * Request for JSON-RPC method getLedgers.
  *
- * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions"
- *     target="_blank">getTransactions documentation</a>
+ * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgers"
+ *     target="_blank">getLedgers documentation</a>
  */
 @Value
 @Builder(toBuilder = true)
-public class GetTransactionsRequest {
+public class GetLedgersRequest {
   @NonNull Long startLedger;
 
   PaginationOptions pagination;
