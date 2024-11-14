@@ -66,8 +66,7 @@ public class TransactionPreconditions {
    *
    * @throws IllegalStateException if the preconditions are invalid
    */
-  // TODO: check valid
-  public void isValid() {
+  public void validate() {
     if (timeBounds == null) {
       throw new IllegalStateException("Invalid preconditions, must define timebounds");
     }
