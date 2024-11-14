@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThrows;
 
 import java.math.BigInteger;
 import org.junit.Test;
-import org.stellar.sdk.exception.StrKeyException;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint64;
@@ -75,6 +74,6 @@ public class MuxedAccountTest {
   public void testFromAccountInvalidAccountRaise() {
     String invalidAccount =
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    assertThrows(StrKeyException.class, () -> new MuxedAccount(invalidAccount));
+    assertThrows(IllegalArgumentException.class, () -> new MuxedAccount(invalidAccount));
   }
 }
