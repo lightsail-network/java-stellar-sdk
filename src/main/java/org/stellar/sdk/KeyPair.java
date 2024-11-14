@@ -189,19 +189,21 @@ public class KeyPair {
 
   /** Returns the signature hint for this keypair. */
   public SignatureHint getSignatureHint() {
+    ByteArrayOutputStream publicKeyBytesStream = new ByteArrayOutputStream();
+    XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(publicKeyBytesStream);
+
     try {
-      ByteArrayOutputStream publicKeyBytesStream = new ByteArrayOutputStream();
-      XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(publicKeyBytesStream);
       this.getXdrPublicKey().encode(xdrOutputStream);
-      byte[] publicKeyBytes = publicKeyBytesStream.toByteArray();
-      byte[] signatureHintBytes =
-          Arrays.copyOfRange(publicKeyBytes, publicKeyBytes.length - 4, publicKeyBytes.length);
-      SignatureHint signatureHint = new SignatureHint();
-      signatureHint.setSignatureHint(signatureHintBytes);
-      return signatureHint;
     } catch (IOException e) {
       throw new UnexpectedException(e);
     }
+
+    byte[] publicKeyBytes = publicKeyBytesStream.toByteArray();
+    byte[] signatureHintBytes =
+        Arrays.copyOfRange(publicKeyBytes, publicKeyBytes.length - 4, publicKeyBytes.length);
+    SignatureHint signatureHint = new SignatureHint();
+    signatureHint.setSignatureHint(signatureHintBytes);
+    return signatureHint;
   }
 
   /** Returns the XDR {@link org.stellar.sdk.xdr.PublicKey} for this keypair. */

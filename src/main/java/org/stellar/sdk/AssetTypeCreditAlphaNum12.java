@@ -18,6 +18,7 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
    *
    * @param code Asset code
    * @param issuer Asset issuer
+   * @throws AssetCodeLengthInvalidException when code is invalid
    */
   public AssetTypeCreditAlphaNum12(String code, String issuer) {
     super(code, issuer);

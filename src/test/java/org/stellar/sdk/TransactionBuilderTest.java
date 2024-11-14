@@ -262,7 +262,7 @@ public class TransactionBuilderTest {
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .build();
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (IllegalStateException ignored) {
     }
   }
 
@@ -561,7 +561,7 @@ public class TransactionBuilderTest {
           .setBaseFee(Transaction.MIN_BASE_FEE)
           .build();
       fail();
-    } catch (IllegalArgumentException ignored) {
+    } catch (IllegalStateException ignored) {
     }
   }
 
@@ -627,7 +627,7 @@ public class TransactionBuilderTest {
           .setTimeout(30)
           .build();
       fail();
-    } catch (IllegalArgumentException exception) {
+    } catch (IllegalStateException exception) {
       assertTrue(
           exception
               .getMessage()
