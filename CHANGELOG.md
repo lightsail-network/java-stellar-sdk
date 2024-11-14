@@ -6,6 +6,7 @@
 - refactor!: change the type of `AbstractTransaction.MIN_BASE_FEE` from `int` to `long`. ([#657](https://github.com/stellar/java-stellar-sdk/pull/657))
 - feat: add support for Soroban PRC's `getLedgers` API interface.
 - refactor!: if seed is not present, calling `Keypair.sign` throws IllegalStateException.
+- refactor!: `StrKeyException` has been removed, use `IllegalArgumentException` instead. When you call functions like `Keypair.fromAccountId`, this exception will also be thrown if invalid data is passed in.
 
 ## 1.0.0-beta1
 

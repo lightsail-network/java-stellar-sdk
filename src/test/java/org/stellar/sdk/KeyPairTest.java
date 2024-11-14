@@ -1,8 +1,15 @@
 package org.stellar.sdk;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
@@ -161,5 +168,46 @@ public class KeyPairTest {
     KeyPair keyPair = KeyPair.random();
     KeyPair keypairCopy = KeyPair.fromSecretSeed(keyPair.getSecretSeed());
     Assert.assertEquals(keyPair, keypairCopy);
+  }
+
+  @Test
+  public void testFromAccountIdThrows() {
+    List<String> invalidAccountIds =
+        Arrays.asList(
+            "",
+            "hello",
+            "GAXDYNIBA5E4DXR5TJN522RRYESFQ5UNUXHIPTFGVLLD5O5K552DFBAD",
+            "GAXDYNIBA5E4DXR5TJN522RRYESFQ5UNUXHIPTFGVLLD5O5K552DF5Z",
+            "masterpassphrasemasterpassphrase",
+            "gsYRSEQhTffqA9opPepAENCr2WG6z5iBHHubxxbRzWaHf8FBWcu");
+    for (String invalidAccountId : invalidAccountIds) {
+      assertThrows(IllegalArgumentException.class, () -> KeyPair.fromAccountId(invalidAccountId));
+    }
+  }
+
+  @Test
+  public void testFromSecretSeedThrowsWithString() {
+    List<String> invalidSeeds =
+        Arrays.asList(
+            "",
+            "hello",
+            "SBWUBZ3SIPLLF5CCXLWUB2Z6UBTYAW34KVXOLRQ5HDAZG4ZY7MHNBWJ1",
+            "masterpassphrasemasterpassphrase",
+            "gsYRSEQhTffqA9opPepAENCr2WG6z5iBHHubxxbRzWaHf8FBWcu");
+    for (String invalidSeed : invalidSeeds) {
+      assertThrows(IllegalArgumentException.class, () -> KeyPair.fromSecretSeed(invalidSeed));
+    }
+  }
+
+  @Test
+  public void testFromSecretSeedThrowsWithBytes() {
+    assertThrows(IllegalArgumentException.class, () -> KeyPair.fromSecretSeed(new byte[0]));
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            KeyPair.fromSecretSeed(
+                Util.hexToBytes("bda3ab27d61644df75a46cafc46340257fdcd0d32c5d87cb4833c09b25270d")));
+    assertThrows(
+        IllegalArgumentException.class, () -> KeyPair.fromSecretSeed(Util.hexToBytes("00")));
   }
 }
