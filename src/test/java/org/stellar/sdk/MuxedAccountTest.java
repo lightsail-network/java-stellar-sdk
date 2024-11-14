@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.Uint256;
@@ -72,8 +74,20 @@ public class MuxedAccountTest {
 
   @Test
   public void testFromAccountInvalidAccountRaise() {
-    String invalidAccount =
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    assertThrows(IllegalArgumentException.class, () -> new MuxedAccount(invalidAccount));
+    List<String> invalidAccounts =
+        Arrays.asList(
+            "GAAAAAAAACGC6",
+            "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUR",
+            "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZA",
+            "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUACUSI",
+            "G47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVP2I",
+            "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLKA",
+            "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAAV75I",
+            "M47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ",
+            "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUK===",
+            "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUO");
+    for (String invalidAccount : invalidAccounts) {
+      assertThrows(IllegalArgumentException.class, () -> new MuxedAccount(invalidAccount));
+    }
   }
 }
