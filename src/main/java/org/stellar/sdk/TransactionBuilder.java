@@ -167,7 +167,7 @@ public class TransactionBuilder {
           preconditions.toBuilder().timeBounds(new TimeBounds(BigInteger.ZERO, maxTime)).build();
     }
 
-    preconditions.isValid();
+    preconditions.validate();
 
     if (baseFee == null) {
       throw new IllegalStateException("baseFee has to be set. you must call setBaseFee().");
