@@ -15,7 +15,6 @@ import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 import org.stellar.sdk.SslCertificateUtils;
-import org.stellar.sdk.federation.exception.MalformedAddressException;
 
 public class FederationTest {
   @Test
@@ -353,8 +352,8 @@ public class FederationTest {
   @Test
   public void testMalformedAddressExceptionThrows() {
     assertThrows(
-        MalformedAddressException.class,
+        IllegalArgumentException.class,
         () -> new Federation().resolveAddress("bob*stellar.org*test"));
-    assertThrows(MalformedAddressException.class, () -> new Federation().resolveAddress("bob"));
+    assertThrows(IllegalArgumentException.class, () -> new Federation().resolveAddress("bob"));
   }
 }

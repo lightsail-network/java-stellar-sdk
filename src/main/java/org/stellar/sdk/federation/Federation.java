@@ -12,7 +12,6 @@ import okhttp3.Response;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.federation.exception.FederationServerInvalidException;
-import org.stellar.sdk.federation.exception.MalformedAddressException;
 import org.stellar.sdk.federation.exception.NoFederationServerException;
 import org.stellar.sdk.federation.exception.NotFoundException;
 import org.stellar.sdk.federation.exception.StellarTomlNotFoundInvalidException;
@@ -47,7 +46,7 @@ public class Federation {
    *
    * @param address Stellar address (e.g. `bob*stellar.org`).
    * @return FederationResponse
-   * @throws MalformedAddressException Address is malformed
+   * @throws IllegalArgumentException Address is malformed
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
    * @throws NotFoundException Stellar address not found in the federation server
@@ -71,7 +70,7 @@ public class Federation {
   public FederationResponse resolveAddress(String address) {
     String[] tokens = address.split("\\*");
     if (tokens.length != 2) {
-      throw new MalformedAddressException(
+      throw new IllegalArgumentException(
           "address is malformed, it should be in the format `bob*stellar.org`");
     }
     String domain = tokens[1];
