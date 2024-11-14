@@ -246,10 +246,11 @@ public class KeyPair {
    *
    * @param data The data to sign.
    * @return signed bytes, null if the private key for this keypair is null.
+   * @throws IllegalStateException if the private key for this keypair is null.
    */
   public byte[] sign(byte[] data) {
     if (privateKey == null) {
-      throw new IllegalArgumentException(
+      throw new IllegalStateException(
           "KeyPair does not contain secret key. Use KeyPair.fromSecretSeed method to create a new KeyPair with a secret key.");
     }
     Ed25519Signer signer = new Ed25519Signer();
