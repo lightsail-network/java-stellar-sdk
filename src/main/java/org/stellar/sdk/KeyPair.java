@@ -56,6 +56,7 @@ public class KeyPair {
    *
    * @param seed Char array containing strkey encoded Stellar secret seed.
    * @return {@link KeyPair}
+   * @throws IllegalArgumentException if the provided seed is invalid
    */
   public static KeyPair fromSecretSeed(char[] seed) {
     byte[] decoded = StrKey.decodeEd25519SecretSeed(seed);
@@ -68,14 +69,14 @@ public class KeyPair {
    *
    * @param seed The strkey encoded Stellar secret seed.
    * @return {@link KeyPair}
+   * @throws IllegalArgumentException if the provided seed is invalid
    * @see <a href=
    *     "http://docs.oracle.com/javase/1.5.0/docs/guide/security/jce/JCERefGuide.html#PBEEx"
    *     target="_blank">Using Password-Based Encryption</a>
    */
   public static KeyPair fromSecretSeed(String seed) {
     char[] charSeed = seed.toCharArray();
-    byte[] decoded = StrKey.decodeEd25519SecretSeed(charSeed);
-    KeyPair keypair = fromSecretSeed(decoded);
+    KeyPair keypair = fromSecretSeed(charSeed);
     Arrays.fill(charSeed, '\0');
     return keypair;
   }
@@ -85,9 +86,15 @@ public class KeyPair {
    *
    * @param seed The 32 byte secret seed.
    * @return {@link KeyPair}
+   * @throws IllegalArgumentException if the provided seed is invalid
    */
   public static KeyPair fromSecretSeed(byte[] seed) {
-    Ed25519PrivateKeyParameters privateKey = new Ed25519PrivateKeyParameters(seed, 0);
+    Ed25519PrivateKeyParameters privateKey;
+    try {
+      privateKey = new Ed25519PrivateKeyParameters(seed, 0);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Secret seed is invalid", e);
+    }
     Ed25519PublicKeyParameters publicKey = privateKey.generatePublicKey();
     return new KeyPair(publicKey, privateKey);
   }
@@ -97,6 +104,7 @@ public class KeyPair {
    *
    * @param accountId The strkey encoded Stellar account ID.
    * @return {@link KeyPair}
+   * @throws IllegalArgumentException if the provided account ID is invalid
    */
   public static KeyPair fromAccountId(String accountId) {
     byte[] decoded = StrKey.decodeEd25519PublicKey(accountId);
@@ -108,12 +116,13 @@ public class KeyPair {
    *
    * @param publicKey The 32 byte public key.
    * @return {@link KeyPair}
+   * @throws IllegalArgumentException if the provided public key is invalid
    */
   public static KeyPair fromPublicKey(byte[] publicKey) {
     Ed25519PublicKeyParameters ed25519PublicKeyParameters;
     try {
       ed25519PublicKeyParameters = new Ed25519PublicKeyParameters(publicKey, 0);
-    } catch (IllegalArgumentException e) {
+    } catch (Exception e) {
       throw new IllegalArgumentException("Public key is invalid", e);
     }
     return new KeyPair(ed25519PublicKeyParameters, null);
@@ -129,13 +138,14 @@ public class KeyPair {
    * @param bip39Seed The output of BIP0039
    * @param accountNumber The number of the account
    * @return KeyPair with secret
+   * @throws IllegalArgumentException if the provided bip39Seed is invalid
    */
   public static KeyPair fromBip39Seed(byte[] bip39Seed, int accountNumber) {
     try {
       return KeyPair.fromSecretSeed(
           SLIP10.deriveEd25519PrivateKey(bip39Seed, 44, 148, accountNumber));
     } catch (Exception e) {
-      throw new UnexpectedException(e);
+      throw new IllegalArgumentException(e);
     }
   }
 

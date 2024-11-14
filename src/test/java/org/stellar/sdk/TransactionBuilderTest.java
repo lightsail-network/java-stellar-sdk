@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
-import org.stellar.sdk.exception.StrKeyException;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.xdr.*;
@@ -902,7 +901,7 @@ public class TransactionBuilderTest {
   }
 
   @Test
-  public void testNoNetworkSet() throws StrKeyException {
+  public void testNoNetworkSet() {
     // GBPMKIRA2OQW2XZZQUCQILI5TMVZ6JNRKM423BSAISDM7ZFWQ6KWEBC4
     KeyPair source =
         KeyPair.fromSecretSeed("SCH27VUZZ6UAKB67BDNF6FA42YMBMQCBKXWGMFD5TZ6S5ZZCZFLRXKHS");

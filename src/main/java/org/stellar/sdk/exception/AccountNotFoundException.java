@@ -2,7 +2,11 @@ package org.stellar.sdk.exception;
 
 import lombok.Getter;
 
-/** Exception thrown when trying to load an account that doesn't exist on the Stellar network. */
+/**
+ * Exception thrown when trying to load an account that doesn't exist on the Stellar network.
+ *
+ * <p>Only applicable to Soroban RPC Request.
+ */
 @Getter
 public class AccountNotFoundException extends NetworkException {
   // The account that was not found.
