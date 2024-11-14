@@ -324,7 +324,7 @@ public class SorobanServer implements Closeable {
    * paginate as long as the pages fall within the history retention of their corresponding RPC
    * provider.
    *
-   * @param getLedgersRequest The {@link GetEventsRequest} to use for the request.
+   * @param getLedgersRequest The {@link GetLedgersRequest} to use for the request.
    * @return A {@link GetLedgersResponse} object containing the ledgers that match the request.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -582,6 +582,7 @@ public class SorobanServer implements Closeable {
       // existing entries are empty and the simulation result contains auth entries.
       if (simulateTransactionResponse.getResults() == null
           || simulateTransactionResponse.getResults().size() != 1) {
+
         throw new IllegalArgumentException(
             "invalid simulateTransactionResponse: results must contain exactly one element if the operation is an InvokeHostFunctionOperation");
       }
