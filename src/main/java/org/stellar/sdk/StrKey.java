@@ -387,12 +387,38 @@ public class StrKey {
 
     byte[] decoded = base32decode(bytes);
     byte decodedVersionByte = decoded[0];
+    VersionByte decodedVersionByteEnum =
+        VersionByte.findByValue(decodedVersionByte)
+            .orElseThrow(() -> new IllegalArgumentException("Version byte is invalid"));
     byte[] payload = Arrays.copyOfRange(decoded, 0, decoded.length - 2);
     byte[] data = Arrays.copyOfRange(payload, 1, payload.length);
     byte[] checksum = Arrays.copyOfRange(decoded, decoded.length - 2, decoded.length);
 
-    if (decodedVersionByte != versionByte.getValue()) {
-      throw new IllegalArgumentException("Version byte is invalid");
+    // Check the data length
+    switch (decodedVersionByteEnum) {
+      case SIGNED_PAYLOAD:
+        if (data.length < 32 + 4 + 4 || data.length > 32 + 4 + 64) {
+          throw new IllegalArgumentException(
+              "Invalid data length, the length should be between 40 and 100 bytes, got "
+                  + data.length);
+        }
+        break;
+      case MUXED:
+        if (data.length != 32 + 8) {
+          throw new IllegalArgumentException(
+              "Invalid data length, expected 40 bytes, got " + data.length);
+        }
+        break;
+      default:
+        if (data.length != 32) {
+          throw new IllegalArgumentException(
+              "Invalid data length, expected 32 bytes, got " + data.length);
+        }
+        break;
+    }
+
+    if (decodedVersionByteEnum != versionByte) {
+      throw new IllegalArgumentException("Version byte mismatch");
     }
 
     byte[] expectedChecksum = StrKey.calculateChecksum(payload);
