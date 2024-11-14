@@ -2,15 +2,26 @@
 
 ## Pending
 
+## 1.0.0-rc0
+
+The following are the changes since version 1.0.0-beta1. If you are upgrading from an older version,
+please also refer to the change logs of previous versions, **especially [1.0.0-alpha0](https://github.com/lightsail-network/java-stellar-sdk/releases/tag/1.0.0-alpha0)**.
+
+In addition, there are two PRs here that demonstrate how to upgrade to the latest version; you can check them out if needed:
+- https://github.com/stellar/kotlin-wallet-sdk/pull/155
+- https://github.com/stellar/java-stellar-anchor-sdk/pull/1575
+
 ### Update
+- feat: add support for Soroban PRC's `getLedgers` API interface. ([#660](https://github.com/stellar/java-stellar-sdk/pull/660))
+- fix: fix the data validation of `StrKey` class. ([#664](https://github.com/stellar/java-stellar-sdk/pull/664))
+
+### Breaking changes
 - refactor!: change the type of `AbstractTransaction.MIN_BASE_FEE` from `int` to `long`. ([#657](https://github.com/stellar/java-stellar-sdk/pull/657))
-- feat: add support for Soroban PRC's `getLedgers` API interface.
-- refactor!: if seed is not present, calling `Keypair.sign` throws IllegalStateException.
-- refactor!: `StrKeyException` has been removed, use `IllegalArgumentException` instead. When you call functions like `Keypair.fromAccountId`, this exception will also be thrown if invalid data is passed in.
-- refactor!: `AssetCodeLengthInvalidException` has been removed, use `IllegalArgumentException` instead.
-- refactor!: `MalformedAddressException` has been removed, use `IllegalArgumentException` instead.
-- fix: fix the data validation of `StrKey` class.
-- refactor!: rename `TransactionPreconditions.isValid` to `TransactionPreconditions.validate`.
+- refactor!: rename `TransactionPreconditions.isValid` to `TransactionPreconditions.validate`. ([#666](https://github.com/stellar/java-stellar-sdk/pull/666))
+- refactor!: if seed is not present, calling `Keypair.sign` throws IllegalStateException. ([#662](https://github.com/stellar/java-stellar-sdk/pull/662))
+- refactor!: `StrKeyException` has been removed, use `IllegalArgumentException` instead. When you call functions like `Keypair.fromAccountId`, this exception will also be thrown if invalid data is passed in. ([#663](https://github.com/stellar/java-stellar-sdk/pull/663))
+- refactor!: `AssetCodeLengthInvalidException` has been removed, use `IllegalArgumentException` instead. ([#667](https://github.com/stellar/java-stellar-sdk/pull/667))
+- refactor!: `MalformedAddressException` has been removed, use `IllegalArgumentException` instead. ([#668](https://github.com/stellar/java-stellar-sdk/pull/668))
 
 ## 1.0.0-beta1
 
