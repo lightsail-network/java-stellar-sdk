@@ -8,6 +8,7 @@
 - refactor!: if seed is not present, calling `Keypair.sign` throws IllegalStateException.
 - refactor!: `StrKeyException` has been removed, use `IllegalArgumentException` instead. When you call functions like `Keypair.fromAccountId`, this exception will also be thrown if invalid data is passed in.
 - fix: fix the data validation of `StrKey` class.
+- refactor!: rename `TransactionPreconditions.isValid` to `TransactionPreconditions.validate`.
 
 ## 1.0.0-beta1
 
