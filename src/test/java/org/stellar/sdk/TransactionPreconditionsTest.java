@@ -198,14 +198,14 @@ public class TransactionPreconditionsTest {
   public void itChecksValidityWhenTimebounds() {
     TransactionPreconditions preconditions =
         TransactionPreconditions.builder().timeBounds(new TimeBounds(1, 2)).build();
-    preconditions.isValid();
+    preconditions.validate();
   }
 
   @Test
   public void itChecksNonValidityOfTimeBounds() {
     TransactionPreconditions preconditions = TransactionPreconditions.builder().build();
     try {
-      preconditions.isValid();
+      preconditions.validate();
       fail();
     } catch (IllegalStateException ignored) {
     }
@@ -223,7 +223,7 @@ public class TransactionPreconditionsTest {
                     SignerKey.builder().build()))
             .build();
     try {
-      preconditions.isValid();
+      preconditions.validate();
       fail();
     } catch (IllegalStateException ignored) {
     }
@@ -233,7 +233,7 @@ public class TransactionPreconditionsTest {
   public void itChecksValidityWhenNoTimeboundsSet() {
     TransactionPreconditions preconditions = TransactionPreconditions.builder().build();
     try {
-      preconditions.isValid();
+      preconditions.validate();
       fail();
     } catch (IllegalStateException exception) {
       assertTrue(exception.getMessage().contains("Invalid preconditions, must define timebounds"));
