@@ -2,6 +2,29 @@
 
 ## Pending
 
+## 1.0.0
+
+We are excited to announce the release of version 1.0.0 of the Java Stellar SDK! 
+This marks a significant milestone in the project's development, representing the culmination 
+of extensive work and valuable community feedback since the alpha and beta releases.
+
+This version is identical in functionality to 1.0.0-rc0. If you are upgrading from an older version, 
+please make sure to review the change logs of all previous versions in our [CHANGELOG.md](https://github.com/lightsail-network/java-stellar-sdk/blob/master/CHANGELOG.md), 
+as there have been significant changes throughout the 1.0.0 development cycle.
+We would like to express our sincere gratitude to everyone who provided feedback, 
+reported issues, and contributed to making this release possible. 
+Your involvement has been instrumental in shaping and improving the SDK.
+
+This release marks our official adoption of semantic versioning, providing more predictability 
+for future updates. Breaking changes will now only be introduced in major version updates.
+
+There are two PRs here that demonstrate how to upgrade to the latest version; you can check them out if needed:
+- https://github.com/stellar/kotlin-wallet-sdk/pull/155
+- https://github.com/stellar/java-stellar-anchor-sdk/pull/1575
+
+Please continue to share your experiences and report any issues you encounter. 
+Your feedback remains vital for the continued improvement of the SDK.
+
 ## 1.0.0-rc0
 
 The following are the changes since version 1.0.0-beta1. If you are upgrading from an older version,
