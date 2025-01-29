@@ -285,7 +285,7 @@ private fun testSDK(): String {
         // send real transaction
         // https://horizon.stellar.org/transactions/fe833c504ca8b329c1e00adec7da79f61a55e28dc705e22a6515494427cc456a
         val xdr =
-            "AAAAAgAAAAAcBaQEwcGuB3ErX1lnwKcP/pe84KcAabwB0GNk6SNvnwAAnQgCwi0TAAgJjwAAAAEAAAAAAAAAAAAAAABlD7HrAAAAAAAAAAIAAAAAAAAADAAAAAAAAAACZUJvbmQAAAAAAAAAAAAAAN80PsIQ9ohJQb1yLu4XaURrKURt5rbLoC7FfOM4vSZQAAAH0oBPrQsAAABFAB6EgAAAAABRAwlNAAAAAAAAAAwAAAAAAAAAAmVCb25kAAAAAAAAAAAAAADfND7CEPaISUG9ci7uF2lEaylEbea2y6AuxXzjOL0mUAAAByOt/5PHAAAAvQBMS0AAAAAAUQMJTgAAAAAAAAAB6SNvnwAAAEDR4cJo3zzZfCFusnM0sECT4xmhLW/bgwukIBxWWXvsDGLdQtE87lkrGijAPiyBEy3n1lDxDu4uwNpGnMXEaTAN"
+            server.transactions().limit(1).includeFailed(false).execute().records.get(0).envelopeXdr
         val tx: Transaction = Transaction.fromEnvelopeXdr(xdr, Network.PUBLIC) as Transaction
         val resp = server.submitTransaction(tx)
         Log.d("MainActivity", "testSDK resp: $resp")
