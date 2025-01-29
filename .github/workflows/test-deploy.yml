@@ -8,6 +8,9 @@ on:
   release:
     types:
       - created
+  schedule:
+    # Every Monday at 00:30 UTC
+    - cron: '30 0 * * 1'
 
 env:
   JAVA_VERSION: '21'
