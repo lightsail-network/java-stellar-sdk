@@ -3,12 +3,12 @@ package org.stellar.sdk.requests;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.Jdk11HttpClient;
 
 public class ResponseHandlerTest {
 
@@ -23,10 +23,9 @@ public class ResponseHandlerTest {
     mockWebServer.start();
     mockWebServer.enqueue(response);
 
-    OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
+    final var httpClient = new Jdk11HttpClient.Builder().build();
     try {
-
-      AccountsRequestBuilder.execute(okHttpClient, mockWebServer.url("/"));
+      AccountsRequestBuilder.execute(httpClient, mockWebServer.url("/").uri());
       Assert.fail();
     } catch (TooManyRequestsException tmre) {
       assertEquals(10, tmre.getRetryAfter().intValue());
@@ -48,10 +47,10 @@ public class ResponseHandlerTest {
     mockWebServer.start();
     mockWebServer.enqueue(response);
 
-    OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
+    final var httpClient = new Jdk11HttpClient.Builder().build();
 
     try {
-      AccountsRequestBuilder.execute(okHttpClient, mockWebServer.url("/"));
+      AccountsRequestBuilder.execute(httpClient, mockWebServer.url("/").uri());
       Assert.fail();
     } catch (TooManyRequestsException tmre) {
       assertEquals(null, tmre.getRetryAfter());

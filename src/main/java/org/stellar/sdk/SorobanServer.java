@@ -5,28 +5,25 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.exception.AccountNotFoundException;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.PrepareTransactionException;
 import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.SorobanRpcException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.Jdk11HttpClient;
+import org.stellar.sdk.http.PostRequest;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
-import org.stellar.sdk.requests.ClientIdentificationInterceptor;
 import org.stellar.sdk.requests.ResponseHandler;
 import org.stellar.sdk.requests.sorobanrpc.GetEventsRequest;
 import org.stellar.sdk.requests.sorobanrpc.GetLedgerEntriesRequest;
@@ -64,8 +61,8 @@ import org.stellar.sdk.xdr.SorobanTransactionData;
 public class SorobanServer implements Closeable {
   private static final int SUBMIT_TRANSACTION_TIMEOUT = 60; // seconds
   private static final int CONNECT_TIMEOUT = 10; // seconds
-  private final HttpUrl serverURI;
-  private final OkHttpClient httpClient;
+  private final URI serverURI;
+  private final IHttpClient httpClient;
   private final Gson gson = new Gson();
 
   /**
@@ -76,11 +73,10 @@ public class SorobanServer implements Closeable {
   public SorobanServer(String serverURI) {
     this(
         serverURI,
-        new OkHttpClient.Builder()
-            .addInterceptor(new ClientIdentificationInterceptor())
-            .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(SUBMIT_TRANSACTION_TIMEOUT, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
+        new Jdk11HttpClient.Builder()
+            .withConnectTimeout(CONNECT_TIMEOUT, ChronoUnit.SECONDS)
+            .withReadTimeout(SUBMIT_TRANSACTION_TIMEOUT, ChronoUnit.SECONDS)
+            .withRetryOnConnectionFailure(true)
             .build());
   }
 
@@ -88,10 +84,10 @@ public class SorobanServer implements Closeable {
    * Creates a new SorobanServer instance.
    *
    * @param serverURI The URI of the Soroban-RPC instance to connect to.
-   * @param httpClient The {@link OkHttpClient} instance to use for requests.
+   * @param httpClient The {@link IHttpClient} instance to use for requests.
    */
-  public SorobanServer(String serverURI, OkHttpClient httpClient) {
-    this.serverURI = HttpUrl.parse(serverURI);
+  public SorobanServer(String serverURI, IHttpClient httpClient) {
+    this.serverURI = UriUtil.toUri(serverURI);
     this.httpClient = httpClient;
   }
 
@@ -655,12 +651,11 @@ public class SorobanServer implements Closeable {
     String requestId = generateRequestId();
     ResponseHandler<SorobanRpcResponse<R>> responseHandler = new ResponseHandler<>(responseType);
     SorobanRpcRequest<T> sorobanRpcRequest = new SorobanRpcRequest<>(requestId, method, params);
-    MediaType mediaType = MediaType.parse("application/json");
-    RequestBody requestBody =
-        RequestBody.create(gson.toJson(sorobanRpcRequest).getBytes(), mediaType);
 
-    Request request = new Request.Builder().url(this.serverURI).post(requestBody).build();
-    try (Response response = this.httpClient.newCall(request).execute()) {
+    final var request = PostRequest.jsonBody(this.serverURI, gson.toJson(sorobanRpcRequest));
+
+    try {
+      final var response = httpClient.post(request);
       SorobanRpcResponse<R> sorobanRpcResponse = responseHandler.handleResponse(response);
       if (sorobanRpcResponse.getError() != null) {
         SorobanRpcResponse.Error error = sorobanRpcResponse.getError();
@@ -676,7 +671,11 @@ public class SorobanServer implements Closeable {
 
   @Override
   public void close() throws IOException {
-    this.httpClient.connectionPool().evictAll();
+    try {
+      this.httpClient.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private static String generateRequestId() {

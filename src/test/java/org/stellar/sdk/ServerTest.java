@@ -6,9 +6,9 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -18,6 +18,7 @@ import org.stellar.sdk.exception.AccountRequiresMemoException;
 import org.stellar.sdk.exception.BadRequestException;
 import org.stellar.sdk.exception.BadResponseException;
 import org.stellar.sdk.exception.RequestTimeoutException;
+import org.stellar.sdk.http.Jdk11HttpClient;
 import org.stellar.sdk.operations.AccountMergeOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.ManageDataOperation;
@@ -244,12 +245,12 @@ public class ServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     Server server = new Server(baseUrl.toString());
 
-    // We're creating a new OkHttpClient to make this test faster
-    OkHttpClient testSubmitHttpClient =
-        new OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(false)
+    // We're creating a new IHttpClient to make this test faster
+    final var testSubmitHttpClient =
+        new Jdk11HttpClient.Builder()
+            .withConnectTimeout(10, ChronoUnit.SECONDS)
+            .withReadTimeout(10, ChronoUnit.SECONDS)
+            .withRetryOnConnectionFailure(false)
             .build();
     server.setSubmitHttpClient(testSubmitHttpClient);
     Transaction tx = this.buildTransaction();
@@ -274,12 +275,12 @@ public class ServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     Server server = new Server(baseUrl.toString());
 
-    // We're creating a new OkHttpClient to make this test faster
-    OkHttpClient testSubmitHttpClient =
-        new OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.SECONDS)
-            .readTimeout(1, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(false)
+    // We're creating a new IHttpClient to make this test faster
+    final var testSubmitHttpClient =
+        new Jdk11HttpClient.Builder()
+            .withConnectTimeout(1, ChronoUnit.SECONDS)
+            .withReadTimeout(1, ChronoUnit.SECONDS)
+            .withRetryOnConnectionFailure(false)
             .build();
     server.setSubmitHttpClient(testSubmitHttpClient);
 
@@ -434,12 +435,12 @@ public class ServerTest {
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     Server server = new Server(baseUrl.toString());
-    // We're creating a new OkHttpClient to make this test faster
-    OkHttpClient testSubmitHttpClient =
-        new OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(false)
+    // We're creating a new IHttpClient to make this test faster
+    final var testSubmitHttpClient =
+        new Jdk11HttpClient.Builder()
+            .withConnectTimeout(10, ChronoUnit.SECONDS)
+            .withReadTimeout(10, ChronoUnit.SECONDS)
+            .withRetryOnConnectionFailure(false)
             .build();
     server.setSubmitHttpClient(testSubmitHttpClient);
 

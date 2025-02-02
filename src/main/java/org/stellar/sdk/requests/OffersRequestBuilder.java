@@ -1,17 +1,18 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
+import java.net.URI;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
 
 /** Builds requests connected to offers. */
 public class OffersRequestBuilder extends RequestBuilder {
-  public OffersRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "offers");
+  public OffersRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "offers");
   }
 
   /**
@@ -34,7 +35,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public OfferResponse offer(HttpUrl uri) {
+  public OfferResponse offer(URI uri) {
     TypeToken<OfferResponse> type = new TypeToken<OfferResponse>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -116,8 +117,8 @@ public class OffersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link OfferResponse}. This
    * method is helpful for getting the next set of results.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link OfferResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -134,7 +135,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<OfferResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<OfferResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<OfferResponse>> type = new TypeToken<Page<OfferResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -153,7 +154,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    */
   public SSEStream<OfferResponse> stream(
       final EventListener<OfferResponse> listener, long reconnectTimeout) {
-    return SSEStream.create(httpClient, this, OfferResponse.class, listener, reconnectTimeout);
+    return SSEStream.create(sseClient, this, OfferResponse.class, listener, reconnectTimeout);
   }
 
   /**

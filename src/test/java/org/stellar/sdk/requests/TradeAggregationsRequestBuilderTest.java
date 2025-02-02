@@ -3,7 +3,6 @@ package org.stellar.sdk.requests;
 import static org.junit.Assert.assertEquals;
 import static org.stellar.sdk.Asset.createNonNativeAsset;
 
-import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Server;
@@ -12,7 +11,7 @@ public class TradeAggregationsRequestBuilderTest {
   @Test
   public void testTradeAggregations() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .tradeAggregations(
                 new AssetTypeNative(),

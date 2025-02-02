@@ -1,17 +1,18 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
+import java.net.URI;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.OrderBookResponse;
 
 /** Builds requests connected to order book. */
 public class OrderBookRequestBuilder extends RequestBuilder {
-  public OrderBookRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "order_book");
+  public OrderBookRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "order_book");
   }
 
   public OrderBookRequestBuilder buyingAsset(Asset asset) {
@@ -37,8 +38,8 @@ public class OrderBookRequestBuilder extends RequestBuilder {
   /**
    * Requests specific <code>uri</code> and returns {@link OrderBookResponse}.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link OrderBookResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -55,7 +56,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static OrderBookResponse execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static OrderBookResponse execute(IHttpClient httpClient, URI uri) {
     TypeToken<OrderBookResponse> type = new TypeToken<OrderBookResponse>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -74,7 +75,7 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    */
   public SSEStream<OrderBookResponse> stream(
       final EventListener<OrderBookResponse> listener, long reconnectTimeout) {
-    return SSEStream.create(httpClient, this, OrderBookResponse.class, listener, reconnectTimeout);
+    return SSEStream.create(sseClient, this, OrderBookResponse.class, listener, reconnectTimeout);
   }
 
   /**

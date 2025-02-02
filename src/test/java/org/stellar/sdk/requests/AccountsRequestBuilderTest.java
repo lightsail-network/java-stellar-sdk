@@ -3,7 +3,6 @@ package org.stellar.sdk.requests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.*;
 
@@ -11,7 +10,7 @@ public class AccountsRequestBuilderTest {
   @Test
   public void testAccounts() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .accounts()
             .cursor("13537736921089")
@@ -27,7 +26,7 @@ public class AccountsRequestBuilderTest {
   @Test
   public void testForSigner() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .accounts()
             .forSigner("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")
@@ -41,7 +40,7 @@ public class AccountsRequestBuilderTest {
   @Test
   public void testForSponsor() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .accounts()
             .forSponsor("GDSBCQO34HWPGUGQSP3QBFEXVTSR2PW46UIGTHVWGWJGQKH3AFNHXHXN")
@@ -58,7 +57,7 @@ public class AccountsRequestBuilderTest {
     AssetTypeCreditAlphaNum asset =
         new AssetTypeCreditAlphaNum4(
             "USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
-    HttpUrl uri = server.accounts().forAsset(asset).buildUri();
+    final var uri = server.accounts().forAsset(asset).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?asset=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
@@ -71,7 +70,7 @@ public class AccountsRequestBuilderTest {
     AssetTypeCreditAlphaNum asset =
         new AssetTypeCreditAlphaNum12(
             "STELLAR", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
-    HttpUrl uri = server.accounts().forAsset(asset).buildUri();
+    final var uri = server.accounts().forAsset(asset).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?asset=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
@@ -136,7 +135,7 @@ public class AccountsRequestBuilderTest {
   public void testForLiquidityPool() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     String liquidityPoolId = "dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca";
-    HttpUrl uri = server.accounts().forLiquidityPool(liquidityPoolId).buildUri();
+    final var uri = server.accounts().forLiquidityPool(liquidityPoolId).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/accounts?liquidity_pool=dd7b1ab831c273310ddbec6f97870aa83c2fbd78ce22aded37ecbf4f3380faca",
         uri.toString());

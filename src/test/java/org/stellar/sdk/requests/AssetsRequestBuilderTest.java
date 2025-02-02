@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
-import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.Server;
 
@@ -10,7 +9,7 @@ public class AssetsRequestBuilderTest {
   @Test
   public void testAssets() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .assets()
             .assetCode("USD")

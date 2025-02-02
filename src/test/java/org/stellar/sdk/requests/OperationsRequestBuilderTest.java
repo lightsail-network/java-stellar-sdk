@@ -3,7 +3,6 @@ package org.stellar.sdk.requests;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -48,7 +47,7 @@ public class OperationsRequestBuilderTest {
   @Test
   public void testOperations() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri = server.operations().limit(200).order(RequestBuilder.Order.DESC).buildUri();
+    final var uri = server.operations().limit(200).order(RequestBuilder.Order.DESC).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/operations?limit=200&order=desc", uri.toString());
     server.close();
@@ -61,20 +60,20 @@ public class OperationsRequestBuilderTest {
     mockWebServer.start();
     Server server = new Server(mockWebServer.url("").toString());
     OperationResponse response = server.operations().operation(438086668289L);
-    assertEquals(response.getType(), "create_account");
-    assertEquals(response.getId(), Long.valueOf(438086668289L));
+    assertEquals("create_account", response.getType());
+    assertEquals(Long.valueOf(438086668289L), response.getId());
     assertEquals(
-        response.getSourceAccount(), "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H");
+        "GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H", response.getSourceAccount());
     RecordedRequest request = mockWebServer.takeRequest();
-    assertEquals(request.getMethod(), "GET");
-    assertEquals(request.getPath(), "/operations/438086668289");
+    assertEquals("GET", request.getMethod());
+    assertEquals("/operations/438086668289", request.getPath());
     server.close();
   }
 
   @Test
   public void testForAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .operations()
             .forAccount("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
@@ -90,7 +89,7 @@ public class OperationsRequestBuilderTest {
   @Test
   public void testForClaimableBalance() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .operations()
             .forClaimableBalance(
@@ -107,7 +106,7 @@ public class OperationsRequestBuilderTest {
   @Test
   public void testForLedger() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .operations()
             .forLedger(200000000000L)
@@ -123,7 +122,7 @@ public class OperationsRequestBuilderTest {
   @Test
   public void testForLiquidityPool() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .operations()
             .forLiquidityPool("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9")
@@ -137,7 +136,7 @@ public class OperationsRequestBuilderTest {
   @Test
   public void testForTransaction() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .operations()
             .forTransaction("991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3")
@@ -151,7 +150,7 @@ public class OperationsRequestBuilderTest {
   @Test
   public void testIncludeFailed() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .operations()
             .forLedger(200000000000L)
@@ -168,7 +167,7 @@ public class OperationsRequestBuilderTest {
   @Test
   public void testIncludeTransactions() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    var uri =
         server
             .operations()
             .forLedger(200000000000L)
@@ -199,7 +198,7 @@ public class OperationsRequestBuilderTest {
   @Test
   public void testExcludeTransactions() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .operations()
             .forLedger(200000000000L)

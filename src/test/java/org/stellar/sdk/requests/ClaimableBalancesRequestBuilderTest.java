@@ -2,7 +2,7 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
-import okhttp3.HttpUrl;
+import java.net.URI;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -16,7 +16,7 @@ public class ClaimableBalancesRequestBuilderTest {
   @Test
   public void testForSponsor() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .claimableBalances()
             .forSponsor("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
@@ -32,7 +32,7 @@ public class ClaimableBalancesRequestBuilderTest {
   @Test
   public void testWithoutParams() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri = server.claimableBalances().buildUri();
+    URI uri = server.claimableBalances().buildUri();
     assertEquals("https://horizon-testnet.stellar.org/claimable_balances", uri.toString());
     server.close();
   }
@@ -40,7 +40,7 @@ public class ClaimableBalancesRequestBuilderTest {
   @Test
   public void testForClaimant() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .claimableBalances()
             .forClaimant("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
@@ -54,7 +54,7 @@ public class ClaimableBalancesRequestBuilderTest {
   @Test
   public void testForNativeAsset() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri = server.claimableBalances().forAsset(Asset.create("native")).buildUri();
+    URI uri = server.claimableBalances().forAsset(Asset.create("native")).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/claimable_balances?asset=native", uri.toString());
     server.close();
@@ -63,7 +63,7 @@ public class ClaimableBalancesRequestBuilderTest {
   @Test
   public void testForAsset() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .claimableBalances()
             .forAsset(Asset.create("USD:GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H"))
@@ -77,7 +77,7 @@ public class ClaimableBalancesRequestBuilderTest {
   @Test
   public void testForAssetAndClaimant() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .claimableBalances()
             .forClaimant("GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY")

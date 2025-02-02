@@ -1,14 +1,13 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
-import okhttp3.Response;
 import org.stellar.sdk.exception.BadRequestException;
 import org.stellar.sdk.exception.BadResponseException;
 import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.exception.UnknownResponseException;
+import org.stellar.sdk.http.StringResponse;
 import org.stellar.sdk.responses.Problem;
 import org.stellar.sdk.responses.SubmitTransactionAsyncResponse;
 import org.stellar.sdk.responses.gson.GsonSingleton;
@@ -43,7 +42,7 @@ public class ResponseHandler<T> {
    * @throws BadRequestException If the response code is in the 4xx range
    * @throws BadResponseException If the response code is in the 5xx range
    */
-  public T handleResponse(final Response response) {
+  public T handleResponse(final StringResponse response) {
     return handleResponse(response, false);
   }
 
@@ -61,76 +60,68 @@ public class ResponseHandler<T> {
    * @throws BadRequestException If the response code is in the 4xx range
    * @throws BadResponseException If the response code is in the 5xx range
    */
-  public T handleResponse(final Response response, boolean submitTransactionAsync) {
-    try {
-      // Too Many Requests
-      if (response.code() == 429) {
+  public T handleResponse(final StringResponse response, boolean submitTransactionAsync) {
+    // Too Many Requests
+    if (response.getStatusCode() == 429) {
 
-        Integer retryAfter = null;
-        String header = response.header("Retry-After");
-        if (header != null) {
-          try {
-            retryAfter = Integer.parseInt(header);
-          } catch (NumberFormatException ignored) {
-          }
-        }
-        throw new TooManyRequestsException(retryAfter);
-      }
-
-      String content = null;
-      if (response.body() == null) {
-        throw new UnexpectedException("Unexpected empty response body");
-      }
-
-      try {
-        content = response.body().string();
-      } catch (IOException e) {
-        throw new UnexpectedException("Unexpected error reading response", e);
-      }
-
-      if (response.code() >= 200 && response.code() < 300) {
-        T object = GsonSingleton.getInstance().fromJson(content, type.getType());
-        if (object instanceof TypedResponse) {
-          ((TypedResponse<T>) object).setType(type);
-        }
-        return object;
-      }
-
-      // Other errors
-      if (response.code() >= 400 && response.code() < 600) {
-        Problem problem = null;
-        SubmitTransactionAsyncResponse submitTransactionAsyncProblem = null;
+      Integer retryAfter = null;
+      final var headerMaybe = response.getHeader("Retry-After");
+      if (headerMaybe.isPresent()) {
         try {
-          problem = GsonSingleton.getInstance().fromJson(content, Problem.class);
+          retryAfter = Integer.parseInt(headerMaybe.get());
+        } catch (NumberFormatException ignored) {
+        }
+      }
+      throw new TooManyRequestsException(retryAfter);
+    }
+
+    String content = null;
+    if (response.getResponseBody() == null) {
+      throw new UnexpectedException("Unexpected empty response body");
+    }
+
+    content = response.getResponseBody();
+
+    if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+      T object = GsonSingleton.getInstance().fromJson(content, type.getType());
+      if (object instanceof TypedResponse) {
+        ((TypedResponse<T>) object).setType(type);
+      }
+      return object;
+    }
+
+    // Other errors
+    if (response.getStatusCode() >= 400 && response.getStatusCode() < 600) {
+      Problem problem = null;
+      SubmitTransactionAsyncResponse submitTransactionAsyncProblem = null;
+      try {
+        problem = GsonSingleton.getInstance().fromJson(content, Problem.class);
+      } catch (Exception e) {
+        // if we can't parse the response, we just ignore it
+      }
+
+      if (submitTransactionAsync) {
+        try {
+          submitTransactionAsyncProblem =
+              GsonSingleton.getInstance().fromJson(content, SubmitTransactionAsyncResponse.class);
         } catch (Exception e) {
           // if we can't parse the response, we just ignore it
         }
-
-        if (submitTransactionAsync) {
-          try {
-            submitTransactionAsyncProblem =
-                GsonSingleton.getInstance().fromJson(content, SubmitTransactionAsyncResponse.class);
-          } catch (Exception e) {
-            // if we can't parse the response, we just ignore it
-          }
-        }
-
-        if (response.code() == 504) {
-          throw new RequestTimeoutException(response.code(), content, problem);
-        } else if (response.code() < 500) {
-          // Codes in the 4xx range indicate an error that failed given the information provided
-          throw new BadRequestException(
-              response.code(), content, problem, submitTransactionAsyncProblem);
-        } else {
-          // Codes in the 5xx range indicate an error with the Horizon server.
-          throw new BadResponseException(
-              response.code(), content, problem, submitTransactionAsyncProblem);
-        }
       }
 
-      throw new UnknownResponseException(response.code(), content);
-    } finally {
-      response.close();
+      if (response.getStatusCode() == 504) {
+        throw new RequestTimeoutException(response.getStatusCode(), content, problem);
+      } else if (response.getStatusCode() < 500) {
+        // Codes in the 4xx range indicate an error that failed given the information provided
+        throw new BadRequestException(
+            response.getStatusCode(), content, problem, submitTransactionAsyncProblem);
+      } else {
+        // Codes in the 5xx range indicate an error with the Horizon server.
+        throw new BadResponseException(
+            response.getStatusCode(), content, problem, submitTransactionAsyncProblem);
+      }
     }
+
+    throw new UnknownResponseException(response.getStatusCode(), content);
   }
 }

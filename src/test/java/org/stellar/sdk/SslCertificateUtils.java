@@ -11,7 +11,6 @@ import java.util.Date;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -22,7 +21,7 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 public class SslCertificateUtils {
-  public static SSLSocketFactory createSslSocketFactory() {
+  public static SSLContext createSslContext() {
     try {
       KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
       keyPairGenerator.initialize(2048);
@@ -43,8 +42,7 @@ public class SslCertificateUtils {
 
       SSLContext sslContext = SSLContext.getInstance("TLS");
       sslContext.init(keyManagers, new TrustManager[] {trustManager}, null);
-
-      return sslContext.getSocketFactory();
+      return sslContext;
     } catch (Exception e) {
       throw new RuntimeException("Failed to create SSL socket factory", e);
     }
