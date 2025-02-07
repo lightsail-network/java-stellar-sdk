@@ -9,6 +9,12 @@ import org.stellar.sdk.requests.RequestBuilder;
 import org.stellar.sdk.responses.Pageable;
 import org.stellar.sdk.responses.gson.GsonSingleton;
 
+/**
+ * SSE event handler backed by Apache CXF.
+ *
+ * @see https://cxf.apache.org/docs/sse.html
+ * @param <T> the SDK response class.
+ */
 @Getter
 public class CxfSseEventStream<T extends org.stellar.sdk.responses.Response>
     implements ISseEventStream {
@@ -41,13 +47,13 @@ public class CxfSseEventStream<T extends org.stellar.sdk.responses.Response>
 
           context.getLastEventTime().set(System.currentTimeMillis());
 
-          final var eventData = inboundSseEvent.readData();
+          final var eventDataString = inboundSseEvent.readData();
 
-          if (eventData.equals("\"hello\"") || eventData.equals("\"byebye\"")) {
+          if (eventDataString.equals("\"hello\"") || eventDataString.equals("\"byebye\"")) {
             return;
           }
 
-          T event = GsonSingleton.getInstance().fromJson(eventData, responseClass);
+          T event = GsonSingleton.getInstance().fromJson(eventDataString, responseClass);
 
           if (event instanceof Pageable) {
             String pagingToken = ((Pageable) event).getPagingToken();
