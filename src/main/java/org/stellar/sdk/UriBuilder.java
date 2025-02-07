@@ -136,14 +136,20 @@ public class UriBuilder {
       return new LinkedHashMap<>();
     } else {
       final var paramsMap = new LinkedHashMap<String, String>();
-      final var pattern = Pattern.compile("\\??(?:&?[^=&]*=[^=&]*)*");
+      final var pattern = Pattern.compile("\\??(&?[^=&]*=[^=&]*)");
       final var matcher = pattern.matcher(queryParamsString);
       while (matcher.find()) {
         final var parts = matcher.group(1).split("=", 2);
+        var name = parts[0];
+
+        if (name.startsWith("&")) {
+          name = name.substring(1);
+        }
+
         if (parts.length == 1 || StringUtil.isBlank(parts[1])) {
-          paramsMap.put(parts[0], "");
+          paramsMap.put(name, "");
         } else {
-          paramsMap.put(parts[0], parts[1]);
+          paramsMap.put(name, parts[1]);
         }
       }
 
