@@ -2,6 +2,15 @@
 
 ## Pending
 
+## 1.1.0
+
+In this release, we have significantly simplified the process of using the Java SDK to interact with Soroban contracts. 
+You can now use stellar-contract-bindings to generate Java bindings for contracts and invoke them. 
+Please visit [the GitHub repository](https://github.com/lightsail-network/stellar-contract-bindings) of stellar-contract-bindings for more information.
+
+### Update
+- feat: add `ContractClient` to simplify contract calls. ([#675](https://github.com/stellar/java-stellar-sdk/pull/675))
+    
 ## 1.0.0
 
 We are excited to announce the release of version 1.0.0 of the Java Stellar SDK! 
