@@ -6,17 +6,18 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import lombok.Getter;
 import lombok.NonNull;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 
 /** Builds a new Transaction object. */
 public class TransactionBuilder {
-  private final TransactionBuilderAccount sourceAccount;
+  @Getter private final TransactionBuilderAccount sourceAccount;
   private Memo memo;
   private final List<Operation> operations;
-  private Long baseFee;
-  private final Network network;
+  @Getter private Long baseFee;
+  @Getter private final Network network;
   @NonNull private TransactionPreconditions preconditions;
   private SorobanTransactionData sorobanData;
   private BigInteger txTimeout;
@@ -158,16 +159,20 @@ public class TransactionBuilder {
           "Can not set both TransactionPreconditions.timeBounds and timeout.");
     }
 
+    TransactionPreconditions txPreconditions;
+
     if (txTimeout != null) {
       BigInteger maxTime =
           !TIMEOUT_INFINITE.equals(txTimeout)
               ? txTimeout.add(BigInteger.valueOf(System.currentTimeMillis() / 1000L))
               : TIMEOUT_INFINITE;
-      preconditions =
+      txPreconditions =
           preconditions.toBuilder().timeBounds(new TimeBounds(BigInteger.ZERO, maxTime)).build();
+    } else {
+      txPreconditions = preconditions;
     }
 
-    preconditions.validate();
+    txPreconditions.validate();
 
     if (baseFee == null) {
       throw new IllegalStateException("baseFee has to be set. you must call setBaseFee().");
@@ -193,7 +198,7 @@ public class TransactionBuilder {
             sequenceNumber,
             operations,
             memo,
-            preconditions,
+            txPreconditions,
             sorobanData,
             network);
     sourceAccount.setSequenceNumber(sequenceNumber);
