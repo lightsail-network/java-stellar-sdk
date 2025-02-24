@@ -1,4 +1,6 @@
 org.stellar.sdk
+org.stellar.sdk.contract
+org.stellar.sdk.contract.exception
 org.stellar.sdk.exception
 org.stellar.sdk.federation
 org.stellar.sdk.federation.exception
