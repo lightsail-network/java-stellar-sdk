@@ -560,7 +560,7 @@ public class SorobanServer implements Closeable {
         "sendTransaction", params, new TypeToken<SorobanRpcResponse<SendTransactionResponse>>() {});
   }
 
-  private Transaction assembleTransaction(
+  public static Transaction assembleTransaction(
       Transaction transaction, SimulateTransactionResponse simulateTransactionResponse) {
     if (!transaction.isSorobanTransaction()) {
       throw new IllegalArgumentException(
