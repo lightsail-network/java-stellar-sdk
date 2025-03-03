@@ -244,21 +244,70 @@ public class TransactionBuilder {
     return this;
   }
 
-  public TransactionBuilder buildPaymentToContractTransaction(
-      String destination, Asset asset, BigDecimal amount, @NonNull String source) {
+  /**
+   * An alias for {@link #buildRestoreAssetBalanceEntryTransaction(String, Asset,
+   * SorobanDataBuilder.Resources, Long, String)} with {@code resources} set to {@code new
+   * SorobanDataBuilder.Resources(400_000L, 1_000L, 1_000L)} and {@code resourceFee} set to {@code
+   * 5_000_000L}.
+   *
+   * @param destination The contract to send the assets to. (starting with 'C')
+   * @param asset The asset to send.
+   * @param amount The amount of the asset to send.
+   * @param source The source account for the transaction.
+   * @return The transaction.
+   */
+  public Transaction buildPaymentToContractTransaction(
+      String destination, Asset asset, BigDecimal amount, @Nullable String source) {
     SorobanDataBuilder.Resources resources =
         new SorobanDataBuilder.Resources(400_000L, 1_000L, 1_000L);
     return buildPaymentToContractTransaction(
         destination, asset, amount, resources, 5_000_000L, source);
   }
 
-  public TransactionBuilder buildPaymentToContractTransaction(
+  /**
+   * Builds a transaction to send asset to a contract.
+   *
+   * <p>The original intention of this interface design is to send assets to the contract account
+   * when the Stellar RPC server is inaccessible. Without Stellar RPC, we cannot accurately estimate
+   * the required resources, so we have preset some values that may be slightly higher than the
+   * actual resource consumption.
+   *
+   * <p>If you encounter the {@code entry_archived} error when submitting this transaction, you
+   * should consider calling the {@link #buildRestoreAssetBalanceEntryTransaction(String, Asset,
+   * SorobanDataBuilder.Resources, Long, String)} method to restore the entry, and then use the
+   * method to send assets again.
+   *
+   * <p><b>Note:</b>
+   *
+   * <ol>
+   *   <li>This method should only be used to send assets to a contract (starting with 'C'). For
+   *       sending assets to regular account addresses (starting with 'G'), please use the {@link
+   *       org.stellar.sdk.operations.PaymentOperation}.
+   *   <li>This method is suitable for sending assets to a contract account when you don't have
+   *       access to a Stellar RPC server. If you have access to a Stellar RPC server, it is
+   *       recommended to use the {@link org.stellar.sdk.contract.ContractClient} to build
+   *       transactions for sending tokens to contracts.
+   *   <li>This method may consume slightly more transaction fee than actually required. Under
+   *       Protocol 22, if the destination is receiving the asset for the first time, it will
+   *       actually consume about 0.25 XLM in resource fees; if it has received the asset before, it
+   *       will actually consume about 0.006 XLM in resource fees.
+   * </ol>
+   *
+   * @param destination The contract to send the assets to. (starting with 'C')
+   * @param asset The asset to send.
+   * @param amount The amount of the asset to send.
+   * @param resources The resources required for the transaction.
+   * @param resourceFee The maximum fee (in stroops) that can be paid for the transaction.
+   * @param source The source account for the transaction.
+   * @return The transaction.
+   */
+  public Transaction buildPaymentToContractTransaction(
       String destination,
       Asset asset,
       BigDecimal amount,
       SorobanDataBuilder.Resources resources,
       Long resourceFee,
-      String source) {
+      @Nullable String source) {
     if (!StrKey.isValidContract(destination)) {
       throw new IllegalArgumentException("destination is not a valid contract address");
     }
@@ -384,17 +433,49 @@ public class TransactionBuilder {
 
     this.addOperation(op);
     this.setSorobanData(sorobanData);
-    return this;
+    return this.build();
   }
 
-  public TransactionBuilder buildRestoreAssetBalanceEntryTransaction(
+  /**
+   * An alias for {@link #buildRestoreAssetBalanceEntryTransaction(String, Asset,
+   * SorobanDataBuilder.Resources, Long, String)} with {@code resources} set to {@code new
+   * SorobanDataBuilder.Resources(0L, 500L, 500L)} and {@code resourceFee} set to {@code
+   * 4_000_000L}.
+   *
+   * @param balanceOwner The owner of the asset, it should be the same as the `destination` address
+   *     in the {@link #buildPaymentToContractTransaction(String, Asset, BigDecimal,
+   *     SorobanDataBuilder.Resources, Long, String)} method.
+   * @param asset The asset
+   * @param source The source account for the transaction.
+   * @return The transaction.
+   */
+  public Transaction buildRestoreAssetBalanceEntryTransaction(
       String balanceOwner, Asset asset, @Nullable String source) {
     SorobanDataBuilder.Resources resources = new SorobanDataBuilder.Resources(0L, 500L, 500L);
     return buildRestoreAssetBalanceEntryTransaction(
         balanceOwner, asset, resources, 4_000_000L, source);
   }
 
-  public TransactionBuilder buildRestoreAssetBalanceEntryTransaction(
+  /**
+   * Builds a transaction to restore the asset balance entry.
+   *
+   * <p>This method is designed to be used in conjunction with the {@link
+   * #buildPaymentToContractTransaction(String, Asset, BigDecimal, SorobanDataBuilder.Resources,
+   * Long, String)} method.
+   *
+   * <p>Under Protocol 22, if the entry really needs to be restored, then this method will consume
+   * about 0.25 XLM in resource fees.
+   *
+   * @param balanceOwner The owner of the asset, it should be the same as the `destination` address
+   *     in the {@link #buildPaymentToContractTransaction(String, Asset, BigDecimal,
+   *     SorobanDataBuilder.Resources, Long, String)} method.
+   * @param asset The asset
+   * @param resources The resources required for the transaction.
+   * @param resourceFee The maximum fee (in stroops) that can be paid for the transaction.
+   * @param source The source account for the transaction.
+   * @return The transaction.
+   */
+  public Transaction buildRestoreAssetBalanceEntryTransaction(
       String balanceOwner,
       Asset asset,
       SorobanDataBuilder.Resources resources,
@@ -426,6 +507,6 @@ public class TransactionBuilder {
 
     this.addOperation(op);
     this.setSorobanData(sorobanData);
-    return this;
+    return this.build();
   }
 }
