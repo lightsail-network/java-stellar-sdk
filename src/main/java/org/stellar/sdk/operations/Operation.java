@@ -22,18 +22,18 @@ public abstract class Operation {
 
   private static final BigDecimal ONE = new BigDecimal(10).pow(7);
 
-  protected static long toXdrAmount(@NonNull BigDecimal value) {
+  public static long toXdrAmount(@NonNull BigDecimal value) {
     // see
     // https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/assets#amount-precision
     BigDecimal amount = value.multiply(Operation.ONE);
     return amount.longValueExact();
   }
 
-  protected static BigDecimal fromXdrAmount(long value) {
+  public static BigDecimal fromXdrAmount(long value) {
     return BigDecimal.valueOf(value).divide(Operation.ONE).setScale(7, RoundingMode.UNNECESSARY);
   }
 
-  protected static BigDecimal formatAmountScale(BigDecimal value) {
+  public static BigDecimal formatAmountScale(BigDecimal value) {
     int scale = value.scale();
     if (scale <= 7) {
       return value.setScale(7, RoundingMode.UNNECESSARY);

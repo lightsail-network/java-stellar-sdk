@@ -2,14 +2,17 @@ package org.stellar.sdk;
 
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import lombok.Getter;
 import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
+import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
-import org.stellar.sdk.xdr.SorobanTransactionData;
+import org.stellar.sdk.operations.RestoreFootprintOperation;
+import org.stellar.sdk.scval.Scv;
+import org.stellar.sdk.xdr.*;
 
 /** Builds a new Transaction object. */
 public class TransactionBuilder {
@@ -238,6 +241,191 @@ public class TransactionBuilder {
    */
   public TransactionBuilder setSorobanData(String sorobanData) {
     this.sorobanData = new SorobanDataBuilder(sorobanData).build();
+    return this;
+  }
+
+  public TransactionBuilder buildPaymentToContractTransaction(
+      String destination, Asset asset, BigDecimal amount, @NonNull String source) {
+    SorobanDataBuilder.Resources resources =
+        new SorobanDataBuilder.Resources(400_000L, 1_000L, 1_000L);
+    return buildPaymentToContractTransaction(
+        destination, asset, amount, resources, 5_000_000L, source);
+  }
+
+  public TransactionBuilder buildPaymentToContractTransaction(
+      String destination,
+      Asset asset,
+      BigDecimal amount,
+      SorobanDataBuilder.Resources resources,
+      Long resourceFee,
+      String source) {
+    if (!StrKey.isValidContract(destination)) {
+      throw new IllegalArgumentException("destination is not a valid contract address");
+    }
+
+    String fromAddress;
+    if (source != null) {
+      fromAddress = new MuxedAccount(source).getAccountId();
+    } else {
+      fromAddress = new MuxedAccount(this.sourceAccount.getAccountId()).getAccountId();
+    }
+
+    String contractId = asset.getContractId(this.network);
+    String functionName = "transfer";
+    BigInteger tokenAmount =
+        BigInteger.valueOf(Operation.toXdrAmount(Operation.formatAmountScale(amount)));
+    List<SCVal> parameters =
+        Arrays.asList(
+            Scv.toAddress(fromAddress), Scv.toAddress(destination), Scv.toInt128(tokenAmount));
+
+    SorobanCredentials credentials =
+        SorobanCredentials.builder()
+            .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)
+            .build();
+    SorobanAuthorizedInvocation rootInvocation =
+        SorobanAuthorizedInvocation.builder()
+            .function(
+                SorobanAuthorizedFunction.builder()
+                    .discriminant(
+                        SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
+                    .contractFn(
+                        InvokeContractArgs.builder()
+                            .contractAddress(new Address(contractId).toSCAddress())
+                            .functionName(Scv.toSymbol(functionName).getSym())
+                            .args(parameters.toArray(new SCVal[0]))
+                            .build())
+                    .build())
+            .subInvocations(new SorobanAuthorizedInvocation[0])
+            .build();
+
+    SorobanAuthorizationEntry auth =
+        SorobanAuthorizationEntry.builder()
+            .credentials(credentials)
+            .rootInvocation(rootInvocation)
+            .build();
+    InvokeHostFunctionOperation op =
+        InvokeHostFunctionOperation.invokeContractFunctionOperationBuilder(
+                contractId, functionName, parameters)
+            .auth(Collections.singletonList(auth))
+            .sourceAccount(source)
+            .build();
+
+    LedgerKey contractInstanceLedgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(new Address(contractId).toSCAddress())
+                    .key(
+                        SCVal.builder()
+                            .discriminant(SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE)
+                            .build())
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    LedgerKey balanceLedgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(new Address(contractId).toSCAddress())
+                    .key(
+                        Scv.toVec(
+                            Arrays.asList(Scv.toSymbol("Balance"), Scv.toAddress(destination))))
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    ArrayList<LedgerKey> readOnly = new ArrayList<>();
+    ArrayList<LedgerKey> readWrite = new ArrayList<>();
+    if (asset instanceof AssetTypeNative) {
+      readOnly.add(contractInstanceLedgerKey);
+      readWrite.add(
+          LedgerKey.builder()
+              .discriminant(LedgerEntryType.ACCOUNT)
+              .account(
+                  LedgerKey.LedgerKeyAccount.builder()
+                      .accountID(KeyPair.fromAccountId(fromAddress).getXdrAccountId())
+                      .build())
+              .build());
+      readWrite.add(balanceLedgerKey);
+    } else {
+      readOnly.add(
+          LedgerKey.builder()
+              .discriminant(LedgerEntryType.ACCOUNT)
+              .account(
+                  LedgerKey.LedgerKeyAccount.builder()
+                      .accountID(
+                          KeyPair.fromAccountId(((AssetTypeCreditAlphaNum) asset).getIssuer())
+                              .getXdrAccountId())
+                      .build())
+              .build());
+      readOnly.add(contractInstanceLedgerKey);
+      readWrite.add(
+          LedgerKey.builder()
+              .discriminant(LedgerEntryType.TRUSTLINE)
+              .trustLine(
+                  LedgerKey.LedgerKeyTrustLine.builder()
+                      .accountID(KeyPair.fromAccountId(fromAddress).getXdrAccountId())
+                      .asset(new TrustLineAsset(asset).toXdr())
+                      .build())
+              .build());
+      readWrite.add(balanceLedgerKey);
+    }
+
+    SorobanTransactionData sorobanData =
+        new SorobanDataBuilder()
+            .setReadOnly(readOnly)
+            .setReadWrite(readWrite)
+            .setResourceFee(resourceFee)
+            .setResources(resources)
+            .build();
+
+    this.addOperation(op);
+    this.setSorobanData(sorobanData);
+    return this;
+  }
+
+  public TransactionBuilder buildRestoreAssetBalanceEntryTransaction(
+      String balanceOwner, Asset asset, @Nullable String source) {
+    SorobanDataBuilder.Resources resources = new SorobanDataBuilder.Resources(0L, 500L, 500L);
+    return buildRestoreAssetBalanceEntryTransaction(
+        balanceOwner, asset, resources, 4_000_000L, source);
+  }
+
+  public TransactionBuilder buildRestoreAssetBalanceEntryTransaction(
+      String balanceOwner,
+      Asset asset,
+      SorobanDataBuilder.Resources resources,
+      Long resourceFee,
+      @Nullable String source) {
+    String contractId = asset.getContractId(this.network);
+    LedgerKey balanceLedgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(new Address(contractId).toSCAddress())
+                    .key(
+                        Scv.toVec(
+                            Arrays.asList(Scv.toSymbol("Balance"), Scv.toAddress(balanceOwner))))
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    RestoreFootprintOperation op =
+        RestoreFootprintOperation.builder().sourceAccount(source).build();
+    SorobanTransactionData sorobanData =
+        new SorobanDataBuilder()
+            .setReadOnly(new ArrayList<>())
+            .setReadWrite(Collections.singletonList(balanceLedgerKey))
+            .setResourceFee(resourceFee)
+            .setResources(resources)
+            .build();
+
+    this.addOperation(op);
+    this.setSorobanData(sorobanData);
     return this;
   }
 }
