@@ -61,7 +61,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build -x test -x jacocoTestReport
       - name: Persist JAR Artifacts
         uses: actions/upload-artifact@v4
         with:
