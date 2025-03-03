@@ -2,14 +2,17 @@ package org.stellar.sdk;
 
 import static org.stellar.sdk.TransactionPreconditions.TIMEOUT_INFINITE;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import lombok.Getter;
 import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
+import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
-import org.stellar.sdk.xdr.SorobanTransactionData;
+import org.stellar.sdk.operations.RestoreFootprintOperation;
+import org.stellar.sdk.scval.Scv;
+import org.stellar.sdk.xdr.*;
 
 /** Builds a new Transaction object. */
 public class TransactionBuilder {
@@ -239,5 +242,271 @@ public class TransactionBuilder {
   public TransactionBuilder setSorobanData(String sorobanData) {
     this.sorobanData = new SorobanDataBuilder(sorobanData).build();
     return this;
+  }
+
+  /**
+   * An alias for {@link #buildRestoreAssetBalanceEntryTransaction(String, Asset,
+   * SorobanDataBuilder.Resources, Long, String)} with {@code resources} set to {@code new
+   * SorobanDataBuilder.Resources(400_000L, 1_000L, 1_000L)} and {@code resourceFee} set to {@code
+   * 5_000_000L}.
+   *
+   * @param destination The contract to send the assets to. (starting with 'C')
+   * @param asset The asset to send.
+   * @param amount The amount of the asset to send.
+   * @param source The source account for the transaction.
+   * @return The transaction.
+   */
+  public Transaction buildPaymentToContractTransaction(
+      String destination, Asset asset, BigDecimal amount, @Nullable String source) {
+    SorobanDataBuilder.Resources resources =
+        new SorobanDataBuilder.Resources(400_000L, 1_000L, 1_000L);
+    return buildPaymentToContractTransaction(
+        destination, asset, amount, resources, 5_000_000L, source);
+  }
+
+  /**
+   * Builds a transaction to send asset to a contract.
+   *
+   * <p>The original intention of this interface design is to send assets to the contract account
+   * when the Stellar RPC server is inaccessible. Without Stellar RPC, we cannot accurately estimate
+   * the required resources, so we have preset some values that may be slightly higher than the
+   * actual resource consumption.
+   *
+   * <p>If you encounter the {@code entry_archived} error when submitting this transaction, you
+   * should consider calling the {@link #buildRestoreAssetBalanceEntryTransaction(String, Asset,
+   * SorobanDataBuilder.Resources, Long, String)} method to restore the entry, and then use the
+   * method to send assets again.
+   *
+   * <p><b>Note:</b>
+   *
+   * <ol>
+   *   <li>This method should only be used to send assets to a contract (starting with 'C'). For
+   *       sending assets to regular account addresses (starting with 'G'), please use the {@link
+   *       org.stellar.sdk.operations.PaymentOperation}.
+   *   <li>This method is suitable for sending assets to a contract account when you don't have
+   *       access to a Stellar RPC server. If you have access to a Stellar RPC server, it is
+   *       recommended to use the {@link org.stellar.sdk.contract.ContractClient} to build
+   *       transactions for sending tokens to contracts.
+   *   <li>This method may consume slightly more transaction fee than actually required. Under
+   *       Protocol 22, if the destination is receiving the asset for the first time, it will
+   *       actually consume about 0.25 XLM in resource fees; if it has received the asset before, it
+   *       will actually consume about 0.006 XLM in resource fees.
+   * </ol>
+   *
+   * @param destination The contract to send the assets to. (starting with 'C')
+   * @param asset The asset to send.
+   * @param amount The amount of the asset to send.
+   * @param resources The resources required for the transaction.
+   * @param resourceFee The maximum fee (in stroops) that can be paid for the transaction.
+   * @param source The source account for the transaction.
+   * @return The transaction.
+   */
+  public Transaction buildPaymentToContractTransaction(
+      String destination,
+      Asset asset,
+      BigDecimal amount,
+      SorobanDataBuilder.Resources resources,
+      Long resourceFee,
+      @Nullable String source) {
+    if (!StrKey.isValidContract(destination)) {
+      throw new IllegalArgumentException("destination is not a valid contract address");
+    }
+
+    String fromAddress;
+    if (source != null) {
+      fromAddress = new MuxedAccount(source).getAccountId();
+    } else {
+      fromAddress = new MuxedAccount(this.sourceAccount.getAccountId()).getAccountId();
+    }
+
+    String contractId = asset.getContractId(this.network);
+    String functionName = "transfer";
+    BigInteger tokenAmount =
+        BigInteger.valueOf(Operation.toXdrAmount(Operation.formatAmountScale(amount)));
+    List<SCVal> parameters =
+        Arrays.asList(
+            Scv.toAddress(fromAddress), Scv.toAddress(destination), Scv.toInt128(tokenAmount));
+
+    SorobanCredentials credentials =
+        SorobanCredentials.builder()
+            .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT)
+            .build();
+    SorobanAuthorizedInvocation rootInvocation =
+        SorobanAuthorizedInvocation.builder()
+            .function(
+                SorobanAuthorizedFunction.builder()
+                    .discriminant(
+                        SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
+                    .contractFn(
+                        InvokeContractArgs.builder()
+                            .contractAddress(new Address(contractId).toSCAddress())
+                            .functionName(Scv.toSymbol(functionName).getSym())
+                            .args(parameters.toArray(new SCVal[0]))
+                            .build())
+                    .build())
+            .subInvocations(new SorobanAuthorizedInvocation[0])
+            .build();
+
+    SorobanAuthorizationEntry auth =
+        SorobanAuthorizationEntry.builder()
+            .credentials(credentials)
+            .rootInvocation(rootInvocation)
+            .build();
+    InvokeHostFunctionOperation op =
+        InvokeHostFunctionOperation.invokeContractFunctionOperationBuilder(
+                contractId, functionName, parameters)
+            .auth(Collections.singletonList(auth))
+            .sourceAccount(source)
+            .build();
+
+    LedgerKey contractInstanceLedgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(new Address(contractId).toSCAddress())
+                    .key(
+                        SCVal.builder()
+                            .discriminant(SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE)
+                            .build())
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    LedgerKey balanceLedgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(new Address(contractId).toSCAddress())
+                    .key(
+                        Scv.toVec(
+                            Arrays.asList(Scv.toSymbol("Balance"), Scv.toAddress(destination))))
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    ArrayList<LedgerKey> readOnly = new ArrayList<>();
+    ArrayList<LedgerKey> readWrite = new ArrayList<>();
+    if (asset instanceof AssetTypeNative) {
+      readOnly.add(contractInstanceLedgerKey);
+      readWrite.add(
+          LedgerKey.builder()
+              .discriminant(LedgerEntryType.ACCOUNT)
+              .account(
+                  LedgerKey.LedgerKeyAccount.builder()
+                      .accountID(KeyPair.fromAccountId(fromAddress).getXdrAccountId())
+                      .build())
+              .build());
+      readWrite.add(balanceLedgerKey);
+    } else {
+      readOnly.add(
+          LedgerKey.builder()
+              .discriminant(LedgerEntryType.ACCOUNT)
+              .account(
+                  LedgerKey.LedgerKeyAccount.builder()
+                      .accountID(
+                          KeyPair.fromAccountId(((AssetTypeCreditAlphaNum) asset).getIssuer())
+                              .getXdrAccountId())
+                      .build())
+              .build());
+      readOnly.add(contractInstanceLedgerKey);
+      readWrite.add(
+          LedgerKey.builder()
+              .discriminant(LedgerEntryType.TRUSTLINE)
+              .trustLine(
+                  LedgerKey.LedgerKeyTrustLine.builder()
+                      .accountID(KeyPair.fromAccountId(fromAddress).getXdrAccountId())
+                      .asset(new TrustLineAsset(asset).toXdr())
+                      .build())
+              .build());
+      readWrite.add(balanceLedgerKey);
+    }
+
+    SorobanTransactionData sorobanData =
+        new SorobanDataBuilder()
+            .setReadOnly(readOnly)
+            .setReadWrite(readWrite)
+            .setResourceFee(resourceFee)
+            .setResources(resources)
+            .build();
+
+    this.addOperation(op);
+    this.setSorobanData(sorobanData);
+    return this.build();
+  }
+
+  /**
+   * An alias for {@link #buildRestoreAssetBalanceEntryTransaction(String, Asset,
+   * SorobanDataBuilder.Resources, Long, String)} with {@code resources} set to {@code new
+   * SorobanDataBuilder.Resources(0L, 500L, 500L)} and {@code resourceFee} set to {@code
+   * 4_000_000L}.
+   *
+   * @param balanceOwner The owner of the asset, it should be the same as the `destination` address
+   *     in the {@link #buildPaymentToContractTransaction(String, Asset, BigDecimal,
+   *     SorobanDataBuilder.Resources, Long, String)} method.
+   * @param asset The asset
+   * @param source The source account for the transaction.
+   * @return The transaction.
+   */
+  public Transaction buildRestoreAssetBalanceEntryTransaction(
+      String balanceOwner, Asset asset, @Nullable String source) {
+    SorobanDataBuilder.Resources resources = new SorobanDataBuilder.Resources(0L, 500L, 500L);
+    return buildRestoreAssetBalanceEntryTransaction(
+        balanceOwner, asset, resources, 4_000_000L, source);
+  }
+
+  /**
+   * Builds a transaction to restore the asset balance entry.
+   *
+   * <p>This method is designed to be used in conjunction with the {@link
+   * #buildPaymentToContractTransaction(String, Asset, BigDecimal, SorobanDataBuilder.Resources,
+   * Long, String)} method.
+   *
+   * <p>Under Protocol 22, if the entry really needs to be restored, then this method will consume
+   * about 0.25 XLM in resource fees.
+   *
+   * @param balanceOwner The owner of the asset, it should be the same as the `destination` address
+   *     in the {@link #buildPaymentToContractTransaction(String, Asset, BigDecimal,
+   *     SorobanDataBuilder.Resources, Long, String)} method.
+   * @param asset The asset
+   * @param resources The resources required for the transaction.
+   * @param resourceFee The maximum fee (in stroops) that can be paid for the transaction.
+   * @param source The source account for the transaction.
+   * @return The transaction.
+   */
+  public Transaction buildRestoreAssetBalanceEntryTransaction(
+      String balanceOwner,
+      Asset asset,
+      SorobanDataBuilder.Resources resources,
+      Long resourceFee,
+      @Nullable String source) {
+    String contractId = asset.getContractId(this.network);
+    LedgerKey balanceLedgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(new Address(contractId).toSCAddress())
+                    .key(
+                        Scv.toVec(
+                            Arrays.asList(Scv.toSymbol("Balance"), Scv.toAddress(balanceOwner))))
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    RestoreFootprintOperation op =
+        RestoreFootprintOperation.builder().sourceAccount(source).build();
+    SorobanTransactionData sorobanData =
+        new SorobanDataBuilder()
+            .setReadOnly(new ArrayList<>())
+            .setReadWrite(Collections.singletonList(balanceLedgerKey))
+            .setResourceFee(resourceFee)
+            .setResources(resources)
+            .build();
+
+    this.addOperation(op);
+    this.setSorobanData(sorobanData);
+    return this.build();
   }
 }

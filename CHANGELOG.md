@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update:
+- feat: add functions to send assets to contract address without relying on Stellar RPC. ([#677](https://github.com/stellar/java-stellar-sdk/pull/677))
+
 ## 1.1.0
 
 In this release, we have significantly simplified the process of using the Java SDK to interact with Soroban contracts. 

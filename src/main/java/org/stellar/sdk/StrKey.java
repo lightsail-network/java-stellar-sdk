@@ -295,7 +295,7 @@ public class StrKey {
    * @param accountID the account ID to check
    * @return true if the given Stellar account ID is a valid Stellar account ID, false otherwise
    */
-  static boolean isValidEd25519PublicKey(String accountID) {
+  public static boolean isValidEd25519PublicKey(String accountID) {
     try {
       decodeEd25519PublicKey(accountID);
       return true;
@@ -310,7 +310,7 @@ public class StrKey {
    * @param contractId the contract ID to check
    * @return true if the given contract ID is a valid contract ID, false otherwise
    */
-  static boolean isValidContract(String contractId) {
+  public static boolean isValidContract(String contractId) {
     try {
       decodeContract(contractId);
       return true;
