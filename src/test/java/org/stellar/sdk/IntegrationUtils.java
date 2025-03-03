@@ -69,8 +69,9 @@ public class IntegrationUtils {
       AssembledTransaction<Address> assembledTransaction =
           new AssembledTransaction<>(transactionBuilder, server, source, Scv::fromAddress, 300);
       Address contractId = assembledTransaction.simulate(true).signAndSubmit(source, false);
+      Thread.sleep(1000); // TODO: This is strange; after the transaction above is submitted, the account's seq does not update immediately.
       return contractId.toString();
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
     }
   }
