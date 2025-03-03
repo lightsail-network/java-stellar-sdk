@@ -12,7 +12,7 @@ You can now use stellar-contract-bindings to generate Java bindings for contract
 Please visit [the GitHub repository](https://github.com/lightsail-network/stellar-contract-bindings) of stellar-contract-bindings for more information.
 
 ### Update
-- feat: add `ContractClient` to simplify contract calls. ([#677](https://github.com/stellar/java-stellar-sdk/pull/675))
+- feat: add `ContractClient` to simplify contract calls. ([#675](https://github.com/stellar/java-stellar-sdk/pull/675))
     
 ## 1.0.0
 
