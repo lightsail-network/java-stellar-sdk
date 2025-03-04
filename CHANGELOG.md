@@ -2,6 +2,8 @@
 
 ## Pending
 
+## 1.2.0
+
 ### Update:
 - feat: add functions to send assets to contract address without relying on Stellar RPC. ([#677](https://github.com/stellar/java-stellar-sdk/pull/677))
 
