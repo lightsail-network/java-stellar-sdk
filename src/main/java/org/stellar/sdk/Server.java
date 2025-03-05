@@ -4,34 +4,37 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
-import okhttp3.*;
-import okhttp3.Response;
-import org.stellar.sdk.exception.AccountRequiresMemoException;
-import org.stellar.sdk.exception.BadRequestException;
-import org.stellar.sdk.exception.ConnectionErrorException;
-import org.stellar.sdk.exception.RequestTimeoutException;
-import org.stellar.sdk.exception.TooManyRequestsException;
-import org.stellar.sdk.operations.AccountMergeOperation;
-import org.stellar.sdk.operations.Operation;
-import org.stellar.sdk.operations.PathPaymentStrictReceiveOperation;
-import org.stellar.sdk.operations.PathPaymentStrictSendOperation;
-import org.stellar.sdk.operations.PaymentOperation;
+import org.stellar.sdk.exception.*;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.Jdk11HttpClient;
+import org.stellar.sdk.http.PostRequest;
+import org.stellar.sdk.http.StringResponse;
+import org.stellar.sdk.http.sse.ISseClient;
+import org.stellar.sdk.operations.*;
 import org.stellar.sdk.requests.*;
-import org.stellar.sdk.responses.*;
+import org.stellar.sdk.responses.AccountResponse;
+import org.stellar.sdk.responses.FeeStatsResponse;
+import org.stellar.sdk.responses.SubmitTransactionAsyncResponse;
+import org.stellar.sdk.responses.TransactionResponse;
 import org.stellar.sdk.xdr.CryptoKeyType;
 
 /** Main class used to connect to Horizon server. */
 public class Server implements Closeable {
-  private final HttpUrl serverURI;
-  @Getter @Setter private OkHttpClient httpClient;
+  private final URI serverURI;
+  @Getter @Setter private IHttpClient httpClient;
 
   /** submitHttpClient is used only for submitting transactions. The read timeout is longer. */
-  @Getter @Setter private OkHttpClient submitHttpClient;
+  @Getter @Setter private IHttpClient submitHttpClient;
+
+  @Getter @Setter private ISseClient sseClient;
 
   /**
    * HORIZON_SUBMIT_TIMEOUT is a time in seconds after Horizon sends a timeout response after
@@ -54,31 +57,43 @@ public class Server implements Closeable {
    * @param uri The URI of the Horizon server.
    */
   public Server(String uri) {
-    this(
-        uri,
-        new OkHttpClient.Builder()
-            .addInterceptor(new ClientIdentificationInterceptor())
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .build(),
-        new OkHttpClient.Builder()
-            .addInterceptor(new ClientIdentificationInterceptor())
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(HORIZON_SUBMIT_TIMEOUT + 5, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .build());
+    this(uri, normalHttpClient(), submitHttpClient());
+  }
+
+  private static IHttpClient normalHttpClient() {
+    return new Jdk11HttpClient.Builder()
+        .withDefaultHeader("X-Client-Name", "java-stellar-sdk")
+        .withDefaultHeader("X-Client-Version", Util.getSdkVersion())
+        .withConnectTimeout(10, ChronoUnit.SECONDS)
+        .withReadTimeout(30, ChronoUnit.SECONDS)
+        .withRetryOnConnectionFailure(true)
+        .build();
+  }
+
+  private static IHttpClient submitHttpClient() {
+    return new Jdk11HttpClient.Builder()
+        .withDefaultHeader("X-Client-Name", "java-stellar-sdk")
+        .withDefaultHeader("X-Client-Version", Util.getSdkVersion())
+        .withConnectTimeout(10, ChronoUnit.SECONDS)
+        .withReadTimeout(HORIZON_SUBMIT_TIMEOUT + 5, ChronoUnit.SECONDS)
+        .withRetryOnConnectionFailure(true)
+        .build();
   }
 
   /**
    * Constructs a new Server object with custom HTTP clients.
    *
    * @param serverURI The URI of the Horizon server.
-   * @param httpClient The OkHttpClient to use for general requests.
-   * @param submitHttpClient The OkHttpClient to use for submitting transactions.
+   * @param httpClient The IHttpClient to use for general requests.
+   * @param submitHttpClient The IHttpClient to use for submitting transactions.
    */
-  public Server(String serverURI, OkHttpClient httpClient, OkHttpClient submitHttpClient) {
-    this.serverURI = HttpUrl.parse(serverURI);
+  public Server(String serverURI, IHttpClient httpClient, IHttpClient submitHttpClient) {
+    try {
+      this.serverURI = new URI(serverURI);
+    } catch (URISyntaxException e) {
+      throw new RuntimeException("Invalid URI: " + serverURI);
+    }
+
     this.httpClient = httpClient;
     this.submitHttpClient = submitHttpClient;
   }
@@ -114,77 +129,77 @@ public class Server implements Closeable {
    * @return {@link RootRequestBuilder} instance.
    */
   public RootRequestBuilder root() {
-    return new RootRequestBuilder(httpClient, serverURI);
+    return new RootRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link AccountsRequestBuilder} instance.
    */
   public AccountsRequestBuilder accounts() {
-    return new AccountsRequestBuilder(httpClient, serverURI);
+    return new AccountsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link AssetsRequestBuilder} instance.
    */
   public AssetsRequestBuilder assets() {
-    return new AssetsRequestBuilder(httpClient, serverURI);
+    return new AssetsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link ClaimableBalancesRequestBuilder} instance.
    */
   public ClaimableBalancesRequestBuilder claimableBalances() {
-    return new ClaimableBalancesRequestBuilder(httpClient, serverURI);
+    return new ClaimableBalancesRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link EffectsRequestBuilder} instance.
    */
   public EffectsRequestBuilder effects() {
-    return new EffectsRequestBuilder(httpClient, serverURI);
+    return new EffectsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link LedgersRequestBuilder} instance.
    */
   public LedgersRequestBuilder ledgers() {
-    return new LedgersRequestBuilder(httpClient, serverURI);
+    return new LedgersRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link OffersRequestBuilder} instance.
    */
   public OffersRequestBuilder offers() {
-    return new OffersRequestBuilder(httpClient, serverURI);
+    return new OffersRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link OperationsRequestBuilder} instance.
    */
   public OperationsRequestBuilder operations() {
-    return new OperationsRequestBuilder(httpClient, serverURI);
+    return new OperationsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link FeeStatsResponse} instance.
    */
   public FeeStatsRequestBuilder feeStats() {
-    return new FeeStatsRequestBuilder(httpClient, serverURI);
+    return new FeeStatsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link OrderBookRequestBuilder} instance.
    */
   public OrderBookRequestBuilder orderBook() {
-    return new OrderBookRequestBuilder(httpClient, serverURI);
+    return new OrderBookRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link TradesRequestBuilder} instance.
    */
   public TradesRequestBuilder trades() {
-    return new TradesRequestBuilder(httpClient, serverURI);
+    return new TradesRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
@@ -198,42 +213,50 @@ public class Server implements Closeable {
       long resolution,
       long offset) {
     return new TradeAggregationsRequestBuilder(
-        httpClient, serverURI, baseAsset, counterAsset, startTime, endTime, resolution, offset);
+        httpClient,
+        sseClient,
+        serverURI,
+        baseAsset,
+        counterAsset,
+        startTime,
+        endTime,
+        resolution,
+        offset);
   }
 
   /**
    * @return {@link StrictReceivePathsRequestBuilder} instance.
    */
   public StrictReceivePathsRequestBuilder strictReceivePaths() {
-    return new StrictReceivePathsRequestBuilder(httpClient, serverURI);
+    return new StrictReceivePathsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link StrictSendPathsRequestBuilder} instance.
    */
   public StrictSendPathsRequestBuilder strictSendPaths() {
-    return new StrictSendPathsRequestBuilder(httpClient, serverURI);
+    return new StrictSendPathsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link PaymentsRequestBuilder} instance.
    */
   public PaymentsRequestBuilder payments() {
-    return new PaymentsRequestBuilder(httpClient, serverURI);
+    return new PaymentsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link TransactionsRequestBuilder} instance.
    */
   public TransactionsRequestBuilder transactions() {
-    return new TransactionsRequestBuilder(httpClient, serverURI);
+    return new TransactionsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
    * @return {@link LiquidityPoolsRequestBuilder} instance.
    */
   public LiquidityPoolsRequestBuilder liquidityPools() {
-    return new LiquidityPoolsRequestBuilder(httpClient, serverURI);
+    return new LiquidityPoolsRequestBuilder(httpClient, sseClient, serverURI);
   }
 
   /**
@@ -259,20 +282,22 @@ public class Server implements Closeable {
    *     due to cancellation or connectivity problems, etc.
    */
   public TransactionResponse submitTransactionXdr(String transactionXdr) {
-    HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions").build();
-    RequestBody requestBody = new FormBody.Builder().add("tx", transactionXdr).build();
-    Request submitTransactionRequest =
-        new Request.Builder().url(transactionsURI).post(requestBody).build();
+    final var transactionsURI = new UriBuilder(serverURI).addPathSegment("transactions").build();
+    final var form = Map.of("tx", transactionXdr);
+    final var post = PostRequest.formBody(transactionsURI, form);
     TypeToken<TransactionResponse> type = new TypeToken<TransactionResponse>() {};
-
     ResponseHandler<TransactionResponse> responseHandler = new ResponseHandler<>(type);
-    Response response;
+    StringResponse response;
     try {
-      response = this.submitHttpClient.newCall(submitTransactionRequest).execute();
+      response = this.submitHttpClient.post(post);
     } catch (SocketTimeoutException e) {
       throw new RequestTimeoutException(e);
     } catch (IOException e) {
-      throw new ConnectionErrorException(e);
+      if (e.getMessage().contains("request timed out")) {
+        throw new RequestTimeoutException(e);
+      } else {
+        throw new ConnectionErrorException(e);
+      }
     }
     return responseHandler.handleResponse(response);
   }
@@ -431,17 +456,17 @@ public class Server implements Closeable {
    *     a Transaction Asynchronously</a>
    */
   public SubmitTransactionAsyncResponse submitTransactionXdrAsync(String transactionXdr) {
-    HttpUrl transactionsURI = serverURI.newBuilder().addPathSegment("transactions_async").build();
-    RequestBody requestBody = new FormBody.Builder().add("tx", transactionXdr).build();
-    Request submitTransactionRequest =
-        new Request.Builder().url(transactionsURI).post(requestBody).build();
+    final var transactionsURI =
+        new UriBuilder(serverURI).addPathSegment("transactions_async").build();
+    final var form = Map.of("tx", transactionXdr);
+    final var post = PostRequest.formBody(transactionsURI, form);
     TypeToken<SubmitTransactionAsyncResponse> type =
         new TypeToken<SubmitTransactionAsyncResponse>() {};
 
     ResponseHandler<SubmitTransactionAsyncResponse> responseHandler = new ResponseHandler<>(type);
-    Response response;
+    StringResponse response;
     try {
-      response = this.submitHttpClient.newCall(submitTransactionRequest).execute();
+      response = this.submitHttpClient.post(post);
     } catch (SocketTimeoutException e) {
       throw new RequestTimeoutException(e);
     } catch (IOException e) {
@@ -653,9 +678,16 @@ public class Server implements Closeable {
 
   @Override
   public void close() {
-    // workaround for https://github.com/square/okhttp/issues/3372
-    // sometimes, the connection pool keeps running and this can prevent a clean shut down.
-    this.httpClient.connectionPool().evictAll();
-    this.submitHttpClient.connectionPool().evictAll();
+    try {
+      this.httpClient.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try {
+      this.submitHttpClient.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

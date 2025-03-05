@@ -1,18 +1,19 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.net.URI;
 import lombok.NonNull;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.effects.EffectResponse;
 
 /** Builds requests connected to effects. */
 public class EffectsRequestBuilder extends RequestBuilder {
-  public EffectsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "effects");
+  public EffectsRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "effects");
   }
 
   /**
@@ -79,8 +80,8 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link EffectResponse}. This
    * method is helpful for getting the next set of results.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link EffectResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -97,7 +98,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    */
-  public static Page<EffectResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<EffectResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<EffectResponse>> type = new TypeToken<Page<EffectResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -116,7 +117,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    */
   public SSEStream<EffectResponse> stream(
       final EventListener<EffectResponse> listener, long reconnectTimeout) {
-    return SSEStream.create(httpClient, this, EffectResponse.class, listener, reconnectTimeout);
+    return SSEStream.create(sseClient, this, EffectResponse.class, listener, reconnectTimeout);
   }
 
   /**

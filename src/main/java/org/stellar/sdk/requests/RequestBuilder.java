@@ -3,35 +3,37 @@ package org.stellar.sdk.requests;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.stellar.sdk.Asset;
-import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.AssetTypeNative;
+import org.stellar.sdk.*;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.GetRequest;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.StringResponse;
+import org.stellar.sdk.http.sse.ISseClient;
 
 /** Abstract class for request builders. */
 public abstract class RequestBuilder {
-  protected HttpUrl.Builder uriBuilder;
-  protected OkHttpClient httpClient;
+  protected UriBuilder uriBuilder;
+  protected IHttpClient httpClient;
+  protected ISseClient sseClient;
   private final ArrayList<String> segments;
   private boolean segmentsAdded;
 
-  RequestBuilder(OkHttpClient httpClient, HttpUrl serverURI, String defaultSegment) {
+  RequestBuilder(
+      IHttpClient httpClient, ISseClient sseClient, URI serverURI, String defaultSegment) {
     this.httpClient = httpClient;
-    uriBuilder = serverURI.newBuilder();
-    segments = new ArrayList<>();
+    this.sseClient = sseClient;
+    this.uriBuilder = new UriBuilder(serverURI);
+    this.segments = new ArrayList<>();
     if (defaultSegment != null) {
       this.setSegments(defaultSegment);
     }
-    segmentsAdded = false; // Allow overwriting segments
+    this.segmentsAdded = false; // Allow overwriting segments
   }
 
   protected RequestBuilder setSegments(String... segments) {
@@ -118,12 +120,14 @@ public abstract class RequestBuilder {
     }
   }
 
-  HttpUrl buildUri() {
+  URI buildUri() {
     if (!segments.isEmpty()) {
-      for (String segment : segments) {
-        uriBuilder.addPathSegment(segment);
-      }
+      segments.forEach(
+          segment -> {
+            uriBuilder.addPathSegment(segment);
+          });
     }
+
     return uriBuilder.build();
   }
 
@@ -146,8 +150,8 @@ public abstract class RequestBuilder {
    * Executes a GET request and handles the response.
    *
    * @param <T> The type of the response object
-   * @param httpClient The OkHttpClient to use for the request
-   * @param url The URL to send the GET request to
+   * @param httpClient The {@link IHttpClient} to use for the request
+   * @param uri The {@link URI} to send the GET request to
    * @param typeToken The TypeToken representing the type of the response
    * @return The response object of type T
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
@@ -165,13 +169,14 @@ public abstract class RequestBuilder {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    */
-  static <T> T executeGetRequest(OkHttpClient httpClient, HttpUrl url, TypeToken<T> typeToken) {
+  static <T> T executeGetRequest(IHttpClient httpClient, URI uri, TypeToken<T> typeToken) {
     ResponseHandler<T> responseHandler = new ResponseHandler<>(typeToken);
 
-    Request request = new Request.Builder().get().url(url).build();
-    Response response;
+    final var getRequest = new GetRequest(uri);
+
+    StringResponse response;
     try {
-      response = httpClient.newCall(request).execute();
+      response = httpClient.get(getRequest);
     } catch (SocketTimeoutException e) {
       throw new RequestTimeoutException(e);
     } catch (IOException e) {

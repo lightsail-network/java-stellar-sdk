@@ -1,17 +1,18 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.net.URI;
 import lombok.NonNull;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
 
 /** Builds requests connected to transactions. */
 public class TransactionsRequestBuilder extends RequestBuilder {
-  public TransactionsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "transactions");
+  public TransactionsRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "transactions");
   }
 
   /**
@@ -34,7 +35,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public TransactionResponse transaction(HttpUrl uri) {
+  public TransactionResponse transaction(URI uri) {
     TypeToken<TransactionResponse> type = new TypeToken<TransactionResponse>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -130,8 +131,8 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   /**
    * Requests specific <code>uri</code> and returns {@link Page} of {@link TransactionResponse}.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link TransactionResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -148,7 +149,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<TransactionResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<TransactionResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<TransactionResponse>> type = new TypeToken<Page<TransactionResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -167,8 +168,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    */
   public SSEStream<TransactionResponse> stream(
       final EventListener<TransactionResponse> listener, long reconnectTimeout) {
-    return SSEStream.create(
-        httpClient, this, TransactionResponse.class, listener, reconnectTimeout);
+    return SSEStream.create(sseClient, this, TransactionResponse.class, listener, reconnectTimeout);
   }
 
   /**
