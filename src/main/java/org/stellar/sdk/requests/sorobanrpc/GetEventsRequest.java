@@ -2,7 +2,6 @@ package org.stellar.sdk.requests.sorobanrpc;
 
 import java.util.Collection;
 import lombok.Builder;
-import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
 
@@ -15,7 +14,7 @@ import lombok.Value;
 @Value
 @Builder(toBuilder = true)
 public class GetEventsRequest {
-  @NonNull Long startLedger;
+  Long startLedger;
 
   @Singular("filter")
   Collection<EventFilter> filters;

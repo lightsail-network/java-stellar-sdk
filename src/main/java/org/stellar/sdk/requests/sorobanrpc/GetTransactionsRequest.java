@@ -1,7 +1,6 @@
 package org.stellar.sdk.requests.sorobanrpc;
 
 import lombok.Builder;
-import lombok.NonNull;
 import lombok.Value;
 
 /**
@@ -13,7 +12,7 @@ import lombok.Value;
 @Value
 @Builder(toBuilder = true)
 public class GetTransactionsRequest {
-  @NonNull Long startLedger;
+  Long startLedger;
 
   PaginationOptions pagination;
 
