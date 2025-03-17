@@ -22,7 +22,7 @@ spotless {
 
 dependencies {
     // Use https://central.sonatype.com/artifact/network.lightsail/stellar-sdk in prod.
-    implementation("com.github.lightsail-network:java-stellar-sdk:master-SNAPSHOT:uber")
+    implementation("network.lightsail:stellar-sdk:1.2.1")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
