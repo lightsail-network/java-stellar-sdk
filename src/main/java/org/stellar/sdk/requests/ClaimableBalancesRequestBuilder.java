@@ -1,19 +1,21 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
+import java.net.URI;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.AssetResponse;
 import org.stellar.sdk.responses.ClaimableBalanceResponse;
 import org.stellar.sdk.responses.Page;
 
 /** Builds requests connected to claimable balances. */
 public class ClaimableBalancesRequestBuilder extends RequestBuilder {
-  public ClaimableBalancesRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "claimable_balances");
+  public ClaimableBalancesRequestBuilder(
+      IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "claimable_balances");
   }
 
   /**
@@ -36,7 +38,7 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    */
-  public ClaimableBalanceResponse claimableBalance(HttpUrl uri) {
+  public ClaimableBalanceResponse claimableBalance(URI uri) {
     TypeToken<ClaimableBalanceResponse> type = new TypeToken<ClaimableBalanceResponse>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -103,8 +105,8 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link
    * ClaimableBalanceResponse}. This method is helpful for getting the next set of results.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link ClaimableBalanceResponse}
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
@@ -114,7 +116,7 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    *     limited to a timeout, connection failure etc.
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
    */
-  public static Page<ClaimableBalanceResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<ClaimableBalanceResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<ClaimableBalanceResponse>> type =
         new TypeToken<Page<ClaimableBalanceResponse>>() {};
     return executeGetRequest(httpClient, uri, type);

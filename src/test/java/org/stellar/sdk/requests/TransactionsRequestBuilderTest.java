@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
-import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.Server;
 
@@ -10,7 +9,7 @@ public class TransactionsRequestBuilderTest {
   @Test
   public void testTransactions() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri = server.transactions().limit(200).order(RequestBuilder.Order.DESC).buildUri();
+    final var uri = server.transactions().limit(200).order(RequestBuilder.Order.DESC).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/transactions?limit=200&order=desc", uri.toString());
     server.close();
@@ -19,7 +18,7 @@ public class TransactionsRequestBuilderTest {
   @Test
   public void testForAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .transactions()
             .forAccount("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
@@ -35,7 +34,7 @@ public class TransactionsRequestBuilderTest {
   @Test
   public void testForClaimableBalance() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .transactions()
             .forClaimableBalance(
@@ -52,7 +51,7 @@ public class TransactionsRequestBuilderTest {
   @Test
   public void testForLedger() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .transactions()
             .forLedger(200000000000L)
@@ -68,7 +67,7 @@ public class TransactionsRequestBuilderTest {
   @Test
   public void testForLiquidityPool() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .transactions()
             .forLiquidityPool("67260c4c1807b262ff851b0a3fe141194936bb0215b2f77447f1df11998eabb9")
@@ -82,7 +81,7 @@ public class TransactionsRequestBuilderTest {
   @Test
   public void testIncludeFailed() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .transactions()
             .forLedger(200000000000L)

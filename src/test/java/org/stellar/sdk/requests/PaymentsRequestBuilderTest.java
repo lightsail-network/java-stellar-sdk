@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
-import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.Server;
 
@@ -10,7 +9,7 @@ public class PaymentsRequestBuilderTest {
   @Test
   public void testPayments() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri = server.payments().limit(200).order(RequestBuilder.Order.DESC).buildUri();
+    final var uri = server.payments().limit(200).order(RequestBuilder.Order.DESC).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/payments?limit=200&order=desc", uri.toString());
     server.close();
@@ -19,7 +18,7 @@ public class PaymentsRequestBuilderTest {
   @Test
   public void testForAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .payments()
             .forAccount("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
@@ -35,7 +34,7 @@ public class PaymentsRequestBuilderTest {
   @Test
   public void testForLedger() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .payments()
             .forLedger(200000000000L)
@@ -51,7 +50,7 @@ public class PaymentsRequestBuilderTest {
   @Test
   public void testForTransaction() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .payments()
             .forTransaction("991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3")
@@ -65,7 +64,7 @@ public class PaymentsRequestBuilderTest {
   @Test
   public void testIncludeTransactions() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    var uri =
         server
             .payments()
             .forTransaction("991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3")
@@ -93,7 +92,7 @@ public class PaymentsRequestBuilderTest {
   @Test
   public void testExcludeTransactions() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .payments()
             .forTransaction("991534d902063b7715cd74207bef4e7bd7aa2f108f62d3eba837ce6023b2d4f3")
