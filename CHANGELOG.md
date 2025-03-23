@@ -2,8 +2,10 @@
 
 ## Pending
 
+## 1.2.1
+
 ### Update:
-fix: remove @NonNull annotation from startLedger in request classes. ([#680](https://github.com/stellar/java-stellar-sdk/pull/680))
+fix: remove `@NonNull` annotation from `startLedger` in request classes. ([#680](https://github.com/stellar/java-stellar-sdk/pull/680))
 
 ## 1.2.0
 

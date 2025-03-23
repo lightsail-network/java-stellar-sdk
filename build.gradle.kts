@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "network.lightsail"
-version = "1.2.0"
+version = "1.2.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
