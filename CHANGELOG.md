@@ -2,6 +2,11 @@
 
 ## Pending
 
+## 1.3.0
+
+### Update:
+feat: add support for SEP-35. ([#683](https://github.com/stellar/java-stellar-sdk/pull/683))
+
 ## 1.2.1
 
 ### Update:
