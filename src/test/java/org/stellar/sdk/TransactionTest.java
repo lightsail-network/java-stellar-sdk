@@ -646,6 +646,51 @@ public class TransactionTest {
   }
 
   @Test
+  public void testIntegrationPaymentToContractTransactionWithAssetIssuerAsSender()
+      throws IOException {
+    BigDecimal amount1 = new BigDecimal("100.125");
+    BigDecimal amount2 = new BigDecimal("120.7891");
+
+    KeyPair kp = KeyPair.random();
+    IntegrationUtils.fundAccount(kp.getAccountId());
+    Asset asset = Asset.createNonNativeAsset("CAT", kp.getAccountId());
+    IntegrationUtils.createAssetContract(asset, kp);
+    String destination = IntegrationUtils.getRandomContractId(kp);
+    Server server = new Server(IntegrationUtils.HORIZON_URL);
+    TransactionBuilderAccount sourceAccount = server.loadAccount(kp.getAccountId());
+
+    Transaction transaction1 =
+        new TransactionBuilder(sourceAccount, IntegrationUtils.NETWORK)
+            .setBaseFee(100)
+            .setTimeout(300)
+            .buildPaymentToContractTransaction(destination, asset, amount1, null);
+    transaction1.sign(kp);
+    server.submitTransaction(transaction1);
+    BigInteger balance1 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
+    assertEquals(1001250000L, balance1.longValue());
+
+    Transaction transaction2 =
+        new TransactionBuilder(sourceAccount, IntegrationUtils.NETWORK)
+            .setBaseFee(100)
+            .setTimeout(300)
+            .buildPaymentToContractTransaction(destination, asset, amount2, null);
+    transaction2.sign(kp);
+    server.submitTransaction(transaction2);
+    BigInteger balance2 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
+    assertEquals(2209141000L, balance2.longValue());
+
+    Transaction transaction3 =
+        new TransactionBuilder(sourceAccount, IntegrationUtils.NETWORK)
+            .setBaseFee(100)
+            .setTimeout(300)
+            .buildRestoreAssetBalanceEntryTransaction(destination, asset, null);
+    transaction3.sign(kp);
+    server.submitTransaction(transaction3);
+
+    server.close();
+  }
+
+  @Test
   public void testIntegrationPaymentToContractTransactionWithDifferentSource() throws IOException {
     Asset asset = Asset.createNativeAsset();
     BigDecimal amount1 = new BigDecimal("100.125");

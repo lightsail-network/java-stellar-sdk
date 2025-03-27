@@ -400,26 +400,27 @@ public class TransactionBuilder {
               .build());
       readWrite.add(balanceLedgerKey);
     } else {
+      String assetIssuer = ((AssetTypeCreditAlphaNum) asset).getIssuer();
       readOnly.add(
           LedgerKey.builder()
               .discriminant(LedgerEntryType.ACCOUNT)
               .account(
                   LedgerKey.LedgerKeyAccount.builder()
-                      .accountID(
-                          KeyPair.fromAccountId(((AssetTypeCreditAlphaNum) asset).getIssuer())
-                              .getXdrAccountId())
+                      .accountID(KeyPair.fromAccountId(assetIssuer).getXdrAccountId())
                       .build())
               .build());
       readOnly.add(contractInstanceLedgerKey);
-      readWrite.add(
-          LedgerKey.builder()
-              .discriminant(LedgerEntryType.TRUSTLINE)
-              .trustLine(
-                  LedgerKey.LedgerKeyTrustLine.builder()
-                      .accountID(KeyPair.fromAccountId(fromAddress).getXdrAccountId())
-                      .asset(new TrustLineAsset(asset).toXdr())
-                      .build())
-              .build());
+      if (!assetIssuer.equals(fromAddress)) {
+        readWrite.add(
+            LedgerKey.builder()
+                .discriminant(LedgerEntryType.TRUSTLINE)
+                .trustLine(
+                    LedgerKey.LedgerKeyTrustLine.builder()
+                        .accountID(KeyPair.fromAccountId(fromAddress).getXdrAccountId())
+                        .asset(new TrustLineAsset(asset).toXdr())
+                        .build())
+                .build());
+      }
       readWrite.add(balanceLedgerKey);
     }
 
