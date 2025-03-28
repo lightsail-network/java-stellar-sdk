@@ -1,12 +1,13 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.net.URI;
 import lombok.NonNull;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
 
@@ -14,8 +15,8 @@ import org.stellar.sdk.responses.TradeResponse;
 public class TradesRequestBuilder extends RequestBuilder {
   private static final String TRADE_TYPE_PARAMETER_NAME = "trade_type";
 
-  public TradesRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "trades");
+  public TradesRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "trades");
   }
 
   public TradesRequestBuilder baseAsset(Asset asset) {
@@ -77,8 +78,8 @@ public class TradesRequestBuilder extends RequestBuilder {
   /**
    * Requests specific <code>uri</code> and returns {@link Page} of {@link TradeResponse}.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link TradeResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -95,7 +96,7 @@ public class TradesRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<TradeResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<TradeResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<TradeResponse>> type = new TypeToken<Page<TradeResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -158,7 +159,7 @@ public class TradesRequestBuilder extends RequestBuilder {
    */
   public SSEStream<TradeResponse> stream(
       final EventListener<TradeResponse> listener, long reconnectTimeout) {
-    return SSEStream.create(httpClient, this, TradeResponse.class, listener, reconnectTimeout);
+    return SSEStream.create(sseClient, this, TradeResponse.class, listener, reconnectTimeout);
   }
 
   /**

@@ -8,7 +8,6 @@ import static org.stellar.sdk.Asset.createNonNativeAsset;
 
 import java.util.Arrays;
 import java.util.List;
-import okhttp3.HttpUrl;
 import org.junit.Test;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Server;
@@ -17,7 +16,7 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictReceiveWithSourceAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .strictReceivePaths()
             .destinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
@@ -55,7 +54,7 @@ public class PathsRequestBuilderTest {
             createNonNativeAsset(
                 "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .strictReceivePaths()
             .destinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
@@ -119,7 +118,7 @@ public class PathsRequestBuilderTest {
   @Test
   public void testStrictSendWithDestinationAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .strictSendPaths()
             .destinationAccount("GB24QI3BJNKBY4YNJZ2I37HFIYK56BL2OURFML76X46RQQKDLVT7WKJF")
@@ -155,7 +154,7 @@ public class PathsRequestBuilderTest {
             createNonNativeAsset(
                 "EUR", "GAYSHLG75RPSMXWJ5KX7O7STE6RSZTD6NE4CTWAXFZYYVYIFRUVJIBJH"));
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .strictSendPaths()
             .destinationAssets(assets)
