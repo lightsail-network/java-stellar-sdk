@@ -2,6 +2,8 @@
 
 ## Pending
 
+## 1.3.1
+
 ### Update:
 fix: fix the issue where sending assets using `TransactionBuilder.buildPaymentToContractTransaction` fails when the sender's account is the same as the asset issuer's account. ([#685](https://github.com/stellar/java-stellar-sdk/pull/685))
 
