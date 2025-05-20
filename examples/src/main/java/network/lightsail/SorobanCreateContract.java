@@ -19,6 +19,9 @@ import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.TransactionMeta;
 
+/**
+ * This example shows how to deploy a contract with an installed (uploaded) wasm id.
+ */
 public class SorobanCreateContract {
   public static void main(String[] args) throws IOException {
     String secret = "SAAPYAPTTRZMCUZFPG3G66V4ZMHTK4TWA6NS7U4F7Z3IMUD52EK4DDEV";
