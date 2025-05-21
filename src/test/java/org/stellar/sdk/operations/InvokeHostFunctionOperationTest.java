@@ -292,10 +292,10 @@ public class InvokeHostFunctionOperationTest {
   }
 
   @Test
-  public void testUploadContractWasmOperationBuilder() {
+  public void testInstallContractWasmOperationBuilder() {
     byte[] wasm = new byte[] {0x00, 0x01, 0x02, 0x03, 0x34, 0x45, 0x66, 0x46};
     InvokeHostFunctionOperation operation =
-        InvokeHostFunctionOperation.uploadContractWasmOperationBuilder(wasm).build();
+        InvokeHostFunctionOperation.installContractWasmOperationBuilder(wasm).build();
     HostFunction expectedFunction =
         HostFunction.builder()
             .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM)
