@@ -1,11 +1,12 @@
 package network.lightsail;
 
 import java.io.IOException;
-import org.stellar.sdk.Address;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import org.stellar.sdk.*;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Network;
 import org.stellar.sdk.SorobanServer;
-import org.stellar.sdk.StrKey;
 import org.stellar.sdk.Transaction;
 import org.stellar.sdk.TransactionBuilder;
 import org.stellar.sdk.TransactionBuilderAccount;
@@ -16,24 +17,23 @@ import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.xdr.TransactionMeta;
 
-public class SorobanCreateContract {
+public class SorobanUploadWasm {
   public static void main(String[] args) throws IOException {
     String secret = "SAAPYAPTTRZMCUZFPG3G66V4ZMHTK4TWA6NS7U4F7Z3IMUD52EK4DDEV";
     String rpcServerUrl = "https://soroban-testnet.stellar.org:443";
     Network network = Network.TESTNET;
-
     KeyPair keyPair = KeyPair.fromSecretSeed(secret);
     GetTransactionResponse getTransactionResponse;
+
+    // Load the WASM file
+    String wasmFilePath = "src/main/resources/wasm/soroban_hello_world_contract.wasm";
+    byte[] wasmBytes = Files.readAllBytes(Paths.get(wasmFilePath));
+
     try (SorobanServer sorobanServer = new SorobanServer(rpcServerUrl)) {
       TransactionBuilderAccount source = sorobanServer.getAccount(keyPair.getAccountId());
 
-      // Please check `SorobanUploadWasm.java` to see how to upload the WASM file and get the WASM
-      // ID
-      String wasmId = "FEC2819684A9C2964614B769EF881C66848AF7EF0EABF1DDB968FC0FEF36B11E";
       InvokeHostFunctionOperation invokeHostFunctionOperation =
-          InvokeHostFunctionOperation.createContractOperationBuilder(
-                  wasmId, new Address(keyPair.getAccountId()), null, null)
-              .build();
+          InvokeHostFunctionOperation.uploadContractWasmOperationBuilder(wasmBytes).build();
 
       // Build the transaction
       Transaction unpreparedTransaction =
@@ -93,16 +93,9 @@ public class SorobanCreateContract {
         System.out.println("Transaction succeeded: " + getTransactionResponse);
         // parse the function return value
         TransactionMeta transactionMeta = getTransactionResponse.parseResultMetaXdr();
-        byte[] hash =
-            transactionMeta
-                .getV3()
-                .getSorobanMeta()
-                .getReturnValue()
-                .getAddress()
-                .getContractId()
-                .getHash();
-        String contractId = StrKey.encodeContract(hash);
-        System.out.println("Contract ID: " + contractId);
+        byte[] wasmId =
+            transactionMeta.getV3().getSorobanMeta().getReturnValue().getBytes().getSCBytes();
+        System.out.println("Wasm ID: " + Util.bytesToHex(wasmId));
       } else {
         System.out.println("Transaction failed: " + getTransactionResponse);
       }
