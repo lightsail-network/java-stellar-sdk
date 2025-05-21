@@ -2,14 +2,8 @@ package network.lightsail;
 
 import java.io.IOException;
 import java.util.List;
-import org.stellar.sdk.Address;
-import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.Network;
-import org.stellar.sdk.SorobanServer;
-import org.stellar.sdk.StrKey;
-import org.stellar.sdk.Transaction;
-import org.stellar.sdk.TransactionBuilder;
-import org.stellar.sdk.TransactionBuilderAccount;
+
+import org.stellar.sdk.*;
 import org.stellar.sdk.exception.NetworkException;
 import org.stellar.sdk.exception.PrepareTransactionException;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
@@ -27,19 +21,68 @@ public class SorobanCreateContract {
     KeyPair sourceAccount = KeyPair.fromSecretSeed(secret);
 
     try (SorobanServer sorobanServer = new SorobanServer(rpcServerUrl)) {
-      TransactionBuilderAccount source = sorobanServer.getAccount(sourceAccount.getAccountId());
-
       List<SCVal> constructorArgs = List.of(Scv.toString("World!"));
-      createContractWithWasmId(
-          sorobanServer,
-          Network.TESTNET,
-          "406edc375a4334ea2849d22e490919a5456ee176dd2f9fc3e1e557cd242ec593",
-          sourceAccount,
-          constructorArgs); // Scv is a helper class to create SCVal objects
+      String txHash =
+          createContractWithWasmId(
+              sorobanServer,
+              Network.TESTNET,
+              "406edc375a4334ea2849d22e490919a5456ee176dd2f9fc3e1e557cd242ec593",
+              sourceAccount,
+              constructorArgs); // Scv is a helper class to create SCVal objects
+
+      GetTransactionResponse getTransactionResponse;
+      // Check the transaction status
+      while (true) {
+        try {
+          getTransactionResponse = sorobanServer.getTransaction(txHash);
+        } catch (NetworkException e) {
+          throw new RuntimeException("Get transaction failed", e);
+        }
+
+        if (!GetTransactionResponse.GetTransactionStatus.NOT_FOUND.equals(
+            getTransactionResponse.getStatus())) {
+          break;
+        }
+        // Wait for 3 seconds before checking the transaction status again
+        try {
+          Thread.sleep(3000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+
+      if (GetTransactionResponse.GetTransactionStatus.SUCCESS.equals(
+          getTransactionResponse.getStatus())) {
+        System.out.println("Transaction succeeded: " + getTransactionResponse);
+        // parse the function return value
+        TransactionMeta transactionMeta = getTransactionResponse.parseResultMetaXdr();
+        byte[] hash =
+            transactionMeta
+                .getV3()
+                .getSorobanMeta()
+                .getReturnValue()
+                .getAddress()
+                .getContractId()
+                .getHash();
+        String contractId = StrKey.encodeContract(hash);
+        System.out.println("Contract ID: " + contractId);
+      } else {
+        System.out.println("Transaction failed: " + getTransactionResponse);
+      }
     }
   }
 
-  private static void createContractWithWasmId(
+  /**
+   * Creates a contract with the given WASM ID and constructor arguments.
+   *
+   * @param sorobanServer the Soroban server
+   * @param network the network (e.g., TESTNET)
+   * @param wasmId the WASM ID of the contract
+   * @param sourceAccount the source account
+   * @param constructorArgs the constructor arguments
+   * @return the transaction hash
+   */
+  private static String createContractWithWasmId(
       SorobanServer sorobanServer,
       Network network,
       String wasmId,
@@ -87,43 +130,6 @@ public class SorobanCreateContract {
       throw new RuntimeException("Send transaction failed: " + sendTransactionResponse);
     }
 
-    // Check the transaction status
-    while (true) {
-      try {
-        getTransactionResponse = sorobanServer.getTransaction(sendTransactionResponse.getHash());
-      } catch (NetworkException e) {
-        throw new RuntimeException("Get transaction failed", e);
-      }
-
-      if (!GetTransactionResponse.GetTransactionStatus.NOT_FOUND.equals(
-          getTransactionResponse.getStatus())) {
-        break;
-      }
-      // Wait for 3 seconds before checking the transaction status again
-      try {
-        Thread.sleep(3000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-
-    if (GetTransactionResponse.GetTransactionStatus.SUCCESS.equals(
-        getTransactionResponse.getStatus())) {
-      System.out.println("Transaction succeeded: " + getTransactionResponse);
-      // parse the function return value
-      TransactionMeta transactionMeta = getTransactionResponse.parseResultMetaXdr();
-      byte[] hash =
-          transactionMeta
-              .getV3()
-              .getSorobanMeta()
-              .getReturnValue()
-              .getAddress()
-              .getContractId()
-              .getHash();
-      String contractId = StrKey.encodeContract(hash);
-      System.out.println("Contract ID: " + contractId);
-    } else {
-      System.out.println("Transaction failed: " + getTransactionResponse);
-    }
+    return sendTransactionResponse.getHash();
   }
 }
