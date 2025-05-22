@@ -1,77 +1,40 @@
 package network.lightsail;
 
 import java.io.IOException;
-import org.stellar.sdk.Address;
-import org.stellar.sdk.KeyPair;
-import org.stellar.sdk.Network;
-import org.stellar.sdk.SorobanServer;
-import org.stellar.sdk.StrKey;
-import org.stellar.sdk.Transaction;
-import org.stellar.sdk.TransactionBuilder;
-import org.stellar.sdk.TransactionBuilderAccount;
+import java.util.List;
+
+import org.stellar.sdk.*;
 import org.stellar.sdk.exception.NetworkException;
 import org.stellar.sdk.exception.PrepareTransactionException;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
+import org.stellar.sdk.scval.Scv;
+import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.TransactionMeta;
 
+/** This example shows how to deploy a contract with an installed (uploaded) wasm id. */
 public class SorobanCreateContract {
   public static void main(String[] args) throws IOException {
     String secret = "SAAPYAPTTRZMCUZFPG3G66V4ZMHTK4TWA6NS7U4F7Z3IMUD52EK4DDEV";
     String rpcServerUrl = "https://soroban-testnet.stellar.org:443";
-    Network network = Network.TESTNET;
+    KeyPair sourceAccount = KeyPair.fromSecretSeed(secret);
 
-    KeyPair keyPair = KeyPair.fromSecretSeed(secret);
-    GetTransactionResponse getTransactionResponse;
     try (SorobanServer sorobanServer = new SorobanServer(rpcServerUrl)) {
-      TransactionBuilderAccount source = sorobanServer.getAccount(keyPair.getAccountId());
+      List<SCVal> constructorArgs = List.of(Scv.toString("World!"));
+      String txHash =
+          createContractWithWasmId(
+              sorobanServer,
+              Network.TESTNET,
+              "406edc375a4334ea2849d22e490919a5456ee176dd2f9fc3e1e557cd242ec593",
+              sourceAccount,
+              constructorArgs); // Scv is a helper class to create SCVal objects
 
-      // Please check `SorobanUploadWasm.java` to see how to upload the WASM file and get the WASM
-      // ID
-      String wasmId = "FEC2819684A9C2964614B769EF881C66848AF7EF0EABF1DDB968FC0FEF36B11E";
-      InvokeHostFunctionOperation invokeHostFunctionOperation =
-          InvokeHostFunctionOperation.createContractOperationBuilder(
-                  wasmId, new Address(keyPair.getAccountId()), null, null)
-              .build();
-
-      // Build the transaction
-      Transaction unpreparedTransaction =
-          new TransactionBuilder(source, network)
-              .setBaseFee(Transaction.MIN_BASE_FEE)
-              .addOperation(invokeHostFunctionOperation)
-              .setTimeout(300)
-              .build();
-
-      // Prepare the transaction
-      Transaction transaction;
-      try {
-        transaction = sorobanServer.prepareTransaction(unpreparedTransaction);
-      } catch (PrepareTransactionException e) {
-        throw new RuntimeException("Prepare transaction failed", e);
-      } catch (NetworkException e) {
-        throw new RuntimeException("Network error", e);
-      }
-
-      // Sign the transaction
-      transaction.sign(keyPair);
-
-      // Send the transaction
-      SendTransactionResponse sendTransactionResponse;
-      try {
-        sendTransactionResponse = sorobanServer.sendTransaction(transaction);
-      } catch (NetworkException e) {
-        throw new RuntimeException("Send transaction failed", e);
-      }
-      if (!SendTransactionResponse.SendTransactionStatus.PENDING.equals(
-          sendTransactionResponse.getStatus())) {
-        throw new RuntimeException("Send transaction failed: " + sendTransactionResponse);
-      }
-
+      GetTransactionResponse getTransactionResponse;
       // Check the transaction status
       while (true) {
         try {
-          getTransactionResponse = sorobanServer.getTransaction(sendTransactionResponse.getHash());
+          getTransactionResponse = sorobanServer.getTransaction(txHash);
         } catch (NetworkException e) {
           throw new RuntimeException("Get transaction failed", e);
         }
@@ -107,5 +70,66 @@ public class SorobanCreateContract {
         System.out.println("Transaction failed: " + getTransactionResponse);
       }
     }
+  }
+
+  /**
+   * Creates a contract with the given WASM ID and constructor arguments.
+   *
+   * @param sorobanServer the Soroban server
+   * @param network the network (e.g., TESTNET)
+   * @param wasmId the WASM ID of the contract
+   * @param sourceAccount the source account
+   * @param constructorArgs the constructor arguments
+   * @return the transaction hash
+   */
+  private static String createContractWithWasmId(
+      SorobanServer sorobanServer,
+      Network network,
+      String wasmId,
+      KeyPair sourceAccount,
+      List<SCVal> constructorArgs) {
+
+    GetTransactionResponse getTransactionResponse;
+    TransactionBuilderAccount source = sorobanServer.getAccount(sourceAccount.getAccountId());
+
+    InvokeHostFunctionOperation invokeHostFunctionOperation =
+        InvokeHostFunctionOperation.createContractOperationBuilder(
+                wasmId, new Address(sourceAccount.getAccountId()), constructorArgs, null)
+            .build();
+
+    // Build the transaction
+    Transaction unpreparedTransaction =
+        new TransactionBuilder(source, network)
+            .setBaseFee(Transaction.MIN_BASE_FEE)
+            .addOperation(invokeHostFunctionOperation)
+            .setTimeout(300)
+            .build();
+
+    // Prepare the transaction
+    Transaction transaction;
+    try {
+      transaction = sorobanServer.prepareTransaction(unpreparedTransaction);
+    } catch (PrepareTransactionException e) {
+      throw new RuntimeException("Prepare transaction failed", e);
+    } catch (NetworkException e) {
+      throw new RuntimeException("Network error", e);
+    }
+
+    // Sign the transaction
+    transaction.sign(sourceAccount);
+
+    // Send the transaction
+    SendTransactionResponse sendTransactionResponse;
+    try {
+      sendTransactionResponse = sorobanServer.sendTransaction(transaction);
+    } catch (NetworkException e) {
+      throw new RuntimeException("Send transaction failed", e);
+    }
+    if (!SendTransactionResponse.SendTransactionStatus.PENDING.equals(
+        sendTransactionResponse.getStatus())) {
+      throw new RuntimeException("Send transaction failed: " + sendTransactionResponse);
+    }
+
+    return sendTransactionResponse.getHash();
   }
 }
