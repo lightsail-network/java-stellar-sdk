@@ -2,7 +2,6 @@ package network.lightsail;
 
 import java.io.IOException;
 import java.util.List;
-
 import org.stellar.sdk.*;
 import org.stellar.sdk.exception.NetworkException;
 import org.stellar.sdk.exception.PrepareTransactionException;
@@ -26,9 +25,10 @@ public class SorobanCreateContract {
           createContractWithWasmId(
               sorobanServer,
               Network.TESTNET,
-              "406edc375a4334ea2849d22e490919a5456ee176dd2f9fc3e1e557cd242ec593",
+              "fec2819684a9c2964614b769ef881c66848af7ef0eabf1ddb968fc0fef36b11e", //  Please check
+              // `SorobanUploadWasm.java` to see how to upload the WASM file and get the WASM ID
               sourceAccount,
-              constructorArgs); // Scv is a helper class to create SCVal objects
+              null);
 
       GetTransactionResponse getTransactionResponse;
       // Check the transaction status
