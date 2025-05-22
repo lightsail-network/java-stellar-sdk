@@ -5,12 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -36,19 +31,8 @@ import org.stellar.sdk.requests.sorobanrpc.GetTransactionsRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
-import org.stellar.sdk.responses.sorobanrpc.GetEventsResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetFeeStatsResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetLedgersResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
-import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
-import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
-import org.stellar.sdk.responses.sorobanrpc.SorobanRpcResponse;
+import org.stellar.sdk.responses.sorobanrpc.*;
+import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.LedgerEntry;
 import org.stellar.sdk.xdr.LedgerEntryType;
@@ -558,6 +542,52 @@ public class SorobanServer implements Closeable {
     SendTransactionRequest params = new SendTransactionRequest(transaction.toEnvelopeXdrBase64());
     return this.sendRequest(
         "sendTransaction", params, new TypeToken<SorobanRpcResponse<SendTransactionResponse>>() {});
+  }
+
+  public GetSacBalanceResponse getSacBalance(String contractId, Asset asset, Network network)
+      throws IOException {
+
+    if (!StrKey.isValidContract(contractId)) {
+      throw new IllegalArgumentException("expected contract ID, got " + contractId);
+    }
+
+    LedgerKey ledgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(Scv.toAddress(asset.getContractId(network)).getAddress())
+                    .key(
+                        Scv.toVec(
+                            Arrays.asList(Scv.toSymbol("Balance"), Scv.toAddress(contractId))))
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    GetLedgerEntriesResponse response = this.getLedgerEntries(Collections.singleton(ledgerKey));
+
+    List<GetLedgerEntriesResponse.LedgerEntryResult> entries = response.getEntries();
+    if (entries == null || entries.isEmpty()) {
+      return null;
+    }
+
+    GetLedgerEntriesResponse.LedgerEntryResult entry = entries.get(0);
+    LedgerEntry.LedgerEntryData ledgerEntryData =
+        LedgerEntry.LedgerEntryData.fromXdrBase64(entry.getXdr());
+    LinkedHashMap<SCVal, SCVal> balanceMap =
+        Scv.fromMap(ledgerEntryData.getContractData().getVal());
+
+    return GetSacBalanceResponse.builder()
+        .latestLedger(response.getLatestLedger())
+        .balanceEntry(
+            GetSacBalanceResponse.BalanceEntry.builder()
+                .liveUntilLedgerSeq(entry.getLiveUntilLedger())
+                .lastModifiedLedgerSeq(entry.getLastModifiedLedger())
+                .amount(Scv.fromInt128(balanceMap.get(Scv.toSymbol("amount"))).toString())
+                .authorized(Scv.fromBoolean(balanceMap.get(Scv.toSymbol("authorized"))))
+                .clawback(Scv.fromBoolean(balanceMap.get(Scv.toSymbol("clawback"))))
+                .build())
+        .build();
   }
 
   public static Transaction assembleTransaction(

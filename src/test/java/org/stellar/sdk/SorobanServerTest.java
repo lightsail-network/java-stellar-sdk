@@ -39,18 +39,7 @@ import org.stellar.sdk.requests.sorobanrpc.GetTransactionsRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
-import org.stellar.sdk.responses.sorobanrpc.GetEventsResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetFeeStatsResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetLedgersResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
-import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
-import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
-import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
+import org.stellar.sdk.responses.sorobanrpc.*;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
@@ -1349,6 +1338,53 @@ public class SorobanServerTest {
     assertEquals(response.getHash(), transaction.hashHex());
     assertEquals(response.getLatestLedger().longValue(), 1479L);
     assertEquals(response.getLatestLedgerCloseTime().longValue(), 1690594566L);
+
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testGetSacBalance() throws IOException {
+    String filePath = "src/test/resources/soroban_server/get_sac_balance.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) {
+            SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<GetLedgerEntriesRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("getLedgerEntries")
+                && "AAAABgAAAAHXkotywnA8z+r365/0701QSlWouXn8m0UOoshCtNHOYQAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAATS6wvBZn2PXUHdI2oDWZqeECiy17cpcL6qrr1lqpqu6AAAAAQ=="
+                    .equals(
+                        sorobanRpcRequest.getParams().getKeys().stream()
+                            .findFirst()
+                            .orElse(null))) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    GetSacBalanceResponse balance =
+        server.getSacBalance(
+            "CA2LVQXQLGPWHV2QO5ENVAGWM2TYICRMWXW4UXBPVKV26WLKU2V3UTH5",
+            Asset.createNativeAsset(),
+            Network.TESTNET);
+    assertEquals(1104160, balance.getLatestLedger());
+    assertEquals((Long) 3163876L, balance.getBalanceEntry().getLiveUntilLedgerSeq());
+    assertEquals((Long) 1090887L, balance.getBalanceEntry().getLastModifiedLedgerSeq());
+    assertEquals("28", balance.getBalanceEntry().getAmount());
+    assertTrue(balance.getBalanceEntry().getAuthorized());
+    assertFalse(balance.getBalanceEntry().getClawback());
 
     server.close();
     mockWebServer.close();
