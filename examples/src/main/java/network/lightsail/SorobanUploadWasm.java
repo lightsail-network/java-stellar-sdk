@@ -1,36 +1,40 @@
 package network.lightsail;
 
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.stellar.sdk.*;
+import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.Network;
+import org.stellar.sdk.SorobanServer;
+import org.stellar.sdk.Transaction;
+import org.stellar.sdk.TransactionBuilder;
+import org.stellar.sdk.TransactionBuilderAccount;
 import org.stellar.sdk.exception.NetworkException;
 import org.stellar.sdk.exception.PrepareTransactionException;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
-import org.stellar.sdk.scval.Scv;
-import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.TransactionMeta;
 
-/** This example shows how to deploy a contract with an installed (uploaded) wasm id. */
-public class SorobanCreateContract {
+/** This example shows how to upload a WASM file to the Soroban network and get the WASM ID. */
+public class SorobanUploadWasm {
   public static void main(String[] args) throws IOException {
     String secret = "SAAPYAPTTRZMCUZFPG3G66V4ZMHTK4TWA6NS7U4F7Z3IMUD52EK4DDEV";
     String rpcServerUrl = "https://soroban-testnet.stellar.org:443";
     KeyPair sourceAccount = KeyPair.fromSecretSeed(secret);
 
+    // Load the WASM file
+    String wasmFilePath = "src/main/resources/wasm/soroban_hello_world_contract.wasm";
+    byte[] wasmBytes = Files.readAllBytes(Paths.get(wasmFilePath));
+
     try (SorobanServer sorobanServer = new SorobanServer(rpcServerUrl)) {
-      List<SCVal> constructorArgs = List.of(Scv.toString("World!"));
-      String txHash =
-          createContractWithWasmId(
-              sorobanServer,
-              Network.TESTNET,
-              "fec2819684a9c2964614b769ef881c66848af7ef0eabf1ddb968fc0fef36b11e", //  Please check
-              // `SorobanUploadWasm.java` to see how to upload the WASM file and get the WASM ID
-              sourceAccount,
-              null);
+      TransactionBuilderAccount source = sorobanServer.getAccount(sourceAccount.getAccountId());
+
+      String txHash = uploadWasm(sorobanServer, Network.TESTNET, wasmBytes, sourceAccount);
 
       GetTransactionResponse getTransactionResponse;
+
       // Check the transaction status
       while (true) {
         try {
@@ -56,16 +60,9 @@ public class SorobanCreateContract {
         System.out.println("Transaction succeeded: " + getTransactionResponse);
         // parse the function return value
         TransactionMeta transactionMeta = getTransactionResponse.parseResultMetaXdr();
-        byte[] hash =
-            transactionMeta
-                .getV3()
-                .getSorobanMeta()
-                .getReturnValue()
-                .getAddress()
-                .getContractId()
-                .getHash();
-        String contractId = StrKey.encodeContract(hash);
-        System.out.println("Contract ID: " + contractId);
+        byte[] wasmId =
+            transactionMeta.getV3().getSorobanMeta().getReturnValue().getBytes().getSCBytes();
+        System.out.println("Wasm ID: " + Util.bytesToHex(wasmId).toLowerCase());
       } else {
         System.out.println("Transaction failed: " + getTransactionResponse);
       }
@@ -73,29 +70,22 @@ public class SorobanCreateContract {
   }
 
   /**
-   * Creates a contract with the given WASM ID and constructor arguments.
+   * Creates a contract with the given WASM bytes and constructor arguments.
    *
    * @param sorobanServer the Soroban server
    * @param network the network (e.g., TESTNET)
-   * @param wasmId the WASM ID of the contract
+   * @param wasmBytes the WASM bytes
    * @param sourceAccount the source account
-   * @param constructorArgs the constructor arguments
    * @return the transaction hash
    */
-  private static String createContractWithWasmId(
-      SorobanServer sorobanServer,
-      Network network,
-      String wasmId,
-      KeyPair sourceAccount,
-      List<SCVal> constructorArgs) {
+  public static String uploadWasm(
+      SorobanServer sorobanServer, Network network, byte[] wasmBytes, KeyPair sourceAccount) {
 
     GetTransactionResponse getTransactionResponse;
     TransactionBuilderAccount source = sorobanServer.getAccount(sourceAccount.getAccountId());
 
     InvokeHostFunctionOperation invokeHostFunctionOperation =
-        InvokeHostFunctionOperation.createContractOperationBuilder(
-                wasmId, new Address(sourceAccount.getAccountId()), constructorArgs, null)
-            .build();
+        InvokeHostFunctionOperation.uploadContractWasmOperationBuilder(wasmBytes).build();
 
     // Build the transaction
     Transaction unpreparedTransaction =
@@ -130,6 +120,7 @@ public class SorobanCreateContract {
       throw new RuntimeException("Send transaction failed: " + sendTransactionResponse);
     }
 
+    // Check the transaction status
     return sendTransactionResponse.getHash();
   }
 }
