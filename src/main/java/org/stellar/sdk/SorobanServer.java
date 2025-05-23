@@ -544,11 +544,19 @@ public class SorobanServer implements Closeable {
         "sendTransaction", params, new TypeToken<SorobanRpcResponse<SendTransactionResponse>>() {});
   }
 
-  public GetSacBalanceResponse getSacBalance(String contractId, Asset asset, Network network)
-      throws IOException {
-
+  /**
+   * Fetches the balance of a specific asset for a contract. This is useful for checking the balance
+   * of a contract in a specific asset.
+   *
+   * @param contractId The contract ID containing the asset balance. Encoded as Stellar Contract
+   *     Address. e.g. CAB...
+   * @param asset The asset to check the balance for. This should be a valid asset object.
+   * @param network The network to use for the asset.
+   * @return A {@link GetSACBalanceResponse} object containing the balance information.
+   */
+  public GetSACBalanceResponse getSACBalance(String contractId, Asset asset, Network network) {
     if (!StrKey.isValidContract(contractId)) {
-      throw new IllegalArgumentException("expected contract ID, got " + contractId);
+      throw new IllegalArgumentException("Invalid contract ID: " + contractId);
     }
 
     LedgerKey ledgerKey =
@@ -568,19 +576,20 @@ public class SorobanServer implements Closeable {
 
     List<GetLedgerEntriesResponse.LedgerEntryResult> entries = response.getEntries();
     if (entries == null || entries.isEmpty()) {
-      return null;
+      return GetSACBalanceResponse.builder().latestLedger(response.getLatestLedger()).build();
     }
 
     GetLedgerEntriesResponse.LedgerEntryResult entry = entries.get(0);
     LedgerEntry.LedgerEntryData ledgerEntryData =
-        LedgerEntry.LedgerEntryData.fromXdrBase64(entry.getXdr());
+        Util.parseXdr(entry.getXdr(), LedgerEntry.LedgerEntryData::fromXdrBase64);
+
     LinkedHashMap<SCVal, SCVal> balanceMap =
         Scv.fromMap(ledgerEntryData.getContractData().getVal());
 
-    return GetSacBalanceResponse.builder()
+    return GetSACBalanceResponse.builder()
         .latestLedger(response.getLatestLedger())
         .balanceEntry(
-            GetSacBalanceResponse.BalanceEntry.builder()
+            GetSACBalanceResponse.BalanceEntry.builder()
                 .liveUntilLedgerSeq(entry.getLiveUntilLedger())
                 .lastModifiedLedgerSeq(entry.getLastModifiedLedger())
                 .amount(Scv.fromInt128(balanceMap.get(Scv.toSymbol("amount"))).toString())

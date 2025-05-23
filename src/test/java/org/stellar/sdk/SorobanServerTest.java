@@ -1344,7 +1344,7 @@ public class SorobanServerTest {
   }
 
   @Test
-  public void testGetSacBalance() throws IOException {
+  public void testGetSACBalance() throws IOException {
     String filePath = "src/test/resources/soroban_server/get_sac_balance.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
     MockWebServer mockWebServer = new MockWebServer();
@@ -1374,12 +1374,12 @@ public class SorobanServerTest {
 
     HttpUrl baseUrl = mockWebServer.url("");
     SorobanServer server = new SorobanServer(baseUrl.toString());
-    GetSacBalanceResponse balance =
-        server.getSacBalance(
+    GetSACBalanceResponse balance =
+        server.getSACBalance(
             "CA2LVQXQLGPWHV2QO5ENVAGWM2TYICRMWXW4UXBPVKV26WLKU2V3UTH5",
             Asset.createNativeAsset(),
             Network.TESTNET);
-    assertEquals(1104160, balance.getLatestLedger());
+    assertEquals((Long) 1104160L, balance.getLatestLedger());
     assertEquals((Long) 3163876L, balance.getBalanceEntry().getLiveUntilLedgerSeq());
     assertEquals((Long) 1090887L, balance.getBalanceEntry().getLastModifiedLedgerSeq());
     assertEquals("28", balance.getBalanceEntry().getAmount());

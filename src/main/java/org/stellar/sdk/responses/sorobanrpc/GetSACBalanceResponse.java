@@ -5,8 +5,8 @@ import lombok.Value;
 
 @Builder
 @Value
-public class GetSacBalanceResponse {
-  long latestLedger;
+public class GetSACBalanceResponse {
+  Long latestLedger;
   BalanceEntry balanceEntry;
 
   @Value
