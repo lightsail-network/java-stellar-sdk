@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,6 +53,19 @@ public class Int256Parts implements XdrElement {
   public static Int256Parts fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
+  }
+
+  public BigInteger toBigInteger() {
+    BigInteger hi_hiValue = BigInteger.valueOf(hi_hi.getInt64());
+    BigInteger hi_loValue = hi_lo.getUint64().getNumber();
+    BigInteger lo_hiValue = lo_hi.getUint64().getNumber();
+    BigInteger lo_loValue = lo_lo.getUint64().getNumber();
+
+    return hi_hiValue
+        .shiftLeft(192)
+        .add(hi_loValue.shiftLeft(128))
+        .add(lo_hiValue.shiftLeft(64))
+        .add(lo_loValue);
   }
 
   public static Int256Parts fromXdrByteArray(byte[] xdr) throws IOException {
