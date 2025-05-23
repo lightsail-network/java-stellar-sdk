@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,6 +35,10 @@ public class Uint256 implements XdrElement {
     decodedUint256.uint256 = new byte[uint256Size];
     stream.read(decodedUint256.uint256, 0, uint256Size);
     return decodedUint256;
+  }
+
+  public BigInteger toBigInteger() {
+    return new BigInteger(1, uint256);
   }
 
   public static Uint256 fromXdrBase64(String xdr) throws IOException {
