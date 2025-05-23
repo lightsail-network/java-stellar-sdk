@@ -3,7 +3,7 @@ package org.stellar.sdk.requests;
 import static org.junit.Assert.assertEquals;
 import static org.stellar.sdk.Asset.createNonNativeAsset;
 
-import okhttp3.HttpUrl;
+import java.net.URI;
 import org.junit.Test;
 import org.stellar.sdk.Server;
 
@@ -11,7 +11,7 @@ public class OrderBookRequestBuilderTest {
   @Test
   public void testOrderBook() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .orderBook()
             .buyingAsset(

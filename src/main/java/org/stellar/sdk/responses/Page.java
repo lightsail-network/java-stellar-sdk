@@ -4,14 +4,18 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.RequestTimeoutException;
+import org.stellar.sdk.exception.UnexpectedException;
+import org.stellar.sdk.http.GetRequest;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.StringResponse;
 import org.stellar.sdk.requests.ResponseHandler;
 import org.stellar.sdk.responses.gson.TypedResponse;
 
@@ -52,7 +56,7 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public Page<T> getNextPage(OkHttpClient httpClient) {
+  public Page<T> getNextPage(IHttpClient httpClient) {
     if (this.getLinks().getNext() == null) {
       return null;
     }
@@ -65,14 +69,16 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
     ResponseHandler<Page<T>> responseHandler = new ResponseHandler<Page<T>>(this.type);
     String url = this.getLinks().getNext().getHref();
 
-    Request request = new Request.Builder().get().url(url).build();
-    okhttp3.Response response;
+    StringResponse response;
     try {
-      response = httpClient.newCall(request).execute();
+      final var request = new GetRequest(new URI(url));
+      response = httpClient.get(request);
     } catch (SocketTimeoutException e) {
       throw new RequestTimeoutException(e);
     } catch (IOException e) {
       throw new ConnectionErrorException(e);
+    } catch (URISyntaxException e) {
+      throw new UnexpectedException(e);
     }
     return responseHandler.handleResponse(response);
   }
