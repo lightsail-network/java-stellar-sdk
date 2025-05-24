@@ -5,7 +5,14 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -31,7 +38,20 @@ import org.stellar.sdk.requests.sorobanrpc.GetTransactionsRequest;
 import org.stellar.sdk.requests.sorobanrpc.SendTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
 import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
-import org.stellar.sdk.responses.sorobanrpc.*;
+import org.stellar.sdk.responses.sorobanrpc.GetEventsResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetFeeStatsResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetHealthResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetLedgersResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetSACBalanceResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
+import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
+import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
+import org.stellar.sdk.responses.sorobanrpc.SorobanRpcResponse;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.LedgerEntry;
@@ -552,7 +572,11 @@ public class SorobanServer implements Closeable {
    *     Address. e.g. CAB...
    * @param asset The asset to check the balance for. This should be a valid asset object.
    * @param network The network to use for the asset.
-   * @return A {@link GetSACBalanceResponse} object containing the balance information.
+   * @return A {@link GetSACBalanceResponse} which will contain the balance entry details if and
+   *     only if the request returned a valid balance ledger entry. If it doesn't, the {@code
+   *     balanceEntry} field will not exist.
+   * @see <a href="https://developers.stellar.org/docs/tokens/stellar-asset-contract"
+   *     target="_blank">Stellar Asset Contract (SAC) documentation</a>
    */
   public GetSACBalanceResponse getSACBalance(String contractId, Asset asset, Network network) {
     if (!StrKey.isValidContract(contractId)) {
