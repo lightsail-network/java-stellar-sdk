@@ -6,8 +6,10 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,12 +45,14 @@ import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgersResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetSACBalanceResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SorobanRpcResponse;
+import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.LedgerEntry;
 import org.stellar.sdk.xdr.LedgerEntryType;
@@ -558,6 +562,65 @@ public class SorobanServer implements Closeable {
     SendTransactionRequest params = new SendTransactionRequest(transaction.toEnvelopeXdrBase64());
     return this.sendRequest(
         "sendTransaction", params, new TypeToken<SorobanRpcResponse<SendTransactionResponse>>() {});
+  }
+
+  /**
+   * Fetches the balance of a specific asset for a contract. This is useful for checking the balance
+   * of a contract in a specific asset.
+   *
+   * @param contractId The contract ID containing the asset balance. Encoded as Stellar Contract
+   *     Address. e.g. CAB...
+   * @param asset The asset to check the balance for. This should be a valid asset object.
+   * @param network The network to use for the asset.
+   * @return A {@link GetSACBalanceResponse} which will contain the balance entry details if and
+   *     only if the request returned a valid balance ledger entry. If it doesn't, the {@code
+   *     balanceEntry} field will not exist.
+   * @see <a href="https://developers.stellar.org/docs/tokens/stellar-asset-contract"
+   *     target="_blank">Stellar Asset Contract (SAC) documentation</a>
+   */
+  public GetSACBalanceResponse getSACBalance(String contractId, Asset asset, Network network) {
+    if (!StrKey.isValidContract(contractId)) {
+      throw new IllegalArgumentException("Invalid contract ID: " + contractId);
+    }
+
+    LedgerKey ledgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(Scv.toAddress(asset.getContractId(network)).getAddress())
+                    .key(
+                        Scv.toVec(
+                            Arrays.asList(Scv.toSymbol("Balance"), Scv.toAddress(contractId))))
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    GetLedgerEntriesResponse response = this.getLedgerEntries(Collections.singleton(ledgerKey));
+
+    List<GetLedgerEntriesResponse.LedgerEntryResult> entries = response.getEntries();
+    if (entries == null || entries.isEmpty()) {
+      return GetSACBalanceResponse.builder().latestLedger(response.getLatestLedger()).build();
+    }
+
+    GetLedgerEntriesResponse.LedgerEntryResult entry = entries.get(0);
+    LedgerEntry.LedgerEntryData ledgerEntryData =
+        Util.parseXdr(entry.getXdr(), LedgerEntry.LedgerEntryData::fromXdrBase64);
+
+    LinkedHashMap<SCVal, SCVal> balanceMap =
+        Scv.fromMap(ledgerEntryData.getContractData().getVal());
+
+    return GetSACBalanceResponse.builder()
+        .latestLedger(response.getLatestLedger())
+        .balanceEntry(
+            GetSACBalanceResponse.BalanceEntry.builder()
+                .liveUntilLedgerSeq(entry.getLiveUntilLedger())
+                .lastModifiedLedgerSeq(entry.getLastModifiedLedger())
+                .amount(Scv.fromInt128(balanceMap.get(Scv.toSymbol("amount"))).toString())
+                .authorized(Scv.fromBoolean(balanceMap.get(Scv.toSymbol("authorized"))))
+                .clawback(Scv.fromBoolean(balanceMap.get(Scv.toSymbol("clawback"))))
+                .build())
+        .build();
   }
 
   public static Transaction assembleTransaction(

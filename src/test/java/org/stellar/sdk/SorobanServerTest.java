@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -46,6 +47,7 @@ import org.stellar.sdk.responses.sorobanrpc.GetLatestLedgerResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgersResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetNetworkResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetSACBalanceResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
@@ -1349,6 +1351,54 @@ public class SorobanServerTest {
     assertEquals(response.getHash(), transaction.hashHex());
     assertEquals(response.getLatestLedger().longValue(), 1479L);
     assertEquals(response.getLatestLedgerCloseTime().longValue(), 1690594566L);
+
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testGetSACBalance() throws IOException {
+    String filePath = "src/test/resources/soroban_server/get_sac_balance.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) {
+            SorobanRpcRequest<GetLedgerEntriesRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<GetLedgerEntriesRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("getLedgerEntries")
+                && "AAAABgAAAAHXkotywnA8z+r365/0701QSlWouXn8m0UOoshCtNHOYQAAABAAAAABAAAAAgAAAA8AAAAHQmFsYW5jZQAAAAASAAAAATS6wvBZn2PXUHdI2oDWZqeECiy17cpcL6qrr1lqpqu6AAAAAQ=="
+                    .equals(
+                        sorobanRpcRequest.getParams().getKeys().stream()
+                            .findFirst()
+                            .orElse(null))) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    GetSACBalanceResponse balance =
+        server.getSACBalance(
+            "CA2LVQXQLGPWHV2QO5ENVAGWM2TYICRMWXW4UXBPVKV26WLKU2V3UTH5",
+            Asset.createNativeAsset(),
+            Network.TESTNET);
+    assertEquals((Long) 1104160L, balance.getLatestLedger());
+    assertNotNull(balance.getBalanceEntry());
+    assertEquals((Long) 3163876L, balance.getBalanceEntry().getLiveUntilLedgerSeq());
+    assertEquals((Long) 1090887L, balance.getBalanceEntry().getLastModifiedLedgerSeq());
+    assertEquals("28", balance.getBalanceEntry().getAmount());
+    assertTrue(balance.getBalanceEntry().getAuthorized());
+    assertFalse(balance.getBalanceEntry().getClawback());
 
     server.close();
     mockWebServer.close();
