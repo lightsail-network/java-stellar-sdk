@@ -2,20 +2,25 @@
 
 ## Pending
 
+## 1.4.0
+
+### Update:
+- feat: Add `getSACBalance` to `SorobanServer`. ([#691](https://github.com/stellar/java-stellar-sdk/pull/691))
+
 ## 1.3.1
 
 ### Update:
-fix: fix the issue where sending assets using `TransactionBuilder.buildPaymentToContractTransaction` fails when the sender's account is the same as the asset issuer's account. ([#685](https://github.com/stellar/java-stellar-sdk/pull/685))
+- fix: fix the issue where sending assets using `TransactionBuilder.buildPaymentToContractTransaction` fails when the sender's account is the same as the asset issuer's account. ([#685](https://github.com/stellar/java-stellar-sdk/pull/685))
 
 ## 1.3.0
 
 ### Update:
-feat: add support for SEP-35. ([#683](https://github.com/stellar/java-stellar-sdk/pull/683))
+- feat: add support for SEP-35. ([#683](https://github.com/stellar/java-stellar-sdk/pull/683))
 
 ## 1.2.1
 
 ### Update:
-fix: remove `@NonNull` annotation from `startLedger` in request classes. ([#680](https://github.com/stellar/java-stellar-sdk/pull/680))
+- fix: remove `@NonNull` annotation from `startLedger` in request classes. ([#680](https://github.com/stellar/java-stellar-sdk/pull/680))
 
 ## 1.2.0
 
