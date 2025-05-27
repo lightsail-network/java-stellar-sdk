@@ -1,16 +1,17 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
+import java.net.URI;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.LedgerResponse;
 import org.stellar.sdk.responses.Page;
 
 /** Builds requests connected to ledgers. */
 public class LedgersRequestBuilder extends RequestBuilder {
-  public LedgersRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "ledgers");
+  public LedgersRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "ledgers");
   }
 
   /**
@@ -33,7 +34,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public LedgerResponse ledger(HttpUrl uri) {
+  public LedgerResponse ledger(URI uri) {
     TypeToken<LedgerResponse> type = new TypeToken<LedgerResponse>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -68,8 +69,8 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link LedgerResponse}. This
    * method is helpful for getting the next set of results.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link LedgerResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -86,7 +87,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<LedgerResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<LedgerResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<LedgerResponse>> type = new TypeToken<Page<LedgerResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -105,7 +106,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    */
   public SSEStream<LedgerResponse> stream(
       final EventListener<LedgerResponse> listener, long reconnectTimeout) {
-    return SSEStream.create(httpClient, this, LedgerResponse.class, listener, reconnectTimeout);
+    return SSEStream.create(sseClient, this, LedgerResponse.class, listener, reconnectTimeout);
   }
 
   /**
