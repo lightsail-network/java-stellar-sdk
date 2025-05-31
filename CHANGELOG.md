@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update:
+- feat: change `XdrElement` interface to public. ([#694](https://github.com/stellar/java-stellar-sdk/pull/694))
+
 ## 1.4.0
 
 ### Update:
