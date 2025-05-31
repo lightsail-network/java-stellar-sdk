@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update:
+- feat: Change `XdrElement` interface to public
+
 ## 1.4.0
 
 ### Update:

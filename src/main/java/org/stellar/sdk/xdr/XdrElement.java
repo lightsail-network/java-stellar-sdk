@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
 /** Common parent interface for all generated classes. */
-interface XdrElement {
+public interface XdrElement {
   void encode(XdrDataOutputStream stream) throws IOException;
 
   default String toXdrBase64() throws IOException {
