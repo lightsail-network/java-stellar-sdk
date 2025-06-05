@@ -1,23 +1,25 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.net.URI;
 import java.util.List;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
 public class StrictSendPathsRequestBuilder extends RequestBuilder {
-  public StrictSendPathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "");
+  public StrictSendPathsRequestBuilder(
+      IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "");
     this.setSegments("paths", "strict-send");
   }
 
   public StrictSendPathsRequestBuilder destinationAccount(String account) {
-    if (uriBuilder.build().queryParameter("destination_assets") != null) {
+    if (uriBuilder.hasQueryParameter("destination_assets")) {
       throw new IllegalArgumentException(
           "cannot set both destination_assets and destination_account");
     }
@@ -26,7 +28,7 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
   }
 
   public StrictSendPathsRequestBuilder destinationAssets(List<Asset> assets) {
-    if (uriBuilder.build().queryParameter("destination_account") != null) {
+    if (uriBuilder.hasQueryParameter("destination_account")) {
       throw new IllegalArgumentException(
           "cannot set both destination_assets and destination_account");
     }
@@ -52,8 +54,8 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
   /**
    * Requests specific <code>uri</code> and returns {@link Page} of {@link PathResponse}.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link PathResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -70,7 +72,7 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<PathResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<PathResponse> execute(IHttpClient httpClient, ISseClient sseClient, URI uri) {
     TypeToken<Page<PathResponse>> type = new TypeToken<Page<PathResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -95,6 +97,6 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
    *     due to cancellation or connectivity problems, etc.
    */
   public Page<PathResponse> execute() {
-    return execute(this.httpClient, this.buildUri());
+    return execute(this.httpClient, this.sseClient, this.buildUri());
   }
 }

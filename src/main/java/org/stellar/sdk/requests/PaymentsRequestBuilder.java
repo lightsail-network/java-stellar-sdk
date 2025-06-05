@@ -1,12 +1,13 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.NonNull;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
@@ -14,8 +15,8 @@ import org.stellar.sdk.responses.operations.OperationResponse;
 public class PaymentsRequestBuilder extends RequestBuilder {
   protected Set<String> toJoin;
 
-  public PaymentsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "payments");
+  public PaymentsRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "payments");
     toJoin = new HashSet<>();
   }
 
@@ -83,8 +84,8 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link OperationResponse}. This
    * method is helpful for getting the next set of results.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link OperationResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -101,7 +102,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<OperationResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<OperationResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<OperationResponse>> type = new TypeToken<Page<OperationResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -120,7 +121,7 @@ public class PaymentsRequestBuilder extends RequestBuilder {
    */
   public SSEStream<OperationResponse> stream(
       final EventListener<OperationResponse> listener, long reconnectTimeout) {
-    return SSEStream.create(httpClient, this, OperationResponse.class, listener, reconnectTimeout);
+    return SSEStream.create(sseClient, this, OperationResponse.class, listener, reconnectTimeout);
   }
 
   /**

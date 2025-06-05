@@ -1,19 +1,21 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
+import java.net.URI;
 import java.util.List;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
 /** Builds requests connected to paths. */
 public class StrictReceivePathsRequestBuilder extends RequestBuilder {
-  public StrictReceivePathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "");
+  public StrictReceivePathsRequestBuilder(
+      IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "");
     this.setSegments("paths", "strict-receive");
   }
 
@@ -23,7 +25,7 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
   }
 
   public StrictReceivePathsRequestBuilder sourceAccount(String account) {
-    if (uriBuilder.build().queryParameter("source_assets") != null) {
+    if (uriBuilder.hasQueryParameter("source_assets")) {
       throw new IllegalArgumentException("cannot set both source_assets and source_account");
     }
     uriBuilder.setQueryParameter("source_account", account);
@@ -31,7 +33,7 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
   }
 
   public StrictReceivePathsRequestBuilder sourceAssets(List<Asset> assets) {
-    if (uriBuilder.build().queryParameter("source_account") != null) {
+    if (uriBuilder.hasQueryParameter("source_account")) {
       throw new IllegalArgumentException("cannot set both source_assets and source_account");
     }
     setAssetsParameter("source_assets", assets);
@@ -56,8 +58,8 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
   /**
    * Requests specific <code>uri</code> and returns {@link Page} of {@link PathResponse}.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link PathResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -74,7 +76,7 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<PathResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<PathResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<PathResponse>> type = new TypeToken<Page<PathResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }

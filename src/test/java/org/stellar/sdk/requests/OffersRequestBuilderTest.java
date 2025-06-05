@@ -2,7 +2,6 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
-import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -44,7 +43,7 @@ public class OffersRequestBuilderTest {
   @Test
   public void testWithoutParams() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri = server.offers().buildUri();
+    final var uri = server.offers().buildUri();
     assertEquals("https://horizon-testnet.stellar.org/offers", uri.toString());
     server.close();
   }
@@ -52,7 +51,7 @@ public class OffersRequestBuilderTest {
   @Test
   public void testForSeller() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .offers()
             .forSeller("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
@@ -66,7 +65,7 @@ public class OffersRequestBuilderTest {
   @Test
   public void testForSponsor() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    final var uri =
         server
             .offers()
             .forSponsor("GBRPYHIL2CI3FNQ4BXLFMNDLFJUNPU2HY3ZMFSHONUCEOASW7QC7OX2H")
@@ -83,7 +82,7 @@ public class OffersRequestBuilderTest {
     Asset selling =
         new AssetTypeCreditAlphaNum4(
             "USD", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
-    HttpUrl uri = server.offers().forSellingAsset(selling).buildUri();
+    final var uri = server.offers().forSellingAsset(selling).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?selling=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
@@ -96,7 +95,7 @@ public class OffersRequestBuilderTest {
     Asset buying =
         new AssetTypeCreditAlphaNum4(
             "XCN", "GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY");
-    HttpUrl uri = server.offers().forBuyingAsset(buying).buildUri();
+    final var uri = server.offers().forBuyingAsset(buying).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?buying=XCN%3AGCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY",
         uri.toString());
@@ -109,7 +108,7 @@ public class OffersRequestBuilderTest {
     Asset selling =
         new AssetTypeCreditAlphaNum12(
             "STELLAR", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
-    HttpUrl uri = server.offers().forSellingAsset(selling).buildUri();
+    final var uri = server.offers().forSellingAsset(selling).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?selling=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
@@ -122,7 +121,7 @@ public class OffersRequestBuilderTest {
     Asset buying =
         new AssetTypeCreditAlphaNum12(
             "STELLAR", "GDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG");
-    HttpUrl uri = server.offers().forBuyingAsset(buying).buildUri();
+    final var uri = server.offers().forBuyingAsset(buying).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?buying=STELLAR%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG",
         uri.toString());
@@ -133,7 +132,7 @@ public class OffersRequestBuilderTest {
   public void testForSellingNativeAsset() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     Asset selling = new AssetTypeNative();
-    HttpUrl uri = server.offers().forSellingAsset(selling).buildUri();
+    final var uri = server.offers().forSellingAsset(selling).buildUri();
     assertEquals("https://horizon-testnet.stellar.org/offers?selling=native", uri.toString());
     server.close();
   }
@@ -142,7 +141,7 @@ public class OffersRequestBuilderTest {
   public void testForBuyingNativeAsset() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     Asset buying = new AssetTypeNative();
-    HttpUrl uri = server.offers().forBuyingAsset(buying).buildUri();
+    final var uri = server.offers().forBuyingAsset(buying).buildUri();
     assertEquals("https://horizon-testnet.stellar.org/offers?buying=native", uri.toString());
     server.close();
   }
@@ -156,7 +155,7 @@ public class OffersRequestBuilderTest {
     Asset buying =
         new AssetTypeCreditAlphaNum4(
             "XCN", "GCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY");
-    HttpUrl uri = server.offers().forSellingAsset(selling).forBuyingAsset(buying).buildUri();
+    final var uri = server.offers().forSellingAsset(selling).forBuyingAsset(buying).buildUri();
     assertEquals(
         "https://horizon-testnet.stellar.org/offers?selling=USD%3AGDVDKQFP665JAO7A2LSHNLQIUNYNAAIGJ6FYJVMG4DT3YJQQJSRBLQDG&buying=XCN%3AGCNY5OXYSY4FKHOPT2SPOQZAOEIGXB5LBYW3HVU3OWSTQITS65M5RCNY",
         uri.toString());

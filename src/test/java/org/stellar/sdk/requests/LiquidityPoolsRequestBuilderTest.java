@@ -2,7 +2,7 @@ package org.stellar.sdk.requests;
 
 import static org.junit.Assert.assertEquals;
 
-import okhttp3.HttpUrl;
+import java.net.URI;
 import org.junit.Test;
 import org.stellar.sdk.*;
 
@@ -10,7 +10,7 @@ public class LiquidityPoolsRequestBuilderTest {
   @Test
   public void testLiquidityPools() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .liquidityPools()
             .cursor("13537736921089")
@@ -26,7 +26,7 @@ public class LiquidityPoolsRequestBuilderTest {
   @Test
   public void testForReserves() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .liquidityPools()
             .forReserves(
@@ -42,7 +42,7 @@ public class LiquidityPoolsRequestBuilderTest {
   @Test
   public void testForAccount() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .liquidityPools()
             .forAccount("GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S")
@@ -56,7 +56,7 @@ public class LiquidityPoolsRequestBuilderTest {
   @Test
   public void testForAccountClear() {
     Server server = new Server("https://horizon-testnet.stellar.org");
-    HttpUrl uri =
+    URI uri =
         server
             .liquidityPools()
             .forAccount("GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S")

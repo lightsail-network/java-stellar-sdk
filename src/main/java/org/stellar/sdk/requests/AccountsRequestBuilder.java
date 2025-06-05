@@ -1,12 +1,13 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
+import java.net.URI;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.RequestTimeoutException;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 
@@ -17,8 +18,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
   private static final String SIGNER_PARAMETER_NAME = "signer";
   private static final String SPONSOR_PARAMETER_NAME = "sponsor";
 
-  public AccountsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "accounts");
+  public AccountsRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "accounts");
   }
 
   /**
@@ -40,7 +41,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    */
-  public AccountResponse account(HttpUrl uri) {
+  public AccountResponse account(URI uri) {
     TypeToken<AccountResponse> type = new TypeToken<AccountResponse>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -79,13 +80,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forSigner(String signer) {
-    if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(ASSET_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both asset and signer");
     }
-    if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(LIQUIDITY_POOL_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both liquidity_pool and signer");
     }
-    if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(SPONSOR_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both sponsor and signer");
     }
     uriBuilder.setQueryParameter(SIGNER_PARAMETER_NAME, signer);
@@ -100,13 +101,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forAsset(AssetTypeCreditAlphaNum asset) {
-    if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(LIQUIDITY_POOL_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both liquidity_pool and asset");
     }
-    if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(SIGNER_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both signer and asset");
     }
-    if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(SPONSOR_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both sponsor and asset");
     }
     setAssetParameter(ASSET_PARAMETER_NAME, asset);
@@ -121,13 +122,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forLiquidityPool(String liquidityPoolId) {
-    if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(ASSET_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both asset and liquidity_pool");
     }
-    if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(SIGNER_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both signer and liquidity_pool");
     }
-    if (uriBuilder.build().queryParameter(SPONSOR_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(SPONSOR_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both sponsor and liquidity_pool");
     }
     uriBuilder.setQueryParameter(LIQUIDITY_POOL_PARAMETER_NAME, liquidityPoolId);
@@ -143,13 +144,13 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
    */
   public AccountsRequestBuilder forSponsor(String sponsor) {
-    if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(ASSET_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both asset and sponsor");
     }
-    if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(LIQUIDITY_POOL_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both liquidity_pool and sponsor");
     }
-    if (uriBuilder.build().queryParameter(SIGNER_PARAMETER_NAME) != null) {
+    if (uriBuilder.hasQueryParameter(SIGNER_PARAMETER_NAME)) {
       throw new IllegalArgumentException("cannot set both signer and sponsor");
     }
     uriBuilder.setQueryParameter(SPONSOR_PARAMETER_NAME, sponsor);
@@ -176,7 +177,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    */
-  public static Page<AccountResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<AccountResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<AccountResponse>> type = new TypeToken<Page<AccountResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }
@@ -195,7 +196,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    */
   public SSEStream<AccountResponse> stream(
       final EventListener<AccountResponse> listener, long reconnectTimeout) {
-    return SSEStream.create(httpClient, this, AccountResponse.class, listener, reconnectTimeout);
+    return SSEStream.create(sseClient, this, AccountResponse.class, listener, reconnectTimeout);
   }
 
   /**

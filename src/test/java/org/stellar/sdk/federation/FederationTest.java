@@ -6,31 +6,28 @@ import static org.junit.Assert.assertThrows;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 import org.stellar.sdk.SslCertificateUtils;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.Jdk11HttpClient;
 
 public class FederationTest {
   @Test
   public void testResolveAddressSuccess() throws IOException, InterruptedException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     String stellarToml = "FEDERATION_SERVER = \"https://" + domain + "/federation\"";
     String successResponse =
@@ -63,18 +60,14 @@ public class FederationTest {
 
   @Test
   public void testResolveAddressSuccessWithMemo() throws IOException, InterruptedException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     String stellarToml = "FEDERATION_SERVER = \"https://" + domain + "/federation\"";
     String successResponse =
@@ -107,18 +100,14 @@ public class FederationTest {
 
   @Test
   public void testResolveAddressNotFound() throws IOException, InterruptedException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     String stellarToml = "FEDERATION_SERVER = \"https://" + domain + "/federation\"";
     String notFoundResponse = "{\"code\":\"not_found\",\"message\":\"Account not found\"}";
@@ -144,18 +133,14 @@ public class FederationTest {
 
   @Test
   public void testResolveAccountIdSuccess() throws IOException, InterruptedException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     String stellarToml = "FEDERATION_SERVER = \"https://" + domain + "/federation\"";
     String successResponse =
@@ -189,18 +174,14 @@ public class FederationTest {
 
   @Test
   public void testResolveAccountIdSuccessWithMemo() throws IOException, InterruptedException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     String stellarToml = "FEDERATION_SERVER = \"https://" + domain + "/federation\"";
     String successResponse =
@@ -235,18 +216,14 @@ public class FederationTest {
 
   @Test
   public void testResolveAccountIdNotFound() throws IOException, InterruptedException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     String stellarToml = "FEDERATION_SERVER = \"https://" + domain + "/federation\"";
     String notFoundResponse = "{\"code\":\"not_found\",\"message\":\"Account not found\"}";
@@ -277,18 +254,14 @@ public class FederationTest {
 
   @Test
   public void testStellarTomlNotFoundInvalidExceptionThrows() throws IOException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     mockWebServer.enqueue(new MockResponse().setResponseCode(404).setBody(""));
     assertThrows(
@@ -299,18 +272,14 @@ public class FederationTest {
 
   @Test
   public void testNoFederationServerExceptionThrows() throws IOException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     String stellarToml = "";
     mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(stellarToml));
@@ -322,18 +291,14 @@ public class FederationTest {
 
   @Test
   public void testFederationServerInvalidExceptionThrows() throws IOException {
-    SSLSocketFactory sslSocketFactory = SslCertificateUtils.createSslSocketFactory();
+    SSLContext sslContext = SslCertificateUtils.createSslContext();
     X509TrustManager trustAllCerts = SslCertificateUtils.createTrustAllCertsManager();
     MockWebServer mockWebServer = new MockWebServer();
-    mockWebServer.useHttps(sslSocketFactory, false);
+    mockWebServer.useHttps(sslContext.getSocketFactory(), false);
     mockWebServer.start();
     HttpUrl baseUrl = mockWebServer.url("");
     String domain = String.format("%s:%d", baseUrl.host(), baseUrl.port());
-    OkHttpClient client =
-        new OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts)
-            .hostnameVerifier((hostname, session) -> true)
-            .build();
+    final var client = laxTlsClient(sslContext);
 
     String stellarToml = "FEDERATION_SERVER = \"http://" + domain + "/federation\"";
 
@@ -353,7 +318,11 @@ public class FederationTest {
   public void testMalformedAddressExceptionThrows() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new Federation().resolveAddress("bob*stellar.org*test"));
-    assertThrows(IllegalArgumentException.class, () -> new Federation().resolveAddress("bob"));
+        () -> new Federation(null).resolveAddress("bob*stellar.org*test"));
+    assertThrows(IllegalArgumentException.class, () -> new Federation(null).resolveAddress("bob"));
+  }
+
+  private static IHttpClient laxTlsClient(SSLContext sslContext) {
+    return new Jdk11HttpClient.Builder().withSslContext(sslContext).build();
   }
 }

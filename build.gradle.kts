@@ -14,8 +14,8 @@ group = "network.lightsail"
 version = "1.5.0"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 spotless {
@@ -33,12 +33,15 @@ repositories {
 dependencies {
     val okhttpVersion = "4.12.0"
 
-    implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
-    implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("org.bouncycastle:bcprov-jdk18on:1.79")
     implementation("commons-codec:commons-codec:1.17.1")
+    implementation("org.jetbrains:annotations:26.0.2")
+
+    // Dependencies for SSE.
+    implementation("org.apache.cxf:cxf-rt-rs-sse:4.1.0")
+    implementation("org.apache.cxf:cxf-rt-rs-client:4.1.0")
 
     testImplementation("org.mockito:mockito-core:5.14.2")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")

@@ -3,18 +3,18 @@ package org.stellar.sdk.federation;
 import com.google.gson.reflect.TypeToken;
 import com.moandjiezana.toml.Toml;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.net.URI;
 import lombok.NonNull;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import org.stellar.sdk.UriBuilder;
+import org.stellar.sdk.UriUtil;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.federation.exception.FederationServerInvalidException;
 import org.stellar.sdk.federation.exception.NoFederationServerException;
 import org.stellar.sdk.federation.exception.NotFoundException;
 import org.stellar.sdk.federation.exception.StellarTomlNotFoundInvalidException;
+import org.stellar.sdk.http.GetRequest;
+import org.stellar.sdk.http.IHttpClient;
 import org.stellar.sdk.requests.ResponseHandler;
 
 /**
@@ -24,20 +24,15 @@ import org.stellar.sdk.requests.ResponseHandler;
  *     href="https://developers.stellar.org/docs/learn/encyclopedia/network-configuration/federation">Federation</a>
  */
 public class Federation {
-  private final OkHttpClient httpClient;
+  private final IHttpClient httpClient;
 
   /**
    * Creates a new <code>Federation</code> instance.
    *
-   * @param httpClient OkHttpClient
+   * @param httpClient IHttpClient
    */
-  public Federation(OkHttpClient httpClient) {
+  public Federation(IHttpClient httpClient) {
     this.httpClient = httpClient;
-  }
-
-  /** Creates a new <code>Federation</code> instance with a default <code>OkHttpClient</code>. */
-  public Federation() {
-    this.httpClient = createHttpClient();
   }
 
   /**
@@ -110,19 +105,21 @@ public class Federation {
   }
 
   private FederationResponse resolve(String q, String domain, QueryType queryType) {
-    HttpUrl federationServerUri = getFederationServerUri(domain);
+    final var federationServerUri = getFederationServerUri(domain);
 
-    HttpUrl.Builder uriBuilder = federationServerUri.newBuilder();
+    final var uriBuilder = new UriBuilder(federationServerUri);
     uriBuilder.setQueryParameter("type", queryType.getValue());
     uriBuilder.setQueryParameter("q", q);
-    HttpUrl uri = uriBuilder.build();
+    final var uri = uriBuilder.build();
 
     TypeToken<FederationResponse> type = new TypeToken<FederationResponse>() {};
     ResponseHandler<FederationResponse> responseHandler = new ResponseHandler<>(type);
 
-    Request request = new Request.Builder().get().url(uri).build();
-    try (Response response = this.httpClient.newCall(request).execute()) {
-      if (response.code() == 404) {
+    final var request = new GetRequest(uri);
+    try {
+      final var response = httpClient.get(request);
+
+      if (response.getStatusCode() == 404) {
         throw new NotFoundException();
       }
 
@@ -145,37 +142,30 @@ public class Federation {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    */
-  private HttpUrl getFederationServerUri(@NonNull String domain) {
+  private URI getFederationServerUri(@NonNull String domain) {
     String uriBuilder = "https://" + domain + "/.well-known/stellar.toml";
-    HttpUrl stellarTomlUri = HttpUrl.parse(uriBuilder);
-    assert stellarTomlUri != null;
-    Request request = new Request.Builder().get().url(stellarTomlUri).build();
-    try (Response response = httpClient.newCall(request).execute()) {
-      if (response.code() >= 300) {
-        throw new StellarTomlNotFoundInvalidException(response.code());
+    URI stellarTomlUri = UriUtil.toUri(uriBuilder);
+    final var request = new GetRequest(stellarTomlUri);
+    try {
+      final var response = httpClient.get(request);
+
+      if (response.getStatusCode() >= 300) {
+        throw new StellarTomlNotFoundInvalidException(response.getStatusCode());
       }
-      assert response.body() != null;
-      Toml stellarToml = new Toml().read(response.body().string());
+      assert response.getResponseBody() != null;
+      Toml stellarToml = new Toml().read(response.getResponseBody());
       String federationServer = stellarToml.getString("FEDERATION_SERVER");
       if (federationServer == null || federationServer.isEmpty()) {
         throw new NoFederationServerException();
       }
-      HttpUrl federationServerUrl = HttpUrl.parse(federationServer);
-      if (federationServerUrl == null || (!federationServerUrl.isHttps())) {
+      URI federationServerUrl = UriUtil.toUri(federationServer);
+      if (!federationServerUrl.getScheme().equalsIgnoreCase("https")) {
         throw new FederationServerInvalidException();
       }
       return federationServerUrl;
     } catch (IOException e) {
       throw new ConnectionErrorException(e);
     }
-  }
-
-  private static OkHttpClient createHttpClient() {
-    return new OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .retryOnConnectionFailure(false)
-        .build();
   }
 
   private enum QueryType {

@@ -1,16 +1,17 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
+import java.net.URI;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.AssetResponse;
 import org.stellar.sdk.responses.Page;
 
 public class AssetsRequestBuilder extends RequestBuilder {
-  public AssetsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
-    super(httpClient, serverURI, "assets");
+  public AssetsRequestBuilder(IHttpClient httpClient, ISseClient sseClient, URI serverURI) {
+    super(httpClient, sseClient, serverURI, "assets");
   }
 
   public AssetsRequestBuilder assetCode(String assetCode) {
@@ -27,8 +28,8 @@ public class AssetsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link AssetResponse}. This *
    * method is helpful for getting the next set of results.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link AssetResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -45,7 +46,7 @@ public class AssetsRequestBuilder extends RequestBuilder {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    */
-  public static Page<AssetResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<AssetResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<AssetResponse>> type = new TypeToken<Page<AssetResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
   }

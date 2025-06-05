@@ -1,26 +1,28 @@
 package org.stellar.sdk.requests;
 
 import com.google.gson.reflect.TypeToken;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
+import java.net.URI;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.exception.TooManyRequestsException;
+import org.stellar.sdk.http.IHttpClient;
+import org.stellar.sdk.http.sse.ISseClient;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeAggregationResponse;
 
 /** Builds requests connected to trades. */
 public class TradeAggregationsRequestBuilder extends RequestBuilder {
   public TradeAggregationsRequestBuilder(
-      OkHttpClient httpClient,
-      HttpUrl serverURI,
+      IHttpClient httpClient,
+      ISseClient sseClient,
+      URI serverURI,
       Asset baseAsset,
       Asset counterAsset,
       long startTime,
       long endTime,
       long resolution,
       long offset) {
-    super(httpClient, serverURI, "trade_aggregations");
+    super(httpClient, sseClient, serverURI, "trade_aggregations");
 
     this.baseAsset(baseAsset);
     this.counterAsset(counterAsset);
@@ -52,8 +54,8 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link
    * TradeAggregationResponse}.
    *
-   * @param httpClient {@link OkHttpClient} to use to send the request.
-   * @param uri {@link HttpUrl} URI to send the request to.
+   * @param httpClient {@link IHttpClient} to use to send the request.
+   * @param uri {@link URI} URI to send the request to.
    * @return {@link Page} of {@link TradeAggregationResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkError
@@ -70,7 +72,7 @@ public class TradeAggregationsRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException When the request cannot be executed
    *     due to cancellation or connectivity problems, etc.
    */
-  public static Page<TradeAggregationResponse> execute(OkHttpClient httpClient, HttpUrl uri) {
+  public static Page<TradeAggregationResponse> execute(IHttpClient httpClient, URI uri) {
     TypeToken<Page<TradeAggregationResponse>> type =
         new TypeToken<Page<TradeAggregationResponse>>() {};
     return executeGetRequest(httpClient, uri, type);
