@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update:
+- feat: add `pollTransaction` method to `SorobanServer` to poll transaction status with retry strategy. ([#696](https://github.com/stellar/java-stellar-sdk/pull/696))
+
 ## 1.5.0
 
 ### Update:

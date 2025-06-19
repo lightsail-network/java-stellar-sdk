@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.IntFunction;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -296,6 +297,63 @@ public class SorobanServer implements Closeable {
     GetTransactionRequest params = new GetTransactionRequest(hash);
     return this.sendRequest(
         "getTransaction", params, new TypeToken<SorobanRpcResponse<GetTransactionResponse>>() {});
+  }
+
+  /**
+   * An alias for {@link #pollTransaction(String, int, SleepStrategy)} with default parameters,
+   * which {@code maxAttempts} is set to 30, and the sleep strategy is set to a default strategy
+   * that sleeps for 1 second between attempts.
+   *
+   * @param hash The hash of the transaction to poll for.
+   * @return A {@link GetTransactionResponse} object after a "found" response, (which may be success
+   *     or failure) or the last response obtained after polling the maximum number of specified
+   *     attempts.
+   * @throws InterruptedException If the thread is interrupted while sleeping between attempts.
+   */
+  public GetTransactionResponse pollTransaction(String hash) throws InterruptedException {
+    return pollTransaction(
+        hash,
+        30,
+        attempt -> {
+          return 1_000L;
+        });
+  }
+
+  /**
+   * Polls the transaction status until it is completed or the maximum number of attempts is
+   * reached.
+   *
+   * <p>After submitting a transaction, clients can use this to poll for transaction completion and
+   * return a definitive state of success or failure.
+   *
+   * @param hash The hash of the transaction to poll for.
+   * @param maxAttempts The number of attempts to make before returning the last-seen status.
+   * @param sleepStrategy A strategy to determine the sleep duration between attempts. It should
+   *     take the current attempt number and return the sleep duration in milliseconds.
+   * @return A {@link GetTransactionResponse} object after a "found" response, (which may be success
+   *     or failure) or the last response obtained after polling the maximum number of specified
+   *     attempts.
+   * @throws IllegalArgumentException If maxAttempts is less than or equal to 0.
+   * @throws InterruptedException If the thread is interrupted while sleeping between attempts.
+   */
+  public GetTransactionResponse pollTransaction(
+      String hash, int maxAttempts, SleepStrategy sleepStrategy) throws InterruptedException {
+    if (maxAttempts <= 0) {
+      throw new IllegalArgumentException("maxAttempts must be greater than 0");
+    }
+
+    int attempts = 0;
+    GetTransactionResponse getTransactionResponse = null;
+    while (attempts < maxAttempts) {
+      getTransactionResponse = getTransaction(hash);
+      if (!GetTransactionResponse.GetTransactionStatus.NOT_FOUND.equals(
+          getTransactionResponse.getStatus())) {
+        return getTransactionResponse;
+      }
+      attempts++;
+      TimeUnit.MILLISECONDS.sleep(sleepStrategy.apply(attempts));
+    }
+    return getTransactionResponse;
   }
 
   /**
@@ -753,5 +811,12 @@ public class SorobanServer implements Closeable {
   public enum Durability {
     TEMPORARY,
     PERSISTENT
+  }
+
+  /** Strategy for sleeping between retries in a retry loop. */
+  @FunctionalInterface
+  public interface SleepStrategy extends IntFunction<Long> {
+    // apply as in apply(iterationNumber) -> millisecondsToSleep
+    Long apply(int iteration);
   }
 }
