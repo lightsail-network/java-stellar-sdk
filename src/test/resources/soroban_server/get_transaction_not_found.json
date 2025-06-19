@@ -1,0 +1,16 @@
+{
+  "jsonrpc": "2.0",
+  "id": "198cb1a8-9104-4446-a269-88bf000c2721",
+  "result": {
+    "latestLedger": 57612528,
+    "latestLedgerCloseTime": "1750300167",
+    "oldestLedger": 57491569,
+    "oldestLedgerCloseTime": "1749616481",
+    "status": "NOT_FOUND",
+    "txHash": "8faa3e6bb29d9d8469bbcabdbfd800f3be1899f4736a3a2fa83cd58617c072fe",
+    "applicationOrder": 0,
+    "feeBump": false,
+    "ledger": 0,
+    "createdAt": "0"
+  }
+}

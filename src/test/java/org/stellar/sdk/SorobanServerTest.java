@@ -515,6 +515,54 @@ public class SorobanServerTest {
   }
 
   @Test
+  public void testPollTransaction() throws IOException, SorobanRpcException, InterruptedException {
+    String txSuccessFilePath = "src/test/resources/soroban_server/get_transaction.json";
+    String txNotFoundFilePath = "src/test/resources/soroban_server/get_transaction_not_found.json";
+    String txSuccessJson = new String(Files.readAllBytes(Paths.get(txSuccessFilePath)));
+    String txNotFoundJson = new String(Files.readAllBytes(Paths.get(txNotFoundFilePath)));
+    String hash = "06dd9ee70bf93bbfe219e2b31363ab5a0361cc6285328592e4d3d1fed4c9025c";
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          private int attempts = 0;
+
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            GetTransactionRequest expectedRequest = new GetTransactionRequest(hash);
+            SorobanRpcRequest<GetTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<GetTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("getTransaction")
+                && sorobanRpcRequest.getParams().equals(expectedRequest)) {
+              attempts++;
+              if (attempts > 3) {
+                return new MockResponse().setResponseCode(200).setBody(txSuccessJson);
+              } else {
+                return new MockResponse().setResponseCode(200).setBody(txNotFoundJson);
+              }
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    GetTransactionResponse tx = server.pollTransaction(hash);
+    assertEquals(tx.getStatus(), GetTransactionResponse.GetTransactionStatus.SUCCESS);
+    assertEquals(
+        tx.getTxHash(), "8faa3e6bb29d9d8469bbcabdbfd800f3be1899f4736a3a2fa83cd58617c072fe");
+
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
   public void testGetTransactions() throws IOException, SorobanRpcException {
     String filePath = "src/test/resources/soroban_server/get_transactions.json";
     String json = new String(Files.readAllBytes(Paths.get(filePath)));
