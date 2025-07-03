@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import static java.lang.System.arraycopy;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -353,5 +354,73 @@ public class KeyPair {
     return Objects.hash(
         Arrays.hashCode(publicKey.getEncoded()),
         privateKey == null ? null : Arrays.hashCode(privateKey.getEncoded()));
+  }
+
+  /**
+   * Calculate the hash of a message according to <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md"
+   * target="_blank">SEP-53</a>.
+   *
+   * @param message The message to hash
+   * @return The SHA-256 hash of the prefixed message.
+   */
+  private static byte[] calculateMessageHash(byte[] message) {
+    final byte[] messagePrefix = "Stellar Signed Message:\n".getBytes(UTF_8);
+    byte[] signedMessageBase = new byte[messagePrefix.length + message.length];
+    System.arraycopy(messagePrefix, 0, signedMessageBase, 0, messagePrefix.length);
+    System.arraycopy(message, 0, signedMessageBase, messagePrefix.length, message.length);
+    return Util.hash(signedMessageBase);
+  }
+
+  /**
+   * Sign a message according to <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md"
+   * target="_blank">SEP-53</a>.
+   *
+   * @param message The message to sign.
+   * @return The signature bytes.
+   */
+  public byte[] signMessage(String message) {
+    return signMessage(message.getBytes(UTF_8));
+  }
+
+  /**
+   * Sign a message according to <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md"
+   * target="_blank">SEP-53</a>.
+   *
+   * @param message The message to sign.
+   * @return The signature bytes.
+   */
+  public byte[] signMessage(byte[] message) {
+    byte[] messageHash = calculateMessageHash(message);
+    return sign(messageHash);
+  }
+
+  /**
+   * Verify a <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md"
+   * target="_blank">SEP-53</a> signed message.
+   *
+   * @param message The original message.
+   * @param signature The signature to verify.
+   * @return True if the signature is valid for the given message, false otherwise.
+   */
+  public boolean verifyMessage(byte[] message, byte[] signature) {
+    byte[] messageHash = calculateMessageHash(message);
+    return verify(messageHash, signature);
+  }
+
+  /**
+   * Verify a <a
+   * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md"
+   * target="_blank">SEP-53</a> signed message.
+   *
+   * @param message The original message.
+   * @param signature The signature to verify.
+   * @return True if the signature is valid for the given message, false otherwise.
+   */
+  public boolean verifyMessage(String message, byte[] signature) {
+    return verifyMessage(message.getBytes(UTF_8), signature);
   }
 }
