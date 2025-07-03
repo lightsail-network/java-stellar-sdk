@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import static java.lang.System.arraycopy;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -364,8 +365,7 @@ public class KeyPair {
    * @return The SHA-256 hash of the prefixed message.
    */
   private static byte[] calculateMessageHash(byte[] message) {
-    final byte[] messagePrefix =
-        "Stellar Signed Message:\n".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    final byte[] messagePrefix = "Stellar Signed Message:\n".getBytes(UTF_8);
     byte[] signedMessageBase = new byte[messagePrefix.length + message.length];
     System.arraycopy(messagePrefix, 0, signedMessageBase, 0, messagePrefix.length);
     System.arraycopy(message, 0, signedMessageBase, messagePrefix.length, message.length);
@@ -381,7 +381,7 @@ public class KeyPair {
    * @return The signature bytes.
    */
   public byte[] signMessage(String message) {
-    return signMessage(message.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    return signMessage(message.getBytes(UTF_8));
   }
 
   /**
@@ -421,6 +421,6 @@ public class KeyPair {
    * @return True if the signature is valid for the given message, false otherwise.
    */
   public boolean verifyMessage(String message, byte[] signature) {
-    return verifyMessage(message.getBytes(java.nio.charset.StandardCharsets.UTF_8), signature);
+    return verifyMessage(message.getBytes(UTF_8), signature);
   }
 }
