@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -211,5 +212,49 @@ public class KeyPairTest {
                 Util.hexToBytes("bda3ab27d61644df75a46cafc46340257fdcd0d32c5d87cb4833c09b25270d")));
     assertThrows(
         IllegalArgumentException.class, () -> KeyPair.fromSecretSeed(Util.hexToBytes("00")));
+  }
+
+  @Test
+  public void testSignAndVerifyMessage() {
+    KeyPair kp = KeyPair.fromSecretSeed("SAKICEVQLYWGSOJS4WW7HZJWAHZVEEBS527LHK5V4MLJALYKICQCJXMW");
+
+    String inputEnglish = "Hello, World!";
+    byte[] expectedEnglishSig =
+        Base64.getDecoder()
+            .decode(
+                "fO5dbYhXUhBMhe6kId/cuVq/AfEnHRHEvsP8vXh03M1uLpi5e46yO2Q8rEBzu3feXQewcQE5GArp88u6ePK6BA==");
+    String inputJapanese = "こんにちは、世界！";
+    byte[] expectedJapaneseSig =
+        Base64.getDecoder()
+            .decode(
+                "CDU265Xs8y3OWbB/56H9jPgUss5G9A0qFuTqH2zs2YDgTm+++dIfmAEceFqB7bhfN3am59lCtDXrCtwH2k1GBA==");
+    byte[] inputBytes = Base64.getDecoder().decode("2zZDP1sa1BVBfLP7TeeMk3sUbaxAkUhBhDiNdrksaFo=");
+    byte[] expectedBytesSig =
+        Base64.getDecoder()
+            .decode(
+                "VA1+7hefNwv2NKScH6n+Sljj15kLAge+M2wE7fzFOf+L0MMbssA1mwfJZRyyrhBORQRle10X1Dxpx+UOI4EbDQ==");
+
+    assertArrayEquals(expectedEnglishSig, kp.signMessage(inputEnglish));
+    assertArrayEquals(expectedJapaneseSig, kp.signMessage(inputJapanese));
+    assertArrayEquals(expectedBytesSig, kp.signMessage(inputBytes));
+
+    assertTrue(kp.verifyMessage(inputEnglish, expectedEnglishSig));
+    assertTrue(kp.verifyMessage(inputJapanese, expectedJapaneseSig));
+    assertTrue(kp.verifyMessage(inputBytes, expectedBytesSig));
+  }
+
+  @Test
+  public void testVerifyMessageWithInvalidSignature() {
+    KeyPair kp = KeyPair.fromAccountId("GBXFXNDLV4LSWA4VB7YIL5GBD7BVNR22SGBTDKMO2SBZZHDXSKZYCP7L");
+    String message = "Hello, World!";
+    String[] invalidSigs =
+        new String[] {
+          "VA1+7hefNwv2NKScH6n+Sljj15kLAge+M2wE7fzFOf+L0MMbssA1mwfJZRyyrhBORQRle10X1Dxpx+UOI4EbDQ==",
+          "MTI="
+        };
+    for (String sigB64 : invalidSigs) {
+      byte[] sig = Base64.getDecoder().decode(sigB64);
+      assertFalse(kp.verifyMessage(message, sig));
+    }
   }
 }

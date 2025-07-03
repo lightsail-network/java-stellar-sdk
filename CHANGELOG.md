@@ -4,6 +4,7 @@
 
 ### Update:
 - feat: add `pollTransaction` method to `SorobanServer` to poll transaction status with retry strategy. ([#696](https://github.com/stellar/java-stellar-sdk/pull/696))
+- feat: implement message signing and verification according to [SEP-53](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md), check `KeyPair.signMessage` and `KeyPair.verifyMessage` for more details. ([#698](https://github.com/stellar/java-stellar-sdk/pull/698))
 
 ## 1.5.0
 
