@@ -201,7 +201,7 @@ public class StrKey {
    * Encodes raw data to strkey claimable balance ID (B...)
    *
    * @param data data to encode
-   * @return "L..." representation of the key
+   * @return "B..." representation of the key
    */
   public static String encodeClaimableBalance(byte[] data) {
     char[] encoded = encodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
@@ -365,7 +365,7 @@ public class StrKey {
    * Checks validity of liquidity pool (L...) address.
    *
    * @param liquidityPoolId the liquidity pool ID to check
-   * @return true if the given contract ID is a valid liquidity pool ID, false otherwise
+   * @return true if the given liquidity pool ID is a valid liquidity pool ID, false otherwise
    */
   public static boolean isValidLiquidityPool(String liquidityPoolId) {
     try {
@@ -377,10 +377,10 @@ public class StrKey {
   }
 
   /**
-   * Checks validity of claimable balance (L...) address.
+   * Checks validity of claimable balance (B...) address.
    *
    * @param claimableBalanceId the claimable balance ID to check
-   * @return true if the given contract ID is a valid claimable balance ID, false otherwise
+   * @return true if the given claimable balance ID is a valid claimable balance ID, false otherwise
    */
   public static boolean isValidClaimableBalance(String claimableBalanceId) {
     try {
