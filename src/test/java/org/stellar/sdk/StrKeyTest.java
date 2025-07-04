@@ -672,7 +672,7 @@ public class StrKeyTest {
   }
 
   @Test
-  public void tesIisValidClaimableBalance() {
+  public void tesIsValidClaimableBalance() {
     assertFalse(
         StrKey.isValidClaimableBalance(
             "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4T"));
