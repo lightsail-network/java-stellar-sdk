@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import lombok.EqualsAndHashCode;
+import org.stellar.sdk.xdr.ContractID;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.SCAddress;
 import org.stellar.sdk.xdr.SCVal;
@@ -65,7 +66,8 @@ public class Address {
       case SC_ADDRESS_TYPE_ACCOUNT:
         return new Address(StrKey.encodeEd25519PublicKey(scAddress.getAccountId()));
       case SC_ADDRESS_TYPE_CONTRACT:
-        return new Address(StrKey.encodeContract(scAddress.getContractId().getHash()));
+        return new Address(
+            StrKey.encodeContract(scAddress.getContractId().getContractID().getHash()));
       default:
         throw new IllegalArgumentException("Unsupported address type");
     }
@@ -100,7 +102,7 @@ public class Address {
         break;
       case CONTRACT:
         scAddress.setDiscriminant(org.stellar.sdk.xdr.SCAddressType.SC_ADDRESS_TYPE_CONTRACT);
-        scAddress.setContractId(new Hash(this.key));
+        scAddress.setContractId(new ContractID(new Hash(this.key)));
         break;
       default:
         throw new IllegalArgumentException("Unsupported address type");

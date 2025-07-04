@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -636,5 +638,52 @@ public class StrKeyTest {
     String strKey = "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVKC";
     assertEquals(strKey, StrKey.encodeContract(rawData));
     assertArrayEquals(rawData, StrKey.decodeContract(strKey));
+  }
+
+  @Test
+  public void testEncodeAndDecodeLiquidityPool() {
+    byte[] rawData =
+        Util.hexToBytes("3f0c34bf93ad0d9971d04ccc90f705511c838aad9734a4a2fb0d7a03fc7fe89a");
+    String strKey = "LA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUPJN";
+    assertEquals(strKey, StrKey.encodeLiquidityPool(rawData));
+    assertArrayEquals(rawData, StrKey.decodeLiquidityPool(strKey));
+  }
+
+  @Test
+  public void testIsValidLiquidityPool() {
+    assertFalse(StrKey.isValidLiquidityPool("LA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA"));
+    assertFalse(StrKey.isValidLiquidityPool(""));
+    assertFalse(
+        StrKey.isValidLiquidityPool("SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO"));
+    assertFalse(
+        StrKey.isValidLiquidityPool(
+            "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26"));
+    assertTrue(
+        StrKey.isValidLiquidityPool("LA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUPJN"));
+  }
+
+  @Test
+  public void testEncodeAndDecodeClaimableBalance() {
+    byte[] rawData =
+        Util.hexToBytes("003f0c34bf93ad0d9971d04ccc90f705511c838aad9734a4a2fb0d7a03fc7fe89a");
+    String strKey = "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU";
+    assertEquals(strKey, StrKey.encodeClaimableBalance(rawData));
+    assertArrayEquals(rawData, StrKey.decodeClaimableBalance(strKey));
+  }
+
+  @Test
+  public void testisValidClaimableBalance() {
+    assertFalse(
+        StrKey.isValidClaimableBalance(
+            "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4T"));
+    assertFalse(StrKey.isValidClaimableBalance(""));
+    assertFalse(
+        StrKey.isValidClaimableBalance("SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO"));
+    assertFalse(
+        StrKey.isValidClaimableBalance(
+            "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26"));
+    assertTrue(
+        StrKey.isValidClaimableBalance(
+            "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU"));
   }
 }

@@ -177,6 +177,48 @@ public class StrKey {
   }
 
   /**
+   * Encodes raw data to strkey liquidity pool ID (L...)
+   *
+   * @param data data to encode
+   * @return "L..." representation of the key
+   */
+  public static String encodeLiquidityPool(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.LIQUIDITY_POOL, data);
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Decodes strkey liquidity pool ID (L...) to raw bytes.
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeLiquidityPool(String data) {
+    return decodeCheck(VersionByte.LIQUIDITY_POOL, data.toCharArray());
+  }
+
+  /**
+   * Encodes raw data to strkey claimable balance ID (B...)
+   *
+   * @param data data to encode
+   * @return "L..." representation of the key
+   */
+  public static String encodeClaimableBalance(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Decodes strkey claimable balance ID (B...) to raw bytes.
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeClaimableBalance(String data) {
+    return decodeCheck(VersionByte.CLAIMABLE_BALANCE, data.toCharArray());
+  }
+
+  /**
    * Encodes raw data to strkey Stellar account ID (G...)
    *
    * @param accountID data to encode
@@ -319,6 +361,36 @@ public class StrKey {
     }
   }
 
+  /**
+   * Checks validity of liquidity pool (L...) address.
+   *
+   * @param liquidityPoolId the liquidity pool ID to check
+   * @return true if the given contract ID is a valid liquidity pool ID, false otherwise
+   */
+  public static boolean isValidLiquidityPool(String liquidityPoolId) {
+    try {
+      decodeLiquidityPool(liquidityPoolId);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * Checks validity of claimable balance (L...) address.
+   *
+   * @param claimableBalanceId the claimable balance ID to check
+   * @return true if the given contract ID is a valid claimable balance ID, false otherwise
+   */
+  public static boolean isValidClaimableBalance(String claimableBalanceId) {
+    try {
+      decodeClaimableBalance(claimableBalanceId);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   static char[] encodeCheck(VersionByte versionByte, byte[] data) {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     outputStream.write(versionByte.getValue());
@@ -407,6 +479,16 @@ public class StrKey {
         if (data.length != 32 + 8) {
           throw new IllegalArgumentException(
               "Invalid data length, expected 40 bytes, got " + data.length);
+        }
+        break;
+      case CLAIMABLE_BALANCE:
+        if (data.length != 32 + 1) {
+          // If we are encoding a claimable balance, the binary bytes of the key has a length of
+          // 33-bytes:
+          // 1-byte value indicating the type of claimable balance, where 0x00 maps to V0, and a
+          // 32-byte SHA256 hash.
+          throw new IllegalArgumentException(
+              "Invalid data length, expected 33 bytes, got " + data.length);
         }
         break;
       default:
@@ -530,7 +612,9 @@ public class StrKey {
     PRE_AUTH_TX((byte) (19 << 3)), // T
     SHA256_HASH((byte) (23 << 3)), // X
     SIGNED_PAYLOAD((byte) (15 << 3)), // P
-    CONTRACT((byte) (2 << 3)); // C
+    CONTRACT((byte) (2 << 3)), // C
+    LIQUIDITY_POOL((byte) (11 << 3)), // L
+    CLAIMABLE_BALANCE((byte) (1 << 3)); // B
 
     private final byte value;
 
