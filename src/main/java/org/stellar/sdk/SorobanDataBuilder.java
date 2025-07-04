@@ -7,7 +7,6 @@ import lombok.NonNull;
 import lombok.Value;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.exception.UnexpectedException;
-import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerFootprint;
 import org.stellar.sdk.xdr.LedgerKey;
@@ -40,11 +39,11 @@ public class SorobanDataBuilder {
                             .readWrite(new LedgerKey[] {})
                             .build())
                     .instructions(new Uint32(new XdrUnsignedInteger(0)))
-                    .readBytes(new Uint32(new XdrUnsignedInteger(0)))
+                    .diskReadBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .build())
             .resourceFee(new Int64(0L))
-            .ext(ExtensionPoint.builder().discriminant(0).build())
+            .ext(SorobanTransactionData.SorobanTransactionDataExt.builder().discriminant(0).build())
             .build();
   }
 
@@ -97,7 +96,8 @@ public class SorobanDataBuilder {
   public SorobanDataBuilder setResources(Resources resources) {
     data.getResources()
         .setInstructions(new Uint32(new XdrUnsignedInteger(resources.getCpuInstructions())));
-    data.getResources().setReadBytes(new Uint32(new XdrUnsignedInteger(resources.getReadBytes())));
+    data.getResources()
+        .setDiskReadBytes(new Uint32(new XdrUnsignedInteger(resources.getDiskReadBytes())));
     data.getResources()
         .setWriteBytes(new Uint32(new XdrUnsignedInteger(resources.getWriteBytes())));
     return this;
@@ -154,9 +154,9 @@ public class SorobanDataBuilder {
   public static class Resources {
     // number of CPU instructions (uint32)
     @NonNull Long cpuInstructions;
-    // number of bytes being read (uint32)
-    @NonNull Long readBytes;
-    // number of bytes being written (uint32)
+    // number of bytes being read from disk (uint32)
+    @NonNull Long diskReadBytes;
+    // number of bytes being written to disk and memory (uint32)
     @NonNull Long writeBytes;
   }
 }

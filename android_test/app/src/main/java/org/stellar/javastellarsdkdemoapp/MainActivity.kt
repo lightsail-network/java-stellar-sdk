@@ -48,7 +48,6 @@ import org.stellar.sdk.xdr.ContractIDPreimage
 import org.stellar.sdk.xdr.ContractIDPreimage.ContractIDPreimageFromAddress
 import org.stellar.sdk.xdr.ContractIDPreimageType
 import org.stellar.sdk.xdr.CreateContractArgs
-import org.stellar.sdk.xdr.ExtensionPoint
 import org.stellar.sdk.xdr.HostFunction
 import org.stellar.sdk.xdr.HostFunctionType
 import org.stellar.sdk.xdr.Int64
@@ -187,13 +186,13 @@ private fun testSDK(): String {
                             .readWrite(arrayOf())
                             .build()
                     )
-                    .readBytes(Uint32(XdrUnsignedInteger(699)))
+                    .diskReadBytes(Uint32(XdrUnsignedInteger(699)))
                     .writeBytes(Uint32(XdrUnsignedInteger(0)))
                     .instructions(Uint32(XdrUnsignedInteger(34567)))
                     .build()
             )
             .resourceFee(Int64(100L))
-            .ext(ExtensionPoint.builder().discriminant(0).build())
+            .ext(SorobanTransactionData.SorobanTransactionDataExt.builder().discriminant(0).build())
             .build()
         val sorobanDataString = sorobanData.toXdrBase64()
 
