@@ -33,6 +33,7 @@ import org.stellar.sdk.Base64Factory;
  *     SC_SPEC_TYPE_STRING = 16,
  *     SC_SPEC_TYPE_SYMBOL = 17,
  *     SC_SPEC_TYPE_ADDRESS = 19,
+ *     SC_SPEC_TYPE_MUXED_ADDRESS = 20,
  *
  *     // Types with parameters.
  *     SC_SPEC_TYPE_OPTION = 1000,
@@ -66,6 +67,7 @@ public enum SCSpecType implements XdrElement {
   SC_SPEC_TYPE_STRING(16),
   SC_SPEC_TYPE_SYMBOL(17),
   SC_SPEC_TYPE_ADDRESS(19),
+  SC_SPEC_TYPE_MUXED_ADDRESS(20),
   SC_SPEC_TYPE_OPTION(1000),
   SC_SPEC_TYPE_RESULT(1001),
   SC_SPEC_TYPE_VEC(1002),
@@ -123,6 +125,8 @@ public enum SCSpecType implements XdrElement {
         return SC_SPEC_TYPE_SYMBOL;
       case 19:
         return SC_SPEC_TYPE_ADDRESS;
+      case 20:
+        return SC_SPEC_TYPE_MUXED_ADDRESS;
       case 1000:
         return SC_SPEC_TYPE_OPTION;
       case 1001:

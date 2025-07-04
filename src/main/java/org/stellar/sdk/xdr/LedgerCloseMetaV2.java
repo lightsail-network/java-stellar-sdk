@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
- * LedgerCloseMetaV1's original definition in the XDR file is:
+ * LedgerCloseMetaV2's original definition in the XDR file is:
  *
  * <pre>
- * struct LedgerCloseMetaV1
+ * struct LedgerCloseMetaV2
  * {
  *     LedgerCloseMetaExt ext;
  *
@@ -26,7 +26,7 @@ import org.stellar.sdk.Base64Factory;
  *     // NB: transactions are sorted in apply order here
  *     // fees for all transactions are processed first
  *     // followed by applying transactions
- *     TransactionResultMeta txProcessing&lt;&gt;;
+ *     TransactionResultMetaV1 txProcessing&lt;&gt;;
  *
  *     // upgrades are applied last
  *     UpgradeEntryMeta upgradesProcessing&lt;&gt;;
@@ -40,9 +40,6 @@ import org.stellar.sdk.Base64Factory;
  *
  *     // TTL and data/code keys that have been evicted at this ledger.
  *     LedgerKey evictedKeys&lt;&gt;;
- *
- *     // Maintained for backwards compatibility, should never be populated.
- *     LedgerEntry unused&lt;&gt;;
  * };
  * </pre>
  */
@@ -50,16 +47,15 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class LedgerCloseMetaV1 implements XdrElement {
+public class LedgerCloseMetaV2 implements XdrElement {
   private LedgerCloseMetaExt ext;
   private LedgerHeaderHistoryEntry ledgerHeader;
   private GeneralizedTransactionSet txSet;
-  private TransactionResultMeta[] txProcessing;
+  private TransactionResultMetaV1[] txProcessing;
   private UpgradeEntryMeta[] upgradesProcessing;
   private SCPHistoryEntry[] scpInfo;
   private Uint64 totalByteSizeOfLiveSorobanState;
   private LedgerKey[] evictedKeys;
-  private LedgerEntry[] unused;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     ext.encode(stream);
@@ -86,53 +82,43 @@ public class LedgerCloseMetaV1 implements XdrElement {
     for (int i = 0; i < evictedKeysSize; i++) {
       evictedKeys[i].encode(stream);
     }
-    int unusedSize = getUnused().length;
-    stream.writeInt(unusedSize);
-    for (int i = 0; i < unusedSize; i++) {
-      unused[i].encode(stream);
-    }
   }
 
-  public static LedgerCloseMetaV1 decode(XdrDataInputStream stream) throws IOException {
-    LedgerCloseMetaV1 decodedLedgerCloseMetaV1 = new LedgerCloseMetaV1();
-    decodedLedgerCloseMetaV1.ext = LedgerCloseMetaExt.decode(stream);
-    decodedLedgerCloseMetaV1.ledgerHeader = LedgerHeaderHistoryEntry.decode(stream);
-    decodedLedgerCloseMetaV1.txSet = GeneralizedTransactionSet.decode(stream);
+  public static LedgerCloseMetaV2 decode(XdrDataInputStream stream) throws IOException {
+    LedgerCloseMetaV2 decodedLedgerCloseMetaV2 = new LedgerCloseMetaV2();
+    decodedLedgerCloseMetaV2.ext = LedgerCloseMetaExt.decode(stream);
+    decodedLedgerCloseMetaV2.ledgerHeader = LedgerHeaderHistoryEntry.decode(stream);
+    decodedLedgerCloseMetaV2.txSet = GeneralizedTransactionSet.decode(stream);
     int txProcessingSize = stream.readInt();
-    decodedLedgerCloseMetaV1.txProcessing = new TransactionResultMeta[txProcessingSize];
+    decodedLedgerCloseMetaV2.txProcessing = new TransactionResultMetaV1[txProcessingSize];
     for (int i = 0; i < txProcessingSize; i++) {
-      decodedLedgerCloseMetaV1.txProcessing[i] = TransactionResultMeta.decode(stream);
+      decodedLedgerCloseMetaV2.txProcessing[i] = TransactionResultMetaV1.decode(stream);
     }
     int upgradesProcessingSize = stream.readInt();
-    decodedLedgerCloseMetaV1.upgradesProcessing = new UpgradeEntryMeta[upgradesProcessingSize];
+    decodedLedgerCloseMetaV2.upgradesProcessing = new UpgradeEntryMeta[upgradesProcessingSize];
     for (int i = 0; i < upgradesProcessingSize; i++) {
-      decodedLedgerCloseMetaV1.upgradesProcessing[i] = UpgradeEntryMeta.decode(stream);
+      decodedLedgerCloseMetaV2.upgradesProcessing[i] = UpgradeEntryMeta.decode(stream);
     }
     int scpInfoSize = stream.readInt();
-    decodedLedgerCloseMetaV1.scpInfo = new SCPHistoryEntry[scpInfoSize];
+    decodedLedgerCloseMetaV2.scpInfo = new SCPHistoryEntry[scpInfoSize];
     for (int i = 0; i < scpInfoSize; i++) {
-      decodedLedgerCloseMetaV1.scpInfo[i] = SCPHistoryEntry.decode(stream);
+      decodedLedgerCloseMetaV2.scpInfo[i] = SCPHistoryEntry.decode(stream);
     }
-    decodedLedgerCloseMetaV1.totalByteSizeOfLiveSorobanState = Uint64.decode(stream);
+    decodedLedgerCloseMetaV2.totalByteSizeOfLiveSorobanState = Uint64.decode(stream);
     int evictedKeysSize = stream.readInt();
-    decodedLedgerCloseMetaV1.evictedKeys = new LedgerKey[evictedKeysSize];
+    decodedLedgerCloseMetaV2.evictedKeys = new LedgerKey[evictedKeysSize];
     for (int i = 0; i < evictedKeysSize; i++) {
-      decodedLedgerCloseMetaV1.evictedKeys[i] = LedgerKey.decode(stream);
+      decodedLedgerCloseMetaV2.evictedKeys[i] = LedgerKey.decode(stream);
     }
-    int unusedSize = stream.readInt();
-    decodedLedgerCloseMetaV1.unused = new LedgerEntry[unusedSize];
-    for (int i = 0; i < unusedSize; i++) {
-      decodedLedgerCloseMetaV1.unused[i] = LedgerEntry.decode(stream);
-    }
-    return decodedLedgerCloseMetaV1;
+    return decodedLedgerCloseMetaV2;
   }
 
-  public static LedgerCloseMetaV1 fromXdrBase64(String xdr) throws IOException {
+  public static LedgerCloseMetaV2 fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static LedgerCloseMetaV1 fromXdrByteArray(byte[] xdr) throws IOException {
+  public static LedgerCloseMetaV2 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);

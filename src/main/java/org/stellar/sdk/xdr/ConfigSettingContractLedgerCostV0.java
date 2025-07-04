@@ -17,38 +17,38 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * struct ConfigSettingContractLedgerCostV0
  * {
- *     // Maximum number of ledger entry read operations per ledger
- *     uint32 ledgerMaxReadLedgerEntries;
- *     // Maximum number of bytes that can be read per ledger
- *     uint32 ledgerMaxReadBytes;
+ *     // Maximum number of disk entry read operations per ledger
+ *     uint32 ledgerMaxDiskReadEntries;
+ *     // Maximum number of bytes of disk reads that can be performed per ledger
+ *     uint32 ledgerMaxDiskReadBytes;
  *     // Maximum number of ledger entry write operations per ledger
  *     uint32 ledgerMaxWriteLedgerEntries;
  *     // Maximum number of bytes that can be written per ledger
  *     uint32 ledgerMaxWriteBytes;
  *
- *     // Maximum number of ledger entry read operations per transaction
- *     uint32 txMaxReadLedgerEntries;
- *     // Maximum number of bytes that can be read per transaction
- *     uint32 txMaxReadBytes;
+ *     // Maximum number of disk entry read operations per transaction
+ *     uint32 txMaxDiskReadEntries;
+ *     // Maximum number of bytes of disk reads that can be performed per transaction
+ *     uint32 txMaxDiskReadBytes;
  *     // Maximum number of ledger entry write operations per transaction
  *     uint32 txMaxWriteLedgerEntries;
  *     // Maximum number of bytes that can be written per transaction
  *     uint32 txMaxWriteBytes;
  *
- *     int64 feeReadLedgerEntry;  // Fee per ledger entry read
- *     int64 feeWriteLedgerEntry; // Fee per ledger entry write
+ *     int64 feeDiskReadLedgerEntry;  // Fee per disk ledger entry read
+ *     int64 feeWriteLedgerEntry;     // Fee per ledger entry write
  *
- *     int64 feeRead1KB;  // Fee for reading 1KB
+ *     int64 feeDiskRead1KB;          // Fee for reading 1KB disk
  *
  *     // The following parameters determine the write fee per 1KB.
- *     // Write fee grows linearly until bucket list reaches this size
- *     int64 bucketListTargetSizeBytes;
- *     // Fee per 1KB write when the bucket list is empty
- *     int64 writeFee1KBBucketListLow;
- *     // Fee per 1KB write when the bucket list has reached `bucketListTargetSizeBytes`
- *     int64 writeFee1KBBucketListHigh;
- *     // Write fee multiplier for any additional data past the first `bucketListTargetSizeBytes`
- *     uint32 bucketListWriteFeeGrowthFactor;
+ *     // Rent fee grows linearly until soroban state reaches this size
+ *     int64 sorobanStateTargetSizeBytes;
+ *     // Fee per 1KB rent when the soroban state is empty
+ *     int64 rentFee1KBSorobanStateSizeLow;
+ *     // Fee per 1KB rent when the soroban state has reached `sorobanStateTargetSizeBytes`
+ *     int64 rentFee1KBSorobanStateSizeHigh;
+ *     // Rent fee multiplier for any additional data past the first `sorobanStateTargetSizeBytes`
+ *     uint32 sorobanStateRentFeeGrowthFactor;
  * };
  * </pre>
  */
@@ -57,59 +57,60 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractLedgerCostV0 implements XdrElement {
-  private Uint32 ledgerMaxReadLedgerEntries;
-  private Uint32 ledgerMaxReadBytes;
+  private Uint32 ledgerMaxDiskReadEntries;
+  private Uint32 ledgerMaxDiskReadBytes;
   private Uint32 ledgerMaxWriteLedgerEntries;
   private Uint32 ledgerMaxWriteBytes;
-  private Uint32 txMaxReadLedgerEntries;
-  private Uint32 txMaxReadBytes;
+  private Uint32 txMaxDiskReadEntries;
+  private Uint32 txMaxDiskReadBytes;
   private Uint32 txMaxWriteLedgerEntries;
   private Uint32 txMaxWriteBytes;
-  private Int64 feeReadLedgerEntry;
+  private Int64 feeDiskReadLedgerEntry;
   private Int64 feeWriteLedgerEntry;
-  private Int64 feeRead1KB;
-  private Int64 bucketListTargetSizeBytes;
-  private Int64 writeFee1KBBucketListLow;
-  private Int64 writeFee1KBBucketListHigh;
-  private Uint32 bucketListWriteFeeGrowthFactor;
+  private Int64 feeDiskRead1KB;
+  private Int64 sorobanStateTargetSizeBytes;
+  private Int64 rentFee1KBSorobanStateSizeLow;
+  private Int64 rentFee1KBSorobanStateSizeHigh;
+  private Uint32 sorobanStateRentFeeGrowthFactor;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
-    ledgerMaxReadLedgerEntries.encode(stream);
-    ledgerMaxReadBytes.encode(stream);
+    ledgerMaxDiskReadEntries.encode(stream);
+    ledgerMaxDiskReadBytes.encode(stream);
     ledgerMaxWriteLedgerEntries.encode(stream);
     ledgerMaxWriteBytes.encode(stream);
-    txMaxReadLedgerEntries.encode(stream);
-    txMaxReadBytes.encode(stream);
+    txMaxDiskReadEntries.encode(stream);
+    txMaxDiskReadBytes.encode(stream);
     txMaxWriteLedgerEntries.encode(stream);
     txMaxWriteBytes.encode(stream);
-    feeReadLedgerEntry.encode(stream);
+    feeDiskReadLedgerEntry.encode(stream);
     feeWriteLedgerEntry.encode(stream);
-    feeRead1KB.encode(stream);
-    bucketListTargetSizeBytes.encode(stream);
-    writeFee1KBBucketListLow.encode(stream);
-    writeFee1KBBucketListHigh.encode(stream);
-    bucketListWriteFeeGrowthFactor.encode(stream);
+    feeDiskRead1KB.encode(stream);
+    sorobanStateTargetSizeBytes.encode(stream);
+    rentFee1KBSorobanStateSizeLow.encode(stream);
+    rentFee1KBSorobanStateSizeHigh.encode(stream);
+    sorobanStateRentFeeGrowthFactor.encode(stream);
   }
 
   public static ConfigSettingContractLedgerCostV0 decode(XdrDataInputStream stream)
       throws IOException {
     ConfigSettingContractLedgerCostV0 decodedConfigSettingContractLedgerCostV0 =
         new ConfigSettingContractLedgerCostV0();
-    decodedConfigSettingContractLedgerCostV0.ledgerMaxReadLedgerEntries = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.ledgerMaxReadBytes = Uint32.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.ledgerMaxDiskReadEntries = Uint32.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.ledgerMaxDiskReadBytes = Uint32.decode(stream);
     decodedConfigSettingContractLedgerCostV0.ledgerMaxWriteLedgerEntries = Uint32.decode(stream);
     decodedConfigSettingContractLedgerCostV0.ledgerMaxWriteBytes = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.txMaxReadLedgerEntries = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.txMaxReadBytes = Uint32.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.txMaxDiskReadEntries = Uint32.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.txMaxDiskReadBytes = Uint32.decode(stream);
     decodedConfigSettingContractLedgerCostV0.txMaxWriteLedgerEntries = Uint32.decode(stream);
     decodedConfigSettingContractLedgerCostV0.txMaxWriteBytes = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.feeReadLedgerEntry = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.feeDiskReadLedgerEntry = Int64.decode(stream);
     decodedConfigSettingContractLedgerCostV0.feeWriteLedgerEntry = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.feeRead1KB = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.bucketListTargetSizeBytes = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListLow = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.writeFee1KBBucketListHigh = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.bucketListWriteFeeGrowthFactor = Uint32.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.feeDiskRead1KB = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.sorobanStateTargetSizeBytes = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.rentFee1KBSorobanStateSizeLow = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.rentFee1KBSorobanStateSizeHigh = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.sorobanStateRentFeeGrowthFactor =
+        Uint32.decode(stream);
     return decodedConfigSettingContractLedgerCostV0;
   }
 

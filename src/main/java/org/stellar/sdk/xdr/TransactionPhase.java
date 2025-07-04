@@ -19,6 +19,8 @@ import org.stellar.sdk.Base64Factory;
  * {
  * case 0:
  *     TxSetComponent v0Components&lt;&gt;;
+ * case 1:
+ *     ParallelTxsComponent parallelTxsComponent;
  * };
  * </pre>
  */
@@ -29,6 +31,7 @@ import org.stellar.sdk.Base64Factory;
 public class TransactionPhase implements XdrElement {
   private Integer discriminant;
   private TxSetComponent[] v0Components;
+  private ParallelTxsComponent parallelTxsComponent;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant);
@@ -39,6 +42,9 @@ public class TransactionPhase implements XdrElement {
         for (int i = 0; i < v0ComponentsSize; i++) {
           v0Components[i].encode(stream);
         }
+        break;
+      case 1:
+        parallelTxsComponent.encode(stream);
         break;
     }
   }
@@ -54,6 +60,9 @@ public class TransactionPhase implements XdrElement {
         for (int i = 0; i < v0ComponentsSize; i++) {
           decodedTransactionPhase.v0Components[i] = TxSetComponent.decode(stream);
         }
+        break;
+      case 1:
+        decodedTransactionPhase.parallelTxsComponent = ParallelTxsComponent.decode(stream);
         break;
     }
     return decodedTransactionPhase;

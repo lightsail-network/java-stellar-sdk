@@ -33,7 +33,6 @@ import org.stellar.sdk.Base64Factory;
  *
  *     Operation operations&lt;MAX_OPS_PER_TX&gt;;
  *
- *     // reserved for future use
  *     union switch (int v)
  *     {
  *     case 0:

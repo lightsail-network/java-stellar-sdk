@@ -35,6 +35,7 @@ import org.stellar.sdk.Base64Factory;
  * case SC_SPEC_TYPE_STRING:
  * case SC_SPEC_TYPE_SYMBOL:
  * case SC_SPEC_TYPE_ADDRESS:
+ * case SC_SPEC_TYPE_MUXED_ADDRESS:
  *     void;
  * case SC_SPEC_TYPE_OPTION:
  *     SCSpecTypeOption option;
@@ -88,6 +89,7 @@ public class SCSpecTypeDef implements XdrElement {
       case SC_SPEC_TYPE_STRING:
       case SC_SPEC_TYPE_SYMBOL:
       case SC_SPEC_TYPE_ADDRESS:
+      case SC_SPEC_TYPE_MUXED_ADDRESS:
         break;
       case SC_SPEC_TYPE_OPTION:
         option.encode(stream);
@@ -136,6 +138,7 @@ public class SCSpecTypeDef implements XdrElement {
       case SC_SPEC_TYPE_STRING:
       case SC_SPEC_TYPE_SYMBOL:
       case SC_SPEC_TYPE_ADDRESS:
+      case SC_SPEC_TYPE_MUXED_ADDRESS:
         break;
       case SC_SPEC_TYPE_OPTION:
         decodedSCSpecTypeDef.option = SCSpecTypeOption.decode(stream);

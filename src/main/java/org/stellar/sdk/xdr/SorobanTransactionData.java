@@ -17,7 +17,13 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * struct SorobanTransactionData
  * {
- *     ExtensionPoint ext;
+ *     union switch (int v)
+ *     {
+ *     case 0:
+ *         void;
+ *     case 1:
+ *         SorobanResourcesExtV0 resourceExt;
+ *     } ext;
  *     SorobanResources resources;
  *     // Amount of the transaction `fee` allocated to the Soroban resource fees.
  *     // The fraction of `resourceFee` corresponding to `resources` specified
@@ -37,7 +43,7 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanTransactionData implements XdrElement {
-  private ExtensionPoint ext;
+  private SorobanTransactionDataExt ext;
   private SorobanResources resources;
   private Int64 resourceFee;
 
@@ -49,7 +55,7 @@ public class SorobanTransactionData implements XdrElement {
 
   public static SorobanTransactionData decode(XdrDataInputStream stream) throws IOException {
     SorobanTransactionData decodedSorobanTransactionData = new SorobanTransactionData();
-    decodedSorobanTransactionData.ext = ExtensionPoint.decode(stream);
+    decodedSorobanTransactionData.ext = SorobanTransactionDataExt.decode(stream);
     decodedSorobanTransactionData.resources = SorobanResources.decode(stream);
     decodedSorobanTransactionData.resourceFee = Int64.decode(stream);
     return decodedSorobanTransactionData;
@@ -64,5 +70,63 @@ public class SorobanTransactionData implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);
+  }
+
+  /**
+   * SorobanTransactionDataExt's original definition in the XDR file is:
+   *
+   * <pre>
+   * union switch (int v)
+   *     {
+   *     case 0:
+   *         void;
+   *     case 1:
+   *         SorobanResourcesExtV0 resourceExt;
+   *     }
+   * </pre>
+   */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
+  public static class SorobanTransactionDataExt implements XdrElement {
+    private Integer discriminant;
+    private SorobanResourcesExtV0 resourceExt;
+
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      stream.writeInt(discriminant);
+      switch (discriminant) {
+        case 0:
+          break;
+        case 1:
+          resourceExt.encode(stream);
+          break;
+      }
+    }
+
+    public static SorobanTransactionDataExt decode(XdrDataInputStream stream) throws IOException {
+      SorobanTransactionDataExt decodedSorobanTransactionDataExt = new SorobanTransactionDataExt();
+      Integer discriminant = stream.readInt();
+      decodedSorobanTransactionDataExt.setDiscriminant(discriminant);
+      switch (decodedSorobanTransactionDataExt.getDiscriminant()) {
+        case 0:
+          break;
+        case 1:
+          decodedSorobanTransactionDataExt.resourceExt = SorobanResourcesExtV0.decode(stream);
+          break;
+      }
+      return decodedSorobanTransactionDataExt;
+    }
+
+    public static SorobanTransactionDataExt fromXdrBase64(String xdr) throws IOException {
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static SorobanTransactionDataExt fromXdrByteArray(byte[] xdr) throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      return decode(xdrDataInputStream);
+    }
   }
 }
