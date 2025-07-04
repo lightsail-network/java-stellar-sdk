@@ -31,7 +31,6 @@ import org.stellar.sdk.xdr.ContractIDPreimageType;
 import org.stellar.sdk.xdr.CreateContractArgs;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
-import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.HostFunction;
 import org.stellar.sdk.xdr.HostFunctionType;
 import org.stellar.sdk.xdr.Int64;
@@ -235,12 +234,12 @@ public class TransactionTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .diskReadBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(ExtensionPoint.builder().discriminant(0).build())
+            .ext(SorobanTransactionData.SorobanTransactionDataExt.builder().discriminant(0).build())
             .build();
 
     CreateContractArgs createContractArgs =

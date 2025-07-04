@@ -953,12 +953,12 @@ public class TransactionBuilderTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .diskReadBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(ExtensionPoint.builder().discriminant(0).build())
+            .ext(SorobanTransactionData.SorobanTransactionDataExt.builder().discriminant(0).build())
             .build();
 
     long sequenceNumber = 2908908335136768L;
@@ -1011,12 +1011,12 @@ public class TransactionBuilderTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .diskReadBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(ExtensionPoint.builder().discriminant(0).build())
+            .ext(SorobanTransactionData.SorobanTransactionDataExt.builder().discriminant(0).build())
             .build();
     String sorobanDataString = sorobanData.toXdrBase64();
 
