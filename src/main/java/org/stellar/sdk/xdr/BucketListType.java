@@ -14,15 +14,13 @@ import org.stellar.sdk.Base64Factory;
  * enum BucketListType
  * {
  *     LIVE = 0,
- *     HOT_ARCHIVE = 1,
- *     COLD_ARCHIVE = 2
+ *     HOT_ARCHIVE = 1
  * };
  * </pre>
  */
 public enum BucketListType implements XdrElement {
   LIVE(0),
-  HOT_ARCHIVE(1),
-  COLD_ARCHIVE(2);
+  HOT_ARCHIVE(1);
 
   private final int value;
 
@@ -41,8 +39,6 @@ public enum BucketListType implements XdrElement {
         return LIVE;
       case 1:
         return HOT_ARCHIVE;
-      case 2:
-        return COLD_ARCHIVE;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }

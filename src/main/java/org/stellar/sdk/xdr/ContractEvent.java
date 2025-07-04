@@ -21,7 +21,7 @@ import org.stellar.sdk.Base64Factory;
  *     // is first, to change ContractEvent into a union.
  *     ExtensionPoint ext;
  *
- *     Hash&#42; contractID;
+ *     ContractID&#42; contractID;
  *     ContractEventType type;
  *
  *     union switch (int v)
@@ -43,7 +43,7 @@ import org.stellar.sdk.Base64Factory;
 @Builder(toBuilder = true)
 public class ContractEvent implements XdrElement {
   private ExtensionPoint ext;
-  private Hash contractID;
+  private ContractID contractID;
   private ContractEventType type;
   private ContractEventBody body;
 
@@ -64,7 +64,7 @@ public class ContractEvent implements XdrElement {
     decodedContractEvent.ext = ExtensionPoint.decode(stream);
     int contractIDPresent = stream.readInt();
     if (contractIDPresent != 0) {
-      decodedContractEvent.contractID = Hash.decode(stream);
+      decodedContractEvent.contractID = ContractID.decode(stream);
     }
     decodedContractEvent.type = ContractEventType.decode(stream);
     decodedContractEvent.body = ContractEventBody.decode(stream);

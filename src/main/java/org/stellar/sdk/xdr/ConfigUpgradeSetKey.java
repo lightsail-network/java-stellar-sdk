@@ -16,7 +16,7 @@ import org.stellar.sdk.Base64Factory;
  *
  * <pre>
  * struct ConfigUpgradeSetKey {
- *     Hash contractID;
+ *     ContractID contractID;
  *     Hash contentHash;
  * };
  * </pre>
@@ -26,7 +26,7 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigUpgradeSetKey implements XdrElement {
-  private Hash contractID;
+  private ContractID contractID;
   private Hash contentHash;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -36,7 +36,7 @@ public class ConfigUpgradeSetKey implements XdrElement {
 
   public static ConfigUpgradeSetKey decode(XdrDataInputStream stream) throws IOException {
     ConfigUpgradeSetKey decodedConfigUpgradeSetKey = new ConfigUpgradeSetKey();
-    decodedConfigUpgradeSetKey.contractID = Hash.decode(stream);
+    decodedConfigUpgradeSetKey.contractID = ContractID.decode(stream);
     decodedConfigUpgradeSetKey.contentHash = Hash.decode(stream);
     return decodedConfigUpgradeSetKey;
   }

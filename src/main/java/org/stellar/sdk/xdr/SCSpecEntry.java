@@ -27,6 +27,8 @@ import org.stellar.sdk.Base64Factory;
  *     SCSpecUDTEnumV0 udtEnumV0;
  * case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
  *     SCSpecUDTErrorEnumV0 udtErrorEnumV0;
+ * case SC_SPEC_ENTRY_EVENT_V0:
+ *     SCSpecEventV0 eventV0;
  * };
  * </pre>
  */
@@ -41,6 +43,7 @@ public class SCSpecEntry implements XdrElement {
   private SCSpecUDTUnionV0 udtUnionV0;
   private SCSpecUDTEnumV0 udtEnumV0;
   private SCSpecUDTErrorEnumV0 udtErrorEnumV0;
+  private SCSpecEventV0 eventV0;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -59,6 +62,9 @@ public class SCSpecEntry implements XdrElement {
         break;
       case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
         udtErrorEnumV0.encode(stream);
+        break;
+      case SC_SPEC_ENTRY_EVENT_V0:
+        eventV0.encode(stream);
         break;
     }
   }
@@ -82,6 +88,9 @@ public class SCSpecEntry implements XdrElement {
         break;
       case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
         decodedSCSpecEntry.udtErrorEnumV0 = SCSpecUDTErrorEnumV0.decode(stream);
+        break;
+      case SC_SPEC_ENTRY_EVENT_V0:
+        decodedSCSpecEntry.eventV0 = SCSpecEventV0.decode(stream);
         break;
     }
     return decodedSCSpecEntry;

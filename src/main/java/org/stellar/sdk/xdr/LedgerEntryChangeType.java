@@ -16,7 +16,8 @@ import org.stellar.sdk.Base64Factory;
  *     LEDGER_ENTRY_CREATED = 0, // entry was added to the ledger
  *     LEDGER_ENTRY_UPDATED = 1, // entry was modified in the ledger
  *     LEDGER_ENTRY_REMOVED = 2, // entry was removed from the ledger
- *     LEDGER_ENTRY_STATE = 3    // value of the entry
+ *     LEDGER_ENTRY_STATE    = 3, // value of the entry
+ *     LEDGER_ENTRY_RESTORED = 4  // archived entry was restored in the ledger
  * };
  * </pre>
  */
@@ -24,7 +25,8 @@ public enum LedgerEntryChangeType implements XdrElement {
   LEDGER_ENTRY_CREATED(0),
   LEDGER_ENTRY_UPDATED(1),
   LEDGER_ENTRY_REMOVED(2),
-  LEDGER_ENTRY_STATE(3);
+  LEDGER_ENTRY_STATE(3),
+  LEDGER_ENTRY_RESTORED(4);
 
   private final int value;
 
@@ -47,6 +49,8 @@ public enum LedgerEntryChangeType implements XdrElement {
         return LEDGER_ENTRY_REMOVED;
       case 3:
         return LEDGER_ENTRY_STATE;
+      case 4:
+        return LEDGER_ENTRY_RESTORED;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }

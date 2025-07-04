@@ -27,11 +27,11 @@ import org.stellar.sdk.Base64Factory;
  *     // max number of entries that emit archival meta in a single ledger
  *     uint32 maxEntriesToArchive;
  *
- *     // Number of snapshots to use when calculating average BucketList size
- *     uint32 bucketListSizeWindowSampleSize;
+ *     // Number of snapshots to use when calculating average live Soroban State size
+ *     uint32 liveSorobanStateSizeWindowSampleSize;
  *
- *     // How often to sample the BucketList size for the average, in ledgers
- *     uint32 bucketListWindowSamplePeriod;
+ *     // How often to sample the live Soroban State size for the average, in ledgers
+ *     uint32 liveSorobanStateSizeWindowSamplePeriod;
  *
  *     // Maximum number of bytes that we scan for eviction per ledger
  *     uint32 evictionScanSize;
@@ -52,8 +52,8 @@ public class StateArchivalSettings implements XdrElement {
   private Int64 persistentRentRateDenominator;
   private Int64 tempRentRateDenominator;
   private Uint32 maxEntriesToArchive;
-  private Uint32 bucketListSizeWindowSampleSize;
-  private Uint32 bucketListWindowSamplePeriod;
+  private Uint32 liveSorobanStateSizeWindowSampleSize;
+  private Uint32 liveSorobanStateSizeWindowSamplePeriod;
   private Uint32 evictionScanSize;
   private Uint32 startingEvictionScanLevel;
 
@@ -64,8 +64,8 @@ public class StateArchivalSettings implements XdrElement {
     persistentRentRateDenominator.encode(stream);
     tempRentRateDenominator.encode(stream);
     maxEntriesToArchive.encode(stream);
-    bucketListSizeWindowSampleSize.encode(stream);
-    bucketListWindowSamplePeriod.encode(stream);
+    liveSorobanStateSizeWindowSampleSize.encode(stream);
+    liveSorobanStateSizeWindowSamplePeriod.encode(stream);
     evictionScanSize.encode(stream);
     startingEvictionScanLevel.encode(stream);
   }
@@ -78,8 +78,8 @@ public class StateArchivalSettings implements XdrElement {
     decodedStateArchivalSettings.persistentRentRateDenominator = Int64.decode(stream);
     decodedStateArchivalSettings.tempRentRateDenominator = Int64.decode(stream);
     decodedStateArchivalSettings.maxEntriesToArchive = Uint32.decode(stream);
-    decodedStateArchivalSettings.bucketListSizeWindowSampleSize = Uint32.decode(stream);
-    decodedStateArchivalSettings.bucketListWindowSamplePeriod = Uint32.decode(stream);
+    decodedStateArchivalSettings.liveSorobanStateSizeWindowSampleSize = Uint32.decode(stream);
+    decodedStateArchivalSettings.liveSorobanStateSizeWindowSamplePeriod = Uint32.decode(stream);
     decodedStateArchivalSettings.evictionScanSize = Uint32.decode(stream);
     decodedStateArchivalSettings.startingEvictionScanLevel = Uint32.decode(stream);
     return decodedStateArchivalSettings;

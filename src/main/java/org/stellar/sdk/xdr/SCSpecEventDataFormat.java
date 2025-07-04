@@ -8,21 +8,25 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 
 /**
- * SurveyMessageResponseType's original definition in the XDR file is:
+ * SCSpecEventDataFormat's original definition in the XDR file is:
  *
  * <pre>
- * enum SurveyMessageResponseType
+ * enum SCSpecEventDataFormat
  * {
- *     SURVEY_TOPOLOGY_RESPONSE_V2 = 2
+ *     SC_SPEC_EVENT_DATA_FORMAT_SINGLE_VALUE = 0,
+ *     SC_SPEC_EVENT_DATA_FORMAT_VEC = 1,
+ *     SC_SPEC_EVENT_DATA_FORMAT_MAP = 2
  * };
  * </pre>
  */
-public enum SurveyMessageResponseType implements XdrElement {
-  SURVEY_TOPOLOGY_RESPONSE_V2(2);
+public enum SCSpecEventDataFormat implements XdrElement {
+  SC_SPEC_EVENT_DATA_FORMAT_SINGLE_VALUE(0),
+  SC_SPEC_EVENT_DATA_FORMAT_VEC(1),
+  SC_SPEC_EVENT_DATA_FORMAT_MAP(2);
 
   private final int value;
 
-  SurveyMessageResponseType(int value) {
+  SCSpecEventDataFormat(int value) {
     this.value = value;
   }
 
@@ -30,11 +34,15 @@ public enum SurveyMessageResponseType implements XdrElement {
     return value;
   }
 
-  public static SurveyMessageResponseType decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecEventDataFormat decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
+      case 0:
+        return SC_SPEC_EVENT_DATA_FORMAT_SINGLE_VALUE;
+      case 1:
+        return SC_SPEC_EVENT_DATA_FORMAT_VEC;
       case 2:
-        return SURVEY_TOPOLOGY_RESPONSE_V2;
+        return SC_SPEC_EVENT_DATA_FORMAT_MAP;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -44,12 +52,12 @@ public enum SurveyMessageResponseType implements XdrElement {
     stream.writeInt(value);
   }
 
-  public static SurveyMessageResponseType fromXdrBase64(String xdr) throws IOException {
+  public static SCSpecEventDataFormat fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static SurveyMessageResponseType fromXdrByteArray(byte[] xdr) throws IOException {
+  public static SCSpecEventDataFormat fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);

@@ -25,6 +25,8 @@ import org.stellar.sdk.Base64Factory;
  *     LedgerKey removed;
  * case LEDGER_ENTRY_STATE:
  *     LedgerEntry state;
+ * case LEDGER_ENTRY_RESTORED:
+ *     LedgerEntry restored;
  * };
  * </pre>
  */
@@ -38,6 +40,7 @@ public class LedgerEntryChange implements XdrElement {
   private LedgerEntry updated;
   private LedgerKey removed;
   private LedgerEntry state;
+  private LedgerEntry restored;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -53,6 +56,9 @@ public class LedgerEntryChange implements XdrElement {
         break;
       case LEDGER_ENTRY_STATE:
         state.encode(stream);
+        break;
+      case LEDGER_ENTRY_RESTORED:
+        restored.encode(stream);
         break;
     }
   }
@@ -73,6 +79,9 @@ public class LedgerEntryChange implements XdrElement {
         break;
       case LEDGER_ENTRY_STATE:
         decodedLedgerEntryChange.state = LedgerEntry.decode(stream);
+        break;
+      case LEDGER_ENTRY_RESTORED:
+        decodedLedgerEntryChange.restored = LedgerEntry.decode(stream);
         break;
     }
     return decodedLedgerEntryChange;

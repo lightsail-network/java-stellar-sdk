@@ -25,6 +25,8 @@ import org.stellar.sdk.Base64Factory;
  *     TransactionMetaV2 v2;
  * case 3:
  *     TransactionMetaV3 v3;
+ * case 4:
+ *     TransactionMetaV4 v4;
  * };
  * </pre>
  */
@@ -38,6 +40,7 @@ public class TransactionMeta implements XdrElement {
   private TransactionMetaV1 v1;
   private TransactionMetaV2 v2;
   private TransactionMetaV3 v3;
+  private TransactionMetaV4 v4;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant);
@@ -57,6 +60,9 @@ public class TransactionMeta implements XdrElement {
         break;
       case 3:
         v3.encode(stream);
+        break;
+      case 4:
+        v4.encode(stream);
         break;
     }
   }
@@ -81,6 +87,9 @@ public class TransactionMeta implements XdrElement {
         break;
       case 3:
         decodedTransactionMeta.v3 = TransactionMetaV3.decode(stream);
+        break;
+      case 4:
+        decodedTransactionMeta.v4 = TransactionMetaV4.decode(stream);
         break;
     }
     return decodedTransactionMeta;

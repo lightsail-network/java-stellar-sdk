@@ -68,13 +68,12 @@ import org.stellar.sdk.Base64Factory;
  *
  * // Special SCVals reserved for system-constructed contract-data
  * // ledger keys, not generally usable elsewhere.
+ * case SCV_CONTRACT_INSTANCE:
+ *     SCContractInstance instance;
  * case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
  *     void;
  * case SCV_LEDGER_KEY_NONCE:
  *     SCNonceKey nonce_key;
- *
- * case SCV_CONTRACT_INSTANCE:
- *     SCContractInstance instance;
  * };
  * </pre>
  */
@@ -102,8 +101,8 @@ public class SCVal implements XdrElement {
   private SCVec vec;
   private SCMap map;
   private SCAddress address;
-  private SCNonceKey nonce_key;
   private SCContractInstance instance;
+  private SCNonceKey nonce_key;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -174,13 +173,13 @@ public class SCVal implements XdrElement {
       case SCV_ADDRESS:
         address.encode(stream);
         break;
+      case SCV_CONTRACT_INSTANCE:
+        instance.encode(stream);
+        break;
       case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
         break;
       case SCV_LEDGER_KEY_NONCE:
         nonce_key.encode(stream);
-        break;
-      case SCV_CONTRACT_INSTANCE:
-        instance.encode(stream);
         break;
     }
   }
@@ -252,13 +251,13 @@ public class SCVal implements XdrElement {
       case SCV_ADDRESS:
         decodedSCVal.address = SCAddress.decode(stream);
         break;
+      case SCV_CONTRACT_INSTANCE:
+        decodedSCVal.instance = SCContractInstance.decode(stream);
+        break;
       case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
         break;
       case SCV_LEDGER_KEY_NONCE:
         decodedSCVal.nonce_key = SCNonceKey.decode(stream);
-        break;
-      case SCV_CONTRACT_INSTANCE:
-        decodedSCVal.instance = SCContractInstance.decode(stream);
         break;
     }
     return decodedSCVal;

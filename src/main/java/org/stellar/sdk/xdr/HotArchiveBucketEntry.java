@@ -21,7 +21,6 @@ import org.stellar.sdk.Base64Factory;
  *     LedgerEntry archivedEntry;
  *
  * case HOT_ARCHIVE_LIVE:
- * case HOT_ARCHIVE_DELETED:
  *     LedgerKey key;
  * case HOT_ARCHIVE_METAENTRY:
  *     BucketMetadata metaEntry;
@@ -45,7 +44,6 @@ public class HotArchiveBucketEntry implements XdrElement {
         archivedEntry.encode(stream);
         break;
       case HOT_ARCHIVE_LIVE:
-      case HOT_ARCHIVE_DELETED:
         key.encode(stream);
         break;
       case HOT_ARCHIVE_METAENTRY:
@@ -63,7 +61,6 @@ public class HotArchiveBucketEntry implements XdrElement {
         decodedHotArchiveBucketEntry.archivedEntry = LedgerEntry.decode(stream);
         break;
       case HOT_ARCHIVE_LIVE:
-      case HOT_ARCHIVE_DELETED:
         decodedHotArchiveBucketEntry.key = LedgerKey.decode(stream);
         break;
       case HOT_ARCHIVE_METAENTRY:

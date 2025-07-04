@@ -41,10 +41,16 @@ import org.stellar.sdk.Base64Factory;
  *     StateArchivalSettings stateArchivalSettings;
  * case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
  *     ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
- * case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
- *     uint64 bucketListSizeWindow&lt;&gt;;
+ * case CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
+ *     uint64 liveSorobanStateSizeWindow&lt;&gt;;
  * case CONFIG_SETTING_EVICTION_ITERATOR:
  *     EvictionIterator evictionIterator;
+ * case CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
+ *     ConfigSettingContractParallelComputeV0 contractParallelCompute;
+ * case CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
+ *     ConfigSettingContractLedgerCostExtV0 contractLedgerCostExt;
+ * case CONFIG_SETTING_SCP_TIMING:
+ *     ConfigSettingSCPTiming contractSCPTiming;
  * };
  * </pre>
  */
@@ -66,8 +72,11 @@ public class ConfigSettingEntry implements XdrElement {
   private Uint32 contractDataEntrySizeBytes;
   private StateArchivalSettings stateArchivalSettings;
   private ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
-  private Uint64[] bucketListSizeWindow;
+  private Uint64[] liveSorobanStateSizeWindow;
   private EvictionIterator evictionIterator;
+  private ConfigSettingContractParallelComputeV0 contractParallelCompute;
+  private ConfigSettingContractLedgerCostExtV0 contractLedgerCostExt;
+  private ConfigSettingSCPTiming contractSCPTiming;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -108,15 +117,24 @@ public class ConfigSettingEntry implements XdrElement {
       case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
         contractExecutionLanes.encode(stream);
         break;
-      case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-        int bucketListSizeWindowSize = getBucketListSizeWindow().length;
-        stream.writeInt(bucketListSizeWindowSize);
-        for (int i = 0; i < bucketListSizeWindowSize; i++) {
-          bucketListSizeWindow[i].encode(stream);
+      case CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
+        int liveSorobanStateSizeWindowSize = getLiveSorobanStateSizeWindow().length;
+        stream.writeInt(liveSorobanStateSizeWindowSize);
+        for (int i = 0; i < liveSorobanStateSizeWindowSize; i++) {
+          liveSorobanStateSizeWindow[i].encode(stream);
         }
         break;
       case CONFIG_SETTING_EVICTION_ITERATOR:
         evictionIterator.encode(stream);
+        break;
+      case CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
+        contractParallelCompute.encode(stream);
+        break;
+      case CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
+        contractLedgerCostExt.encode(stream);
+        break;
+      case CONFIG_SETTING_SCP_TIMING:
+        contractSCPTiming.encode(stream);
         break;
     }
   }
@@ -166,15 +184,27 @@ public class ConfigSettingEntry implements XdrElement {
         decodedConfigSettingEntry.contractExecutionLanes =
             ConfigSettingContractExecutionLanesV0.decode(stream);
         break;
-      case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-        int bucketListSizeWindowSize = stream.readInt();
-        decodedConfigSettingEntry.bucketListSizeWindow = new Uint64[bucketListSizeWindowSize];
-        for (int i = 0; i < bucketListSizeWindowSize; i++) {
-          decodedConfigSettingEntry.bucketListSizeWindow[i] = Uint64.decode(stream);
+      case CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
+        int liveSorobanStateSizeWindowSize = stream.readInt();
+        decodedConfigSettingEntry.liveSorobanStateSizeWindow =
+            new Uint64[liveSorobanStateSizeWindowSize];
+        for (int i = 0; i < liveSorobanStateSizeWindowSize; i++) {
+          decodedConfigSettingEntry.liveSorobanStateSizeWindow[i] = Uint64.decode(stream);
         }
         break;
       case CONFIG_SETTING_EVICTION_ITERATOR:
         decodedConfigSettingEntry.evictionIterator = EvictionIterator.decode(stream);
+        break;
+      case CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
+        decodedConfigSettingEntry.contractParallelCompute =
+            ConfigSettingContractParallelComputeV0.decode(stream);
+        break;
+      case CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
+        decodedConfigSettingEntry.contractLedgerCostExt =
+            ConfigSettingContractLedgerCostExtV0.decode(stream);
+        break;
+      case CONFIG_SETTING_SCP_TIMING:
+        decodedConfigSettingEntry.contractSCPTiming = ConfigSettingSCPTiming.decode(stream);
         break;
     }
     return decodedConfigSettingEntry;

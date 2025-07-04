@@ -20,7 +20,13 @@ import org.stellar.sdk.Base64Factory;
  * case SC_ADDRESS_TYPE_ACCOUNT:
  *     AccountID accountId;
  * case SC_ADDRESS_TYPE_CONTRACT:
- *     Hash contractId;
+ *     ContractID contractId;
+ * case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
+ *     MuxedEd25519Account muxedAccount;
+ * case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
+ *     ClaimableBalanceID claimableBalanceId;
+ * case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
+ *     PoolID liquidityPoolId;
  * };
  * </pre>
  */
@@ -31,7 +37,10 @@ import org.stellar.sdk.Base64Factory;
 public class SCAddress implements XdrElement {
   private SCAddressType discriminant;
   private AccountID accountId;
-  private Hash contractId;
+  private ContractID contractId;
+  private MuxedEd25519Account muxedAccount;
+  private ClaimableBalanceID claimableBalanceId;
+  private PoolID liquidityPoolId;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -41,6 +50,15 @@ public class SCAddress implements XdrElement {
         break;
       case SC_ADDRESS_TYPE_CONTRACT:
         contractId.encode(stream);
+        break;
+      case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
+        muxedAccount.encode(stream);
+        break;
+      case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
+        claimableBalanceId.encode(stream);
+        break;
+      case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
+        liquidityPoolId.encode(stream);
         break;
     }
   }
@@ -54,7 +72,16 @@ public class SCAddress implements XdrElement {
         decodedSCAddress.accountId = AccountID.decode(stream);
         break;
       case SC_ADDRESS_TYPE_CONTRACT:
-        decodedSCAddress.contractId = Hash.decode(stream);
+        decodedSCAddress.contractId = ContractID.decode(stream);
+        break;
+      case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
+        decodedSCAddress.muxedAccount = MuxedEd25519Account.decode(stream);
+        break;
+      case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
+        decodedSCAddress.claimableBalanceId = ClaimableBalanceID.decode(stream);
+        break;
+      case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
+        decodedSCAddress.liquidityPoolId = PoolID.decode(stream);
         break;
     }
     return decodedSCAddress;
