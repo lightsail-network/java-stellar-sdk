@@ -687,14 +687,14 @@ public class StrKeyTest {
   @Test
   public void testIsValidContract() {
     String validKey = "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVKC";
-    assertTrue(StrKey.isValidSha256Hash(validKey));
+    assertTrue(StrKey.isValidContract(validKey));
     String[] invalidKeys = {
       "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVK",
       "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVKC2",
       "GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC"
     };
     for (String key : invalidKeys) {
-      assertFalse(StrKey.isValidSha256Hash(key));
+      assertFalse(StrKey.isValidContract(key));
     }
   }
 
