@@ -11,6 +11,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Claimant;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Predicate;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.ClaimantType;
@@ -50,7 +51,8 @@ public class CreateClaimableBalanceOperation extends Operation {
     for (org.stellar.sdk.xdr.Claimant c : op.getClaimants()) {
       claimants.add(
           new Claimant(
-              StrKey.encodeEd25519PublicKey(c.getV0().getDestination()),
+              StrKey.encodeEd25519PublicKey(
+                  c.getV0().getDestination().getAccountID().getEd25519().getUint256()),
               Predicate.fromXdr(c.getV0().getPredicate())));
     }
     return new CreateClaimableBalanceOperation(amount, asset, claimants);
@@ -72,7 +74,7 @@ public class CreateClaimableBalanceOperation extends Operation {
     for (int i = 0; i < claimants.size(); i++) {
 
       org.stellar.sdk.xdr.Claimant.ClaimantV0 v0 = new org.stellar.sdk.xdr.Claimant.ClaimantV0();
-      v0.setDestination(StrKey.encodeToXDRAccountId(claimants.get(i).getDestination()));
+      v0.setDestination(KeyPair.fromAccountId(claimants.get(i).getDestination()).getXdrAccountId());
       v0.setPredicate(claimants.get(i).getPredicate().toXdr());
 
       xdrClaimants[i] = new org.stellar.sdk.xdr.Claimant();

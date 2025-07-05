@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.MuxedAccount;
 import org.stellar.sdk.xdr.Operation.OperationBody;
 import org.stellar.sdk.xdr.OperationType;
@@ -32,13 +31,14 @@ public class AccountMergeOperation extends Operation {
    * @return {@link AccountMergeOperation} object
    */
   public static AccountMergeOperation fromXdr(MuxedAccount destination) {
-    return new AccountMergeOperation(StrKey.encodeMuxedAccount(destination));
+    return new AccountMergeOperation(
+        org.stellar.sdk.MuxedAccount.fromXdr(destination).getAddress());
   }
 
   @Override
   OperationBody toOperationBody() {
     OperationBody body = new org.stellar.sdk.xdr.Operation.OperationBody();
-    body.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
+    body.setDestination(new org.stellar.sdk.MuxedAccount(this.destination).toXdr());
     body.setDiscriminant(OperationType.ACCOUNT_MERGE);
     return body;
   }

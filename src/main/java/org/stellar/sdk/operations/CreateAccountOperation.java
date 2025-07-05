@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.CreateAccountOp;
 import org.stellar.sdk.xdr.Int64;
@@ -38,7 +39,8 @@ public class CreateAccountOperation extends Operation {
    * @return {@link CreateAccountOperation} object
    */
   public static CreateAccountOperation fromXdr(CreateAccountOp op) {
-    String destination = StrKey.encodeEd25519PublicKey(op.getDestination());
+    String destination =
+        StrKey.encodeEd25519PublicKey(op.getDestination().getAccountID().getEd25519().getUint256());
     BigDecimal startingBalance = Operation.fromXdrAmount(op.getStartingBalance().getInt64());
     return new CreateAccountOperation(destination, startingBalance);
   }
@@ -46,7 +48,7 @@ public class CreateAccountOperation extends Operation {
   @Override
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     CreateAccountOp op = new CreateAccountOp();
-    op.setDestination(StrKey.encodeToXDRAccountId(this.destination));
+    op.setDestination(KeyPair.fromAccountId(this.destination).getXdrAccountId());
     Int64 startingBalance = new Int64();
     startingBalance.setInt64(Operation.toXdrAmount(this.startingBalance));
     op.setStartingBalance(startingBalance);

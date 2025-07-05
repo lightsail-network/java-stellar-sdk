@@ -120,7 +120,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
       FeeBumpTransactionEnvelope envelope, Network network) {
     Transaction inner =
         Transaction.fromV1EnvelopeXdr(envelope.getTx().getInnerTx().getV1(), network);
-    String feeSource = StrKey.encodeMuxedAccount(envelope.getTx().getFeeSource());
+    String feeSource = MuxedAccount.fromXdr(envelope.getTx().getFeeSource()).getAddress();
     long fee = envelope.getTx().getFee().getInt64();
     FeeBumpTransaction feeBump = new FeeBumpTransaction(feeSource, fee, inner);
     feeBump.signatures.addAll(Arrays.asList(envelope.getSignatures()));
@@ -135,7 +135,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
     Int64 xdrFee = new Int64();
     xdrFee.setInt64(fee);
     xdr.setFee(xdrFee);
-    xdr.setFeeSource(StrKey.decodeMuxedAccount(this.feeSource));
+    xdr.setFeeSource(new MuxedAccount(this.feeSource).toXdr());
     org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx innerXDR =
         new org.stellar.sdk.xdr.FeeBumpTransaction.FeeBumpTransactionInnerTx();
     innerXDR.setDiscriminant(EnvelopeType.ENVELOPE_TYPE_TX);

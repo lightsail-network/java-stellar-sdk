@@ -9,7 +9,7 @@ import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.StrKey;
+import org.stellar.sdk.MuxedAccount;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PathPaymentStrictSendOp;
@@ -60,7 +60,7 @@ public class PathPaymentStrictSendOperation extends Operation {
   public static PathPaymentStrictSendOperation fromXdr(PathPaymentStrictSendOp op) {
     Asset sendAsset = Asset.fromXdr(op.getSendAsset());
     BigDecimal sendAmount = Operation.fromXdrAmount(op.getSendAmount().getInt64());
-    String destination = StrKey.encodeMuxedAccount(op.getDestination());
+    String destination = MuxedAccount.fromXdr(op.getDestination()).getAddress();
     Asset destAsset = Asset.fromXdr(op.getDestAsset());
     BigDecimal destMin = Operation.fromXdrAmount(op.getDestMin().getInt64());
     Asset[] path = new Asset[op.getPath().length];
@@ -82,7 +82,7 @@ public class PathPaymentStrictSendOperation extends Operation {
     sendAmount.setInt64(Operation.toXdrAmount(this.sendAmount));
     op.setSendAmount(sendAmount);
     // destination
-    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
+    op.setDestination(new MuxedAccount(this.destination).toXdr());
     // destAsset
     op.setDestAsset(destAsset.toXdr());
     // destMin

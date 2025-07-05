@@ -64,7 +64,9 @@ public class Address {
   public static Address fromSCAddress(SCAddress scAddress) {
     switch (scAddress.getDiscriminant()) {
       case SC_ADDRESS_TYPE_ACCOUNT:
-        return new Address(StrKey.encodeEd25519PublicKey(scAddress.getAccountId()));
+        return new Address(
+            StrKey.encodeEd25519PublicKey(
+                scAddress.getAccountId().getAccountID().getEd25519().getUint256()));
       case SC_ADDRESS_TYPE_CONTRACT:
         return new Address(
             StrKey.encodeContract(scAddress.getContractId().getContractID().getHash()));
