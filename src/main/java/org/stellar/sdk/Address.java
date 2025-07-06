@@ -15,8 +15,8 @@ import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 
 /**
- * Represents a single address in the Stellar network. An address can represent an account or a
- * contract.
+ * Represents a single address in the Stellar network. An address can represent an account,
+ * contract, muxed account, claimable balance, or liquidity pool.
  */
 @EqualsAndHashCode
 public class Address {
@@ -26,9 +26,10 @@ public class Address {
   private final AddressType type;
 
   /**
-   * Creates a new {@link Address} from a Stellar public key or contract ID.
+   * Creates a new {@link Address} from a Stellar public key (G...), contract ID (C...), med25519
+   * public key (M...), liquidity pool ID (L...), or claimable balance ID (B...).
    *
-   * @param address the StrKey encoded format of Stellar public key or contract ID.
+   * @param address the StrKey encoded format of Stellar address.
    */
   public Address(String address) {
     if (StrKey.isValidEd25519PublicKey(address)) {
