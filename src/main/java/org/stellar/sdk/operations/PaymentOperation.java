@@ -8,7 +8,7 @@ import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.StrKey;
+import org.stellar.sdk.MuxedAccount;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.OperationType;
 import org.stellar.sdk.xdr.PaymentOp;
@@ -40,7 +40,7 @@ public class PaymentOperation extends Operation {
    * @return {@link PaymentOperation} object
    */
   public static PaymentOperation fromXdr(PaymentOp op) {
-    String destination = StrKey.encodeMuxedAccount(op.getDestination());
+    String destination = MuxedAccount.fromXdr(op.getDestination()).getAddress();
     Asset asset = Asset.fromXdr(op.getAsset());
     BigDecimal amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     return new PaymentOperation(destination, asset, amount);
@@ -51,7 +51,7 @@ public class PaymentOperation extends Operation {
     PaymentOp op = new PaymentOp();
 
     // destination
-    op.setDestination(StrKey.encodeToXDRMuxedAccount(this.destination));
+    op.setDestination(new MuxedAccount(destination).toXdr());
     // asset
     op.setAsset(asset.toXdr());
     // amount

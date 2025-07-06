@@ -10,16 +10,13 @@ import org.stellar.sdk.operations.ExtendFootprintTTLOperation;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.Operation;
 import org.stellar.sdk.operations.RestoreFootprintOperation;
-import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClaimableBalanceIDType;
-import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.EnvelopeType;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.HashIDPreimage;
 import org.stellar.sdk.xdr.Int64;
-import org.stellar.sdk.xdr.MuxedAccount;
 import org.stellar.sdk.xdr.SequenceNumber;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.TransactionEnvelope;
@@ -147,19 +144,14 @@ public class Transaction extends AbstractTransaction {
 
     Uint32 opIndex = new Uint32(new XdrUnsignedInteger(index));
     SequenceNumber sequenceNumber = new SequenceNumber(new Int64(getSequenceNumber()));
-    MuxedAccount sourceMuxedAccount = StrKey.decodeMuxedAccount(getSourceAccount());
-    byte[] rawPublicKey;
-    if (sourceMuxedAccount.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_ED25519)) {
-      rawPublicKey = sourceMuxedAccount.getEd25519().getUint256();
-    } else {
-      rawPublicKey = sourceMuxedAccount.getMed25519().getEd25519().getUint256();
-    }
-    AccountID sourceAccount = KeyPair.fromPublicKey(rawPublicKey).getXdrAccountId();
+    MuxedAccount sourceMuxedAccount = new MuxedAccount(getSourceAccount());
+
     HashIDPreimage.HashIDPreimageOperationID operationID =
         HashIDPreimage.HashIDPreimageOperationID.builder()
             .opNum(opIndex)
             .seqNum(sequenceNumber)
-            .sourceAccount(sourceAccount)
+            .sourceAccount(
+                KeyPair.fromAccountId(sourceMuxedAccount.getAccountId()).getXdrAccountId())
             .build();
     HashIDPreimage hashIDPreimage =
         HashIDPreimage.builder()
@@ -203,7 +195,7 @@ public class Transaction extends AbstractTransaction {
     transaction.setFee(fee);
     transaction.setSeqNum(sequenceNumber);
     transaction.setSourceAccountEd25519(
-        StrKey.encodeToXDRAccountId(this.sourceAccount).getAccountID().getEd25519());
+        KeyPair.fromAccountId(this.sourceAccount).getXdrAccountId().getAccountID().getEd25519());
     transaction.setOperations(operations);
     transaction.setMemo(memo.toXdr());
     transaction.setTimeBounds(getTimeBounds() == null ? null : getTimeBounds().toXdr());
@@ -239,7 +231,7 @@ public class Transaction extends AbstractTransaction {
     org.stellar.sdk.xdr.Transaction v1Tx = new org.stellar.sdk.xdr.Transaction();
     v1Tx.setFee(fee);
     v1Tx.setSeqNum(sequenceNumber);
-    v1Tx.setSourceAccount(StrKey.encodeToXDRMuxedAccount(sourceAccount));
+    v1Tx.setSourceAccount(new org.stellar.sdk.MuxedAccount(sourceAccount).toXdr());
     v1Tx.setOperations(operations);
     v1Tx.setMemo(memo.toXdr());
     v1Tx.setCond(preconditions.toXdr());
@@ -290,7 +282,7 @@ public class Transaction extends AbstractTransaction {
 
     Transaction transaction =
         new Transaction(
-            StrKey.encodeMuxedAccount(envelope.getTx().getSourceAccount()),
+            org.stellar.sdk.MuxedAccount.fromXdr(envelope.getTx().getSourceAccount()).getAddress(),
             mFee,
             mSequenceNumber,
             mOperations,

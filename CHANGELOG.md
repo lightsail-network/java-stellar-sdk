@@ -5,6 +5,16 @@
 ### Update:
 - feat: add `pollTransaction` method to `SorobanServer` to poll transaction status with retry strategy. ([#696](https://github.com/stellar/java-stellar-sdk/pull/696))
 - feat: implement message signing and verification according to [SEP-53](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md), check `KeyPair.signMessage` and `KeyPair.verifyMessage` for more details. ([#698](https://github.com/stellar/java-stellar-sdk/pull/698))
+- feat: add `isValidEd25519SecretSeed`, `isValidPreAuthTx` and `isValidSha256Hash` to `StrKey` class, these functions can be used to validate the corresponding strkey.
+- feat: add med25519 public key support to `StrKey`.
+
+### Breaking changes:
+- refactor!: the following functions in `StrKey` are marked as deprecated, they will be removed in the next major release; please refer to the documentation for each function to see the corresponding replacement functions:
+  - `StrKey#encodeEd25519PublicKey(AccountID)`
+  - `StrKey#encodeMuxedAccount(MuxedAccount)`
+  - `StrKey#decodeMuxedAccount(String)`
+  - `StrKey#encodeToXDRAccountId(String)`
+  - `StrKey#encodeToXDRMuxedAccount(String)`
 
 ## 1.5.0
 

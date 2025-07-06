@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerEntryType;
@@ -45,7 +46,9 @@ public class RevokeOfferSponsorshipOperation extends Operation {
    */
   public static RevokeOfferSponsorshipOperation fromXdr(RevokeSponsorshipOp op) {
     long offerId = op.getLedgerKey().getOffer().getOfferID().getInt64();
-    String seller = StrKey.encodeEd25519PublicKey(op.getLedgerKey().getOffer().getSellerID());
+    String seller =
+        StrKey.encodeEd25519PublicKey(
+            op.getLedgerKey().getOffer().getSellerID().getAccountID().getEd25519().getUint256());
     return new RevokeOfferSponsorshipOperation(seller, offerId);
   }
 
@@ -58,7 +61,7 @@ public class RevokeOfferSponsorshipOperation extends Operation {
     Int64 id = new Int64();
     id.setInt64(offerId);
     offer.setOfferID(id);
-    offer.setSellerID(StrKey.encodeToXDRAccountId(seller));
+    offer.setSellerID(KeyPair.fromAccountId(seller).getXdrAccountId());
     key.setOffer(offer);
 
     op.setLedgerKey(key);

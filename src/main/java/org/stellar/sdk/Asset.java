@@ -71,12 +71,16 @@ public abstract class Asset implements Comparable<Asset> {
       case ASSET_TYPE_CREDIT_ALPHANUM4:
         String assetCode4 =
             Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode().getAssetCode4());
-        accountId = StrKey.encodeEd25519PublicKey(xdr.getAlphaNum4().getIssuer());
+        accountId =
+            StrKey.encodeEd25519PublicKey(
+                xdr.getAlphaNum4().getIssuer().getAccountID().getEd25519().getUint256());
         return new AssetTypeCreditAlphaNum4(assetCode4, accountId);
       case ASSET_TYPE_CREDIT_ALPHANUM12:
         String assetCode12 =
             Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode().getAssetCode12());
-        accountId = StrKey.encodeEd25519PublicKey(xdr.getAlphaNum12().getIssuer());
+        accountId =
+            StrKey.encodeEd25519PublicKey(
+                xdr.getAlphaNum12().getIssuer().getAccountID().getEd25519().getUint256());
         return new AssetTypeCreditAlphaNum12(assetCode12, accountId);
       default:
         throw new IllegalArgumentException("Unknown asset type " + xdr.getDiscriminant());

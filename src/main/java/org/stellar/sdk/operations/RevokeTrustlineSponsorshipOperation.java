@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.TrustLineAsset;
 import org.stellar.sdk.xdr.LedgerEntryType;
@@ -45,7 +46,13 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
    */
   public static RevokeTrustlineSponsorshipOperation fromXdr(RevokeSponsorshipOp op) {
     String accountId =
-        StrKey.encodeEd25519PublicKey(op.getLedgerKey().getTrustLine().getAccountID());
+        StrKey.encodeEd25519PublicKey(
+            op.getLedgerKey()
+                .getTrustLine()
+                .getAccountID()
+                .getAccountID()
+                .getEd25519()
+                .getUint256());
     TrustLineAsset asset = TrustLineAsset.fromXdr(op.getLedgerKey().getTrustLine().getAsset());
     return new RevokeTrustlineSponsorshipOperation(accountId, asset);
   }
@@ -56,7 +63,7 @@ public class RevokeTrustlineSponsorshipOperation extends Operation {
     LedgerKey key = new LedgerKey();
     key.setDiscriminant(LedgerEntryType.TRUSTLINE);
     LedgerKey.LedgerKeyTrustLine trustLine = new LedgerKey.LedgerKeyTrustLine();
-    trustLine.setAccountID(StrKey.encodeToXDRAccountId(accountId));
+    trustLine.setAccountID(KeyPair.fromAccountId(accountId).getXdrAccountId());
     trustLine.setAsset(asset.toXdr());
     key.setTrustLine(trustLine);
 

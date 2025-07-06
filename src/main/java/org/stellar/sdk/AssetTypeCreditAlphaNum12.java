@@ -33,7 +33,9 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
 
   public static AssetTypeCreditAlphaNum12 fromXdr(org.stellar.sdk.xdr.AlphaNum12 alphaNum12) {
     String assetCode12 = Util.paddedByteArrayToString(alphaNum12.getAssetCode().getAssetCode12());
-    String accountId = StrKey.encodeEd25519PublicKey(alphaNum12.getIssuer());
+    String accountId =
+        StrKey.encodeEd25519PublicKey(
+            alphaNum12.getIssuer().getAccountID().getEd25519().getUint256());
     return new AssetTypeCreditAlphaNum12(assetCode12, accountId);
   }
 
@@ -45,7 +47,7 @@ public final class AssetTypeCreditAlphaNum12 extends AssetTypeCreditAlphaNum {
     AssetCode12 assetCode12 = new AssetCode12();
     assetCode12.setAssetCode12(Util.paddedByteArray(code, 12));
     credit.setAssetCode(assetCode12);
-    credit.setIssuer(StrKey.encodeToXDRAccountId(issuer));
+    credit.setIssuer(KeyPair.fromAccountId(issuer).getXdrAccountId());
     xdr.setAlphaNum12(credit);
     return xdr;
   }
