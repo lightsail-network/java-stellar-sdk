@@ -42,7 +42,14 @@ public class GetTransactionsResponse {
 
     Long ledger;
     Long createdAt;
-    List<String> diagnosticEventsXdr;
+
+    /**
+     * This field is deprecated, and it will be removed in the next version of the Stellar RPC and
+     * the SDK. Use {@link Events#getDiagnosticEventsXdr()} instead.
+     */
+    @Deprecated List<String> diagnosticEventsXdr;
+
+    Events events;
 
     /**
      * Parses the {@code envelopeXdr} field from a string to an {@link
@@ -78,8 +85,12 @@ public class GetTransactionsResponse {
      * Parses the {@code diagnosticEventsXdr} field from a list of strings to a list of {@link
      * org.stellar.sdk.xdr.DiagnosticEvent} objects.
      *
+     * <p>This method is deprecated and will be removed in the next version of the Stellar RPC and
+     * the SDK. Use {@link Events#getDiagnosticEventsXdr()} instead.
+     *
      * @return a list of parsed {@link org.stellar.sdk.xdr.DiagnosticEvent} objects
      */
+    @Deprecated
     public List<DiagnosticEvent> parseDiagnosticEventsXdr() {
       if (diagnosticEventsXdr == null) {
         return null;

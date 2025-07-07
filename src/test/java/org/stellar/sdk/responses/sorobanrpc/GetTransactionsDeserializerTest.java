@@ -1,6 +1,7 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -88,5 +89,82 @@ public class GetTransactionsDeserializerTest {
         getTransactionsResponse.getTransactions().get(0).getLedger().longValue(), 1888539L);
     assertEquals(
         getTransactionsResponse.getTransactions().get(1).getCreatedAt().longValue(), 1717166042L);
+    assertNotNull(getTransactionsResponse.getTransactions().get(3).getEvents());
+    assertEquals(
+        getTransactionsResponse
+            .getTransactions()
+            .get(3)
+            .getEvents()
+            .getDiagnosticEventsXdr()
+            .size(),
+        21);
+    for (int i = 0; i < 21; i++) {
+      assertEquals(
+          getTransactionsResponse
+              .getTransactions()
+              .get(3)
+              .getEvents()
+              .getDiagnosticEventsXdr()
+              .get(i),
+          getTransactionsResponse
+              .getTransactions()
+              .get(3)
+              .getEvents()
+              .parseDiagnosticEventsXdr()
+              .get(i)
+              .toXdrBase64());
+    }
+    assertEquals(
+        getTransactionsResponse
+            .getTransactions()
+            .get(3)
+            .getEvents()
+            .getTransactionEventsXdr()
+            .size(),
+        2);
+    for (int i = 0; i < 2; i++) {
+      assertEquals(
+          getTransactionsResponse
+              .getTransactions()
+              .get(3)
+              .getEvents()
+              .getTransactionEventsXdr()
+              .get(i),
+          getTransactionsResponse
+              .getTransactions()
+              .get(3)
+              .getEvents()
+              .parseTransactionEventsXdr()
+              .get(i)
+              .toXdrBase64());
+    }
+    assertEquals(
+        getTransactionsResponse.getTransactions().get(3).getEvents().getContractEventsXdr().size(),
+        1);
+    assertEquals(
+        getTransactionsResponse
+            .getTransactions()
+            .get(3)
+            .getEvents()
+            .getContractEventsXdr()
+            .get(0)
+            .size(),
+        1);
+    assertEquals(
+        getTransactionsResponse
+            .getTransactions()
+            .get(3)
+            .getEvents()
+            .getContractEventsXdr()
+            .get(0)
+            .get(0),
+        getTransactionsResponse
+            .getTransactions()
+            .get(3)
+            .getEvents()
+            .parseContractEventsXdr()
+            .get(0)
+            .get(0)
+            .toXdrBase64());
   }
 }
