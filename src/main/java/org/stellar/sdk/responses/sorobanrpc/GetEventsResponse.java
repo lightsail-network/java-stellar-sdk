@@ -18,9 +18,13 @@ import org.stellar.sdk.xdr.SCVal;
 public class GetEventsResponse {
   List<EventInfo> events;
 
-  Long latestLedger;
-
   String cursor;
+
+  Long latestLedger;
+  Long oldestLedger;
+
+  Long latestLedgerCloseTime;
+  Long oldestLedgerCloseTime;
 
   @Value
   public static class EventInfo {
@@ -34,11 +38,12 @@ public class GetEventsResponse {
 
     String id;
 
-    /**
-     * The field may will be removed in the next version of the protocol. It remains for backward.
-     * It is recommended to use {@link #cursor} instead.
-     */
-    String pagingToken;
+    Long operationIndex;
+
+    Long transactionIndex;
+
+    @SerializedName("txHash")
+    String transactionHash;
 
     /** The elements inside can be parsed as {@link org.stellar.sdk.xdr.SCVal} objects. */
     List<String> topic;
@@ -46,10 +51,8 @@ public class GetEventsResponse {
     /** The field can be parsed as {@link org.stellar.sdk.xdr.SCVal} object. */
     String value;
 
+    /** The field will be removed in the next version. */
     Boolean inSuccessfulContractCall;
-
-    @SerializedName("txHash")
-    String transactionHash;
 
     /**
      * Parses the {@code topic} field from a list of strings to a list of {@link
