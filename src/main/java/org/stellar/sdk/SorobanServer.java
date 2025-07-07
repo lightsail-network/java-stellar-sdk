@@ -489,6 +489,7 @@ public class SorobanServer implements Closeable {
    *     org.stellar.sdk.operations.RestoreFootprintOperation}. Any provided footprint will be
    *     ignored.
    * @param resourceConfig Additional resource include in the simulation.
+   * @param authMode Explicitly allows users to opt-in to non-root authorization in recording mode.
    * @return A {@link SimulateTransactionResponse} object containing the cost, footprint,
    *     result/auth requirements (if applicable), and error of the transaction.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
@@ -502,10 +503,12 @@ public class SorobanServer implements Closeable {
    *     target="_blank">simulateTransaction documentation</a>
    */
   public SimulateTransactionResponse simulateTransaction(
-      Transaction transaction, @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig) {
+      Transaction transaction,
+      @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig,
+      @Nullable SimulateTransactionRequest.AuthMode authMode) {
     // TODO: In the future, it may be necessary to consider FeeBumpTransaction.
     SimulateTransactionRequest params =
-        new SimulateTransactionRequest(transaction.toEnvelopeXdrBase64(), resourceConfig);
+        new SimulateTransactionRequest(transaction.toEnvelopeXdrBase64(), resourceConfig, authMode);
     return this.sendRequest(
         "simulateTransaction",
         params,
@@ -514,10 +517,11 @@ public class SorobanServer implements Closeable {
 
   /**
    * An alias for {@link #simulateTransaction(Transaction,
-   * SimulateTransactionRequest.ResourceConfig)} with no resource leeway.
+   * SimulateTransactionRequest.ResourceConfig, SimulateTransactionRequest.AuthMode)} with no
+   * resource leeway, and no auth mode set.
    */
   public SimulateTransactionResponse simulateTransaction(Transaction transaction) {
-    return simulateTransaction(transaction, null);
+    return simulateTransaction(transaction, null, null);
   }
 
   /**

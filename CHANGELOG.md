@@ -11,6 +11,7 @@
 - feat: add `destinationMuxedId` and `destinationMuxedIdType` to `InvokeHostFunctionOperationResponse.AssetContractBalanceChange`.
 - feat: add `events` field to `GetTransactionsResponse.Transaction` and `GetTransactionResponse`, see [stellar-rpc#455](https://github.com/stellar/stellar-rpc/pull/455) for more details.
 - feat: add `oldestLedger`, `latestLedgerCloseTime` and `oldestLedgerCloseTime` fields to `GetEventsResponse`, and add `transactionIndex` and `operationIndex` fields to `GetEventsResponse.EventInfo`, check [Stellar RPC release log](https://github.com/stellar/stellar-rpc/releases/tag/v23.0.0-rc.1) for more information. 
+- feat: add support for non-root authorization in `SorobanServer#simulateTransaction`.
 
 ### Breaking changes:
 - refactor!: the following functions in `StrKey` are marked as deprecated, they will be removed in the next major release; please refer to the documentation for each function to see the corresponding replacement functions:
