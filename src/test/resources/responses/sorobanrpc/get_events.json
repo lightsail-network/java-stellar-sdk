@@ -9,13 +9,14 @@
         "ledgerClosedAt": "2023-07-23T14:47:01Z",
         "contractId": "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K",
         "id": "0000000463856472064-0000000000",
-        "pagingToken": "0000000463856472064-0000000000",
         "topic": [
           "AAAADwAAAAdDT1VOVEVSAA==",
           "AAAADwAAAAlpbmNyZW1lbnQAAAA="
         ],
         "value": "AAAAAwAAAAE=",
         "inSuccessfulContractCall": true,
+        "operationIndex": 1,
+        "transactionIndex": 2,
         "txHash": "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d"
       },
       {
@@ -30,6 +31,8 @@
           "AAAADwAAAAlpbmNyZW1lbnQAAAA="
         ],
         "value": "AAAAAwAAAAI=",
+        "operationIndex": 3,
+        "transactionIndex": 4,
         "inSuccessfulContractCall": true,
         "txHash": "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d"
       },
@@ -45,11 +48,16 @@
           "AAAADwAAAAlpbmNyZW1lbnQAAAA="
         ],
         "value": "AAAAAwAAAAM=",
+        "operationIndex": 5,
+        "transactionIndex": 6,
         "inSuccessfulContractCall": true,
         "txHash": "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d"
       }
     ],
-    "latestLedger": "169",
+    "latestLedger": 318987,
+    "oldestLedger": 317964,
+    "latestLedgerCloseTime": "1751863824",
+    "oldestLedgerCloseTime": "1751858705",
     "cursor": "0000000463856472064-0000000000"
   }
 }

@@ -9,11 +9,12 @@
         "ledgerClosedAt": "2023-07-28T14:57:02Z",
         "contractId": "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K",
         "id": "0000000459561504768-0000000000",
-        "pagingToken": "0000000459561504768-0000000000",
         "topic": [
           "AAAADwAAAAdDT1VOVEVSAA==",
           "AAAADwAAAAlpbmNyZW1lbnQAAAA="
         ],
+        "operationIndex": 1,
+        "transactionIndex": 2,
         "value": "AAAAAwAAAAQ=",
         "inSuccessfulContractCall": true,
         "txHash": "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d"
@@ -29,12 +30,17 @@
           "AAAADwAAAAdDT1VOVEVSAA==",
           "AAAADwAAAAlpbmNyZW1lbnQAAAA="
         ],
+        "operationIndex": 3,
+        "transactionIndex": 4,
         "value": "AAAAAwAAAAU=",
         "inSuccessfulContractCall": true,
         "txHash": "db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d"
       }
     ],
-    "latestLedger": "187",
+    "latestLedger": 318987,
+    "oldestLedger": 317964,
+    "latestLedgerCloseTime": "1751863824",
+    "oldestLedgerCloseTime": "1751858705",
     "cursor": "0000000468151439360-0000000000"
   }
 }
