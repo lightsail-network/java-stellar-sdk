@@ -381,6 +381,10 @@ public class OperationResponseTest {
         "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM",
         response.getAssetBalanceChanges().get(0).getTo());
     assertEquals("500.0000000", response.getAssetBalanceChanges().get(0).getAmount());
+    assertEquals(
+        InvokeHostFunctionOperationResponse.AssetContractBalanceChange.DestinationMuxedIdType
+            .UINT64,
+        response.getAssetBalanceChanges().get(0).getDestinationMuxedIdType());
   }
 
   @Test

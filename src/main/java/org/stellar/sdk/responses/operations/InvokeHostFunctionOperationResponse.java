@@ -77,8 +77,25 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
     @SerializedName("amount")
     String amount;
 
+    @SerializedName("destination_muxed_id_type")
+    DestinationMuxedIdType destinationMuxedIdType;
+
+    @SerializedName("destination_muxed_id")
+    String destinationMuxedId;
+
     public Asset getAsset() {
       return create(assetType, assetCode, assetIssuer);
+    }
+
+    public enum DestinationMuxedIdType {
+      @SerializedName("string")
+      STRING,
+
+      @SerializedName("uint64")
+      UINT64,
+
+      @SerializedName("bytes")
+      BYTES
     }
   }
 }
