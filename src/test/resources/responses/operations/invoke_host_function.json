@@ -57,7 +57,9 @@
             "type": "transfer",
             "from": "GDAT5HWTGIU4TSSZ4752OUC4SABDLTLZFRPZUJ3D6LKBNEPA7V2CIG54",
             "to": "GBMLPRFCZDZJPKUPHUSHCKA737GOZL7ERZLGGMJ6YGHBFJZ6ZKMKCZTM",
-            "amount": "500.0000000"
+            "amount": "500.0000000",
+            "destination_muxed_id_type": "uint64",
+            "destination_muxed_id": "123456789"
         }
     ]
 }
