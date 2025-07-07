@@ -16,6 +16,7 @@
   - `StrKey#decodeMuxedAccount(String)`
   - `StrKey#encodeToXDRAccountId(String)`
   - `StrKey#encodeToXDRMuxedAccount(String)`
+- refactor!: remove `numArchivedContracts` and `archivedContractsAmount` from `AssetResponse`.
 
 ## 1.5.0
 
