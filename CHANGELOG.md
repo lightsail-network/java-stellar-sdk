@@ -9,6 +9,7 @@
 - feat: add med25519 public key support to `StrKey`.
 - feat: add muxed account, liquidity pool and claimable balance support to `Address` class.
 - feat: add `destinationMuxedId` and `destinationMuxedIdType` to `InvokeHostFunctionOperationResponse.AssetContractBalanceChange`.
+- feat: add `events` field to `GetTransactionsResponse.Transaction` and `GetTransactionResponse`, see [stellar-rpc#455](https://github.com/stellar/stellar-rpc/pull/455) for more details.
 
 ### Breaking changes:
 - refactor!: the following functions in `StrKey` are marked as deprecated, they will be removed in the next major release; please refer to the documentation for each function to see the corresponding replacement functions:
@@ -18,6 +19,7 @@
   - `StrKey#encodeToXDRAccountId(String)`
   - `StrKey#encodeToXDRMuxedAccount(String)`
 - refactor!: remove `numArchivedContracts` and `archivedContractsAmount` from `AssetResponse`.
+- refactor!: `GetTransactionsResponse.Transaction#getDiagnosticEventsXdr()` and `GetTransactionsResponse.Transaction#parseDiagnosticEventsXdr()` has been marked as deprecated, they will be removed in Stellar RPC soon, use `GetTransactionsResponse.Transaction#getEvents()` instead.
 
 ## 1.5.0
 
