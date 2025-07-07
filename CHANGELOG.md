@@ -9,6 +9,7 @@
 - feat: add med25519 public key support to `StrKey`.
 - feat: add muxed account, liquidity pool and claimable balance support to `Address` class.
 - feat: add `destinationMuxedId` and `destinationMuxedIdType` to `InvokeHostFunctionOperationResponse.AssetContractBalanceChange`.
+- feat: add support for non-root authorization in `SorobanServer#simulateTransaction`.
 
 ### Breaking changes:
 - refactor!: the following functions in `StrKey` are marked as deprecated, they will be removed in the next major release; please refer to the documentation for each function to see the corresponding replacement functions:
