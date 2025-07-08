@@ -22,8 +22,8 @@ import org.stellar.sdk.Base64Factory;
  *     // The maximum number of instructions this transaction can use
  *     uint32 instructions;
  *
- *     // The maximum number of bytes this transaction can read from ledger
- *     uint32 readBytes;
+ *     // The maximum number of bytes this transaction can read from disk backed entries
+ *     uint32 diskReadBytes;
  *     // The maximum number of bytes this transaction can write to ledger
  *     uint32 writeBytes;
  * };
@@ -36,13 +36,13 @@ import org.stellar.sdk.Base64Factory;
 public class SorobanResources implements XdrElement {
   private LedgerFootprint footprint;
   private Uint32 instructions;
-  private Uint32 readBytes;
+  private Uint32 diskReadBytes;
   private Uint32 writeBytes;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     footprint.encode(stream);
     instructions.encode(stream);
-    readBytes.encode(stream);
+    diskReadBytes.encode(stream);
     writeBytes.encode(stream);
   }
 
@@ -50,7 +50,7 @@ public class SorobanResources implements XdrElement {
     SorobanResources decodedSorobanResources = new SorobanResources();
     decodedSorobanResources.footprint = LedgerFootprint.decode(stream);
     decodedSorobanResources.instructions = Uint32.decode(stream);
-    decodedSorobanResources.readBytes = Uint32.decode(stream);
+    decodedSorobanResources.diskReadBytes = Uint32.decode(stream);
     decodedSorobanResources.writeBytes = Uint32.decode(stream);
     return decodedSorobanResources;
   }

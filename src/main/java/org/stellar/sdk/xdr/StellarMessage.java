@@ -25,8 +25,6 @@ import org.stellar.sdk.Base64Factory;
  *     Auth auth;
  * case DONT_HAVE:
  *     DontHave dontHave;
- * case GET_PEERS:
- *     void;
  * case PEERS:
  *     PeerAddress peers&lt;100&gt;;
  *
@@ -39,12 +37,6 @@ import org.stellar.sdk.Base64Factory;
  *
  * case TRANSACTION:
  *     TransactionEnvelope transaction;
- *
- * case SURVEY_REQUEST:
- *     SignedSurveyRequestMessage signedSurveyRequestMessage;
- *
- * case SURVEY_RESPONSE:
- *     SignedSurveyResponseMessage signedSurveyResponseMessage;
  *
  * case TIME_SLICED_SURVEY_REQUEST:
  *     SignedTimeSlicedSurveyRequestMessage signedTimeSlicedSurveyRequestMessage;
@@ -96,8 +88,6 @@ public class StellarMessage implements XdrElement {
   private TransactionSet txSet;
   private GeneralizedTransactionSet generalizedTxSet;
   private TransactionEnvelope transaction;
-  private SignedSurveyRequestMessage signedSurveyRequestMessage;
-  private SignedSurveyResponseMessage signedSurveyResponseMessage;
   private SignedTimeSlicedSurveyRequestMessage signedTimeSlicedSurveyRequestMessage;
   private SignedTimeSlicedSurveyResponseMessage signedTimeSlicedSurveyResponseMessage;
   private SignedTimeSlicedSurveyStartCollectingMessage signedTimeSlicedSurveyStartCollectingMessage;
@@ -126,8 +116,6 @@ public class StellarMessage implements XdrElement {
       case DONT_HAVE:
         dontHave.encode(stream);
         break;
-      case GET_PEERS:
-        break;
       case PEERS:
         int peersSize = getPeers().length;
         stream.writeInt(peersSize);
@@ -146,12 +134,6 @@ public class StellarMessage implements XdrElement {
         break;
       case TRANSACTION:
         transaction.encode(stream);
-        break;
-      case SURVEY_REQUEST:
-        signedSurveyRequestMessage.encode(stream);
-        break;
-      case SURVEY_RESPONSE:
-        signedSurveyResponseMessage.encode(stream);
         break;
       case TIME_SLICED_SURVEY_REQUEST:
         signedTimeSlicedSurveyRequestMessage.encode(stream);
@@ -209,8 +191,6 @@ public class StellarMessage implements XdrElement {
       case DONT_HAVE:
         decodedStellarMessage.dontHave = DontHave.decode(stream);
         break;
-      case GET_PEERS:
-        break;
       case PEERS:
         int peersSize = stream.readInt();
         decodedStellarMessage.peers = new PeerAddress[peersSize];
@@ -229,14 +209,6 @@ public class StellarMessage implements XdrElement {
         break;
       case TRANSACTION:
         decodedStellarMessage.transaction = TransactionEnvelope.decode(stream);
-        break;
-      case SURVEY_REQUEST:
-        decodedStellarMessage.signedSurveyRequestMessage =
-            SignedSurveyRequestMessage.decode(stream);
-        break;
-      case SURVEY_RESPONSE:
-        decodedStellarMessage.signedSurveyResponseMessage =
-            SignedSurveyResponseMessage.decode(stream);
         break;
       case TIME_SLICED_SURVEY_REQUEST:
         decodedStellarMessage.signedTimeSlicedSurveyRequestMessage =

@@ -59,7 +59,6 @@ import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
 import org.stellar.sdk.xdr.ContractIDPreimageType;
 import org.stellar.sdk.xdr.CreateContractArgs;
-import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.HostFunction;
 import org.stellar.sdk.xdr.HostFunctionType;
 import org.stellar.sdk.xdr.Int64;
@@ -758,7 +757,7 @@ public class SorobanServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     SorobanServer server = new SorobanServer(baseUrl.toString());
     GetEventsResponse resp = server.getEvents(getEventsRequest);
-    assertEquals(resp.getLatestLedger().longValue(), 187L);
+    assertEquals(resp.getLatestLedger().longValue(), 318987L);
     assertEquals(resp.getCursor(), "0000000468151439360-0000000000");
     assertEquals(resp.getEvents().size(), 2);
     assertEquals(resp.getEvents().get(0).getType(), EventFilterType.CONTRACT);
@@ -768,7 +767,6 @@ public class SorobanServerTest {
         resp.getEvents().get(0).getContractId(),
         "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K");
     assertEquals(resp.getEvents().get(0).getId(), "0000000459561504768-0000000000");
-    assertEquals(resp.getEvents().get(0).getPagingToken(), "0000000459561504768-0000000000");
     assertEquals(resp.getEvents().get(0).getTopic().size(), 2);
     assertEquals(resp.getEvents().get(0).getTopic().get(0), "AAAADwAAAAdDT1VOVEVSAA==");
     assertEquals(resp.getEvents().get(0).getTopic().get(1), "AAAADwAAAAlpbmNyZW1lbnQAAAA=");
@@ -999,7 +997,79 @@ public class SorobanServerTest {
 
     SimulateTransactionRequest.ResourceConfig resourceConfig =
         new SimulateTransactionRequest.ResourceConfig(cpuInstructions);
-    SimulateTransactionResponse resp = server.simulateTransaction(transaction, resourceConfig);
+    SimulateTransactionResponse resp =
+        server.simulateTransaction(transaction, resourceConfig, null);
+    assertEquals(resp.getLatestLedger().longValue(), 14245L);
+    assertEquals(
+        resp.getTransactionData(),
+        "AAAAAAAAAAIAAAAGAAAAAem354u9STQWq5b3Ed1j9tOemvL7xV0NPwhn4gXg0AP8AAAAFAAAAAEAAAAH8dTe2OoI0BnhlDbH0fWvXmvprkBvBAgKIcL9busuuMEAAAABAAAABgAAAAHpt+eLvUk0FquW9xHdY/bTnpry+8VdDT8IZ+IF4NAD/AAAABAAAAABAAAAAgAAAA8AAAAHQ291bnRlcgAAAAASAAAAAAAAAABYt8SiyPKXqo89JHEoH9/M7K/kjlZjMT7BjhKnPsqYoQAAAAEAHifGAAAFlAAAAIgAAAAAAAAAAg==");
+    assertEquals(resp.getEvents().size(), 2);
+    assertEquals(
+        resp.getEvents().get(0),
+        "AAAAAQAAAAAAAAAAAAAAAgAAAAAAAAADAAAADwAAAAdmbl9jYWxsAAAAAA0AAAAg6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAPAAAACWluY3JlbWVudAAAAAAAABAAAAABAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAo=");
+    assertEquals(
+        resp.getEvents().get(1),
+        "AAAAAQAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAACAAAAAAAAAAIAAAAPAAAACWZuX3JldHVybgAAAAAAAA8AAAAJaW5jcmVtZW50AAAAAAAAAwAAABQ=");
+    assertEquals(resp.getMinResourceFee().longValue(), 58181L);
+    assertEquals(resp.getResults().size(), 1);
+    assertEquals(resp.getResults().get(0).getAuth().size(), 1);
+    assertEquals(
+        resp.getResults().get(0).getAuth().get(0),
+        "AAAAAAAAAAAAAAAB6bfni71JNBarlvcR3WP2056a8vvFXQ0/CGfiBeDQA/wAAAAJaW5jcmVtZW50AAAAAAAAAgAAABIAAAAAAAAAAFi3xKLI8peqjz0kcSgf38zsr+SOVmMxPsGOEqc+ypihAAAAAwAAAAoAAAAA");
+    assertEquals(resp.getResults().get(0).getXdr(), "AAAAAwAAABQ=");
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testSimulateTransactionWithAuthMode() throws IOException, SorobanRpcException {
+    String filePath =
+        "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    Transaction transaction = buildSorobanTransaction(null, null);
+    BigInteger cpuInstructions = BigInteger.valueOf(20000L);
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())
+                && sorobanRpcRequest
+                    .getParams()
+                    .getResourceConfig()
+                    .getInstructionLeeway()
+                    .equals(cpuInstructions)
+                && sorobanRpcRequest
+                    .getParams()
+                    .getAuthMode()
+                    .equals(SimulateTransactionRequest.AuthMode.RECORD_ALLOW_NONROOT)) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+
+    SimulateTransactionRequest.ResourceConfig resourceConfig =
+        new SimulateTransactionRequest.ResourceConfig(cpuInstructions);
+    SimulateTransactionResponse resp =
+        server.simulateTransaction(
+            transaction, resourceConfig, SimulateTransactionRequest.AuthMode.RECORD_ALLOW_NONROOT);
     assertEquals(resp.getLatestLedger().longValue(), 14245L);
     assertEquals(
         resp.getTransactionData(),
@@ -1116,12 +1186,12 @@ public class SorobanServerTest {
                             .readOnly(new LedgerKey[] {ledgerKey})
                             .readWrite(new LedgerKey[] {})
                             .build())
-                    .readBytes(new Uint32(new XdrUnsignedInteger(699)))
+                    .diskReadBytes(new Uint32(new XdrUnsignedInteger(699)))
                     .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                     .instructions(new Uint32(new XdrUnsignedInteger(34567)))
                     .build())
             .resourceFee(new Int64(100L))
-            .ext(ExtensionPoint.builder().discriminant(0).build())
+            .ext(SorobanTransactionData.SorobanTransactionDataExt.builder().discriminant(0).build())
             .build();
     Transaction transaction = buildSorobanTransaction(originSorobanData, null);
 

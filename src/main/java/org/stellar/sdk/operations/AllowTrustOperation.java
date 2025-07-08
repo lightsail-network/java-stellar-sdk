@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.AllowTrustOp;
@@ -51,7 +52,8 @@ public class AllowTrustOperation extends Operation {
    * @return {@link AllowTrustOperation} object
    */
   public static AllowTrustOperation fromXdr(AllowTrustOp op) {
-    String trustor = StrKey.encodeEd25519PublicKey(op.getTrustor());
+    String trustor =
+        StrKey.encodeEd25519PublicKey(op.getTrustor().getAccountID().getEd25519().getUint256());
     String assetCode;
     switch (op.getAsset().getDiscriminant()) {
       case ASSET_TYPE_CREDIT_ALPHANUM4:
@@ -73,7 +75,7 @@ public class AllowTrustOperation extends Operation {
     AllowTrustOp op = new AllowTrustOp();
 
     // trustor
-    op.setTrustor(StrKey.encodeToXDRAccountId(this.trustor));
+    op.setTrustor(KeyPair.fromAccountId(this.trustor).getXdrAccountId());
     // asset
     AssetCode asset = new AssetCode();
     if (assetCode.length() <= 4) {

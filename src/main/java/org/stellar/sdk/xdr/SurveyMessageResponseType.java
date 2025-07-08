@@ -13,15 +13,11 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * enum SurveyMessageResponseType
  * {
- *     SURVEY_TOPOLOGY_RESPONSE_V0 = 0,
- *     SURVEY_TOPOLOGY_RESPONSE_V1 = 1,
  *     SURVEY_TOPOLOGY_RESPONSE_V2 = 2
  * };
  * </pre>
  */
 public enum SurveyMessageResponseType implements XdrElement {
-  SURVEY_TOPOLOGY_RESPONSE_V0(0),
-  SURVEY_TOPOLOGY_RESPONSE_V1(1),
   SURVEY_TOPOLOGY_RESPONSE_V2(2);
 
   private final int value;
@@ -37,10 +33,6 @@ public enum SurveyMessageResponseType implements XdrElement {
   public static SurveyMessageResponseType decode(XdrDataInputStream stream) throws IOException {
     int value = stream.readInt();
     switch (value) {
-      case 0:
-        return SURVEY_TOPOLOGY_RESPONSE_V0;
-      case 1:
-        return SURVEY_TOPOLOGY_RESPONSE_V1;
       case 2:
         return SURVEY_TOPOLOGY_RESPONSE_V2;
       default:

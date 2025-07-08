@@ -63,19 +63,21 @@ public class MuxedAccount {
    * @throws IllegalArgumentException If the provided address is invalid.
    */
   public MuxedAccount(@NonNull String address) {
-    org.stellar.sdk.xdr.MuxedAccount xdrMuxedAccount = StrKey.encodeToXDRMuxedAccount(address);
-    switch (xdrMuxedAccount.getDiscriminant()) {
-      case KEY_TYPE_ED25519:
-        this.accountId = StrKey.encodeEd25519PublicKey(xdrMuxedAccount.getEd25519().getUint256());
-        this.muxedId = null;
-        break;
-      case KEY_TYPE_MUXED_ED25519:
-        this.accountId =
-            StrKey.encodeEd25519PublicKey(xdrMuxedAccount.getMed25519().getEd25519().getUint256());
-        this.muxedId = xdrMuxedAccount.getMed25519().getId().getUint64().getNumber();
-        break;
-      default:
-        throw new IllegalArgumentException("Invalid address");
+    if (StrKey.isValidEd25519PublicKey(address)) {
+      this.accountId = address;
+      this.muxedId = null;
+    } else if (StrKey.isValidMed25519PublicKey(address)) {
+      byte[] rawMed25519 = StrKey.decodeMed25519PublicKey(address);
+      // first 32 bytes are the ed25519 public key
+      byte[] ed25519PublicKey = new byte[32];
+      System.arraycopy(rawMed25519, 0, ed25519PublicKey, 0, 32);
+      // the next 8 bytes are the multiplexing ID, it's an unsigned 64-bit integer
+      byte[] muxedIdBytes = new byte[8];
+      System.arraycopy(rawMed25519, 32, muxedIdBytes, 0, 8);
+      this.accountId = StrKey.encodeEd25519PublicKey(ed25519PublicKey);
+      this.muxedId = new BigInteger(1, muxedIdBytes);
+    } else {
+      throw new IllegalArgumentException("Invalid address");
     }
   }
 
@@ -86,7 +88,10 @@ public class MuxedAccount {
    *     the multiplexing ID is not set.
    */
   public String getAddress() {
-    return StrKey.encodeMuxedAccount(toXdr());
+    if (muxedId == null) {
+      return accountId;
+    }
+    return StrKey.encodeMed25519PublicKey(getMuxedEd25519AccountBytes(toXdr().getMed25519()));
   }
 
   /**
@@ -128,5 +133,20 @@ public class MuxedAccount {
               new Uint64(new XdrUnsignedHyperInteger(this.muxedId)),
               new Uint256(StrKey.decodeEd25519PublicKey(this.accountId))));
     }
+  }
+
+  private static byte[] getMuxedEd25519AccountBytes(
+      org.stellar.sdk.xdr.MuxedAccount.MuxedAccountMed25519 muxedAccountMed25519) {
+    byte[] accountBytes = muxedAccountMed25519.getEd25519().getUint256();
+    byte[] idBytes = muxedAccountMed25519.getId().getUint64().getNumber().toByteArray();
+    byte[] idPaddedBytes = new byte[8];
+    int idNumBytesToCopy = Math.min(idBytes.length, 8);
+    int idCopyStartIndex = idBytes.length - idNumBytesToCopy;
+    System.arraycopy(
+        idBytes, idCopyStartIndex, idPaddedBytes, 8 - idNumBytesToCopy, idNumBytesToCopy);
+    byte[] result = new byte[accountBytes.length + idPaddedBytes.length];
+    System.arraycopy(accountBytes, 0, result, 0, accountBytes.length);
+    System.arraycopy(idPaddedBytes, 0, result, accountBytes.length, idPaddedBytes.length);
+    return result;
   }
 }

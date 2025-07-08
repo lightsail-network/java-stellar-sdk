@@ -8,7 +8,6 @@ import static org.junit.Assert.assertNotSame;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.junit.Test;
-import org.stellar.sdk.xdr.ExtensionPoint;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerFootprint;
@@ -52,11 +51,11 @@ public class SorobanDataBuilderTest {
                           .readWrite(new LedgerKey[] {})
                           .build())
                   .instructions(new Uint32(new XdrUnsignedInteger(0)))
-                  .readBytes(new Uint32(new XdrUnsignedInteger(0)))
+                  .diskReadBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .writeBytes(new Uint32(new XdrUnsignedInteger(0)))
                   .build())
           .resourceFee(new Int64(0L))
-          .ext(ExtensionPoint.builder().discriminant(0).build())
+          .ext(SorobanTransactionData.SorobanTransactionDataExt.builder().discriminant(0).build())
           .build();
 
   SorobanTransactionData presetSorobanData =
@@ -69,11 +68,11 @@ public class SorobanDataBuilderTest {
                           .readWrite(new LedgerKey[] {readWrite})
                           .build())
                   .instructions(new Uint32(new XdrUnsignedInteger(1)))
-                  .readBytes(new Uint32(new XdrUnsignedInteger(2)))
+                  .diskReadBytes(new Uint32(new XdrUnsignedInteger(2)))
                   .writeBytes(new Uint32(new XdrUnsignedInteger(3)))
                   .build())
           .resourceFee(new Int64(5L))
-          .ext(ExtensionPoint.builder().discriminant(0).build())
+          .ext(SorobanTransactionData.SorobanTransactionDataExt.builder().discriminant(0).build())
           .build();
 
   @Test
@@ -105,7 +104,7 @@ public class SorobanDataBuilderTest {
             .setResources(
                 new SorobanDataBuilder.Resources.ResourcesBuilder()
                     .cpuInstructions(1L)
-                    .readBytes(2L)
+                    .diskReadBytes(2L)
                     .writeBytes(3L)
                     .build())
             .build();

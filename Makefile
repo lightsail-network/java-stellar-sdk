@@ -10,12 +10,13 @@ xdr/Stellar-contract-meta.x \
 xdr/Stellar-contract-spec.x \
 xdr/Stellar-contract.x \
 xdr/Stellar-internal.x \
-xdr/Stellar-contract-config-setting.x
+xdr/Stellar-contract-config-setting.x \
+xdr/Stellar-exporter.x
 
 # xdrgen commit to use, see https://github.com/stellar/xdrgen
-XDRGEN_COMMIT=6d4d47b4bc6815e26a52d62fd6613cfb56676d4b
+XDRGEN_COMMIT=6b98787dcbb2b6407880adec5f74c6d88975ab0f
 # stellar-xdr commit to use, see https://github.com/stellar/stellar-xdr
-XDR_COMMIT=529d5176f24c73eeccfa5eba481d4e89c19b1181
+XDR_COMMIT=4b7a2ef7931ab2ca2499be68d849f38190b443ca
 
 .PHONY: xdr xdr-clean xdr-update
 

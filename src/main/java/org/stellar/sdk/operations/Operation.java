@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.stellar.sdk.StrKey;
+import org.stellar.sdk.MuxedAccount;
 import org.stellar.sdk.exception.UnexpectedException;
 
 /** Abstract class for operations. */
@@ -46,7 +46,7 @@ public abstract class Operation {
   public org.stellar.sdk.xdr.Operation toXdr() {
     org.stellar.sdk.xdr.Operation xdr = new org.stellar.sdk.xdr.Operation();
     if (getSourceAccount() != null) {
-      xdr.setSourceAccount(StrKey.encodeToXDRMuxedAccount(sourceAccount));
+      xdr.setSourceAccount(new MuxedAccount(sourceAccount).toXdr());
     }
     xdr.setBody(toOperationBody());
     return xdr;
@@ -193,7 +193,7 @@ public abstract class Operation {
         throw new IllegalArgumentException("Unknown operation body " + body.getDiscriminant());
     }
     if (xdr.getSourceAccount() != null) {
-      operation.setSourceAccount(StrKey.encodeMuxedAccount(xdr.getSourceAccount()));
+      operation.setSourceAccount(MuxedAccount.fromXdr(xdr.getSourceAccount()).getAddress());
     }
     return operation;
   }

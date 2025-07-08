@@ -16,8 +16,8 @@ import org.stellar.sdk.Base64Factory;
  *     ERROR_MSG = 0,
  *     AUTH = 2,
  *     DONT_HAVE = 3,
+ *     // GET_PEERS (4) is deprecated
  *
- *     GET_PEERS = 4, // gets a list of peers this guy knows about
  *     PEERS = 5,
  *
  *     GET_TX_SET = 6, // gets a particular txset by hash
@@ -35,8 +35,8 @@ import org.stellar.sdk.Base64Factory;
  *     // new messages
  *     HELLO = 13,
  *
- *     SURVEY_REQUEST = 14,
- *     SURVEY_RESPONSE = 15,
+ *     // SURVEY_REQUEST (14) removed and replaced by TIME_SLICED_SURVEY_REQUEST
+ *     // SURVEY_RESPONSE (15) removed and replaced by TIME_SLICED_SURVEY_RESPONSE
  *
  *     SEND_MORE = 16,
  *     SEND_MORE_EXTENDED = 20,
@@ -55,7 +55,6 @@ public enum MessageType implements XdrElement {
   ERROR_MSG(0),
   AUTH(2),
   DONT_HAVE(3),
-  GET_PEERS(4),
   PEERS(5),
   GET_TX_SET(6),
   TX_SET(7),
@@ -66,8 +65,6 @@ public enum MessageType implements XdrElement {
   SCP_MESSAGE(11),
   GET_SCP_STATE(12),
   HELLO(13),
-  SURVEY_REQUEST(14),
-  SURVEY_RESPONSE(15),
   SEND_MORE(16),
   SEND_MORE_EXTENDED(20),
   FLOOD_ADVERT(18),
@@ -96,8 +93,6 @@ public enum MessageType implements XdrElement {
         return AUTH;
       case 3:
         return DONT_HAVE;
-      case 4:
-        return GET_PEERS;
       case 5:
         return PEERS;
       case 6:
@@ -118,10 +113,6 @@ public enum MessageType implements XdrElement {
         return GET_SCP_STATE;
       case 13:
         return HELLO;
-      case 14:
-        return SURVEY_REQUEST;
-      case 15:
-        return SURVEY_RESPONSE;
       case 16:
         return SEND_MORE;
       case 20:

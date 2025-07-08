@@ -23,7 +23,6 @@ import org.stellar.sdk.operations.PathPaymentStrictSendOperation;
 import org.stellar.sdk.operations.PaymentOperation;
 import org.stellar.sdk.requests.*;
 import org.stellar.sdk.responses.*;
-import org.stellar.sdk.xdr.CryptoKeyType;
 
 /** Main class used to connect to Horizon server. */
 public class Server implements Closeable {
@@ -596,11 +595,6 @@ public class Server implements Closeable {
     return submitTransactionAsync(transaction, false);
   }
 
-  private boolean hashMemoId(String muxedAccount) {
-    return StrKey.encodeToXDRMuxedAccount(muxedAccount).getDiscriminant()
-        == CryptoKeyType.KEY_TYPE_MUXED_ED25519;
-  }
-
   /**
    * checkMemoRequired implements a memo required check as defined in <a
    * href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md"
@@ -630,7 +624,7 @@ public class Server implements Closeable {
       } else {
         continue;
       }
-      if (destinations.contains(destination) || hashMemoId(destination)) {
+      if (destinations.contains(destination) || StrKey.isValidMed25519PublicKey(destination)) {
         continue;
       }
 

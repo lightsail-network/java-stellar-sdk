@@ -20,7 +20,10 @@ public class GetEventsDeserializerTest {
     SorobanRpcResponse<GetEventsResponse> getEventsResponse =
         GsonSingleton.getInstance()
             .fromJson(json, new TypeToken<SorobanRpcResponse<GetEventsResponse>>() {}.getType());
-    assertEquals(getEventsResponse.getResult().getLatestLedger().longValue(), 169L);
+    assertEquals(getEventsResponse.getResult().getLatestLedger().longValue(), 318987L);
+    assertEquals(getEventsResponse.getResult().getOldestLedger().longValue(), 317964L);
+    assertEquals(getEventsResponse.getResult().getLatestLedgerCloseTime().longValue(), 1751863824L);
+    assertEquals(getEventsResponse.getResult().getOldestLedgerCloseTime().longValue(), 1751858705L);
     assertEquals(getEventsResponse.getResult().getEvents().size(), 3);
     assertEquals(getEventsResponse.getResult().getCursor(), "0000000463856472064-0000000000");
 
@@ -31,7 +34,6 @@ public class GetEventsDeserializerTest {
     assertEquals(
         eventInfo0.getContractId(), "CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K");
     assertEquals(eventInfo0.getId(), "0000000463856472064-0000000000");
-    assertEquals(eventInfo0.getPagingToken(), "0000000463856472064-0000000000");
     assertEquals(eventInfo0.getTopic().size(), 2);
     assertEquals(eventInfo0.getTopic().get(0), "AAAADwAAAAdDT1VOVEVSAA==");
     assertEquals(eventInfo0.getTopic().get(1), "AAAADwAAAAlpbmNyZW1lbnQAAAA=");
@@ -45,6 +47,8 @@ public class GetEventsDeserializerTest {
     assertEquals(eventInfo0.parseTopic().size(), 2);
     assertEquals(eventInfo0.parseTopic().get(0).toXdrBase64(), eventInfo0.getTopic().get(0));
     assertEquals(eventInfo0.parseTopic().get(1).toXdrBase64(), eventInfo0.getTopic().get(1));
+    assertEquals(eventInfo0.getOperationIndex().longValue(), 1L);
+    assertEquals(eventInfo0.getTransactionIndex().longValue(), 2L);
 
     GetEventsResponse.EventInfo eventInfo1 = getEventsResponse.getResult().getEvents().get(1);
     assertEquals(eventInfo1.getType(), EventFilterType.SYSTEM);

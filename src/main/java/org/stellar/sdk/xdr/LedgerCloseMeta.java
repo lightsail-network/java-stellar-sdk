@@ -21,6 +21,8 @@ import org.stellar.sdk.Base64Factory;
  *     LedgerCloseMetaV0 v0;
  * case 1:
  *     LedgerCloseMetaV1 v1;
+ * case 2:
+ *     LedgerCloseMetaV2 v2;
  * };
  * </pre>
  */
@@ -32,6 +34,7 @@ public class LedgerCloseMeta implements XdrElement {
   private Integer discriminant;
   private LedgerCloseMetaV0 v0;
   private LedgerCloseMetaV1 v1;
+  private LedgerCloseMetaV2 v2;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant);
@@ -41,6 +44,9 @@ public class LedgerCloseMeta implements XdrElement {
         break;
       case 1:
         v1.encode(stream);
+        break;
+      case 2:
+        v2.encode(stream);
         break;
     }
   }
@@ -55,6 +61,9 @@ public class LedgerCloseMeta implements XdrElement {
         break;
       case 1:
         decodedLedgerCloseMeta.v1 = LedgerCloseMetaV1.decode(stream);
+        break;
+      case 2:
+        decodedLedgerCloseMeta.v2 = LedgerCloseMetaV2.decode(stream);
         break;
     }
     return decodedLedgerCloseMeta;

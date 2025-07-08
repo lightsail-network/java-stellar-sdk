@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.OperationType;
@@ -48,7 +49,8 @@ public class SetTrustlineFlagsOperation extends Operation {
    * @return {@link SetTrustlineFlagsOperation} object
    */
   public static SetTrustlineFlagsOperation fromXdr(SetTrustLineFlagsOp op) {
-    String trustor = StrKey.encodeEd25519PublicKey(op.getTrustor());
+    String trustor =
+        StrKey.encodeEd25519PublicKey(op.getTrustor().getAccountID().getEd25519().getUint256());
     AssetTypeCreditAlphaNum asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
     EnumSet<TrustLineFlags> clearFlags =
         flagSetFromInt(op.getClearFlags().getUint32().getNumber().intValue());
@@ -61,7 +63,7 @@ public class SetTrustlineFlagsOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     SetTrustLineFlagsOp op = new SetTrustLineFlagsOp();
 
-    op.setTrustor(StrKey.encodeToXDRAccountId(this.trustor));
+    op.setTrustor(KeyPair.fromAccountId(this.trustor).getXdrAccountId());
     op.setAsset(asset.toXdr());
     op.setClearFlags(bitwiseOr(clearFlags));
     op.setSetFlags(bitwiseOr(setFlags));

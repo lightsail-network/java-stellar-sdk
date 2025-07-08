@@ -9,7 +9,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.AssetTypeCreditAlphaNum;
-import org.stellar.sdk.StrKey;
+import org.stellar.sdk.MuxedAccount;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.ClawbackOp;
 import org.stellar.sdk.xdr.Int64;
@@ -42,7 +42,7 @@ public class ClawbackOperation extends Operation {
    * @return {@link ClawbackOperation} object
    */
   public static ClawbackOperation fromXdr(ClawbackOp op) {
-    String from = StrKey.encodeMuxedAccount(op.getFrom());
+    String from = MuxedAccount.fromXdr(op.getFrom()).getAddress();
     BigDecimal amount = Operation.fromXdrAmount(op.getAmount().getInt64());
     AssetTypeCreditAlphaNum asset = Util.assertNonNativeAsset(Asset.fromXdr(op.getAsset()));
     return new ClawbackOperation(from, asset, amount);
@@ -53,7 +53,7 @@ public class ClawbackOperation extends Operation {
     ClawbackOp op = new ClawbackOp();
 
     // trustor
-    op.setFrom(StrKey.encodeToXDRMuxedAccount(from));
+    op.setFrom(new MuxedAccount(this.from).toXdr());
 
     Int64 amount = new Int64();
     amount.setInt64(Operation.toXdrAmount(this.amount));

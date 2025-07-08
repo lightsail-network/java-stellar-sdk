@@ -12,7 +12,6 @@
   "num_claimable_balances": 415,
   "num_liquidity_pools": 384,
   "num_contracts": 24,
-  "num_archived_contracts": 1,
   "accounts": {
     "authorized": 918786,
     "authorized_to_maintain_liabilities": 0,
@@ -21,7 +20,6 @@
   "claimable_balances_amount": "8073.0306754",
   "liquidity_pools_amount": "3001425.9918924",
   "contracts_amount": "453241.3236804",
-  "archived_contracts_amount": "1.0000000",
   "balances": {
     "authorized": "196141192.6091517",
     "authorized_to_maintain_liabilities": "0.0000000",

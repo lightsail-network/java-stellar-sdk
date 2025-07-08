@@ -55,6 +55,7 @@ public class GetTransactionDeserializerTest {
     assertEquals(
         getTransactionResponse.getResult().parseResultMetaXdr().toXdrBase64(),
         getTransactionResponse.getResult().getResultMetaXdr());
+    assertNotNull(getTransactionResponse.getResult().getEvents());
   }
 
   @Test

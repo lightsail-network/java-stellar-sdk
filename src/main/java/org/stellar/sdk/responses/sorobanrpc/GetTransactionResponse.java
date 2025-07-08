@@ -43,6 +43,8 @@ public class GetTransactionResponse {
 
   Long createdAt;
 
+  Events events;
+
   /**
    * Parses the {@code envelopeXdr} field from a string to an {@link
    * org.stellar.sdk.xdr.TransactionEnvelope} object.

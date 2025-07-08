@@ -34,16 +34,15 @@ import org.stellar.sdk.Base64Factory;
  *     // other misc information attached to the ledger close
  *     SCPHistoryEntry scpInfo&lt;&gt;;
  *
- *     // Size in bytes of BucketList, to support downstream
+ *     // Size in bytes of live Soroban state, to support downstream
  *     // systems calculating storage fees correctly.
- *     uint64 totalByteSizeOfBucketList;
+ *     uint64 totalByteSizeOfLiveSorobanState;
  *
- *     // Temp keys that are being evicted at this ledger.
- *     LedgerKey evictedTemporaryLedgerKeys&lt;&gt;;
+ *     // TTL and data/code keys that have been evicted at this ledger.
+ *     LedgerKey evictedKeys&lt;&gt;;
  *
- *     // Archived restorable ledger entries that are being
- *     // evicted at this ledger.
- *     LedgerEntry evictedPersistentLedgerEntries&lt;&gt;;
+ *     // Maintained for backwards compatibility, should never be populated.
+ *     LedgerEntry unused&lt;&gt;;
  * };
  * </pre>
  */
@@ -58,9 +57,9 @@ public class LedgerCloseMetaV1 implements XdrElement {
   private TransactionResultMeta[] txProcessing;
   private UpgradeEntryMeta[] upgradesProcessing;
   private SCPHistoryEntry[] scpInfo;
-  private Uint64 totalByteSizeOfBucketList;
-  private LedgerKey[] evictedTemporaryLedgerKeys;
-  private LedgerEntry[] evictedPersistentLedgerEntries;
+  private Uint64 totalByteSizeOfLiveSorobanState;
+  private LedgerKey[] evictedKeys;
+  private LedgerEntry[] unused;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     ext.encode(stream);
@@ -81,16 +80,16 @@ public class LedgerCloseMetaV1 implements XdrElement {
     for (int i = 0; i < scpInfoSize; i++) {
       scpInfo[i].encode(stream);
     }
-    totalByteSizeOfBucketList.encode(stream);
-    int evictedTemporaryLedgerKeysSize = getEvictedTemporaryLedgerKeys().length;
-    stream.writeInt(evictedTemporaryLedgerKeysSize);
-    for (int i = 0; i < evictedTemporaryLedgerKeysSize; i++) {
-      evictedTemporaryLedgerKeys[i].encode(stream);
+    totalByteSizeOfLiveSorobanState.encode(stream);
+    int evictedKeysSize = getEvictedKeys().length;
+    stream.writeInt(evictedKeysSize);
+    for (int i = 0; i < evictedKeysSize; i++) {
+      evictedKeys[i].encode(stream);
     }
-    int evictedPersistentLedgerEntriesSize = getEvictedPersistentLedgerEntries().length;
-    stream.writeInt(evictedPersistentLedgerEntriesSize);
-    for (int i = 0; i < evictedPersistentLedgerEntriesSize; i++) {
-      evictedPersistentLedgerEntries[i].encode(stream);
+    int unusedSize = getUnused().length;
+    stream.writeInt(unusedSize);
+    for (int i = 0; i < unusedSize; i++) {
+      unused[i].encode(stream);
     }
   }
 
@@ -114,18 +113,16 @@ public class LedgerCloseMetaV1 implements XdrElement {
     for (int i = 0; i < scpInfoSize; i++) {
       decodedLedgerCloseMetaV1.scpInfo[i] = SCPHistoryEntry.decode(stream);
     }
-    decodedLedgerCloseMetaV1.totalByteSizeOfBucketList = Uint64.decode(stream);
-    int evictedTemporaryLedgerKeysSize = stream.readInt();
-    decodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys =
-        new LedgerKey[evictedTemporaryLedgerKeysSize];
-    for (int i = 0; i < evictedTemporaryLedgerKeysSize; i++) {
-      decodedLedgerCloseMetaV1.evictedTemporaryLedgerKeys[i] = LedgerKey.decode(stream);
+    decodedLedgerCloseMetaV1.totalByteSizeOfLiveSorobanState = Uint64.decode(stream);
+    int evictedKeysSize = stream.readInt();
+    decodedLedgerCloseMetaV1.evictedKeys = new LedgerKey[evictedKeysSize];
+    for (int i = 0; i < evictedKeysSize; i++) {
+      decodedLedgerCloseMetaV1.evictedKeys[i] = LedgerKey.decode(stream);
     }
-    int evictedPersistentLedgerEntriesSize = stream.readInt();
-    decodedLedgerCloseMetaV1.evictedPersistentLedgerEntries =
-        new LedgerEntry[evictedPersistentLedgerEntriesSize];
-    for (int i = 0; i < evictedPersistentLedgerEntriesSize; i++) {
-      decodedLedgerCloseMetaV1.evictedPersistentLedgerEntries[i] = LedgerEntry.decode(stream);
+    int unusedSize = stream.readInt();
+    decodedLedgerCloseMetaV1.unused = new LedgerEntry[unusedSize];
+    for (int i = 0; i < unusedSize; i++) {
+      decodedLedgerCloseMetaV1.unused[i] = LedgerEntry.decode(stream);
     }
     return decodedLedgerCloseMetaV1;
   }

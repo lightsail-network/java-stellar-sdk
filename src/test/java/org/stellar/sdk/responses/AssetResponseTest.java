@@ -26,14 +26,12 @@ public class AssetResponseTest {
     assertEquals(assetResponse.getNumClaimableBalances().intValue(), 415);
     assertEquals(assetResponse.getNumLiquidityPools().intValue(), 384);
     assertEquals(assetResponse.getNumContracts().intValue(), 24);
-    assertEquals(assetResponse.getNumArchivedContracts().intValue(), 1);
     assertEquals(assetResponse.getAccounts().getAuthorized().intValue(), 918786);
     assertEquals(assetResponse.getAccounts().getAuthorizedToMaintainLiabilities().intValue(), 0);
     assertEquals(assetResponse.getAccounts().getUnauthorized().intValue(), 0);
     assertEquals(assetResponse.getClaimableBalancesAmount(), "8073.0306754");
     assertEquals(assetResponse.getLiquidityPoolsAmount(), "3001425.9918924");
     assertEquals(assetResponse.getContractsAmount(), "453241.3236804");
-    assertEquals(assetResponse.getArchivedContractsAmount(), "1.0000000");
     assertEquals(assetResponse.getBalances().getAuthorized(), "196141192.6091517");
     assertEquals(assetResponse.getBalances().getAuthorizedToMaintainLiabilities(), "0.0000000");
     assertEquals(assetResponse.getBalances().getUnauthorized(), "0.0000000");

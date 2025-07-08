@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerKey;
@@ -41,7 +42,9 @@ public class RevokeAccountSponsorshipOperation extends Operation {
    * @return {@link RevokeAccountSponsorshipOperation} object
    */
   public static RevokeAccountSponsorshipOperation fromXdr(RevokeSponsorshipOp op) {
-    String accountId = StrKey.encodeEd25519PublicKey(op.getLedgerKey().getAccount().getAccountID());
+    String accountId =
+        StrKey.encodeEd25519PublicKey(
+            op.getLedgerKey().getAccount().getAccountID().getAccountID().getEd25519().getUint256());
     return new RevokeAccountSponsorshipOperation(accountId);
   }
 
@@ -51,7 +54,7 @@ public class RevokeAccountSponsorshipOperation extends Operation {
     LedgerKey key = new LedgerKey();
     key.setDiscriminant(LedgerEntryType.ACCOUNT);
     LedgerKey.LedgerKeyAccount account = new LedgerKey.LedgerKeyAccount();
-    account.setAccountID(StrKey.encodeToXDRAccountId(accountId));
+    account.setAccountID(KeyPair.fromAccountId(accountId).getXdrAccountId());
     key.setAccount(account);
     op.setLedgerKey(key);
     op.setDiscriminant(RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY);

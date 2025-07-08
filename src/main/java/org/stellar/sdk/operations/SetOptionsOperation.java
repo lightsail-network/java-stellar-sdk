@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.AccountFlag;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.StrKey;
 import org.stellar.sdk.xdr.*;
 
@@ -81,7 +82,9 @@ public class SetOptionsOperation extends Operation {
   public static SetOptionsOperation fromXdr(SetOptionsOp op) {
     SetOptionsOperationBuilder<?, ?> builder = SetOptionsOperation.builder();
     if (op.getInflationDest() != null) {
-      builder.inflationDestination(StrKey.encodeEd25519PublicKey(op.getInflationDest()));
+      builder.inflationDestination(
+          StrKey.encodeEd25519PublicKey(
+              op.getInflationDest().getAccountID().getEd25519().getUint256()));
     }
     if (op.getClearFlags() != null) {
       builder.clearFlags(op.getClearFlags().getUint32().getNumber().intValue());
@@ -115,7 +118,7 @@ public class SetOptionsOperation extends Operation {
   org.stellar.sdk.xdr.Operation.OperationBody toOperationBody() {
     SetOptionsOp op = new SetOptionsOp();
     if (inflationDestination != null) {
-      op.setInflationDest(StrKey.encodeToXDRAccountId(this.inflationDestination));
+      op.setInflationDest(KeyPair.fromAccountId(this.inflationDestination).getXdrAccountId());
     }
     if (clearFlags != null) {
       Uint32 clearFlags = new Uint32();

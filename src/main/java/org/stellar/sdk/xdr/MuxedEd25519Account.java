@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
 
 /**
- * ArchivalProofNode's original definition in the XDR file is:
+ * MuxedEd25519Account's original definition in the XDR file is:
  *
  * <pre>
- * struct ArchivalProofNode
+ * struct MuxedEd25519Account
  * {
- *     uint32 index;
- *     Hash hash;
+ *     uint64 id;
+ *     uint256 ed25519;
  * };
  * </pre>
  */
@@ -26,28 +26,28 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class ArchivalProofNode implements XdrElement {
-  private Uint32 index;
-  private Hash hash;
+public class MuxedEd25519Account implements XdrElement {
+  private Uint64 id;
+  private Uint256 ed25519;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
-    index.encode(stream);
-    hash.encode(stream);
+    id.encode(stream);
+    ed25519.encode(stream);
   }
 
-  public static ArchivalProofNode decode(XdrDataInputStream stream) throws IOException {
-    ArchivalProofNode decodedArchivalProofNode = new ArchivalProofNode();
-    decodedArchivalProofNode.index = Uint32.decode(stream);
-    decodedArchivalProofNode.hash = Hash.decode(stream);
-    return decodedArchivalProofNode;
+  public static MuxedEd25519Account decode(XdrDataInputStream stream) throws IOException {
+    MuxedEd25519Account decodedMuxedEd25519Account = new MuxedEd25519Account();
+    decodedMuxedEd25519Account.id = Uint64.decode(stream);
+    decodedMuxedEd25519Account.ed25519 = Uint256.decode(stream);
+    return decodedMuxedEd25519Account;
   }
 
-  public static ArchivalProofNode fromXdrBase64(String xdr) throws IOException {
+  public static MuxedEd25519Account fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
-  public static ArchivalProofNode fromXdrByteArray(byte[] xdr) throws IOException {
+  public static MuxedEd25519Account fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     return decode(xdrDataInputStream);

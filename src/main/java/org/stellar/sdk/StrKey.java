@@ -50,6 +50,21 @@ public class StrKey {
   }
 
   /**
+   * Checks validity of Stellar account ID (G...).
+   *
+   * @param accountID the account ID to check
+   * @return true if the given Stellar account ID is a valid Stellar account ID, false otherwise
+   */
+  public static boolean isValidEd25519PublicKey(String accountID) {
+    try {
+      decodeEd25519PublicKey(accountID);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
    * Encodes raw data to strkey ed25519 seed in char array (S...)
    *
    * @param data data to encode
@@ -67,6 +82,21 @@ public class StrKey {
    */
   public static byte[] decodeEd25519SecretSeed(char[] data) {
     return decodeCheck(VersionByte.SEED, data);
+  }
+
+  /**
+   * Checks validity of seed (S...).
+   *
+   * @param seed the seed to check
+   * @return true if the given seed is a valid seed, false otherwise
+   */
+  public static boolean isValidEd25519SecretSeed(char[] seed) {
+    try {
+      decodeEd25519SecretSeed(seed);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   /**
@@ -91,6 +121,21 @@ public class StrKey {
   }
 
   /**
+   * Checks validity of PreAuthTx (T...).
+   *
+   * @param preAuthTx the PreAuthTx to check
+   * @return true if the given PreAuthTx is a valid PreAuthTx, false otherwise
+   */
+  public static boolean isValidPreAuthTx(String preAuthTx) {
+    try {
+      decodePreAuthTx(preAuthTx);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
    * Encodes raw data to strkey SHA256 hash (X...)
    *
    * @param data data to encode
@@ -109,6 +154,21 @@ public class StrKey {
    */
   public static byte[] decodeSha256Hash(String data) {
     return decodeCheck(VersionByte.SHA256_HASH, data.toCharArray());
+  }
+
+  /**
+   * Checks validity of SHA256 hash (X...).
+   *
+   * @param sha256Hash the SHA256 hash to check
+   * @return true if the given SHA256 hash is a valid SHA256 hash, false otherwise
+   */
+  public static boolean isValidSha256Hash(String sha256Hash) {
+    try {
+      decodeSha256Hash(sha256Hash);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   /**
@@ -177,11 +237,138 @@ public class StrKey {
   }
 
   /**
+   * Checks validity of contract (C...) address.
+   *
+   * @param contractId the contract ID to check
+   * @return true if the given contract ID is a valid contract ID, false otherwise
+   */
+  public static boolean isValidContract(String contractId) {
+    try {
+      decodeContract(contractId);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * Encodes raw data to strkey liquidity pool ID (L...)
+   *
+   * @param data data to encode
+   * @return "L..." representation of the key
+   */
+  public static String encodeLiquidityPool(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.LIQUIDITY_POOL, data);
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Decodes strkey liquidity pool ID (L...) to raw bytes.
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeLiquidityPool(String data) {
+    return decodeCheck(VersionByte.LIQUIDITY_POOL, data.toCharArray());
+  }
+
+  /**
+   * Checks validity of liquidity pool (L...) address.
+   *
+   * @param liquidityPoolId the liquidity pool ID to check
+   * @return true if the given liquidity pool ID is a valid liquidity pool ID, false otherwise
+   */
+  public static boolean isValidLiquidityPool(String liquidityPoolId) {
+    try {
+      decodeLiquidityPool(liquidityPoolId);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * Encodes raw data to strkey claimable balance ID (B...)
+   *
+   * @param data data to encode
+   * @return "B..." representation of the key
+   */
+  public static String encodeClaimableBalance(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.CLAIMABLE_BALANCE, data);
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Decodes strkey claimable balance ID (B...) to raw bytes.
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeClaimableBalance(String data) {
+    return decodeCheck(VersionByte.CLAIMABLE_BALANCE, data.toCharArray());
+  }
+
+  /**
+   * Checks validity of claimable balance (B...) address.
+   *
+   * @param claimableBalanceId the claimable balance ID to check
+   * @return true if the given claimable balance ID is a valid claimable balance ID, false otherwise
+   */
+  public static boolean isValidClaimableBalance(String claimableBalanceId) {
+    try {
+      decodeClaimableBalance(claimableBalanceId);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
+   * Encodes raw data to strkey Stellar med25519 public key (M...)
+   *
+   * @param data data to encode
+   * @return "M..." representation of the key
+   */
+  public static String encodeMed25519PublicKey(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.MED25519_PUBLIC_KEY, data);
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Decodes strkey Stellar med25519 public key (M...) to raw bytes
+   *
+   * @param data data to decode
+   * @return raw bytes
+   */
+  public static byte[] decodeMed25519PublicKey(String data) {
+    return decodeCheck(VersionByte.MED25519_PUBLIC_KEY, data.toCharArray());
+  }
+
+  /**
+   * Checks validity of med25519 public key (M...).
+   *
+   * @param med25519PublicKey the med25519 public key to check
+   * @return true if the given med25519 public key is a valid med25519 public key, false otherwise
+   */
+  public static boolean isValidMed25519PublicKey(String med25519PublicKey) {
+    try {
+      decodeMed25519PublicKey(med25519PublicKey);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  /**
    * Encodes raw data to strkey Stellar account ID (G...)
+   *
+   * <p>This method is deprecated and will be removed in future versions, use {@link
+   * #encodeEd25519PublicKey(byte[])} instead.
    *
    * @param accountID data to encode
    * @return "G..." representation of the key
    */
+  @Deprecated
   public static String encodeEd25519PublicKey(AccountID accountID) {
     char[] encoded =
         encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
@@ -191,14 +378,19 @@ public class StrKey {
   /**
    * Encodes raw data to strkey Stellar muxed account ID (M... or G...)
    *
+   * <p>This method is deprecated and will be removed in future versions, use {@link
+   * org.stellar.sdk.MuxedAccount} instead.
+   *
    * @param muxedAccount the muxed account to encode
    * @return "M..." or "G..." representation of the key
    */
+  @Deprecated
   public static String encodeMuxedAccount(MuxedAccount muxedAccount) {
     switch (muxedAccount.getDiscriminant()) {
       case KEY_TYPE_MUXED_ED25519:
         return String.valueOf(
-            encodeCheck(VersionByte.MUXED, getMuxedEd25519AccountBytes(muxedAccount)));
+            encodeCheck(
+                VersionByte.MED25519_PUBLIC_KEY, getMuxedEd25519AccountBytes(muxedAccount)));
       case KEY_TYPE_ED25519:
         return String.valueOf(
             encodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.getEd25519().getUint256()));
@@ -210,9 +402,13 @@ public class StrKey {
   /**
    * Decodes strkey Stellar account ID (G...) or muxed account ID (M...) to {@link MuxedAccount}.
    *
+   * <p>This method is deprecated and will be removed in future versions, use {@link
+   * org.stellar.sdk.MuxedAccount} instead.
+   *
    * @param address the address to decode
    * @return {@link MuxedAccount} representation of the key
    */
+  @Deprecated
   public static MuxedAccount decodeMuxedAccount(String address) {
     return encodeToXDRMuxedAccount(address);
   }
@@ -220,9 +416,13 @@ public class StrKey {
   /**
    * Encodes strkey Stellar account ID (G...) to {@link AccountID}.
    *
+   * <p>This method is deprecated and will be removed in future versions, use {@link
+   * KeyPair#getXdrAccountId()} instead.
+   *
    * @param data the data to encode
    * @return {@link AccountID} representation of the key
    */
+  @Deprecated
   public static AccountID encodeToXDRAccountId(String data) {
     AccountID accountID = new AccountID();
     PublicKey publicKey = new PublicKey();
@@ -239,9 +439,13 @@ public class StrKey {
   /**
    * Encodes strkey Stellar account ID (G...) or muxed account ID (M...) to {@link MuxedAccount}.
    *
+   * <p>This method is deprecated and will be removed in future versions, use {@link
+   * org.stellar.sdk.MuxedAccount} instead.
+   *
    * @param data the data to encode
    * @return {@link MuxedAccount} representation of the key
    */
+  @Deprecated
   public static MuxedAccount encodeToXDRMuxedAccount(String data) {
     MuxedAccount muxed = new MuxedAccount();
 
@@ -258,10 +462,11 @@ public class StrKey {
           throw new IllegalArgumentException("invalid address: " + data, e);
         }
         break;
-      case MUXED:
+      case MED25519_PUBLIC_KEY:
         XdrDataInputStream input =
             new XdrDataInputStream(
-                new ByteArrayInputStream(decodeCheck(VersionByte.MUXED, data.toCharArray())));
+                new ByteArrayInputStream(
+                    decodeCheck(VersionByte.MED25519_PUBLIC_KEY, data.toCharArray())));
         muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
         MuxedAccount.MuxedAccountMed25519 med = new MuxedAccount.MuxedAccountMed25519();
         try {
@@ -287,36 +492,6 @@ public class StrKey {
       throw new IllegalArgumentException("Version byte is invalid");
     }
     return versionByteOptional.get();
-  }
-
-  /**
-   * Checks validity of Stellar account ID (G...).
-   *
-   * @param accountID the account ID to check
-   * @return true if the given Stellar account ID is a valid Stellar account ID, false otherwise
-   */
-  public static boolean isValidEd25519PublicKey(String accountID) {
-    try {
-      decodeEd25519PublicKey(accountID);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
-  }
-
-  /**
-   * Checks validity of contract (C...) address.
-   *
-   * @param contractId the contract ID to check
-   * @return true if the given contract ID is a valid contract ID, false otherwise
-   */
-  public static boolean isValidContract(String contractId) {
-    try {
-      decodeContract(contractId);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
   }
 
   static char[] encodeCheck(VersionByte versionByte, byte[] data) {
@@ -403,10 +578,20 @@ public class StrKey {
                   + data.length);
         }
         break;
-      case MUXED:
+      case MED25519_PUBLIC_KEY:
         if (data.length != 32 + 8) {
           throw new IllegalArgumentException(
               "Invalid data length, expected 40 bytes, got " + data.length);
+        }
+        break;
+      case CLAIMABLE_BALANCE:
+        if (data.length != 32 + 1) {
+          // If we are encoding a claimable balance, the binary bytes of the key has a length of
+          // 33-bytes:
+          // 1-byte value indicating the type of claimable balance, where 0x00 maps to V0, and a
+          // 32-byte SHA256 hash.
+          throw new IllegalArgumentException(
+              "Invalid data length, expected 33 bytes, got " + data.length);
         }
         break;
       default:
@@ -472,6 +657,7 @@ public class StrKey {
     return table;
   }
 
+  @Deprecated
   private static byte[] getMuxedEd25519AccountBytes(MuxedAccount muxedAccount) {
     byte[] accountBytes = muxedAccount.getMed25519().getEd25519().getUint256();
     byte[] idBytes = muxedAccount.getMed25519().getId().getUint64().getNumber().toByteArray();
@@ -525,12 +711,14 @@ public class StrKey {
 
   enum VersionByte {
     ACCOUNT_ID((byte) (6 << 3)), // G
-    MUXED((byte) (12 << 3)), // M
+    MED25519_PUBLIC_KEY((byte) (12 << 3)), // M
     SEED((byte) (18 << 3)), // S
     PRE_AUTH_TX((byte) (19 << 3)), // T
     SHA256_HASH((byte) (23 << 3)), // X
     SIGNED_PAYLOAD((byte) (15 << 3)), // P
-    CONTRACT((byte) (2 << 3)); // C
+    CONTRACT((byte) (2 << 3)), // C
+    LIQUIDITY_POOL((byte) (11 << 3)), // L
+    CLAIMABLE_BALANCE((byte) (1 << 3)); // B
 
     private final byte value;
 

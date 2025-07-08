@@ -25,7 +25,6 @@
         "num_claimable_balances": 0,
         "num_liquidity_pools": 0,
         "num_contracts": 0,
-        "num_archived_contracts": 0,
         "accounts": {
           "authorized": 25,
           "authorized_to_maintain_liabilities": 0,
@@ -34,7 +33,6 @@
         "claimable_balances_amount": "0.0000000",
         "liquidity_pools_amount": "0.0000000",
         "contracts_amount": "0.0000000",
-        "archived_contracts_amount": "0.0000000",
         "balances": {
           "authorized": "988.9481303",
           "authorized_to_maintain_liabilities": "0.0000000",
@@ -60,7 +58,6 @@
         "num_claimable_balances": 0,
         "num_liquidity_pools": 0,
         "num_contracts": 0,
-        "num_archived_contracts": 0,
         "accounts": {
           "authorized": 1,
           "authorized_to_maintain_liabilities": 0,
@@ -69,7 +66,6 @@
         "claimable_balances_amount": "0.0000000",
         "liquidity_pools_amount": "0.0000000",
         "contracts_amount": "0.0000000",
-        "archived_contracts_amount": "0.0000000",
         "balances": {
           "authorized": "0.0000001",
           "authorized_to_maintain_liabilities": "0.0000000",
@@ -95,7 +91,6 @@
         "num_claimable_balances": 0,
         "num_liquidity_pools": 0,
         "num_contracts": 0,
-        "num_archived_contracts": 0,
         "accounts": {
           "authorized": 1,
           "authorized_to_maintain_liabilities": 0,
@@ -104,7 +99,6 @@
         "claimable_balances_amount": "0.0000000",
         "liquidity_pools_amount": "0.0000000",
         "contracts_amount": "0.0000000",
-        "archived_contracts_amount": "0.0000000",
         "balances": {
           "authorized": "0.0000001",
           "authorized_to_maintain_liabilities": "0.0000000",

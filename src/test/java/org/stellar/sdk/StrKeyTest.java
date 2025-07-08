@@ -2,6 +2,8 @@ package org.stellar.sdk;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -50,7 +52,7 @@ public class StrKeyTest {
     assertEquals(
         StrKey.decodeVersionByte(
             "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK"),
-        StrKey.VersionByte.MUXED);
+        StrKey.VersionByte.MED25519_PUBLIC_KEY);
     assertEquals(
         StrKey.decodeVersionByte("TAQCSRX2RIDJNHFIFHWD63X7D7D6TRT5Y2S6E3TEMXTG5W3OECHZ2OG4"),
         StrKey.VersionByte.PRE_AUTH_TX);
@@ -492,6 +494,22 @@ public class StrKeyTest {
   }
 
   @Test
+  public void isValidEd25519SecretSeed() {
+    String validSeed = "SB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZV4E";
+    assertTrue(StrKey.isValidEd25519SecretSeed(validSeed.toCharArray()));
+    String[] invalidSeeds = {
+      "SB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZV4F",
+      "SB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZV",
+      "SB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZV4E2",
+      "SB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZV4E!",
+      "GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC"
+    };
+    for (String seed : invalidSeeds) {
+      assertFalse(StrKey.isValidEd25519SecretSeed(seed.toCharArray()));
+    }
+  }
+
+  @Test
   public void testEncodeAndDecodePreAuthTx() {
     byte[] rawData = {
       (byte) 0x7d,
@@ -533,6 +551,20 @@ public class StrKeyTest {
   }
 
   @Test
+  public void isValidPreAuthTx() {
+    String validKey = "TB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZM5K";
+    assertTrue(StrKey.isValidPreAuthTx(validKey));
+    String[] invalidKeys = {
+      "TB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZM5",
+      "TB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZM5K2",
+      "GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC"
+    };
+    for (String key : invalidKeys) {
+      assertFalse(StrKey.isValidPreAuthTx(key));
+    }
+  }
+
+  @Test
   public void testEncodeAndDecodeSha256Hash() {
     byte[] rawData = {
       (byte) 0x7d,
@@ -571,6 +603,20 @@ public class StrKeyTest {
     String strKey = "XB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLYIYT";
     assertEquals(strKey, StrKey.encodeSha256Hash(rawData));
     assertArrayEquals(rawData, StrKey.decodeSha256Hash(strKey));
+  }
+
+  @Test
+  public void isValidSha256Hash() {
+    String validKey = "XB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLYIYT";
+    assertTrue(StrKey.isValidSha256Hash(validKey));
+    String[] invalidKeys = {
+      "XB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLYIY",
+      "XB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLYIYT2",
+      "GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC"
+    };
+    for (String key : invalidKeys) {
+      assertFalse(StrKey.isValidSha256Hash(key));
+    }
   }
 
   @Test
@@ -636,5 +682,107 @@ public class StrKeyTest {
     String strKey = "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVKC";
     assertEquals(strKey, StrKey.encodeContract(rawData));
     assertArrayEquals(rawData, StrKey.decodeContract(strKey));
+  }
+
+  @Test
+  public void testIsValidContract() {
+    String validKey = "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVKC";
+    assertTrue(StrKey.isValidContract(validKey));
+    String[] invalidKeys = {
+      "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVK",
+      "CB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZVKC2",
+      "GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC"
+    };
+    for (String key : invalidKeys) {
+      assertFalse(StrKey.isValidContract(key));
+    }
+  }
+
+  @Test
+  public void testEncodeAndDecodeLiquidityPool() {
+    byte[] rawData =
+        Util.hexToBytes("3f0c34bf93ad0d9971d04ccc90f705511c838aad9734a4a2fb0d7a03fc7fe89a");
+    String strKey = "LA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUPJN";
+    assertEquals(strKey, StrKey.encodeLiquidityPool(rawData));
+    assertArrayEquals(rawData, StrKey.decodeLiquidityPool(strKey));
+  }
+
+  @Test
+  public void testIsValidLiquidityPool() {
+    assertFalse(StrKey.isValidLiquidityPool("LA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA"));
+    assertFalse(StrKey.isValidLiquidityPool(""));
+    assertFalse(
+        StrKey.isValidLiquidityPool("SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO"));
+    assertFalse(
+        StrKey.isValidLiquidityPool(
+            "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26"));
+    assertTrue(
+        StrKey.isValidLiquidityPool("LA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUPJN"));
+  }
+
+  @Test
+  public void testEncodeAndDecodeClaimableBalance() {
+    byte[] rawData =
+        Util.hexToBytes("003f0c34bf93ad0d9971d04ccc90f705511c838aad9734a4a2fb0d7a03fc7fe89a");
+    String strKey = "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU";
+    assertEquals(strKey, StrKey.encodeClaimableBalance(rawData));
+    assertArrayEquals(rawData, StrKey.decodeClaimableBalance(strKey));
+  }
+
+  @Test
+  public void tesIsValidClaimableBalance() {
+    assertFalse(
+        StrKey.isValidClaimableBalance(
+            "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4T"));
+    assertFalse(StrKey.isValidClaimableBalance(""));
+    assertFalse(
+        StrKey.isValidClaimableBalance("SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO"));
+    assertFalse(
+        StrKey.isValidClaimableBalance(
+            "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26"));
+    assertTrue(
+        StrKey.isValidClaimableBalance(
+            "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU"));
+  }
+
+  @Test
+  public void testEncodeAndDecodeMed25519PublicKey() {
+    byte[] rawData =
+        Util.hexToBytes(
+            "2000757eeae583fc50dd669f97673acc25ec725823ac73faf6c7df31ad31e50900000000000004d2");
+    String strKey = "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26";
+    assertEquals(strKey, StrKey.encodeMed25519PublicKey(rawData));
+    assertArrayEquals(rawData, StrKey.decodeMed25519PublicKey(strKey));
+  }
+
+  @Test
+  public void testIsValidMed25519PublicKey() {
+    String[] invalidKeys = {
+      "XBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG",
+      "MBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG",
+      "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUR",
+      "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZA",
+      "G47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVP2I",
+      "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLKA",
+      "M47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ",
+      "M47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ",
+      "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUK",
+      "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUO",
+      "SBCVMMCBEDB64TVJZFYJOJAERZC4YVVUOE6SYR2Y76CBTENGUSGWRRVO",
+      "MCEO75Y6YKE53HM6N46IJYH3LK3YYFZ4QWGNUKCSSIQSH3KOAD7BEAAAAAAAAAAAPNT2W___",
+      "MDWZCOEQRODFCH6ISYQPWY67L3ULLWS5ISXYYL5GH43W7YFMTLB64AAAAAAAAAAAAHGLW===",
+      " MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK"
+    };
+    for (String key : invalidKeys) {
+      assertFalse(StrKey.isValidMed25519PublicKey(key));
+    }
+
+    String[] validKeys = {
+      "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUQ",
+      "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26"
+    };
+    for (String key : validKeys) {
+      assertTrue(StrKey.isValidMed25519PublicKey(key));
+    }
   }
 }

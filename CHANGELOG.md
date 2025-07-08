@@ -5,6 +5,25 @@
 ### Update:
 - feat: add `pollTransaction` method to `SorobanServer` to poll transaction status with retry strategy. ([#696](https://github.com/stellar/java-stellar-sdk/pull/696))
 - feat: implement message signing and verification according to [SEP-53](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md), check `KeyPair.signMessage` and `KeyPair.verifyMessage` for more details. ([#698](https://github.com/stellar/java-stellar-sdk/pull/698))
+- feat: add `isValidEd25519SecretSeed`, `isValidPreAuthTx` and `isValidSha256Hash` to `StrKey` class, these functions can be used to validate the corresponding strkey.
+- feat: add med25519 public key support to `StrKey`.
+- feat: add muxed account, liquidity pool and claimable balance support to `Address` class.
+- feat: add `destinationMuxedId` and `destinationMuxedIdType` to `InvokeHostFunctionOperationResponse.AssetContractBalanceChange`.
+- feat: add `events` field to `GetTransactionsResponse.Transaction` and `GetTransactionResponse`, see [stellar-rpc#455](https://github.com/stellar/stellar-rpc/pull/455) for more details.
+- feat: add `oldestLedger`, `latestLedgerCloseTime` and `oldestLedgerCloseTime` fields to `GetEventsResponse`, and add `transactionIndex` and `operationIndex` fields to `GetEventsResponse.EventInfo`, check [Stellar RPC release log](https://github.com/stellar/stellar-rpc/releases/tag/v23.0.0-rc.1) for more information. 
+- feat: add support for non-root authorization in `SorobanServer#simulateTransaction`.
+
+### Breaking changes:
+- refactor!: the following functions in `StrKey` are marked as deprecated, they will be removed in the next major release; please refer to the documentation for each function to see the corresponding replacement functions:
+  - `StrKey#encodeEd25519PublicKey(AccountID)`
+  - `StrKey#encodeMuxedAccount(MuxedAccount)`
+  - `StrKey#decodeMuxedAccount(String)`
+  - `StrKey#encodeToXDRAccountId(String)`
+  - `StrKey#encodeToXDRMuxedAccount(String)`
+- refactor!: remove `numArchivedContracts` and `archivedContractsAmount` from `AssetResponse`.
+- refactor!: `GetTransactionsResponse.Transaction#getDiagnosticEventsXdr()` and `GetTransactionsResponse.Transaction#parseDiagnosticEventsXdr()` has been marked as deprecated, they will be removed in Stellar RPC soon, use `GetTransactionsResponse.Transaction#getEvents()` instead.
+- refactor!: remove deprecated `pagingToken` field from `GetEventsResponse.EventInfo`.
+- refactor!: `inSuccessfulContractCall` in `GetEventsResponse.EventInfo` has been marked as deprecated, it will be removed in the next release.
 
 ## 1.5.0
 
