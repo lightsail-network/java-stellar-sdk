@@ -3,6 +3,7 @@ package org.stellar.sdk.responses.operations;
 import static org.stellar.sdk.Asset.create;
 
 import com.google.gson.annotations.SerializedName;
+import java.math.BigInteger;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -77,25 +78,11 @@ public class InvokeHostFunctionOperationResponse extends OperationResponse {
     @SerializedName("amount")
     String amount;
 
-    @SerializedName("destination_muxed_id_type")
-    DestinationMuxedIdType destinationMuxedIdType;
-
     @SerializedName("destination_muxed_id")
-    String destinationMuxedId;
+    BigInteger destinationMuxedId;
 
     public Asset getAsset() {
       return create(assetType, assetCode, assetIssuer);
-    }
-
-    public enum DestinationMuxedIdType {
-      @SerializedName("string")
-      STRING,
-
-      @SerializedName("uint64")
-      UINT64,
-
-      @SerializedName("bytes")
-      BYTES
     }
   }
 }
