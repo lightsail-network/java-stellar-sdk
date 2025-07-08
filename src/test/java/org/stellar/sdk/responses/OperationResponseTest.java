@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -382,9 +383,8 @@ public class OperationResponseTest {
         response.getAssetBalanceChanges().get(0).getTo());
     assertEquals("500.0000000", response.getAssetBalanceChanges().get(0).getAmount());
     assertEquals(
-        InvokeHostFunctionOperationResponse.AssetContractBalanceChange.DestinationMuxedIdType
-            .UINT64,
-        response.getAssetBalanceChanges().get(0).getDestinationMuxedIdType());
+        new BigInteger("123456789"),
+        response.getAssetBalanceChanges().get(0).getDestinationMuxedId());
   }
 
   @Test
