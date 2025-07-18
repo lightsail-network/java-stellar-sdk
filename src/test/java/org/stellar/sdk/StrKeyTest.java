@@ -139,36 +139,6 @@ public class StrKeyTest {
   }
 
   @Test
-  public void testValidSignedPayloadEncode() {
-    // Valid signed payload with an ed25519 public key and a 32-byte payload.
-    byte[] payload =
-        Util.hexToBytes(
-            "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
-    SignedPayloadSigner signedPayloadSigner =
-        new SignedPayloadSigner(
-            StrKey.decodeEd25519PublicKey(
-                "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ"),
-            payload);
-    String encoded = StrKey.encodeSignedPayload(signedPayloadSigner);
-    assertEquals(
-        encoded,
-        "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAQACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB6IBZGM");
-
-    // Valid signed payload with an ed25519 public key and a 29-byte payload.
-    payload =
-        Util.hexToBytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d".toUpperCase());
-    signedPayloadSigner =
-        new SignedPayloadSigner(
-            StrKey.decodeEd25519PublicKey(
-                "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZ"),
-            payload);
-    encoded = StrKey.encodeSignedPayload(signedPayloadSigner);
-    assertEquals(
-        encoded,
-        "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUAAAAFGBU");
-  }
-
-  @Test
   public void testRoundTripSignedPayloadVersionByte() {
     byte[] data =
         rawBytes(
@@ -620,30 +590,6 @@ public class StrKeyTest {
   }
 
   @Test
-  public void testEncodeAndDecodeSignedPayload() {
-    AccountID accountID =
-        KeyPair.fromAccountId("GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC")
-            .getXdrAccountId();
-    byte[] payload = {
-      (byte) 0xd5,
-      (byte) 0xf1,
-      (byte) 0x3d,
-      (byte) 0xbd,
-      (byte) 0x95,
-      (byte) 0x5e,
-      (byte) 0x99,
-      (byte) 0xf9,
-      (byte) 0xd
-    };
-    SignedPayloadSigner signedPayloadSigner = new SignedPayloadSigner(accountID, payload);
-    String expected =
-        "PBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5SAAAAAE5L4J5XWKV5GPZBUAAAAAYQ4";
-    assertEquals(expected, StrKey.encodeSignedPayload(signedPayloadSigner));
-    assertArrayEquals(payload, StrKey.decodeSignedPayload(expected).getPayload());
-    assertEquals(accountID, StrKey.decodeSignedPayload(expected).getSignerAccountId());
-  }
-
-  @Test
   public void testEncodeAndDecodeContract() {
     byte[] rawData = {
       (byte) 0x7d,
@@ -783,6 +729,41 @@ public class StrKeyTest {
     };
     for (String key : validKeys) {
       assertTrue(StrKey.isValidMed25519PublicKey(key));
+    }
+  }
+
+  @Test
+  public void testEncodeAndDecodeSignedPayload() {
+    byte[] rawData =
+        Util.hexToBytes(
+            "363eaa3867841fbad0f4ed88c779e4fe66e56a2470dc98c0ec9c073d05c7b10300000009000000000000000000000000");
+    String strKey =
+        "PA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQGAAAAAEQAAAAAAAAAAAAAAAAAABBXA";
+    assertEquals(strKey, StrKey.encodeSignedPayload(rawData));
+    assertArrayEquals(rawData, StrKey.decodeSignedPayload(strKey));
+  }
+
+  @Test
+  public void testIsValidSignedPayload() {
+    String[] validKeys = {
+      "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAQACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB6IBZGM",
+      "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUAAAAFGBU"
+    };
+    for (String key : validKeys) {
+      assertTrue(StrKey.isValidSignedPayload(key));
+    }
+
+    String[] invalidKeys = {
+      "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAQACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB6IAAAAAAAAPM",
+      "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4Z2PQ",
+      "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DXFH6",
+      "",
+      "PDPYP7E6NEYZSVOTV6M23OFM2XRIMPDUJABHGHHH2Y67X7JL25GW6AAAAAAAAAAAAAAJE",
+      "GAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSTVY",
+      "PA3D5KRYM6CB7OWQ6TWYRR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQGAAAAAAGK7I"
+    };
+    for (String key : invalidKeys) {
+      assertFalse(key, StrKey.isValidSignedPayload(key));
     }
   }
 }

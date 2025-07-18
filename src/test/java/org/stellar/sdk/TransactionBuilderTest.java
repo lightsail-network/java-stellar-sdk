@@ -485,15 +485,7 @@ public class TransactionBuilderTest {
     String encodedString = "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20";
     byte[] payload = Util.hexToBytes(encodedString);
 
-    SignerKey signerKey =
-        SignerKey.builder()
-            .discriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD)
-            .ed25519SignedPayload(
-                SignerKey.SignerKeyEd25519SignedPayload.builder()
-                    .payload(payload)
-                    .ed25519(new Uint256(StrKey.decodeEd25519PublicKey(accountStrKey)))
-                    .build())
-            .build();
+    SignerKey signerKey = SignerKey.fromEd25519SignedPayload(accountStrKey, payload);
 
     Transaction transaction =
         new TransactionBuilder(account, Network.TESTNET)
@@ -514,13 +506,14 @@ public class TransactionBuilderTest {
 
     assertEquals(
         SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD,
-        transaction.getPreconditions().getExtraSigners().get(0).getDiscriminant());
+        transaction.getPreconditions().getExtraSigners().get(0).toXdr().getDiscriminant());
     assertArrayEquals(
         payload,
         transaction
             .getPreconditions()
             .getExtraSigners()
             .get(0)
+            .toXdr()
             .getEd25519SignedPayload()
             .getPayload());
 
@@ -553,9 +546,12 @@ public class TransactionBuilderTest {
                       new TimeBounds(BigInteger.ZERO, TransactionPreconditions.TIMEOUT_INFINITE))
                   .extraSigners(
                       Arrays.asList(
-                          SignerKey.builder().build(),
-                          SignerKey.builder().build(),
-                          SignerKey.builder().build()))
+                          SignerKey.fromPreAuthTx(
+                              "TBYUE4AVHZBVPIYLHQUPNYV2AMVLB7ONSYXA27HXARHDCLFUQFFIZQB4"),
+                          SignerKey.fromPreAuthTx(
+                              "TC3HOIZHCKANIWNDU74MS63RROXV2YFXQAHDTBARXPL67T3GEZGIVKDA"),
+                          SignerKey.fromPreAuthTx(
+                              "TDTP7O55ZRHDCU3G63XZRRHPKV3F4FVV7KGHOTE6NU33K7RQF4DNO5XM")))
                   .minSeqLedgerGap(5)
                   .build())
           .setBaseFee(Transaction.MIN_BASE_FEE)

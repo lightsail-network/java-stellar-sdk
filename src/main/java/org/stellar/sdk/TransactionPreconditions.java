@@ -14,7 +14,6 @@ import org.stellar.sdk.xdr.PreconditionType;
 import org.stellar.sdk.xdr.Preconditions;
 import org.stellar.sdk.xdr.PreconditionsV2;
 import org.stellar.sdk.xdr.SequenceNumber;
-import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
@@ -119,7 +118,10 @@ public class TransactionPreconditions {
       }
       if (preconditions.getV2().getExtraSigners() != null
           && preconditions.getV2().getExtraSigners().length > 0) {
-        builder.extraSigners(Arrays.asList(preconditions.getV2().getExtraSigners()));
+        builder.extraSigners(
+            Arrays.stream(preconditions.getV2().getExtraSigners())
+                .map(SignerKey::fromXdr)
+                .collect(java.util.stream.Collectors.toList()));
       }
       if (preconditions.getV2().getMinSeqAge() != null) {
         builder.minSeqAge(
@@ -156,7 +158,10 @@ public class TransactionPreconditions {
     if (hasV2()) {
       preconditionsBuilder.discriminant(PreconditionType.PRECOND_V2);
       PreconditionsV2.PreconditionsV2Builder v2Builder = PreconditionsV2.builder();
-      v2Builder.extraSigners(extraSigners.toArray(new SignerKey[] {}));
+      v2Builder.extraSigners(
+          extraSigners.stream()
+              .map(SignerKey::toXdr)
+              .toArray(org.stellar.sdk.xdr.SignerKey[]::new));
       v2Builder.minSeqAge(new Duration(new Uint64(new XdrUnsignedHyperInteger(minSeqAge))));
 
       if (ledgerBounds != null) {

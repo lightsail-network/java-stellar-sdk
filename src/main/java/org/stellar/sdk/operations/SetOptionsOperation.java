@@ -8,8 +8,14 @@ import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.AccountFlag;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.SignerKey;
 import org.stellar.sdk.StrKey;
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.xdr.OperationType;
+import org.stellar.sdk.xdr.SetOptionsOp;
+import org.stellar.sdk.xdr.String32;
+import org.stellar.sdk.xdr.Uint32;
+import org.stellar.sdk.xdr.XdrString;
+import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 /**
  * Represents <a
@@ -74,9 +80,10 @@ public class SetOptionsOperation extends Operation {
   @Nullable private final Integer signerWeight;
 
   /**
-   * Construct a new {@link SetOptionsOperation} object from a {@link SetOptionsOp} XDR object.
+   * Construct a new {@link SetOptionsOperation} object from a {@link
+   * org.stellar.sdk.xdr.SetOptionsOp} XDR object.
    *
-   * @param op {@link SetOptionsOp} XDR object
+   * @param op {@link org.stellar.sdk.xdr.SetOptionsOp} XDR object
    * @return {@link SetOptionsOperation} object
    */
   public static SetOptionsOperation fromXdr(SetOptionsOp op) {
@@ -108,7 +115,7 @@ public class SetOptionsOperation extends Operation {
       builder.homeDomain(op.getHomeDomain().getString32().toString());
     }
     if (op.getSigner() != null) {
-      builder.signer(op.getSigner().getKey());
+      builder.signer(SignerKey.fromXdr(op.getSigner().getKey()));
       builder.signerWeight(op.getSigner().getWeight().getUint32().getNumber().intValue());
     }
     return builder.build();
@@ -159,7 +166,7 @@ public class SetOptionsOperation extends Operation {
       org.stellar.sdk.xdr.Signer signer = new org.stellar.sdk.xdr.Signer();
       Uint32 weight = new Uint32();
       weight.setUint32(new XdrUnsignedInteger(signerWeight));
-      signer.setKey(this.signer);
+      signer.setKey(this.signer.toXdr());
       signer.setWeight(weight);
       op.setSigner(signer);
     }

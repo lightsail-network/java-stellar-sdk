@@ -19,10 +19,7 @@ import org.stellar.sdk.xdr.PreconditionType;
 import org.stellar.sdk.xdr.Preconditions;
 import org.stellar.sdk.xdr.PreconditionsV2;
 import org.stellar.sdk.xdr.SequenceNumber;
-import org.stellar.sdk.xdr.SignerKey;
-import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.TimePoint;
-import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrDataInputStream;
@@ -39,7 +36,7 @@ public class TransactionPreconditionsTest {
     preconditionsBuilder.discriminant(PreconditionType.PRECOND_V2);
     PreconditionsV2.PreconditionsV2Builder v2Builder = PreconditionsV2.builder();
 
-    v2Builder.extraSigners(new SignerKey[] {});
+    v2Builder.extraSigners(new org.stellar.sdk.xdr.SignerKey[] {});
     v2Builder.minSeqAge(new Duration(new Uint64(new XdrUnsignedHyperInteger(2L))));
     v2Builder.ledgerBounds(
         org.stellar.sdk.xdr.LedgerBounds.builder()
@@ -80,7 +77,7 @@ public class TransactionPreconditionsTest {
     v2Builder.timeBounds(xdrTimeBounds);
     v2Builder.minSeqLedgerGap(new Uint32(new XdrUnsignedInteger(0)));
     v2Builder.minSeqAge(new Duration(new Uint64(new XdrUnsignedHyperInteger(0L))));
-    v2Builder.extraSigners(new SignerKey[] {});
+    v2Builder.extraSigners(new org.stellar.sdk.xdr.SignerKey[] {});
     preconditionsBuilder.v2(v2Builder.build());
     // create V2 Precond with just timebounds
     Preconditions xdr = preconditionsBuilder.build();
@@ -110,18 +107,8 @@ public class TransactionPreconditionsTest {
         Util.hexToBytes(
             "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
     SignerKey signerKey =
-        SignerKey.builder()
-            .discriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD)
-            .ed25519SignedPayload(
-                SignerKey.SignerKeyEd25519SignedPayload.builder()
-                    .payload(payload)
-                    .ed25519(
-                        new Uint256(
-                            StrKey.decodeEd25519PublicKey(
-                                "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR")))
-                    .build())
-            .build();
-
+        SignerKey.fromEd25519SignedPayload(
+            "GDW6AUTBXTOC7FIKUO5BOO3OGLK4SF7ZPOBLMQHMZDI45J2Z6VXRB5NR", payload);
     TransactionPreconditions preconditions =
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
@@ -218,9 +205,12 @@ public class TransactionPreconditionsTest {
             .timeBounds(new TimeBounds(1, 2))
             .extraSigners(
                 Arrays.asList(
-                    SignerKey.builder().build(),
-                    SignerKey.builder().build(),
-                    SignerKey.builder().build()))
+                    SignerKey.fromPreAuthTx(
+                        "TBYUE4AVHZBVPIYLHQUPNYV2AMVLB7ONSYXA27HXARHDCLFUQFFIZQB4"),
+                    SignerKey.fromPreAuthTx(
+                        "TC3HOIZHCKANIWNDU74MS63RROXV2YFXQAHDTBARXPL67T3GEZGIVKDA"),
+                    SignerKey.fromPreAuthTx(
+                        "TDTP7O55ZRHDCU3G63XZRRHPKV3F4FVV7KGHOTE6NU33K7RQF4DNO5XM")))
             .build();
     try {
       preconditions.validate();
@@ -246,7 +236,7 @@ public class TransactionPreconditionsTest {
     preconditionsBuilder.discriminant(PreconditionType.PRECOND_V2);
     PreconditionsV2.PreconditionsV2Builder v2Builder = PreconditionsV2.builder();
 
-    v2Builder.extraSigners(new SignerKey[] {});
+    v2Builder.extraSigners(new org.stellar.sdk.xdr.SignerKey[] {});
     v2Builder.minSeqAge(new Duration(new Uint64(new XdrUnsignedHyperInteger(2L))));
     v2Builder.ledgerBounds(
         org.stellar.sdk.xdr.LedgerBounds.builder()

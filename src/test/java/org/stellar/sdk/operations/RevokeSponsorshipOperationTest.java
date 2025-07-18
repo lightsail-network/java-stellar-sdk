@@ -4,9 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.stellar.sdk.Asset;
-import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.SignerKey;
 import org.stellar.sdk.TrustLineAsset;
-import org.stellar.sdk.xdr.SignerKey;
 
 public class RevokeSponsorshipOperationTest {
 
@@ -121,8 +120,7 @@ public class RevokeSponsorshipOperationTest {
     String source = "GA2N7NI5WEMJILMK4UPDTF2ZX2BIRQUM3HZUE27TRUNRFN5M5EXU6RQV";
     String accountId = "GAGQ7DNQUVQR6OWYOI563L5EMJE6KCAHPQSFCZFLY5PDRYMRCA5UWCMP";
     SignerKey signerKey =
-        KeyPair.fromAccountId("GBOSQJIV4VJMWMPVPB7EFVIRJT7A7SAAAB4FA23ZDJRUMXMYHBYWY57L")
-            .getXdrSignerKey();
+        SignerKey.fromEd25519PublicKey("GBOSQJIV4VJMWMPVPB7EFVIRJT7A7SAAAB4FA23ZDJRUMXMYHBYWY57L");
     RevokeSignerSponsorshipOperation operation =
         RevokeSignerSponsorshipOperation.builder()
             .accountId(accountId)
