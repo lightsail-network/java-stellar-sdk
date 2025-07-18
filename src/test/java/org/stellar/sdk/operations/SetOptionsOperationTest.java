@@ -9,14 +9,11 @@ import org.junit.Test;
 import org.stellar.sdk.Account;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Network;
-import org.stellar.sdk.SignedPayloadSigner;
-import org.stellar.sdk.Signer;
-import org.stellar.sdk.StrKey;
+import org.stellar.sdk.SignerKey;
 import org.stellar.sdk.Transaction;
 import org.stellar.sdk.TransactionBuilder;
 import org.stellar.sdk.TransactionPreconditions;
 import org.stellar.sdk.Util;
-import org.stellar.sdk.xdr.SignerKey;
 
 public class SetOptionsOperationTest {
 
@@ -30,8 +27,9 @@ public class SetOptionsOperationTest {
         KeyPair.fromSecretSeed("SDHZGHURAYXKU2KMVHPOXI6JG2Q4BSQUQCEOY72O3QQTCLR2T455PMII");
     // GBCP5W2VS7AEWV2HFRN7YYC623LTSV7VSTGIHFXDEJU7S5BAGVCSETRR
     SignerKey signer =
-        Signer.ed25519PublicKey(
-            KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ"));
+        SignerKey.fromEd25519PublicKey(
+            KeyPair.fromSecretSeed("SA64U7C5C7BS5IHWEPA7YWFN3Z6FE5L6KAMYUIT4AQ7KVTVLD23C6HEZ")
+                .getAccountId());
 
     Integer clearFlags = 1;
     Integer setFlags = 1;
@@ -69,11 +67,7 @@ public class SetOptionsOperationTest {
     assertEquals(highThreshold, parsedOperation.getHighThreshold());
     assertEquals(homeDomain, parsedOperation.getHomeDomain());
     assert parsedOperation.getSigner() != null;
-    assertEquals(
-        signer.getDiscriminant().getValue(),
-        parsedOperation.getSigner().getDiscriminant().getValue());
-    assertEquals(
-        signer.getEd25519().getUint256(), parsedOperation.getSigner().getEd25519().getUint256());
+    assertEquals(signer, parsedOperation.getSigner());
     assertEquals(signerWeight, parsedOperation.getSignerWeight());
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
 
@@ -127,7 +121,7 @@ public class SetOptionsOperationTest {
 
     SetOptionsOperation operation =
         SetOptionsOperation.builder()
-            .signer(Signer.sha256Hash(hash))
+            .signer(SignerKey.fromSha256Hash(hash))
             .signerWeight(10)
             .sourceAccount(source.getAccountId())
             .build();
@@ -144,7 +138,7 @@ public class SetOptionsOperationTest {
     assertNull(parsedOperation.getHighThreshold());
     assertNull(parsedOperation.getHomeDomain());
     assert parsedOperation.getSigner() != null;
-    assertArrayEquals(hash, parsedOperation.getSigner().getHashX().getUint256());
+    assertArrayEquals(hash, parsedOperation.getSigner().toXdr().getHashX().getUint256());
     assert parsedOperation.getSignerWeight() != null;
     assertEquals(10, parsedOperation.getSignerWeight().intValue());
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
@@ -181,7 +175,7 @@ public class SetOptionsOperationTest {
 
     SetOptionsOperation operation =
         SetOptionsOperation.builder()
-            .signer(Signer.preAuthTx(transaction))
+            .signer(SignerKey.fromPreAuthTx(transaction))
             .signerWeight(10)
             .sourceAccount(opSource.getAccountId())
             .build();
@@ -198,7 +192,8 @@ public class SetOptionsOperationTest {
     assertEquals(operation.getHighThreshold(), parsedOperation.getHighThreshold());
     assertEquals(operation.getHomeDomain(), parsedOperation.getHomeDomain());
     assert parsedOperation.getSigner() != null;
-    assertArrayEquals(transaction.hash(), parsedOperation.getSigner().getPreAuthTx().getUint256());
+    assertArrayEquals(
+        transaction.hash(), parsedOperation.getSigner().toXdr().getPreAuthTx().getUint256());
     assertEquals(operation.getSignerWeight(), parsedOperation.getSignerWeight());
     assertEquals(operation.getSourceAccount(), parsedOperation.getSourceAccount());
   }
@@ -213,9 +208,7 @@ public class SetOptionsOperationTest {
     byte[] payload =
         Util.hexToBytes(
             "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20".toUpperCase());
-    SignedPayloadSigner signedPayloadSigner =
-        new SignedPayloadSigner(StrKey.decodeEd25519PublicKey(payloadSignerStrKey), payload);
-    SignerKey signerKey = Signer.signedPayload(signedPayloadSigner);
+    SignerKey signerKey = SignerKey.fromEd25519SignedPayload(payloadSignerStrKey, payload);
 
     builder.signer(signerKey);
     builder.signerWeight(1);
@@ -229,12 +222,7 @@ public class SetOptionsOperationTest {
     // verify round trip between xdr and pojo
     assertEquals(source.getAccountId(), parsedOperation.getSourceAccount());
     assert parsedOperation.getSigner() != null;
-    assertEquals(
-        signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519(),
-        parsedOperation.getSigner().getEd25519SignedPayload().getEd25519());
-    assertArrayEquals(
-        signedPayloadSigner.getPayload(),
-        parsedOperation.getSigner().getEd25519SignedPayload().getPayload());
+    assertEquals(signerKey, parsedOperation.getSigner());
 
     // verify serialized xdr emitted with signed payload
     assertEquals(

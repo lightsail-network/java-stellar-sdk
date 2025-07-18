@@ -3,6 +3,7 @@ package org.stellar.sdk;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
@@ -12,11 +13,9 @@ import org.stellar.sdk.xdr.CryptoKeyType;
 import org.stellar.sdk.xdr.MuxedAccount;
 import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
-import org.stellar.sdk.xdr.SignerKey;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrDataInputStream;
-import org.stellar.sdk.xdr.XdrDataOutputStream;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /**
@@ -172,47 +171,39 @@ public class StrKey {
   }
 
   /**
-   * Encodes {@link SignedPayloadSigner} to strkey signed payload (P...)
+   * Encodes raw data to strkey signed payload (P...)
    *
-   * @param signedPayloadSigner the signed payload signer
+   * @param data data to encode
    * @return "P..." representation of the key
    */
-  public static String encodeSignedPayload(SignedPayloadSigner signedPayloadSigner) {
-    SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner =
-        new SignerKey.SignerKeyEd25519SignedPayload();
-    xdrPayloadSigner.setPayload(signedPayloadSigner.getPayload());
-    xdrPayloadSigner.setEd25519(
-        signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
-
-    ByteArrayOutputStream record = new ByteArrayOutputStream();
-    try {
-      xdrPayloadSigner.encode(new XdrDataOutputStream(record));
-    } catch (IOException e) {
-      throw new IllegalArgumentException("encode signed payload failed", e);
-    }
-
-    char[] encoded = encodeCheck(VersionByte.SIGNED_PAYLOAD, record.toByteArray());
+  public static String encodeSignedPayload(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.SIGNED_PAYLOAD, data);
     return String.valueOf(encoded);
   }
 
   /**
-   * Decodes strkey signed payload (P...) to {@link SignedPayloadSigner}
+   * Decodes strkey signed payload (P...) to raw bytes.
    *
    * @param data data to decode
    * @return raw bytes
    */
-  public static SignedPayloadSigner decodeSignedPayload(String data) {
-    byte[] rawSignedPayload = decodeCheck(VersionByte.SIGNED_PAYLOAD, data.toCharArray());
+  public static byte[] decodeSignedPayload(String data) {
+    return decodeCheck(VersionByte.SIGNED_PAYLOAD, data.toCharArray());
+  }
 
-    SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = null;
+  /**
+   * Checks validity of signed payload (P...).
+   *
+   * @param signedPayload the signed payload to check
+   * @return true if the given signed payload is a valid signed payload, false otherwise
+   */
+  public static boolean isValidSignedPayload(String signedPayload) {
     try {
-      xdrPayloadSigner = SignerKey.SignerKeyEd25519SignedPayload.fromXdrByteArray(rawSignedPayload);
-    } catch (IOException e) {
-      throw new IllegalArgumentException("decode signed payload failed", e);
+      decodeSignedPayload(signedPayload);
+      return true;
+    } catch (Exception e) {
+      return false;
     }
-
-    return new SignedPayloadSigner(
-        xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
   }
 
   /**
@@ -610,6 +601,15 @@ public class StrKey {
 
     if (!Arrays.equals(expectedChecksum, checksum)) {
       throw new IllegalArgumentException("Checksum invalid");
+    }
+
+    if (VersionByte.SIGNED_PAYLOAD.getValue() == decodedVersionByte) {
+      byte[] lengthBytes = Arrays.copyOfRange(data, 32, 36);
+      int payloadLength = ByteBuffer.wrap(lengthBytes).getInt();
+      int padding = (4 - payloadLength % 4) % 4;
+      if (data.length % 4 != 0 || payloadLength + padding != data.length - 36) {
+        throw new IllegalArgumentException("Invalid Ed25519 Signed Payload Key");
+      }
     }
 
     if (VersionByte.SEED.getValue() == decodedVersionByte) {

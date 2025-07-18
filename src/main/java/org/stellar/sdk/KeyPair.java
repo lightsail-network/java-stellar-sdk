@@ -20,8 +20,6 @@ import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.DecoratedSignature;
 import org.stellar.sdk.xdr.PublicKeyType;
 import org.stellar.sdk.xdr.SignatureHint;
-import org.stellar.sdk.xdr.SignerKey;
-import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.XdrDataOutputStream;
 
@@ -224,16 +222,6 @@ public class KeyPair {
     return accountID;
   }
 
-  /** Returns the XDR {@link SignerKey} for this keypair. */
-  public SignerKey getXdrSignerKey() {
-    SignerKey signerKey = new SignerKey();
-    signerKey.setDiscriminant(SignerKeyType.SIGNER_KEY_TYPE_ED25519);
-    Uint256 uint256 = new Uint256();
-    uint256.setUint256(getPublicKey());
-    signerKey.setEd25519(uint256);
-    return signerKey;
-  }
-
   /**
    * Creates a new KeyPair from an XDR {@link org.stellar.sdk.xdr.PublicKey}.
    *
@@ -241,16 +229,6 @@ public class KeyPair {
    * @return KeyPair
    */
   public static KeyPair fromXdrPublicKey(org.stellar.sdk.xdr.PublicKey key) {
-    return KeyPair.fromPublicKey(key.getEd25519().getUint256());
-  }
-
-  /**
-   * Creates a new KeyPair from an XDR {@link SignerKey}.
-   *
-   * @param key The XDR {@link SignerKey} object.
-   * @return KeyPair
-   */
-  public static KeyPair fromXdrSignerKey(SignerKey key) {
     return KeyPair.fromPublicKey(key.getEd25519().getUint256());
   }
 

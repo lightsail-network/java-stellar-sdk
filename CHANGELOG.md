@@ -2,7 +2,17 @@
 
 ## Pending
 
-## 2.0.0-beta0
+### Update:
+- feat: add `isValidSignedPayload` to `StrKey` class, this function can be used to validate the ed25519 signed payload. ([#712](https://github.com/stellar/java-stellar-sdk/pull/712))
+
+### Breaking changes:
+- feat: add `org.stellar.sdk.SignerKey` for enhanced signer key handling. ([#712](https://github.com/stellar/java-stellar-sdk/pull/712))
+  - `org.stellar.sdk.Signer` and `org.stellar.sdk.SignedPayloadSigner` has been removed, use `org.stellar.sdk.SignerKey` instead.
+  - The `StrKey#encodeSignedPayload(SignedPayloadSigner)` and `StrKey#decodeSignedPayload(String)` methods now operate on raw `byte[]` instead of the `SignedPayloadSigner` object to provide more flexibility.
+  - `KeyPair#fromXdrSignerKey()` and `KeyPair#getXdrSignerKey()` have been removed, use `org.stellar.sdk.SignerKey` instead.
+  - The type of `TransactionPreconditions#extraSigners` has been changed from `List<org.stellar.sdk.xdr.SignerKey>` to `List<org.stellar.sdk.SignerKey>`.
+  - The type of `SetOptionsOperation#signer` has been changed from `org.stellar.sdk.xdr.SignerKey` to `org.stellar.sdk.SignerKey`.
+  - The type of `RevokeSignerSponsorshipOperation#signer` has been changed from `org.stellar.sdk.xdr.SignerKey` to `org.stellar.sdk.SignerKey`.
 
 ### Update:
 - feat: add `pollTransaction` method to `SorobanServer` to poll transaction status with retry strategy. ([#696](https://github.com/stellar/java-stellar-sdk/pull/696))

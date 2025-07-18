@@ -7,8 +7,11 @@ import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.SignerKey;
 import org.stellar.sdk.StrKey;
-import org.stellar.sdk.xdr.*;
+import org.stellar.sdk.xdr.OperationType;
+import org.stellar.sdk.xdr.RevokeSponsorshipOp;
+import org.stellar.sdk.xdr.RevokeSponsorshipType;
 
 /**
  * Represents <a
@@ -43,7 +46,7 @@ public class RevokeSignerSponsorshipOperation extends Operation {
     String accountId =
         StrKey.encodeEd25519PublicKey(
             op.getSigner().getAccountID().getAccountID().getEd25519().getUint256());
-    SignerKey signer = op.getSigner().getSignerKey();
+    SignerKey signer = SignerKey.fromXdr(op.getSigner().getSignerKey());
     return new RevokeSignerSponsorshipOperation(accountId, signer);
   }
 
@@ -54,7 +57,7 @@ public class RevokeSignerSponsorshipOperation extends Operation {
     RevokeSponsorshipOp.RevokeSponsorshipOpSigner xdrSigner =
         new RevokeSponsorshipOp.RevokeSponsorshipOpSigner();
     xdrSigner.setAccountID(KeyPair.fromAccountId(accountId).getXdrAccountId());
-    xdrSigner.setSignerKey(signer);
+    xdrSigner.setSignerKey(signer.toXdr());
     op.setSigner(xdrSigner);
     op.setDiscriminant(RevokeSponsorshipType.REVOKE_SPONSORSHIP_SIGNER);
 
