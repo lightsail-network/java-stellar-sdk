@@ -738,4 +738,226 @@ public class TransactionTest {
 
     server.close();
   }
+
+  @Test
+  public void testSignExtraSignersPayloadOneExtraSigner() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCCS5ZBI7WVIJ4SW36WGOQQIWJYCL3VOAULSXX3FB57USIO25EDOYQHH");
+    KeyPair signer1 =
+        KeyPair.fromSecretSeed("SDHOAMBNLGCE2MV5ZKIVZAQD3VCLGP53P3OBSBI6UN5L5XZI5TKHFQL4");
+    String destination = "GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2";
+    BigDecimal amount = new BigDecimal("1000.0");
+    long sequence = 1;
+    long fee = 200;
+    Asset asset = new AssetTypeNative();
+
+    List<SignerKey> extraSigners = new ArrayList<>();
+    extraSigners.add(
+        SignerKey.fromEd25519SignedPayload(signer1.getAccountId(), "cat!!!".getBytes()));
+    TransactionPreconditions cond =
+        TransactionPreconditions.builder().extraSigners(extraSigners).build();
+
+    PaymentOperation op =
+        PaymentOperation.builder().destination(destination).asset(asset).amount(amount).build();
+
+    Transaction tx =
+        new Transaction(
+            source.getAccountId(),
+            fee,
+            sequence,
+            new org.stellar.sdk.operations.Operation[] {op},
+            null,
+            cond,
+            null,
+            Network.PUBLIC);
+
+    tx.signExtraSignersPayload(signer1);
+    assertEquals(1, tx.getSignatures().size());
+    assertEquals(tx.getSignatures().get(0), signer1.signPayloadDecorated("cat!!!".getBytes()));
+  }
+
+  @Test
+  public void testSignExtraSignersPayloadTwoExtraSigners() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCCS5ZBI7WVIJ4SW36WGOQQIWJYCL3VOAULSXX3FB57USIO25EDOYQHH");
+    KeyPair signer1 =
+        KeyPair.fromSecretSeed("SDHOAMBNLGCE2MV5ZKIVZAQD3VCLGP53P3OBSBI6UN5L5XZI5TKHFQL4");
+    String destination = "GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2";
+    BigDecimal amount = new BigDecimal("1000.0");
+    long sequence = 1;
+    long fee = 200;
+    Asset asset = new AssetTypeNative();
+
+    List<SignerKey> extraSigners = new ArrayList<>();
+    extraSigners.add(
+        SignerKey.fromEd25519SignedPayload(signer1.getAccountId(), "cat!!!".getBytes()));
+    extraSigners.add(SignerKey.fromEd25519SignedPayload(signer1.getAccountId(), "cat".getBytes()));
+
+    TransactionPreconditions cond =
+        new TransactionPreconditions(null, null, null, BigInteger.ZERO, 0, extraSigners);
+
+    PaymentOperation op =
+        PaymentOperation.builder().destination(destination).asset(asset).amount(amount).build();
+
+    Transaction tx =
+        new Transaction(
+            source.getAccountId(),
+            fee,
+            sequence,
+            new org.stellar.sdk.operations.Operation[] {op},
+            null,
+            cond,
+            null,
+            Network.PUBLIC);
+
+    tx.signExtraSignersPayload(signer1);
+    assertEquals(2, tx.getSignatures().size());
+    assertEquals(tx.getSignatures().get(0), signer1.signPayloadDecorated("cat!!!".getBytes()));
+    assertEquals(tx.getSignatures().get(1), signer1.signPayloadDecorated("cat".getBytes()));
+  }
+
+  @Test
+  public void testSignExtraSignersPayloadTwoExtraSignersNotSameSigner() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCCS5ZBI7WVIJ4SW36WGOQQIWJYCL3VOAULSXX3FB57USIO25EDOYQHH");
+    KeyPair signer1 =
+        KeyPair.fromSecretSeed("SDHOAMBNLGCE2MV5ZKIVZAQD3VCLGP53P3OBSBI6UN5L5XZI5TKHFQL4");
+    KeyPair signer2 =
+        KeyPair.fromSecretSeed("SAUQGMBSYKZ73CZCVEOE44Z7FDSZWP4VORDVQMGOTBADVT3K5SQXBFTY");
+    String destination = "GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2";
+    BigDecimal amount = new BigDecimal("1000.0");
+    long sequence = 1;
+    long fee = 200;
+    Asset asset = new AssetTypeNative();
+
+    List<SignerKey> extraSigners = new ArrayList<>();
+    extraSigners.add(
+        SignerKey.fromEd25519SignedPayload(signer1.getAccountId(), "cat!!!".getBytes()));
+    extraSigners.add(SignerKey.fromEd25519SignedPayload(signer2.getAccountId(), "cat".getBytes()));
+
+    TransactionPreconditions cond =
+        new TransactionPreconditions(null, null, null, BigInteger.ZERO, 0, extraSigners);
+
+    PaymentOperation op =
+        PaymentOperation.builder().destination(destination).asset(asset).amount(amount).build();
+
+    Transaction tx =
+        new Transaction(
+            source.getAccountId(),
+            fee,
+            sequence,
+            new org.stellar.sdk.operations.Operation[] {op},
+            null,
+            cond,
+            null,
+            Network.PUBLIC);
+
+    tx.signExtraSignersPayload(signer1);
+    assertEquals(1, tx.getSignatures().size());
+    assertEquals(tx.getSignatures().get(0), signer1.signPayloadDecorated("cat!!!".getBytes()));
+
+    tx.signExtraSignersPayload(signer2);
+    assertEquals(2, tx.getSignatures().size());
+    assertEquals(tx.getSignatures().get(1), signer2.signPayloadDecorated("cat".getBytes()));
+  }
+
+  @Test
+  public void testSignExtraSignersPayloadNoExtraSigner() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCCS5ZBI7WVIJ4SW36WGOQQIWJYCL3VOAULSXX3FB57USIO25EDOYQHH");
+    KeyPair signer1 =
+        KeyPair.fromSecretSeed("SDHOAMBNLGCE2MV5ZKIVZAQD3VCLGP53P3OBSBI6UN5L5XZI5TKHFQL4");
+    String destination = "GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2";
+    BigDecimal amount = new BigDecimal("1000.0");
+    long sequence = 1;
+    long fee = 200;
+    Asset asset = new AssetTypeNative();
+
+    TransactionPreconditions cond =
+        new TransactionPreconditions(
+            null, null, null, BigInteger.ZERO, 0, new ArrayList<SignerKey>());
+
+    PaymentOperation op =
+        PaymentOperation.builder().destination(destination).asset(asset).amount(amount).build();
+
+    Transaction tx =
+        new Transaction(
+            source.getAccountId(),
+            fee,
+            sequence,
+            new org.stellar.sdk.operations.Operation[] {op},
+            null,
+            cond,
+            null,
+            Network.PUBLIC);
+
+    tx.signExtraSignersPayload(signer1);
+    assertEquals(0, tx.getSignatures().size());
+  }
+
+  @Test
+  public void testSignExtraSignersCondIsNull() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCCS5ZBI7WVIJ4SW36WGOQQIWJYCL3VOAULSXX3FB57USIO25EDOYQHH");
+    KeyPair signer1 =
+        KeyPair.fromSecretSeed("SDHOAMBNLGCE2MV5ZKIVZAQD3VCLGP53P3OBSBI6UN5L5XZI5TKHFQL4");
+    String destination = "GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2";
+    BigDecimal amount = new BigDecimal("1000.0");
+    long sequence = 1;
+    long fee = 200;
+    Asset asset = new AssetTypeNative();
+
+    PaymentOperation op =
+        PaymentOperation.builder().destination(destination).asset(asset).amount(amount).build();
+
+    Transaction tx =
+        new Transaction(
+            source.getAccountId(),
+            fee,
+            sequence,
+            new org.stellar.sdk.operations.Operation[] {op},
+            null,
+            null,
+            null,
+            Network.PUBLIC);
+
+    tx.signExtraSignersPayload(signer1);
+    assertEquals(0, tx.getSignatures().size());
+  }
+
+  @Test
+  public void testSignExtraSignersPayloadIsNotSignedExtraSigner() {
+    KeyPair source =
+        KeyPair.fromSecretSeed("SCCS5ZBI7WVIJ4SW36WGOQQIWJYCL3VOAULSXX3FB57USIO25EDOYQHH");
+    KeyPair signer1 =
+        KeyPair.fromSecretSeed("SDHOAMBNLGCE2MV5ZKIVZAQD3VCLGP53P3OBSBI6UN5L5XZI5TKHFQL4");
+    String destination = "GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2";
+    BigDecimal amount = new BigDecimal("1000.0");
+    long sequence = 1;
+    long fee = 200;
+    Asset asset = new AssetTypeNative();
+
+    List<SignerKey> extraSigners = new ArrayList<>();
+    extraSigners.add(SignerKey.fromEd25519PublicKey(signer1.getAccountId()));
+
+    TransactionPreconditions cond =
+        new TransactionPreconditions(null, null, null, BigInteger.ZERO, 0, extraSigners);
+
+    PaymentOperation op =
+        PaymentOperation.builder().destination(destination).asset(asset).amount(amount).build();
+
+    Transaction tx =
+        new Transaction(
+            source.getAccountId(),
+            fee,
+            sequence,
+            new org.stellar.sdk.operations.Operation[] {op},
+            null,
+            cond,
+            null,
+            Network.PUBLIC);
+
+    tx.signExtraSignersPayload(signer1);
+    assertEquals(0, tx.getSignatures().size());
+  }
 }

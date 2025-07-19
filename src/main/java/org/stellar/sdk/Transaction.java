@@ -18,6 +18,7 @@ import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.HashIDPreimage;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.SequenceNumber;
+import org.stellar.sdk.xdr.SignerKeyType;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 import org.stellar.sdk.xdr.TransactionEnvelope;
 import org.stellar.sdk.xdr.TransactionSignaturePayload;
@@ -168,6 +169,30 @@ public class Transaction extends AbstractTransaction {
       return Util.bytesToHex(claimableBalanceID.toXdrByteArray()).toLowerCase();
     } catch (IOException e) {
       throw new UnexpectedException(e);
+    }
+  }
+
+  /**
+   * Signs the extra signers payloads for this transaction using the provided signer.
+   *
+   * @param signer the KeyPair of the signer to use for signing the extra signers payloads.
+   */
+  public void signExtraSignersPayload(@NonNull KeyPair signer) {
+    if (preconditions == null || preconditions.getExtraSigners().isEmpty()) {
+      // No extra signers to sign for this transaction
+      return;
+    }
+    for (SignerKey extraSigner : preconditions.getExtraSigners()) {
+      if (extraSigner.getType() != SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD) {
+        continue;
+      }
+      SignerKey.Ed25519SignedPayload ed25519SignedPayload = extraSigner.toEd25519SignedPayload();
+      if (!Arrays.equals(ed25519SignedPayload.getEd25519PublicKey(), signer.getPublicKey())) {
+        // This extra signer is not the one we are signing for
+        continue;
+      }
+      DecoratedSignature signature = signer.signPayloadDecorated(ed25519SignedPayload.getPayload());
+      signatures.add(signature);
     }
   }
 

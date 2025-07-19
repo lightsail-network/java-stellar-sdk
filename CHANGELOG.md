@@ -4,6 +4,7 @@
 
 ### Update:
 - feat: add `isValidSignedPayload` to `StrKey` class, this function can be used to validate the ed25519 signed payload. ([#712](https://github.com/stellar/java-stellar-sdk/pull/712))
+- feat: add `signExtraSignersPayload` to sign extra signers payloads in `Transaction` class. ([#713](https://github.com/stellar/java-stellar-sdk/pull/713))
 
 ### Breaking changes:
 - feat: add `org.stellar.sdk.SignerKey` for enhanced signer key handling. ([#712](https://github.com/stellar/java-stellar-sdk/pull/712))
