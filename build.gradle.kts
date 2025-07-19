@@ -8,6 +8,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.51.0"
     id("io.freefair.lombok") version "8.10.2"
     id("com.gradleup.nmcp") version "0.0.9"
+    kotlin("jvm") version "2.2.0"
 }
 
 group = "network.lightsail"
@@ -23,6 +24,10 @@ spotless {
         importOrder("java", "javax", "org.stellar")
         removeUnusedImports()
         googleJavaFormat()
+    }
+    kotlin {
+        target("src/test/kotlin/**/*.kt")
+        ktlint("1.7.0")
     }
 }
 
@@ -46,6 +51,9 @@ dependencies {
     testImplementation("org.bouncycastle:bcpkix-jdk18on:1.79")  // mock https
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    testImplementation("io.kotest:kotest-runner-junit5:6.0.0.M5")
+    testImplementation("io.kotest:kotest-assertions-core:6.0.0.M5")
 }
 
 tasks {
