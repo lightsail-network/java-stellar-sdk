@@ -98,7 +98,7 @@ public class TOID {
 
   /**
    * The inclusive range representation between two ledgers inclusive. The end value points at the
-   * end+1 ledger so when using this range make sure < comparison is used for the upper bound.
+   * end+1 ledger, so when using this range makes sure &lt; comparison is used for the upper bound.
    *
    * @param from The start ledger sequence.
    * @param to The end ledger sequence.
