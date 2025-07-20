@@ -15,8 +15,13 @@ group = "network.lightsail"
 version = "2.0.0-beta0"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+kotlin {
+    jvmToolchain(8)
 }
 
 spotless {
@@ -27,7 +32,7 @@ spotless {
     }
     kotlin {
         target("src/test/kotlin/**/*.kt")
-        ktlint("1.7.0")
+        ktfmt("0.56").googleStyle()
     }
 }
 
@@ -52,8 +57,8 @@ dependencies {
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("io.kotest:kotest-runner-junit5:6.0.0.M5")
-    testImplementation("io.kotest:kotest-assertions-core:6.0.0.M5")
+    testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
+    testImplementation("io.kotest:kotest-assertions-core:5.9.1")
 }
 
 tasks {
