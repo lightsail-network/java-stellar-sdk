@@ -102,55 +102,60 @@ class AddressTest :
       test("should convert account to SCAddress") {
         val address = Address(accountId)
         val scAddress = address.toSCAddress()
-        
+
         val expectedXdr = "AAAAAAAAAAA/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg=="
         val expectedBytes = Base64.getDecoder().decode(expectedXdr)
-        val expectedScAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
-        
+        val expectedScAddress =
+          SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
+
         scAddress shouldBe expectedScAddress
       }
 
       test("should convert contract to SCAddress") {
         val address = Address(contractId)
         val scAddress = address.toSCAddress()
-        
+
         val expectedXdr = "AAAAAT8MNL+TrQ2ZcdBMzJD3BVEcg4qtlzSkovsNegP8f+ia"
         val expectedBytes = Base64.getDecoder().decode(expectedXdr)
-        val expectedScAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
-        
+        val expectedScAddress =
+          SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
+
         scAddress shouldBe expectedScAddress
       }
 
       test("should convert muxed account to SCAddress") {
         val address = Address(muxedAccountId)
         val scAddress = address.toSCAddress()
-        
+
         val expectedXdr = "AAAAAiAAdX7q5YP8UN1mn5dnOswl7HJYI6xz+vbH3zGtMeUJAAAAAAAABNI="
         val expectedBytes = Base64.getDecoder().decode(expectedXdr)
-        val expectedScAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
-        
+        val expectedScAddress =
+          SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
+
         scAddress shouldBe expectedScAddress
       }
 
       test("should convert claimable balance to SCAddress") {
         val address = Address(claimableBalanceId)
         val scAddress = address.toSCAddress()
-        
+
         val expectedXdr = "AAAAAwAAAAA/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg=="
         val expectedBytes = Base64.getDecoder().decode(expectedXdr)
-        val expectedScAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
-        
+        val expectedScAddress =
+          SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
+
         scAddress shouldBe expectedScAddress
       }
 
       test("should convert liquidity pool to SCAddress") {
         val address = Address(liquidityPoolId)
         val scAddress = address.toSCAddress()
-        
+
         val expectedXdr = "AAAABD8MNL+TrQ2ZcdBMzJD3BVEcg4qtlzSkovsNegP8f+ia"
         val expectedBytes = Base64.getDecoder().decode(expectedXdr)
-        val expectedScAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
-        
+        val expectedScAddress =
+          SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
+
         scAddress shouldBe expectedScAddress
       }
     }
@@ -160,7 +165,7 @@ class AddressTest :
         val xdr = "AAAAAAAAAAA/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg=="
         val bytes = Base64.getDecoder().decode(xdr)
         val scAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(bytes)))
-        
+
         val address = Address.fromSCAddress(scAddress)
         address.toString() shouldBe accountId
         address.addressType shouldBe Address.AddressType.ACCOUNT
@@ -170,7 +175,7 @@ class AddressTest :
         val xdr = "AAAAAT8MNL+TrQ2ZcdBMzJD3BVEcg4qtlzSkovsNegP8f+ia"
         val bytes = Base64.getDecoder().decode(xdr)
         val scAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(bytes)))
-        
+
         val address = Address.fromSCAddress(scAddress)
         address.toString() shouldBe contractId
         address.addressType shouldBe Address.AddressType.CONTRACT
@@ -180,7 +185,7 @@ class AddressTest :
         val xdr = "AAAAAiAAdX7q5YP8UN1mn5dnOswl7HJYI6xz+vbH3zGtMeUJAAAAAAAABNI="
         val bytes = Base64.getDecoder().decode(xdr)
         val scAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(bytes)))
-        
+
         val address = Address.fromSCAddress(scAddress)
         address.toString() shouldBe muxedAccountId
         address.addressType shouldBe Address.AddressType.MUXED_ACCOUNT
@@ -190,7 +195,7 @@ class AddressTest :
         val xdr = "AAAAAwAAAAA/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg=="
         val bytes = Base64.getDecoder().decode(xdr)
         val scAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(bytes)))
-        
+
         val address = Address.fromSCAddress(scAddress)
         address.toString() shouldBe claimableBalanceId
         address.addressType shouldBe Address.AddressType.CLAIMABLE_BALANCE
@@ -200,7 +205,7 @@ class AddressTest :
         val xdr = "AAAABD8MNL+TrQ2ZcdBMzJD3BVEcg4qtlzSkovsNegP8f+ia"
         val bytes = Base64.getDecoder().decode(xdr)
         val scAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(bytes)))
-        
+
         val address = Address.fromSCAddress(scAddress)
         address.toString() shouldBe liquidityPoolId
         address.addressType shouldBe Address.AddressType.LIQUIDITY_POOL
@@ -211,11 +216,11 @@ class AddressTest :
       test("should convert address to SCVal") {
         val address = Address(contractId)
         val scVal = address.toSCVal()
-        
+
         val expectedXdr = "AAAAEgAAAAE/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg=="
         val expectedBytes = Base64.getDecoder().decode(expectedXdr)
         val expectedSCVal = SCVal.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
-        
+
         scVal shouldBe expectedSCVal
       }
 
@@ -223,7 +228,7 @@ class AddressTest :
         val xdr = "AAAAEgAAAAE/DDS/k60NmXHQTMyQ9wVRHIOKrZc0pKL7DXoD/H/omg=="
         val bytes = Base64.getDecoder().decode(xdr)
         val scVal = SCVal.decode(XdrDataInputStream(ByteArrayInputStream(bytes)))
-        
+
         val address = Address.fromSCVal(scVal)
         address.toString() shouldBe contractId
         address.addressType shouldBe Address.AddressType.CONTRACT
