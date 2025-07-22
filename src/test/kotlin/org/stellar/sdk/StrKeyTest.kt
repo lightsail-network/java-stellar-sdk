@@ -189,7 +189,7 @@ class StrKeyTest :
           "SAB5556L5AN5KSR5WF7UOEFDCIODEWEO7H2UR4S5R62DFTQOGLKOVZDY"
         ) shouldBe false
         StrKey.isValidClaimableBalance(
-          "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4T"
+          "BAT7RRVQBTQ3TEDLDICV7GNX6GE3KVQFJCNOESUI4QNA4TYYR44P2FS5PZYQ"
         ) shouldBe false
       }
     }
@@ -261,6 +261,20 @@ class StrKeyTest :
         }
       }
 
+      test("decode with invalid payload length - too long") {
+        val encoded =
+          "PBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5SAAAABA5P7IKKHQ7JVFVSMJM7EWEBTDTL5XMXMFVVTMG65GUYEHAQCX6JHGGBLBW7EHIJJD7FH7HQL5FLDFBC22QJGTGQEHXVY4GEKCRHGGD7IBAAAAAS6LA"
+        shouldThrow<IllegalArgumentException> { StrKey.decodeSignedPayload(encoded) }
+          .message shouldBe
+          "Invalid data length, the length should be between 40 and 100 bytes, got 104"
+      }
+
+      test("decode with invalid payload length - too short") {
+        val encoded = "PACLVBTZGFKZBKERFMUDQQRJODWJLFAAQYF7XH6I6SXDYAPXP7LXYM37QTTGBGQI4LCA"
+        shouldThrow<IllegalArgumentException> { StrKey.decodeSignedPayload(encoded) }
+          .message shouldBe
+          "Invalid data length, the length should be between 40 and 100 bytes, got 39"
+      }
       // TODO: add encode check
     }
 
