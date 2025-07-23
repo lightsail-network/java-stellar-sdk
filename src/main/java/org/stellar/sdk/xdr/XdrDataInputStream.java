@@ -97,8 +97,10 @@ public class XdrDataInputStream extends DataInputStream {
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
       int read = mIn.read(b, off, len);
-      mCount += read;
-      pad();
+      if (read > 0) {
+        mCount += read;
+        pad();
+      }
       return read;
     }
 
