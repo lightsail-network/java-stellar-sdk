@@ -68,6 +68,9 @@ public class ClawbackClaimableBalanceOperation extends Operation {
           B extends ClawbackClaimableBalanceOperationBuilder<C, B>>
       extends OperationBuilder<C, B> {
     public B balanceId(@NonNull String balanceId) {
+      if (balanceId.length() != 8 + 64) {
+        throw new IllegalArgumentException("invalid balanceId: " + balanceId);
+      }
       this.balanceId = balanceId.toLowerCase();
       return self();
     }
