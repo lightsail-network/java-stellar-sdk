@@ -14,6 +14,7 @@ class MemoTest :
         val memo = Memo.none()
         memo.toXdr().discriminant shouldBe MemoType.MEMO_NONE
         memo.toString() shouldBe ""
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
     }
 
@@ -24,6 +25,7 @@ class MemoTest :
         memo.text shouldBe "test"
         memo.bytes shouldBe "test".toByteArray(StandardCharsets.UTF_8)
         memo.toString() shouldBe "test"
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should create text memo from empty string") {
@@ -32,6 +34,10 @@ class MemoTest :
         memo.text shouldBe ""
         memo.bytes shouldBe "".toByteArray(StandardCharsets.UTF_8)
         memo.toString() shouldBe ""
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
+
+        // https://discord.com/channels/897514728459468821/1082043640140017664/1397339401713094778
+        org.stellar.sdk.xdr.Memo.fromXdrBase64(memo.toXdr().toXdrBase64())
       }
 
       test("should create text memo with UTF-8 content") {
@@ -40,6 +46,7 @@ class MemoTest :
         memo.text shouldBe "三"
         memo.bytes shouldBe "三".toByteArray(StandardCharsets.UTF_8)
         memo.toString() shouldBe "三"
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should create text memo with exactly 28 bytes") {
@@ -50,6 +57,7 @@ class MemoTest :
         memo.text shouldBe text
         memo.bytes shouldBe text.toByteArray(StandardCharsets.UTF_8)
         memo.toString() shouldBe text
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should throw exception when text is too long") {
@@ -74,6 +82,7 @@ class MemoTest :
         memo.toXdr().discriminant shouldBe MemoType.MEMO_ID
         memo.toXdr().id.uint64.number shouldBe BigInteger.valueOf(9223372036854775807L)
         memo.toString() shouldBe "9223372036854775807"
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should create id memo with 0") {
@@ -82,6 +91,7 @@ class MemoTest :
         memo.toXdr().discriminant shouldBe MemoType.MEMO_ID
         memo.toXdr().id.uint64.number shouldBe BigInteger.ZERO
         memo.toString() shouldBe "0"
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should throw exception when id is negative") {
@@ -98,6 +108,7 @@ class MemoTest :
         memo.bytes shouldBe bytes
         memo.hexValue shouldBe "4141414141414141414141414141414141414141414141414141414141414141"
         memo.toString() shouldBe "4141414141414141414141414141414141414141414141414141414141414141"
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should create hash memo from hex string") {
@@ -114,6 +125,7 @@ class MemoTest :
         memo.toXdr().discriminant shouldBe MemoType.MEMO_HASH
         memo.hexValue shouldBe hashHex.lowercase()
         memo.toString() shouldBe hashHex.lowercase()
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should throw exception when bytes are not 32-bytes long") {
@@ -143,6 +155,7 @@ class MemoTest :
         memo.bytes shouldBe bytes
         memo.hexValue shouldBe "4141414141414141414141414141414141414141414141414141414141414141"
         memo.toString() shouldBe "4141414141414141414141414141414141414141414141414141414141414141"
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should create return hash memo from hex string") {
@@ -151,6 +164,7 @@ class MemoTest :
         memo.toXdr().discriminant shouldBe MemoType.MEMO_RETURN
         memo.hexValue shouldBe hashHex.lowercase()
         memo.toString() shouldBe hashHex.lowercase()
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should create return hash memo from uppercase hex string") {
@@ -159,6 +173,7 @@ class MemoTest :
         memo.toXdr().discriminant shouldBe MemoType.MEMO_RETURN
         memo.hexValue shouldBe hashHex.lowercase()
         memo.toString() shouldBe hashHex.lowercase()
+        Memo.fromXdr(memo.toXdr()) shouldBe memo
       }
 
       test("should throw exception when bytes are not 32-bytes long") {
