@@ -2,6 +2,11 @@
 
 ## Pending
 
+## 1.5.1
+
+### Update:
+- fix: avoid unnecessary padding during writing and reading of XDR data. ([#720](https://github.com/stellar/java-stellar-sdk/pull/720))
+
 ## 1.5.0
 
 ### Update:
