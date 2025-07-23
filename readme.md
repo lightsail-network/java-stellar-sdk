@@ -14,13 +14,13 @@ The Java Stellar SDK library provides APIs to build transactions and connect to 
 <dependency>
     <groupId>network.lightsail</groupId>
     <artifactId>stellar-sdk</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
 </dependency>
 ```
 
 ### Gradle
 ```groovy
-implementation 'network.lightsail:stellar-sdk:1.5.0'
+implementation 'network.lightsail:stellar-sdk:1.5.1'
 ```
 
 You can find instructions on how to install this dependency using alternative package managers [here](https://central.sonatype.com/artifact/network.lightsail/stellar-sdk).
