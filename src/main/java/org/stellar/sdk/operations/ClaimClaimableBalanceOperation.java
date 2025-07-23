@@ -66,6 +66,10 @@ public class ClaimClaimableBalanceOperation extends Operation {
           B extends ClaimClaimableBalanceOperationBuilder<C, B>>
       extends OperationBuilder<C, B> {
     public B balanceId(@NonNull String balanceId) {
+      // TODO: add validation in other places
+      if (balanceId.length() != 8 + 64) {
+        throw new IllegalArgumentException("invalid balanceId: " + balanceId);
+      }
       this.balanceId = balanceId.toLowerCase();
       return self();
     }
