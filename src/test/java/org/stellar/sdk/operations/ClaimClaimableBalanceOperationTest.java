@@ -60,13 +60,13 @@ public class ClaimClaimableBalanceOperationTest {
   public void testBuilderWithInvalidEmptyBalanceId() {
     String balanceId = "";
     String accountId = "GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN";
-    ClaimClaimableBalanceOperation operation =
-        ClaimClaimableBalanceOperation.builder()
-            .balanceId(balanceId)
-            .sourceAccount(accountId)
-            .build();
+
     try {
-      operation.toXdr();
+      ClaimClaimableBalanceOperation operation =
+          ClaimClaimableBalanceOperation.builder()
+              .balanceId(balanceId)
+              .sourceAccount(accountId)
+              .build();
       fail();
     } catch (IllegalArgumentException e) {
       assertEquals("invalid balanceId: ", e.getMessage());
@@ -77,13 +77,13 @@ public class ClaimClaimableBalanceOperationTest {
   public void testBuilderWithInvalidClaimableBalanceIDTypeMissing() {
     String balanceId = "6d6a0c142516a9cc7885a85c5aba3a1f4af5181cf9e7a809ac7ae5e4a58c825f";
     String accountId = "GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN";
-    ClaimClaimableBalanceOperation operation =
-        ClaimClaimableBalanceOperation.builder()
-            .balanceId(balanceId)
-            .sourceAccount(accountId)
-            .build();
+
     try {
-      operation.toXdr();
+      ClaimClaimableBalanceOperation operation =
+          ClaimClaimableBalanceOperation.builder()
+              .balanceId(balanceId)
+              .sourceAccount(accountId)
+              .build();
       fail();
     } catch (RuntimeException ignored) {
     }
@@ -93,13 +93,12 @@ public class ClaimClaimableBalanceOperationTest {
   public void testBuilderWithInvalidClaimableBalanceIDBodyMissing() {
     String balanceId = "00000000";
     String accountId = "GABTTS6N4CT7AUN4LD7IFIUMRD5PSMCW6QTLIQNEFZDEI6ZQVUCQMCLN";
-    ClaimClaimableBalanceOperation operation =
-        ClaimClaimableBalanceOperation.builder()
-            .balanceId(balanceId)
-            .sourceAccount(accountId)
-            .build();
     try {
-      operation.toXdr();
+      ClaimClaimableBalanceOperation operation =
+          ClaimClaimableBalanceOperation.builder()
+              .balanceId(balanceId)
+              .sourceAccount(accountId)
+              .build();
       fail();
     } catch (IllegalArgumentException e) {
       assertEquals("invalid balanceId: " + balanceId, e.getMessage());

@@ -43,6 +43,11 @@
 - refactor(SorobanServer)!: remove deprecated `pagingToken` field from `GetEventsResponse.EventInfo`. ([#707](https://github.com/stellar/java-stellar-sdk/pull/707))
 - refactor(SorobanServer)!: `inSuccessfulContractCall` in `GetEventsResponse.EventInfo` has been marked as deprecated, it will be removed in the next release. ([#707](https://github.com/stellar/java-stellar-sdk/pull/707))
 
+## 1.5.1
+
+### Update:
+- fix: avoid unnecessary padding during writing and reading of XDR data. ([#720](https://github.com/stellar/java-stellar-sdk/pull/720))
+
 ## 1.5.0
 
 ### Update:
