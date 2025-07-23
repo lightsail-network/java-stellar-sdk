@@ -379,7 +379,12 @@ public class AssembledTransaction<T> {
       throw new IllegalArgumentException(
           "Unable to convert transaction meta to TransactionMeta", e);
     }
-    SCVal resultVal = transactionMeta.getV3().getSorobanMeta().getReturnValue();
+    SCVal resultVal;
+    if (transactionMeta.getV3() != null) {
+      resultVal = transactionMeta.getV3().getSorobanMeta().getReturnValue();
+    } else {
+      resultVal = transactionMeta.getV4().getSorobanMeta().getReturnValue();
+    }
     return parseResultXdrFn != null ? parseResultXdrFn.apply(resultVal) : (T) resultVal;
   }
 
