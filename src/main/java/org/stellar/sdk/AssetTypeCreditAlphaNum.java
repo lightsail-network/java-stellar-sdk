@@ -25,8 +25,7 @@ public abstract class AssetTypeCreditAlphaNum extends Asset {
    *
    * @param code Asset code
    * @param issuer Asset issuer
-   * @throws IllegalArgumentException when code is invalid or issuer is not a valid Ed25519 public
-   *     key
+   * @throws IllegalArgumentException when the issuer is not a valid Ed25519 public key.
    */
   public AssetTypeCreditAlphaNum(@NonNull String code, @NonNull String issuer) {
     if (!StrKey.isValidEd25519PublicKey(issuer)) {
