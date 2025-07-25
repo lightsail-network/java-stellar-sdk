@@ -64,24 +64,13 @@ public abstract class Asset implements Comparable<Asset> {
    * @param xdr XDR object
    */
   public static Asset fromXdr(org.stellar.sdk.xdr.Asset xdr) {
-    String accountId;
     switch (xdr.getDiscriminant()) {
       case ASSET_TYPE_NATIVE:
         return new AssetTypeNative();
       case ASSET_TYPE_CREDIT_ALPHANUM4:
-        String assetCode4 =
-            Util.paddedByteArrayToString(xdr.getAlphaNum4().getAssetCode().getAssetCode4());
-        accountId =
-            StrKey.encodeEd25519PublicKey(
-                xdr.getAlphaNum4().getIssuer().getAccountID().getEd25519().getUint256());
-        return new AssetTypeCreditAlphaNum4(assetCode4, accountId);
+        return AssetTypeCreditAlphaNum4.fromXdr(xdr.getAlphaNum4());
       case ASSET_TYPE_CREDIT_ALPHANUM12:
-        String assetCode12 =
-            Util.paddedByteArrayToString(xdr.getAlphaNum12().getAssetCode().getAssetCode12());
-        accountId =
-            StrKey.encodeEd25519PublicKey(
-                xdr.getAlphaNum12().getIssuer().getAccountID().getEd25519().getUint256());
-        return new AssetTypeCreditAlphaNum12(assetCode12, accountId);
+        return AssetTypeCreditAlphaNum12.fromXdr(xdr.getAlphaNum12());
       default:
         throw new IllegalArgumentException("Unknown asset type " + xdr.getDiscriminant());
     }
