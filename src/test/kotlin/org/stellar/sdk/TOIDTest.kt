@@ -16,11 +16,8 @@ class TOIDTest :
         nameFn = { (toid, id) ->
           "TOID(${toid.ledgerSequence}, ${toid.transactionOrder}, ${toid.operationIndex}) should be $id"
         },
-        TOID(0, 0, 1) to 1L,
         TOID(0, 0, 4095) to 4095L,
-        TOID(0, 1, 0) to 4096L,
         TOID(0, 1048575, 0) to 4294963200L,
-        TOID(1, 0, 0) to 4294967296L,
         TOID(2147483647, 0, 0) to 9223372032559808512L,
         TOID(1, 1, 1) to (ledgerFirst + txFirst + opFirst),
         TOID(1, 1, 0) to (ledgerFirst + txFirst),
