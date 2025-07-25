@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update:
+- refactor: add validation for asset issuer. ([#725](https://github.com/stellar/java-stellar-sdk/pull/725)) 
+
 ## 2.0.0-beta1
 
 ### Update:
