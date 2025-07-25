@@ -15,6 +15,8 @@ import org.stellar.sdk.xdr.Hash;
 @EqualsAndHashCode
 @Getter
 public class TrustLineAsset {
+  private static final int LIQUIDITY_POOL_ID_LENGTH = 64;
+
   /** The type of the asset. */
   @NonNull private final AssetType assetType;
 
@@ -53,6 +55,10 @@ public class TrustLineAsset {
    * @param liquidityPoolId The ID of the liquidity pool.
    */
   public TrustLineAsset(@NonNull String liquidityPoolId) {
+    if (liquidityPoolId.length() != LIQUIDITY_POOL_ID_LENGTH) {
+      throw new IllegalArgumentException(
+          "Liquidity pool ID must be a 64-character hexadecimal string");
+    }
     this.assetType = AssetType.ASSET_TYPE_POOL_SHARE;
     this.asset = null;
     this.liquidityPoolId = liquidityPoolId.toLowerCase();
