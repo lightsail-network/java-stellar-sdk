@@ -44,7 +44,7 @@ class KeyPairTest :
 
         keypair.canSign() shouldBe true
         keypair.accountId shouldBe expectedAccountId
-        String(keypair.getSecretSeed()!!) shouldBe seed
+        keypair.getSecretSeed() shouldBe seed.toCharArray()
       }
 
       test("should create keypair from char array seed") {
@@ -295,7 +295,7 @@ class KeyPairTest :
 
         keypair.canSign() shouldBe true
         keypair.accountId shouldBe expectedAccount
-        String(keypair.getSecretSeed()!!) shouldBe expectedSecret
+        keypair.getSecretSeed() shouldBe expectedSecret.toCharArray()
       }
     }
   })
