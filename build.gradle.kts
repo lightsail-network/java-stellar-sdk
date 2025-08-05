@@ -50,6 +50,7 @@ dependencies {
     implementation("org.bouncycastle:bcprov-jdk18on:1.79")
     implementation("commons-codec:commons-codec:1.17.1")
 
+    testImplementation(kotlin("stdlib"))
     testImplementation("org.mockito:mockito-core:5.14.2")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")
     testImplementation("junit:junit:4.13.2")
