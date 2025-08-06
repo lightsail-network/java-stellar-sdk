@@ -2,6 +2,8 @@
 
 ## Pending
 
+## 2.0.0-beta2
+
 ### Update:
 - refactor: add validation for asset issuer. ([#725](https://github.com/stellar/java-stellar-sdk/pull/725))
 - refactor: add validation for liquidity pool ID length in `TrustLineAsset`. ([#726](https://github.com/stellar/java-stellar-sdk/pull/726))
