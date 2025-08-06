@@ -68,7 +68,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     // Since we are adding local jar(libs/stellar-sdk.jar) as dependency,
     // gradle cannot automatically download the required third-party dependencies.
-    implementation(files("libs/stellar-sdk-2.0.0-beta1.jar"))
+    implementation(files("libs/stellar-sdk-2.0.0-beta2.jar"))
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:okhttp-sse:4.11.0")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
