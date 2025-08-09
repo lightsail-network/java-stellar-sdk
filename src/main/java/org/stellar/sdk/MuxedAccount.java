@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import java.math.BigInteger;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -69,14 +68,11 @@ public class MuxedAccount {
       this.muxedId = null;
     } else if (StrKey.isValidMed25519PublicKey(address)) {
       byte[] rawMed25519 = StrKey.decodeMed25519PublicKey(address);
-      // first 32 bytes are the ed25519 public key
-      byte[] ed25519PublicKey = new byte[32];
-      System.arraycopy(rawMed25519, 0, ed25519PublicKey, 0, 32);
-      // the next 8 bytes are the multiplexing ID, it's an unsigned 64-bit integer
-      byte[] muxedIdBytes = new byte[8];
-      System.arraycopy(rawMed25519, 32, muxedIdBytes, 0, 8);
-      this.accountId = StrKey.encodeEd25519PublicKey(ed25519PublicKey);
-      this.muxedId = new BigInteger(1, muxedIdBytes);
+      StrKey.RawMuxedAccountStrKey rawMuxedAccountStrKey =
+          StrKey.fromRawMuxedAccountStrKey(rawMed25519);
+      this.accountId =
+          StrKey.encodeEd25519PublicKey(rawMuxedAccountStrKey.getEd25519().getUint256());
+      this.muxedId = rawMuxedAccountStrKey.getId().getUint64().getNumber();
     } else {
       throw new IllegalArgumentException("Invalid address");
     }
@@ -92,7 +88,10 @@ public class MuxedAccount {
     if (muxedId == null) {
       return accountId;
     }
-    return StrKey.encodeMed25519PublicKey(StrKey.toMuxedAccountBytes(toXdr().getMed25519().getEd25519(), toXdr().getMed25519().getId()));
+    org.stellar.sdk.xdr.MuxedAccount.MuxedAccountMed25519 med25519 = toXdr().getMed25519();
+    return StrKey.encodeMed25519PublicKey(
+        StrKey.toRawMuxedAccountStrKey(
+            new StrKey.RawMuxedAccountStrKey(med25519.getEd25519(), med25519.getId())));
   }
 
   /**

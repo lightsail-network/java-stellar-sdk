@@ -3,10 +3,13 @@ package org.stellar.sdk;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
+import lombok.NonNull;
+import lombok.Value;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
@@ -709,7 +712,13 @@ public class StrKey {
     return true;
   }
 
-  static byte[] toMuxedAccountBytes(Uint256 ed25519, Uint64 id) {
+  @Value
+  static class RawMuxedAccountStrKey {
+    @NonNull Uint256 ed25519;
+    @NonNull Uint64 id;
+  }
+
+  static byte[] toRawMuxedAccountStrKey(RawMuxedAccountStrKey parameter) {
     // Get the 64-bit ID. This is the critical part of the explanation.
     //
     // THE KEY INSIGHT: Why using .longValue() is safe for a uint64
@@ -754,9 +763,24 @@ public class StrKey {
     // buffer,
     // it correctly serializes the original uint64 value into 8 bytes, regardless of whether Java
     // interpreted the intermediate `long` as positive or negative.
-    long idLong = id.getUint64().getNumber().longValue();
-    byte[] ed25519Bytes = ed25519.getUint256();
+    long idLong = parameter.getId().getUint64().getNumber().longValue();
+    byte[] ed25519Bytes = parameter.getEd25519().getUint256();
     return ByteBuffer.allocate(ed25519Bytes.length + 8).put(ed25519Bytes).putLong(idLong).array();
+  }
+
+  static RawMuxedAccountStrKey fromRawMuxedAccountStrKey(byte @NonNull [] data) {
+    if (data.length != 40) {
+      throw new IllegalArgumentException(
+          "Muxed account bytes must be 40 bytes long, got " + data.length);
+    }
+    ByteBuffer buffer = ByteBuffer.wrap(data);
+    byte[] ed25519Bytes = new byte[32];
+    buffer.get(ed25519Bytes);
+    byte[] idBytes = new byte[8];
+    buffer.get(idBytes);
+    Uint256 ed25519 = new Uint256(ed25519Bytes);
+    Uint64 id = new Uint64(new XdrUnsignedHyperInteger(new BigInteger(1, idBytes)));
+    return new RawMuxedAccountStrKey(ed25519, id);
   }
 
   enum VersionByte {

@@ -3,7 +3,6 @@ package org.stellar.sdk;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
-import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClaimableBalanceIDType;
 import org.stellar.sdk.xdr.ContractID;
@@ -13,8 +12,6 @@ import org.stellar.sdk.xdr.PoolID;
 import org.stellar.sdk.xdr.SCAddress;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
-import org.stellar.sdk.xdr.Uint256;
-import org.stellar.sdk.xdr.Uint64;
 
 /**
  * Represents a single address in the Stellar network. An address can represent an account,
@@ -117,7 +114,11 @@ public class Address {
       case SC_ADDRESS_TYPE_CONTRACT:
         return fromContract(scAddress.getContractId().getContractID().getHash());
       case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
-        return fromMuxedAccount(StrKey.toMuxedAccountBytes(scAddress.getMuxedAccount().getEd25519(), scAddress.getMuxedAccount().getId()));
+        return fromMuxedAccount(
+            StrKey.toRawMuxedAccountStrKey(
+                new StrKey.RawMuxedAccountStrKey(
+                    scAddress.getMuxedAccount().getEd25519(),
+                    scAddress.getMuxedAccount().getId())));
       case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
         if (scAddress.getClaimableBalanceId().getDiscriminant()
             != ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0) {
@@ -169,16 +170,13 @@ public class Address {
         break;
       case MUXED_ACCOUNT:
         scAddress.setDiscriminant(org.stellar.sdk.xdr.SCAddressType.SC_ADDRESS_TYPE_MUXED_ACCOUNT);
-        Uint64 id;
-        Uint256 ed25519;
-        try {
-          id = Uint64.fromXdrByteArray(Arrays.copyOfRange(this.key, 32, 40));
-          ed25519 = Uint256.fromXdrByteArray(Arrays.copyOfRange(this.key, 0, 32));
-        } catch (IOException e) {
-          throw new UnexpectedException(e);
-        }
+        StrKey.RawMuxedAccountStrKey rawMuxedAccountStrKey =
+            StrKey.fromRawMuxedAccountStrKey(this.key);
         MuxedEd25519Account muxedEd25519Account =
-            MuxedEd25519Account.builder().id(id).ed25519(ed25519).build();
+            MuxedEd25519Account.builder()
+                .id(rawMuxedAccountStrKey.getId())
+                .ed25519(rawMuxedAccountStrKey.getEd25519())
+                .build();
         scAddress.setMuxedAccount(muxedEd25519Account);
         break;
       case CLAIMABLE_BALANCE:
