@@ -405,7 +405,7 @@ class StrKeyTest :
           val ed25519 = org.stellar.sdk.xdr.Uint256(ed25519Bytes)
           val id =
             org.stellar.sdk.xdr.Uint64(org.stellar.sdk.xdr.XdrUnsignedHyperInteger(testCase.id))
-          val param = StrKey.RawMuxedAccountStrKey(ed25519, id)
+          val param = StrKey.RawMuxedAccountStrKeyParameter(ed25519, id)
 
           val bytes = StrKey.toRawMuxedAccountStrKey(param)
           bytes.size shouldBe 40
