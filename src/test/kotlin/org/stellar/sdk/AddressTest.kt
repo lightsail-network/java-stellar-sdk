@@ -127,7 +127,7 @@ class AddressTest :
         val address = Address(muxedAccountId)
         val scAddress = address.toSCAddress()
 
-        val expectedXdr = "AAAAAiAAdX7q5YP8UN1mn5dnOswl7HJYI6xz+vbH3zGtMeUJAAAAAAAABNI="
+        val expectedXdr = "AAAAAgAAAAAAAATSIAB1furlg/xQ3Wafl2c6zCXsclgjrHP69sffMa0x5Qk="
         val expectedBytes = Base64.getDecoder().decode(expectedXdr)
         val expectedScAddress =
           SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(expectedBytes)))
@@ -182,7 +182,7 @@ class AddressTest :
       }
 
       test("should create address from muxed account SCAddress") {
-        val xdr = "AAAAAiAAdX7q5YP8UN1mn5dnOswl7HJYI6xz+vbH3zGtMeUJAAAAAAAABNI="
+        val xdr = "AAAAAgAAAAAAAATSIAB1furlg/xQ3Wafl2c6zCXsclgjrHP69sffMa0x5Qk="
         val bytes = Base64.getDecoder().decode(xdr)
         val scAddress = SCAddress.decode(XdrDataInputStream(ByteArrayInputStream(bytes)))
 

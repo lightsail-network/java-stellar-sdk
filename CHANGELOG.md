@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update
+- fix: fix muxed account handling in `Address` class. ([#733](https://github.com/stellar/java-stellar-sdk/pull/733))
+
 ## 2.0.0-beta2
 
 ### Update:
