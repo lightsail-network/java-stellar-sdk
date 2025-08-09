@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import org.stellar.sdk.exception.UnexpectedException;
@@ -13,6 +14,8 @@ import org.stellar.sdk.xdr.PoolID;
 import org.stellar.sdk.xdr.SCAddress;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
+import org.stellar.sdk.xdr.Uint256;
+import org.stellar.sdk.xdr.Uint64;
 
 /**
  * Represents a single address in the Stellar network. An address can represent an account,
@@ -115,11 +118,11 @@ public class Address {
       case SC_ADDRESS_TYPE_CONTRACT:
         return fromContract(scAddress.getContractId().getContractID().getHash());
       case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
-        try {
-          return fromMuxedAccount(scAddress.getMuxedAccount().toXdrByteArray());
-        } catch (IOException e) {
-          throw new UnexpectedException(e);
-        }
+        byte[] accountBytes = scAddress.getMuxedAccount().getEd25519().getUint256();
+        long id = scAddress.getMuxedAccount().getId().getUint64().getNumber().longValue();
+        byte[] rawBytes =
+            ByteBuffer.allocate(accountBytes.length + 8).put(accountBytes).putLong(id).array();
+        return fromMuxedAccount(rawBytes);
       case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
         if (scAddress.getClaimableBalanceId().getDiscriminant()
             != ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0) {
@@ -171,11 +174,17 @@ public class Address {
         break;
       case MUXED_ACCOUNT:
         scAddress.setDiscriminant(org.stellar.sdk.xdr.SCAddressType.SC_ADDRESS_TYPE_MUXED_ACCOUNT);
+        Uint64 id;
+        Uint256 ed25519;
         try {
-          scAddress.setMuxedAccount(MuxedEd25519Account.fromXdrByteArray(this.key));
+          id = Uint64.fromXdrByteArray(Arrays.copyOfRange(this.key, 32, 40));
+          ed25519 = Uint256.fromXdrByteArray(Arrays.copyOfRange(this.key, 0, 32));
         } catch (IOException e) {
-          throw new IllegalArgumentException("Invalid med25519 public key", e);
+          throw new UnexpectedException(e);
         }
+        MuxedEd25519Account muxedEd25519Account =
+            MuxedEd25519Account.builder().id(id).ed25519(ed25519).build();
+        scAddress.setMuxedAccount(muxedEd25519Account);
         break;
       case CLAIMABLE_BALANCE:
         if (this.key[0] != 0x00) {
@@ -237,8 +246,13 @@ public class Address {
     return type;
   }
 
-  @Override
-  public String toString() {
+  /**
+   * Gets the encoded string representation of this address.
+   *
+   * @return The StrKey-encoded representation of this address
+   * @throws IllegalArgumentException if the address type is unknown
+   */
+  public String getEncodedAddress() {
     switch (this.type) {
       case ACCOUNT:
         return StrKey.encodeEd25519PublicKey(this.key);
@@ -253,6 +267,11 @@ public class Address {
       default:
         throw new IllegalArgumentException("Unsupported address type");
     }
+  }
+
+  @Override
+  public String toString() {
+    return getEncodedAddress();
   }
 
   /** Represents the type of the address. */
