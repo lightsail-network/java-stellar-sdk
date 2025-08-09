@@ -3,10 +3,13 @@ package org.stellar.sdk;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
+import lombok.NonNull;
+import lombok.Value;
 import org.stellar.sdk.exception.UnexpectedException;
 import org.stellar.sdk.xdr.AccountID;
 import org.stellar.sdk.xdr.CryptoKeyType;
@@ -707,6 +710,77 @@ public class StrKey {
       }
     }
     return true;
+  }
+
+  @Value
+  static class RawMuxedAccountStrKeyParameter {
+    @NonNull Uint256 ed25519;
+    @NonNull Uint64 id;
+  }
+
+  static byte[] toRawMuxedAccountStrKey(RawMuxedAccountStrKeyParameter parameter) {
+    // Get the 64-bit ID. This is the critical part of the explanation.
+    //
+    // THE KEY INSIGHT: Why using .longValue() is safe for a uint64
+    // --------------------------------------------------------------------
+    //
+    // The Goal: We need to get the 8-byte binary representation of an uint64.
+    // The Problem: A Java `long` is a *signed* 64-bit integer.
+    //   - `uint64` range: 0 to 2^64 - 1
+    //   - `long` range:   -2^63 to 2^63 - 1
+    // A `uint64` can hold values larger than a `long`'s maximum positive value.
+    //
+    // The Solution: We focus on the underlying *bit pattern*, not the numerical interpretation.
+    //
+    // When we serialize data, we only care about the sequence of bits.
+    // - `getNumber()` returns a BigInteger, which correctly holds the full uint64 value.
+    // - `.longValue()` extracts the low-order 64 bits from the BigInteger. For an uint64, this is
+    // all its bits.
+    //
+    // Let's consider two cases:
+    //
+    // Case A: The uint64 value is small ( < 2^63 ).
+    //   The most significant bit is 0. The `long` will have the same positive value, and the bit
+    // pattern is identical.
+    //
+    // Case B: The uint64 value is large ( >= 2^63 ).
+    //   The most significant bit is 1. When converted to a `long`, Java interprets this bit as a
+    // sign bit,
+    //   making the `long`'s numerical value negative. HOWEVER, the underlying 64-bit pattern in
+    // memory remains IDENTICAL
+    //   to the original uint64's bit pattern.
+    //
+    // Example for Case B:
+    //   - Let uint64 be 2^64 - 1 (all 64 bits are '1').
+    //   - Its binary representation is 0xFFFF_FFFF_FFFF_FFFF.
+    //   - `.longValue()` will produce a `long` with the value -1.
+    //   - The binary representation of -1L in Java (using two's complement) is also
+    // 0xFFFF_FFFF_FFFF_FFFF.
+    //
+    // The bit patterns are the same!
+    //
+    // Since `ByteBuffer.putLong()` simply writes the 64-bit pattern of the given long into the
+    // buffer,
+    // it correctly serializes the original uint64 value into 8 bytes, regardless of whether Java
+    // interpreted the intermediate `long` as positive or negative.
+    long idLong = parameter.getId().getUint64().getNumber().longValue();
+    byte[] ed25519Bytes = parameter.getEd25519().getUint256();
+    return ByteBuffer.allocate(ed25519Bytes.length + 8).put(ed25519Bytes).putLong(idLong).array();
+  }
+
+  static RawMuxedAccountStrKeyParameter fromRawMuxedAccountStrKey(byte @NonNull [] data) {
+    if (data.length != 40) {
+      throw new IllegalArgumentException(
+          "Muxed account bytes must be 40 bytes long, got " + data.length);
+    }
+    ByteBuffer buffer = ByteBuffer.wrap(data);
+    byte[] ed25519Bytes = new byte[32];
+    buffer.get(ed25519Bytes);
+    byte[] idBytes = new byte[8];
+    buffer.get(idBytes);
+    Uint256 ed25519 = new Uint256(ed25519Bytes);
+    Uint64 id = new Uint64(new XdrUnsignedHyperInteger(new BigInteger(1, idBytes)));
+    return new RawMuxedAccountStrKeyParameter(ed25519, id);
   }
 
   enum VersionByte {

@@ -68,14 +68,10 @@ public class MuxedAccount {
       this.muxedId = null;
     } else if (StrKey.isValidMed25519PublicKey(address)) {
       byte[] rawMed25519 = StrKey.decodeMed25519PublicKey(address);
-      // first 32 bytes are the ed25519 public key
-      byte[] ed25519PublicKey = new byte[32];
-      System.arraycopy(rawMed25519, 0, ed25519PublicKey, 0, 32);
-      // the next 8 bytes are the multiplexing ID, it's an unsigned 64-bit integer
-      byte[] muxedIdBytes = new byte[8];
-      System.arraycopy(rawMed25519, 32, muxedIdBytes, 0, 8);
-      this.accountId = StrKey.encodeEd25519PublicKey(ed25519PublicKey);
-      this.muxedId = new BigInteger(1, muxedIdBytes);
+      StrKey.RawMuxedAccountStrKeyParameter parameter =
+          StrKey.fromRawMuxedAccountStrKey(rawMed25519);
+      this.accountId = StrKey.encodeEd25519PublicKey(parameter.getEd25519().getUint256());
+      this.muxedId = parameter.getId().getUint64().getNumber();
     } else {
       throw new IllegalArgumentException("Invalid address");
     }
@@ -91,7 +87,10 @@ public class MuxedAccount {
     if (muxedId == null) {
       return accountId;
     }
-    return StrKey.encodeMed25519PublicKey(getMuxedEd25519AccountBytes(toXdr().getMed25519()));
+    org.stellar.sdk.xdr.MuxedAccount.MuxedAccountMed25519 med25519 = toXdr().getMed25519();
+    return StrKey.encodeMed25519PublicKey(
+        StrKey.toRawMuxedAccountStrKey(
+            new StrKey.RawMuxedAccountStrKeyParameter(med25519.getEd25519(), med25519.getId())));
   }
 
   /**
@@ -133,20 +132,5 @@ public class MuxedAccount {
               new Uint64(new XdrUnsignedHyperInteger(this.muxedId)),
               new Uint256(StrKey.decodeEd25519PublicKey(this.accountId))));
     }
-  }
-
-  private static byte[] getMuxedEd25519AccountBytes(
-      org.stellar.sdk.xdr.MuxedAccount.MuxedAccountMed25519 muxedAccountMed25519) {
-    byte[] accountBytes = muxedAccountMed25519.getEd25519().getUint256();
-    byte[] idBytes = muxedAccountMed25519.getId().getUint64().getNumber().toByteArray();
-    byte[] idPaddedBytes = new byte[8];
-    int idNumBytesToCopy = Math.min(idBytes.length, 8);
-    int idCopyStartIndex = idBytes.length - idNumBytesToCopy;
-    System.arraycopy(
-        idBytes, idCopyStartIndex, idPaddedBytes, 8 - idNumBytesToCopy, idNumBytesToCopy);
-    byte[] result = new byte[accountBytes.length + idPaddedBytes.length];
-    System.arraycopy(accountBytes, 0, result, 0, accountBytes.length);
-    System.arraycopy(idPaddedBytes, 0, result, accountBytes.length, idPaddedBytes.length);
-    return result;
   }
 }

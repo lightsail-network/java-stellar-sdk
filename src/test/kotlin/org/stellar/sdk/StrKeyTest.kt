@@ -344,4 +344,89 @@ class StrKeyTest :
         }
       exception.message shouldBe "Version byte is invalid"
     }
+
+    context("toMuxedAccountBytes and fromMuxedAccountBytes") {
+      data class MuxedAccountTestCase(
+        val description: String,
+        val ed25519Hex: String,
+        val id: java.math.BigInteger,
+      )
+
+      context("round trip consistency") {
+        withData(
+          nameFn = { "should handle ${it.description}" },
+          MuxedAccountTestCase(
+            "ID = 0",
+            "5223d15964cb25b98d17dfc9cb954a4331617bbaa4e5dc144c87df0b8b3b47d9",
+            java.math.BigInteger.ZERO,
+          ),
+          MuxedAccountTestCase(
+            "ID = 1",
+            "5223d15964cb25b98d17dfc9cb954a4331617bbaa4e5dc144c87df0b8b3b47d9",
+            java.math.BigInteger.ONE,
+          ),
+          MuxedAccountTestCase(
+            "ID = 1234",
+            "5223d15964cb25b98d17dfc9cb954a4331617bbaa4e5dc144c87df0b8b3b47d9",
+            java.math.BigInteger.valueOf(1234L),
+          ),
+          MuxedAccountTestCase(
+            "ID = Long.MAX_VALUE",
+            "5223d15964cb25b98d17dfc9cb954a4331617bbaa4e5dc144c87df0b8b3b47d9",
+            java.math.BigInteger.valueOf(Long.MAX_VALUE),
+          ),
+          MuxedAccountTestCase(
+            "large ID > Long.MAX_VALUE",
+            "5223d15964cb25b98d17dfc9cb954a4331617bbaa4e5dc144c87df0b8b3b47d9",
+            java.math.BigInteger.valueOf(Long.MAX_VALUE).add(java.math.BigInteger.valueOf(12345L)),
+          ),
+          MuxedAccountTestCase(
+            "max uint64 value (2^64 - 1)",
+            "5223d15964cb25b98d17dfc9cb954a4331617bbaa4e5dc144c87df0b8b3b47d9",
+            java.math.BigInteger("18446744073709551615"),
+          ),
+          MuxedAccountTestCase(
+            "all-zero ed25519 key",
+            "0000000000000000000000000000000000000000000000000000000000000000",
+            java.math.BigInteger.valueOf(9999L),
+          ),
+          MuxedAccountTestCase(
+            "all-FF ed25519 key",
+            "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            java.math.BigInteger.valueOf(42L),
+          ),
+          MuxedAccountTestCase(
+            "known test vector",
+            "2000757eeae583fc50dd669f97673acc25ec725823ac73faf6c7df31ad31e509",
+            java.math.BigInteger.valueOf(1234L),
+          ),
+        ) { testCase ->
+          val ed25519Bytes = Util.hexToBytes(testCase.ed25519Hex)
+          val ed25519 = org.stellar.sdk.xdr.Uint256(ed25519Bytes)
+          val id =
+            org.stellar.sdk.xdr.Uint64(org.stellar.sdk.xdr.XdrUnsignedHyperInteger(testCase.id))
+          val param = StrKey.RawMuxedAccountStrKeyParameter(ed25519, id)
+
+          val bytes = StrKey.toRawMuxedAccountStrKey(param)
+          bytes.size shouldBe 40
+
+          val decoded = StrKey.fromRawMuxedAccountStrKey(bytes)
+          decoded.ed25519.uint256 shouldBe ed25519Bytes
+          decoded.id.uint64.number shouldBe testCase.id
+        }
+      }
+
+      context("error handling") {
+        withData(
+          nameFn = { "should throw for ${it.first}" },
+          Pair("too short bytes (39)", 39),
+          Pair("too long bytes (41)", 41),
+        ) { (_, length) ->
+          val invalidBytes = ByteArray(length)
+          val exception =
+            shouldThrow<IllegalArgumentException> { StrKey.fromRawMuxedAccountStrKey(invalidBytes) }
+          exception.message shouldBe "Muxed account bytes must be 40 bytes long, got $length"
+        }
+      }
+    }
   })
