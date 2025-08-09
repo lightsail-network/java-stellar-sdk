@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import java.math.BigInteger;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -91,7 +92,7 @@ public class MuxedAccount {
     if (muxedId == null) {
       return accountId;
     }
-    return StrKey.encodeMed25519PublicKey(getMuxedEd25519AccountBytes(toXdr().getMed25519()));
+    return StrKey.encodeMed25519PublicKey(StrKey.toMuxedAccountBytes(toXdr().getMed25519().getEd25519(), toXdr().getMed25519().getId()));
   }
 
   /**
@@ -133,20 +134,5 @@ public class MuxedAccount {
               new Uint64(new XdrUnsignedHyperInteger(this.muxedId)),
               new Uint256(StrKey.decodeEd25519PublicKey(this.accountId))));
     }
-  }
-
-  private static byte[] getMuxedEd25519AccountBytes(
-      org.stellar.sdk.xdr.MuxedAccount.MuxedAccountMed25519 muxedAccountMed25519) {
-    byte[] accountBytes = muxedAccountMed25519.getEd25519().getUint256();
-    byte[] idBytes = muxedAccountMed25519.getId().getUint64().getNumber().toByteArray();
-    byte[] idPaddedBytes = new byte[8];
-    int idNumBytesToCopy = Math.min(idBytes.length, 8);
-    int idCopyStartIndex = idBytes.length - idNumBytesToCopy;
-    System.arraycopy(
-        idBytes, idCopyStartIndex, idPaddedBytes, 8 - idNumBytesToCopy, idNumBytesToCopy);
-    byte[] result = new byte[accountBytes.length + idPaddedBytes.length];
-    System.arraycopy(accountBytes, 0, result, 0, accountBytes.length);
-    System.arraycopy(idPaddedBytes, 0, result, accountBytes.length, idPaddedBytes.length);
-    return result;
   }
 }

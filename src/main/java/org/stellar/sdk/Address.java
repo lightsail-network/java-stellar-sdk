@@ -1,7 +1,6 @@
 package org.stellar.sdk;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import org.stellar.sdk.exception.UnexpectedException;
@@ -118,11 +117,7 @@ public class Address {
       case SC_ADDRESS_TYPE_CONTRACT:
         return fromContract(scAddress.getContractId().getContractID().getHash());
       case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
-        byte[] accountBytes = scAddress.getMuxedAccount().getEd25519().getUint256();
-        long id = scAddress.getMuxedAccount().getId().getUint64().getNumber().longValue();
-        byte[] rawBytes =
-            ByteBuffer.allocate(accountBytes.length + 8).put(accountBytes).putLong(id).array();
-        return fromMuxedAccount(rawBytes);
+        return fromMuxedAccount(StrKey.toMuxedAccountBytes(scAddress.getMuxedAccount().getEd25519(), scAddress.getMuxedAccount().getId()));
       case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
         if (scAddress.getClaimableBalanceId().getDiscriminant()
             != ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0) {
