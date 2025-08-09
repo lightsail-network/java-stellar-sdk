@@ -116,7 +116,7 @@ public class Address {
       case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
         return fromMuxedAccount(
             StrKey.toRawMuxedAccountStrKey(
-                new StrKey.RawMuxedAccountStrKey(
+                new StrKey.RawMuxedAccountStrKeyParameter(
                     scAddress.getMuxedAccount().getEd25519(),
                     scAddress.getMuxedAccount().getId())));
       case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
@@ -170,12 +170,12 @@ public class Address {
         break;
       case MUXED_ACCOUNT:
         scAddress.setDiscriminant(org.stellar.sdk.xdr.SCAddressType.SC_ADDRESS_TYPE_MUXED_ACCOUNT);
-        StrKey.RawMuxedAccountStrKey rawMuxedAccountStrKey =
+        StrKey.RawMuxedAccountStrKeyParameter parameter =
             StrKey.fromRawMuxedAccountStrKey(this.key);
         MuxedEd25519Account muxedEd25519Account =
             MuxedEd25519Account.builder()
-                .id(rawMuxedAccountStrKey.getId())
-                .ed25519(rawMuxedAccountStrKey.getEd25519())
+                .id(parameter.getId())
+                .ed25519(parameter.getEd25519())
                 .build();
         scAddress.setMuxedAccount(muxedEd25519Account);
         break;

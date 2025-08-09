@@ -713,12 +713,12 @@ public class StrKey {
   }
 
   @Value
-  static class RawMuxedAccountStrKey {
+  static class RawMuxedAccountStrKeyParameter {
     @NonNull Uint256 ed25519;
     @NonNull Uint64 id;
   }
 
-  static byte[] toRawMuxedAccountStrKey(RawMuxedAccountStrKey parameter) {
+  static byte[] toRawMuxedAccountStrKey(RawMuxedAccountStrKeyParameter parameter) {
     // Get the 64-bit ID. This is the critical part of the explanation.
     //
     // THE KEY INSIGHT: Why using .longValue() is safe for a uint64
@@ -768,7 +768,7 @@ public class StrKey {
     return ByteBuffer.allocate(ed25519Bytes.length + 8).put(ed25519Bytes).putLong(idLong).array();
   }
 
-  static RawMuxedAccountStrKey fromRawMuxedAccountStrKey(byte @NonNull [] data) {
+  static RawMuxedAccountStrKeyParameter fromRawMuxedAccountStrKey(byte @NonNull [] data) {
     if (data.length != 40) {
       throw new IllegalArgumentException(
           "Muxed account bytes must be 40 bytes long, got " + data.length);
@@ -780,7 +780,7 @@ public class StrKey {
     buffer.get(idBytes);
     Uint256 ed25519 = new Uint256(ed25519Bytes);
     Uint64 id = new Uint64(new XdrUnsignedHyperInteger(new BigInteger(1, idBytes)));
-    return new RawMuxedAccountStrKey(ed25519, id);
+    return new RawMuxedAccountStrKeyParameter(ed25519, id);
   }
 
   enum VersionByte {
