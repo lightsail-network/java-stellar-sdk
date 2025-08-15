@@ -2,6 +2,51 @@
 
 ## Pending
 
+## 2.0.0
+
+**This release adds support for Protocol 23.**
+
+This release contains the exact same content as 2.0.0-beta3. Below is the changelog since 1.5.1.
+
+### Update:
+- feat: add `pollTransaction` method to `SorobanServer` to poll transaction status with retry strategy. ([#696](https://github.com/stellar/java-stellar-sdk/pull/696))
+- feat: implement message signing and verification according to [SEP-53](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md), check `KeyPair.signMessage` and `KeyPair.verifyMessage` for more details. ([#698](https://github.com/stellar/java-stellar-sdk/pull/698))
+- feat: add `isValidEd25519SecretSeed`, `isValidPreAuthTx` and `isValidSha256Hash` to `StrKey` class, these functions can be used to validate the corresponding strkey. ([#702](https://github.com/stellar/java-stellar-sdk/pull/702))
+- feat: add med25519 public key support to `StrKey`. ([#702](https://github.com/stellar/java-stellar-sdk/pull/702))
+- feat: add liquidity pool and claimable balance support to `StrKey`. ([#701](https://github.com/stellar/java-stellar-sdk/pull/701))
+- feat: add muxed account, liquidity pool and claimable balance support to `Address` class. ([#703](https://github.com/stellar/java-stellar-sdk/pull/703))
+- feat(SorobanServer): add `destinationMuxedId` to `InvokeHostFunctionOperationResponse.AssetContractBalanceChange`. ([#710](https://github.com/stellar/java-stellar-sdk/pull/710) and ([#705](https://github.com/stellar/java-stellar-sdk/pull/705)))
+- feat(SorobanServer): add `events` field to `GetTransactionsResponse.Transaction` and `GetTransactionResponse`. ([#707](https://github.com/stellar/java-stellar-sdk/pull/707))
+- feat(SorobanServer): add `oldestLedger`, `latestLedgerCloseTime` and `oldestLedgerCloseTime` fields to `GetEventsResponse`, and add `transactionIndex` and `operationIndex` fields to `GetEventsResponse.EventInfo`, check [Stellar RPC release log](https://github.com/stellar/stellar-rpc/releases/tag/v23.0.0-rc.1) for more information.
+- feat(SorobanServer): add support for non-root authorization in `SorobanServer#simulateTransaction`. ([#708](https://github.com/stellar/java-stellar-sdk/pull/708))
+- feat: add `isValidSignedPayload` to `StrKey` class, this function can be used to validate the ed25519 signed payload. ([#712](https://github.com/stellar/java-stellar-sdk/pull/712))
+- feat: add `signExtraSignersPayload` to sign extra signers payloads in `Transaction` class. ([#713](https://github.com/stellar/java-stellar-sdk/pull/713))
+- refactor: add balance id validation. ([#722](https://github.com/stellar/java-stellar-sdk/pull/722))
+- fix: fix handling of transaction metadata versioning in `AssembledTransaction` class. ([#723](https://github.com/stellar/java-stellar-sdk/pull/723))
+- refactor: add validation for asset issuer. ([#725](https://github.com/stellar/java-stellar-sdk/pull/725))
+- refactor: add validation for liquidity pool ID length in `TrustLineAsset`. ([#726](https://github.com/stellar/java-stellar-sdk/pull/726))
+
+### Breaking changes:
+- chore: upgrade generated XDR definitions to Protocol 23. ([#699](https://github.com/stellar/java-stellar-sdk/pull/699))
+- refactor!: the following functions in `StrKey` are marked as deprecated, they will be removed in the next major release; please refer to the documentation for each function to see the corresponding replacement functions: ([#702](https://github.com/stellar/java-stellar-sdk/pull/702))
+    - `StrKey#encodeEd25519PublicKey(AccountID)`
+    - `StrKey#encodeMuxedAccount(MuxedAccount)`
+    - `StrKey#decodeMuxedAccount(String)`
+    - `StrKey#encodeToXDRAccountId(String)`
+    - `StrKey#encodeToXDRMuxedAccount(String)`
+- refactor!: rename `readBytes` to `diskReadBytes` and update related methods in SorobanDataBuilder. ([#700](https://github.com/stellar/java-stellar-sdk/pull/700))
+- refactor(HorizonServer)!: remove `numArchivedContracts` and `archivedContractsAmount` from `AssetResponse`. ([#704](https://github.com/stellar/java-stellar-sdk/pull/704))
+- refactor(SorobanServer)!: `GetTransactionsResponse.Transaction#getDiagnosticEventsXdr()` and `GetTransactionsResponse.Transaction#parseDiagnosticEventsXdr()` has been marked as deprecated, they will be removed in Stellar RPC soon, use `GetTransactionsResponse.Transaction#getEvents()` instead. ([#706](https://github.com/stellar/java-stellar-sdk/pull/706))
+- refactor(SorobanServer)!: remove deprecated `pagingToken` field from `GetEventsResponse.EventInfo`. ([#707](https://github.com/stellar/java-stellar-sdk/pull/707))
+- refactor(SorobanServer)!: `inSuccessfulContractCall` in `GetEventsResponse.EventInfo` has been marked as deprecated, it will be removed in the next release. ([#707](https://github.com/stellar/java-stellar-sdk/pull/707))
+- feat: add `org.stellar.sdk.SignerKey` for enhanced signer key handling. ([#712](https://github.com/stellar/java-stellar-sdk/pull/712))
+    - `org.stellar.sdk.Signer` and `org.stellar.sdk.SignedPayloadSigner` has been removed, use `org.stellar.sdk.SignerKey` instead.
+    - The `StrKey#encodeSignedPayload(SignedPayloadSigner)` and `StrKey#decodeSignedPayload(String)` methods now operate on raw `byte[]` instead of the `SignedPayloadSigner` object to provide more flexibility.
+    - `KeyPair#fromXdrSignerKey()` and `KeyPair#getXdrSignerKey()` have been removed, use `org.stellar.sdk.SignerKey` instead.
+    - The type of `TransactionPreconditions#extraSigners` has been changed from `List<org.stellar.sdk.xdr.SignerKey>` to `List<org.stellar.sdk.SignerKey>`.
+    - The type of `SetOptionsOperation#signer` has been changed from `org.stellar.sdk.xdr.SignerKey` to `org.stellar.sdk.SignerKey`.
+    - The type of `RevokeSignerSponsorshipOperation#signer` has been changed from `org.stellar.sdk.xdr.SignerKey` to `org.stellar.sdk.SignerKey`.
+
 ## 2.0.0-beta3
 
 ### Update

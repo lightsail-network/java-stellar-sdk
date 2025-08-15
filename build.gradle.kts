@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "network.lightsail"
-version = "2.0.0-beta3"
+version = "2.0.0"
 
 java {
     toolchain {
@@ -46,9 +46,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
     implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
-    implementation("com.google.code.gson:gson:2.11.0")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.79")
-    implementation("commons-codec:commons-codec:1.17.1")
+    implementation("com.google.code.gson:gson:2.13.1")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.81")
+    implementation("commons-codec:commons-codec:1.19.0")
 
     testImplementation(kotlin("stdlib"))
     testImplementation("org.mockito:mockito-core:5.14.2")
