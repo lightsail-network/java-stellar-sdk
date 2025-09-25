@@ -16,6 +16,8 @@ import lombok.Value;
 public class GetEventsRequest {
   Long startLedger;
 
+  Long endLedger;
+
   @Singular("filter")
   Collection<EventFilter> filters;
 
