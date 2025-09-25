@@ -123,7 +123,7 @@ jobs:
           target: ${{ matrix.emulator.target }}
           script: ./gradlew connectedCheck
           arch: x86_64
-          profile: 'nexus_5x'
+          profile: 'Nexus 5X'
 
 
   deploy-gh-releases:
