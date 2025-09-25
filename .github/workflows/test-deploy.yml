@@ -95,7 +95,8 @@ jobs:
       fail-fast: false
       matrix:
         emulator: [
-          { api-level: 23, target: google_apis },
+          # { api-level: 23, target: google_apis },
+          # It seems that Google no longer provides this image? Let's temporarily disable it.
           { api-level: 34, target: playstore }
         ]
     steps:

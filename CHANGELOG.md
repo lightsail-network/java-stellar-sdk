@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update:
+- feat: Add `endLedger` field to `GetEventsRequest`. ([#739](https://github.com/stellar/java-stellar-sdk/pull/739))
+
 ## 2.0.0
 
 **This release adds support for Protocol 23.**
