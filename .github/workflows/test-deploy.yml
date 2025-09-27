@@ -124,8 +124,8 @@ jobs:
           target: ${{ matrix.emulator.target }}
           script: ./gradlew connectedCheck
           arch: x86_64
-          profile: "pixel_7_pro"
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          profile: "Nexus 5"
+          emulator-options: -no-window -gpu
           disable-animations: true
 
   deploy-gh-releases:
