@@ -116,7 +116,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
       - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@main
         with:
           working-directory: ./android_test
           api-level: ${{ matrix.emulator.api-level }}
