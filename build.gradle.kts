@@ -113,6 +113,7 @@ tasks {
 
 
     jacocoTestReport {
+        dependsOn(compileJava, compileKotlin, processResources)
         reports {
             html.required = true
             xml.required = true
