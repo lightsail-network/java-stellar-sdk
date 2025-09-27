@@ -10,11 +10,11 @@ on:
       - created
   schedule:
     # Every Monday at 00:30 UTC
-    - cron: '30 0 * * 1'
+    - cron: "30 0 * * 1"
 
 env:
-  JAVA_VERSION: '21'
-  JAVA_DISTRIBUTION: 'microsoft'
+  JAVA_VERSION: "21"
+  JAVA_DISTRIBUTION: "microsoft"
 
 jobs:
   test:
@@ -94,10 +94,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        emulator: [
-          { api-level: 23, target: google_apis },
-          { api-level: 34, target: playstore }
-        ]
+        emulator:
+          [
+            { api-level: 23, target: google_apis },
+            { api-level: 34, target: playstore },
+          ]
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -123,11 +124,12 @@ jobs:
           target: ${{ matrix.emulator.target }}
           script: ./gradlew connectedCheck
           arch: x86_64
-          profile: 'Nexus 5'
-
+          profile: "pixel_7_pro"
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
 
   deploy-gh-releases:
-    needs: [ build, javadoc, android-test ]
+    needs: [build, javadoc, android-test]
     permissions:
       contents: write
     if: github.event_name == 'release' && github.event.action == 'created'
@@ -159,7 +161,7 @@ jobs:
           folder: javadoc
 
   deploy-maven-central:
-    needs: [ build, javadoc, android-test ]
+    needs: [build, javadoc, android-test]
     if: github.event_name == 'release' && github.event.action == 'created'
     runs-on: ubuntu-latest
     env:
