@@ -96,7 +96,7 @@ jobs:
       matrix:
         emulator: [
           { api-level: 23, target: google_apis },
-          { api-level: 36, target: playstore }
+          { api-level: 35, target: playstore }
         ]
     steps:
       - name: checkout
