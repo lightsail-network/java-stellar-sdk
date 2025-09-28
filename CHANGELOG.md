@@ -2,6 +2,8 @@
 
 ## Pending
 
+## 2.1.0
+
 ### Update:
 - feat: Add `endLedger` field to `GetEventsRequest`. ([#739](https://github.com/stellar/java-stellar-sdk/pull/739))
 
