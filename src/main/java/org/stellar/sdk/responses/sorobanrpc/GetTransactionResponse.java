@@ -9,7 +9,8 @@ import org.stellar.sdk.xdr.TransactionResult;
 /**
  * Response for JSON-RPC method getTransaction.
  *
- * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransaction"
  *     target="_blank">getTransaction documentation</a>
  */
 @Value

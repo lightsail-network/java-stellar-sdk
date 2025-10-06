@@ -42,7 +42,8 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   /**
    * Requests <code>GET /transactions/{transactionId}</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/transactions/single/">Transaction
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transaction">Transaction
    *     Details</a>
    * @param transactionId Transaction to fetch
    * @return {@link TransactionResponse}
@@ -69,7 +70,8 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /accounts/{account}/transactions</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/transactions/">Transactions
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-transactions-by-account-id">Transactions
    *     for Account</a>
    * @param account Account for which to get transactions
    */
@@ -82,7 +84,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * Builds request to <code>GET /claimable_balances/{claimable_balance_id}/transactions</code>
    *
    * @see <a
-   *     href="https://developers.stellar.org/api/resources/claimablebalances/transactions/">Transactions
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-transactions">Transactions
    *     for ClaimableBalance</a>
    * @param claimableBalance Claimable Balance for which to get transactions
    */
@@ -94,7 +96,8 @@ public class TransactionsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /ledgers/{ledgerSeq}/transactions</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/ledgers/transactions/">Transactions
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-transactions">Transactions
    *     for Ledger</a>
    * @param ledgerSeq Ledger for which to get transactions
    */
@@ -107,7 +110,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * Builds request to <code>GET /liquidity_pools/{ledgerSeq}/transactions</code>
    *
    * @see <a
-   *     href="https://developers.stellar.org/api/resources/liquiditypools/transactions/">Transactions
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/lp-retrieve-related-transactions">Transactions
    *     for Liquidity Pool</a>
    * @param liquidityPoolId Liquidity pool for which to get transactions
    */
@@ -159,7 +162,8 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link TransactionResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms

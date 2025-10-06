@@ -16,7 +16,8 @@ import org.stellar.sdk.xdr.TransactionResult;
 /**
  * Represents transaction response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/transactions/"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/transactions"
  *     target="_blank">Transaction documentation</a>
  * @see org.stellar.sdk.requests.TransactionsRequestBuilder
  * @see org.stellar.sdk.Server#transactions()

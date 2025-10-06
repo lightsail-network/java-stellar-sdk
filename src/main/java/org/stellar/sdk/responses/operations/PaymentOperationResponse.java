@@ -12,7 +12,7 @@ import org.stellar.sdk.Asset;
  * Represents Payment operation response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/payment"
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations/object/payment"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()

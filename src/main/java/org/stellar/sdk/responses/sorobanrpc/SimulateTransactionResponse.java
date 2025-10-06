@@ -20,7 +20,7 @@ import org.stellar.sdk.xdr.SorobanTransactionData;
  * restore operation needed.
  *
  * <p>Please refer to the latest <a
- * href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction"
+ * href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction"
  * target="_blank">Soroban simulateTransaction documentation</a> for details on which members of the
  * simulation response model are keyed to each type of response.
  */

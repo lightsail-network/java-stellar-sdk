@@ -9,8 +9,9 @@ import org.stellar.sdk.Asset;
 /**
  * Represents order book response.
  *
- * @see <a href="https://developers.stellar.org/api/aggregations/order-books/" target="_blank">Order
- *     book documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/aggregations/order-books"
+ *     target="_blank">Order book documentation</a>
  * @see org.stellar.sdk.requests.OrderBookRequestBuilder
  * @see org.stellar.sdk.Server#orderBook()
  */

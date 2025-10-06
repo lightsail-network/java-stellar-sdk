@@ -18,7 +18,7 @@ import java.math.BigInteger;
  * <p>Use static methods to generate any of above types.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/memos"
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/transactions/operations-and-transactions#memo"
  *     target="_blank">Memos</a>
  * @see Transaction
  */

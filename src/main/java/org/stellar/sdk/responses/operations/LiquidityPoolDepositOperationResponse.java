@@ -11,7 +11,7 @@ import org.stellar.sdk.responses.Price;
  * Represents LiquidityPoolDeposit operation response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/liquidity-pool-deposit"
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations/object/liquidity-pool-deposit"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()

@@ -53,7 +53,8 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * @throws org.stellar.sdk.exception.ConnectionErrorException if the request fails due to an
    *     IOException, including but not limited to a timeout, connection failure etc.
    * @throws TooManyRequestsException when too many requests were sent to the Horizon server.
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/single/">Liquidity
+   * @see <a
+   *     href="hhttps://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-liquidity-pool">Liquidity
    *     Pool Details</a>
    */
   public LiquidityPoolResponse liquidityPool(String liquidityPoolId) {
@@ -67,7 +68,7 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * @param reserves Reserve assets to filter liquidity pools
    * @return current {@link LiquidityPoolsRequestBuilder} instance
    * @see <a
-   *     href="https://developers.stellar.org/api/resources/liquiditypools/list/">LiquidityPools</a>
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/list-liquidity-pools">LiquidityPools</a>
    */
   public LiquidityPoolsRequestBuilder forReserves(String... reserves) {
     uriBuilder.setQueryParameter(RESERVES_PARAMETER_NAME, String.join(",", reserves));
@@ -80,7 +81,7 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * @param account Account ID to filter liquidity pools
    * @return current {@link LiquidityPoolsRequestBuilder} instance
    * @see <a
-   *     href="https://developers.stellar.org/api/resources/liquiditypools/list/">LiquidityPools</a>
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/list-liquidity-pools">LiquidityPools</a>
    */
   public LiquidityPoolsRequestBuilder forAccount(String account) {
     uriBuilder.setQueryParameter(ACCOUNT_PARAMETER_NAME, account);
@@ -123,7 +124,8 @@ public class LiquidityPoolsRequestBuilder extends RequestBuilder {
    * @param reconnectTimeout Custom stream connection timeout in ms
    * @return EventSource object, so you can <code>close()</code> connection when not needed anymore
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    */
   public SSEStream<LiquidityPoolResponse> stream(

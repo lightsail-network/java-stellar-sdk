@@ -8,7 +8,7 @@ import lombok.Value;
  * Represents ExtendFootprintTTL operation response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/extend-footprint-ttl"
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations/object/extend-footprint-ttl"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()

@@ -52,7 +52,8 @@ public abstract class RequestBuilder {
    * specific location in a collection of resources. The cursor attribute itself is an opaque value
    * meaning that users should not try to parse it.
    *
-   * @see <a href="https://developers.stellar.org/api/introduction/pagination/">Page
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/pagination">Page
    *     documentation</a>
    * @param cursor A cursor is a value that points to a specific location in a collection of
    *     resources.

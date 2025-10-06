@@ -20,8 +20,7 @@ import org.stellar.sdk.requests.ResponseHandler;
 /**
  * Helper class for resolving Stellar addresses
  *
- * @see <a
- *     href="https://developers.stellar.org/docs/learn/encyclopedia/network-configuration/federation">Federation</a>
+ * @see <a href="https://developers.stellar.org/docs/learn/glossary#federation">Federation</a>
  */
 public class Federation {
   private final OkHttpClient httpClient;

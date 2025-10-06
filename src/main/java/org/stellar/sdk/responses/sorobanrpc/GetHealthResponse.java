@@ -5,7 +5,7 @@ import lombok.Value;
 /**
  * Response for JSON-RPC method getHealth.
  *
- * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getHealth"
+ * @see <a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getHealth"
  *     target="_blank">getHealth documentation</a>
  */
 @Value

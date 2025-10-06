@@ -7,8 +7,9 @@ import org.stellar.sdk.xdr.AccountFlags;
  * AccountFlag is the <code>enum</code> that can be used in {@link
  * org.stellar.sdk.operations.SetOptionsOperation}.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary#flags" target="_blank">Account
- *     Flags</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/tokens/control-asset-access#controlling-access-to-an-asset-with-flags"
+ *     target="_blank">Account Flags</a>
  */
 @Getter
 public enum AccountFlag {
@@ -27,6 +28,8 @@ public enum AccountFlag {
    * and the account can never be deleted.
    */
   AUTH_IMMUTABLE_FLAG(AccountFlags.AUTH_IMMUTABLE_FLAG.getValue());
+
+  // TODO: Add Clawback Enabled flag
 
   private final int value;
 

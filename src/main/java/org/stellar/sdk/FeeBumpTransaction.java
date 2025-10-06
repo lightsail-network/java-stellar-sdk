@@ -15,7 +15,8 @@ import org.stellar.sdk.xdr.TransactionSignaturePayload;
  * Represents <a href="https://github.com/stellar/stellar-protocol/blob/master/core/cap-0015.md"
  * target="_blank">Fee Bump Transaction</a> in Stellar network.
  *
- * @see <a href="https://developers.stellar.org/docs/encyclopedia/fee-bump-transactions">Fee-bump
+ * @see <a
+ *     href="https://developers.stellar.org/docs/build/guides/transactions/fee-bump-transactions">Fee-bump
  *     Transactions</a>
  */
 @Getter

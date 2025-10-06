@@ -11,8 +11,9 @@ import org.stellar.sdk.Asset;
 /**
  * Represents path response.
  *
- * @see <a href="https://developers.stellar.org/api/aggregations/paths/" target="_blank">Path
- *     documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/aggregations/paths"
+ *     target="_blank">Path documentation</a>
  * @see org.stellar.sdk.requests.StrictReceivePathsRequestBuilder
  * @see org.stellar.sdk.requests.StrictSendPathsRequestBuilder
  * @see org.stellar.sdk.Server#strictReceivePaths()

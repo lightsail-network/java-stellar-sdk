@@ -18,8 +18,9 @@ import org.stellar.sdk.responses.gson.TypedResponse;
 /**
  * Represents page of objects.
  *
- * @see <a href="https://developers.stellar.org/api/introduction/pagination/" target="_blank">Page
- *     documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/pagination"
+ *     target="_blank">Page documentation</a>
  */
 @Getter
 @EqualsAndHashCode(callSuper = false)

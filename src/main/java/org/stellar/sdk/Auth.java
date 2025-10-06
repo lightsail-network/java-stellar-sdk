@@ -23,7 +23,8 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
 /**
  * This class contains helper methods to sign {@link SorobanAuthorizationEntry}.
  *
- * @see <a href="https://developers.stellar.org/docs/learn/encyclopedia/security/authorization/"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/authorization"
  *     target="_blank">Smart Contract Authorization</a>
  */
 public class Auth {

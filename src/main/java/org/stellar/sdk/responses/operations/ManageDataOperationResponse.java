@@ -9,7 +9,7 @@ import org.stellar.sdk.Base64Factory;
  * Represents ManageDataoperation response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/manage-data"
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations/object/manage-data"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()

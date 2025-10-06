@@ -69,7 +69,8 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param sponsor Account ID of the sponsor.
    * @return current {@link OffersRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/offers/">Offers</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/offers">Offers</a>
    */
   public OffersRequestBuilder forSponsor(String sponsor) {
     uriBuilder.setQueryParameter("sponsor", sponsor);
@@ -81,7 +82,8 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param seller Account ID of the offer creator.
    * @return current {@link OffersRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/offers/">Offers</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/offers">Offers</a>
    */
   public OffersRequestBuilder forSeller(String seller) {
     uriBuilder.setQueryParameter("seller", seller);
@@ -93,7 +95,8 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param asset The Asset being bought.
    * @return current {@link OffersRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/offers/">Offers</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/offers">Offers</a>
    */
   public OffersRequestBuilder forBuyingAsset(Asset asset) {
     setAssetParameter("buying", asset);
@@ -105,7 +108,8 @@ public class OffersRequestBuilder extends RequestBuilder {
    *
    * @param asset The Asset being sold.
    * @return current {@link OffersRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/offers/">Offers</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/offers">Offers</a>
    */
   public OffersRequestBuilder forSellingAsset(Asset asset) {
     setAssetParameter("selling", asset);
@@ -145,7 +149,8 @@ public class OffersRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link OfferResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms

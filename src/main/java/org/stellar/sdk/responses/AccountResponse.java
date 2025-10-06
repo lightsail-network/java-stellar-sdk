@@ -15,7 +15,7 @@ import org.stellar.sdk.TrustLineAsset;
  * Represents account response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/accounts"
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts"
  *     target="_blank">Account documentation</a>
  * @see org.stellar.sdk.requests.AccountsRequestBuilder
  * @see org.stellar.sdk.Server#accounts()

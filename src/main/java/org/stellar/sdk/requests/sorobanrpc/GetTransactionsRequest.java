@@ -6,7 +6,8 @@ import lombok.Value;
 /**
  * Request for JSON-RPC method getTransactions.
  *
- * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions"
  *     target="_blank">getTransactions documentation</a>
  */
 @Value

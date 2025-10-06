@@ -41,8 +41,9 @@ public class TradesRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /accounts/{account}/trades</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/trades/">Trades for
-   *     Account</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-trades-by-account-id">Trades
+   *     for Account</a>
    * @param account Account for which to get trades
    */
   public TradesRequestBuilder forAccount(@NonNull String account) {
@@ -53,8 +54,9 @@ public class TradesRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /liquidity_pools/{poolID}/trades</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/trades/">Trades for
-   *     Liquidity Pool</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-related-trades">Trades
+   *     for Liquidity Pool</a>
    * @param liquidityPoolId Liquidity pool for which to get trades
    */
   public TradesRequestBuilder forLiquidityPool(String liquidityPoolId) {
@@ -67,7 +69,9 @@ public class TradesRequestBuilder extends RequestBuilder {
    *
    * @param tradeType type
    * @return current {@link TradesRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/trades/list/">List All Trades</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-all-trades">List
+   *     All Trades</a>
    */
   public TradesRequestBuilder forTradeType(@NonNull String tradeType) {
     uriBuilder.setQueryParameter(TRADE_TYPE_PARAMETER_NAME, tradeType);
@@ -150,7 +154,8 @@ public class TradesRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link TradeResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms

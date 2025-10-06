@@ -6,7 +6,8 @@ import lombok.Value;
 /**
  * Response for JSON-RPC method getNetwork.
  *
- * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getVersionInfo"
  *     target="_blank">getNetwork documentation</a>
  */
 @AllArgsConstructor

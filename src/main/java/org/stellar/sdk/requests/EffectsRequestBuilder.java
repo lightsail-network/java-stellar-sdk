@@ -18,8 +18,9 @@ public class EffectsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /accounts/{account}/effects</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/effects/">Effects for
-   *     Account</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-effects-by-account-id">Effects
+   *     for Account</a>
    * @param account Account for which to get effects
    */
   public EffectsRequestBuilder forAccount(@NonNull String account) {
@@ -30,8 +31,9 @@ public class EffectsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /ledgers/{ledgerSeq}/effects</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/ledgers/effects/">Effects for
-   *     Ledger</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-effects">Effects
+   *     for Ledger</a>
    * @param ledgerSeq Ledger for which to get effects
    */
   public EffectsRequestBuilder forLedger(long ledgerSeq) {
@@ -42,8 +44,9 @@ public class EffectsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /transactions/{transactionId}/effects</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/transactions/effects/">Effect for
-   *     Transaction</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transactions-effects">Effect
+   *     for Transaction</a>
    * @param transactionId Transaction ID for which to get effects
    */
   public EffectsRequestBuilder forTransaction(@NonNull String transactionId) {
@@ -54,8 +57,9 @@ public class EffectsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /liquidity_pools/{poolID}/effects</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/effects/">Effects for
-   *     Liquidity Pool</a>
+   * @see <a
+   *     href="ttps://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-related-effects">Effects
+   *     for Liquidity Pool</a>
    * @param liquidityPoolId Liquidity pool for which to get effects
    */
   public EffectsRequestBuilder forLiquidityPool(String liquidityPoolId) {
@@ -66,8 +70,9 @@ public class EffectsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /operation/{operationId}/effects</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/operations/effects/">Effect for
-   *     Operation</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-operations-effects">Effect
+   *     for Operation</a>
    * @param operationId Operation ID for which to get effects
    */
   public EffectsRequestBuilder forOperation(long operationId) {
@@ -108,7 +113,8 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link EffectResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms

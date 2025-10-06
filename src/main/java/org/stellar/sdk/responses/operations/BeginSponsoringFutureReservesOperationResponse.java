@@ -8,7 +8,7 @@ import lombok.Value;
  * Represents BeginSponsoringFutureReserves operation response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/begin-sponsoring-future-reserves"
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations/object/begin-sponsoring-future-reserves"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()

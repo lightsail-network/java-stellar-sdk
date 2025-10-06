@@ -8,8 +8,9 @@ import org.stellar.sdk.Asset;
 /**
  * Represents trades response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/trades/" target="_blank">Trades
- *     documentation</a>
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/trades"
+ *     target="_blank">Trades documentation</a>
  * @see org.stellar.sdk.requests.TradesRequestBuilder
  * @see org.stellar.sdk.Server#trades()
  */

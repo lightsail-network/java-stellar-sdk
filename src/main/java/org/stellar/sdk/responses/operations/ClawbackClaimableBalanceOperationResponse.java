@@ -8,7 +8,7 @@ import lombok.Value;
  * Represents a Clawback Claimable Balance operation response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/create-claimable-balance"
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations/object/create-claimable-balance"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()

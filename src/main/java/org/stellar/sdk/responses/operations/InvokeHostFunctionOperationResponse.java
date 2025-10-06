@@ -14,7 +14,7 @@ import org.stellar.sdk.xdr.HostFunctionType;
  * Represents InvokeHostFunction operation response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/operations/object/invoke-host-function"
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/operations/object/invoke-host-function"
  *     target="_blank">Operation documentation</a>
  * @see org.stellar.sdk.requests.OperationsRequestBuilder
  * @see org.stellar.sdk.Server#operations()

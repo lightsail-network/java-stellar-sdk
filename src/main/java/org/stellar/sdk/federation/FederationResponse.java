@@ -6,7 +6,7 @@ import lombok.Value;
 /**
  * Object to hold a response from a federation server.
  *
- * @see <a href="https://developers.stellar.org/docs/glossary/federation/"
+ * @see <a href="https://developers.stellar.org/docs/learn/glossary#federation"
  *     target="_blank">Federation docs</a>
  */
 @Value

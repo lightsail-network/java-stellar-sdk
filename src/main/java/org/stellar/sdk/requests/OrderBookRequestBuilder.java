@@ -66,7 +66,8 @@ public class OrderBookRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href= "https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a href=
+   *     "https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link OrderBookResponse} implementation with {@link OrderBookResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms

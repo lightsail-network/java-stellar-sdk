@@ -8,7 +8,8 @@ import org.stellar.sdk.Asset;
 /**
  * Represents claimable_balance_created effect response.
  *
- * @see <a href="https://developers.stellar.org/docs/data/horizon/api-reference/resources/effects"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/effects"
  *     target="_blank">Effect documentation</a>
  * @see org.stellar.sdk.requests.EffectsRequestBuilder
  * @see org.stellar.sdk.Server#effects()

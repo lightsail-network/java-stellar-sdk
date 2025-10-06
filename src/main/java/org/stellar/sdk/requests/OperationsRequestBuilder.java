@@ -47,7 +47,8 @@ public class OperationsRequestBuilder extends RequestBuilder {
   /**
    * Requests <code>GET /operations/{operationId}</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/operations/single/">Operation
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-operation">Operation
    *     Details</a>
    * @param operationId Operation to fetch
    * @return {@link OperationResponse}
@@ -74,8 +75,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /accounts/{account}/operations</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/operations/">Operations for
-   *     Account</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-operations-by-account-id">Operations
+   *     for Account</a>
    * @param account Account for which to get operations
    */
   public OperationsRequestBuilder forAccount(@NonNull String account) {
@@ -87,7 +89,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * Builds request to <code>GET /claimable_balances/{claimable_balance_id}/operations</code>
    *
    * @see <a
-   *     href="https://developers.stellar.org/api/resources/claimablebalances/operations/">Operations
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-operations">Operations
    *     for ClaimableBalance</a>
    * @param claimableBalance Claimable Balance for which to get operations
    */
@@ -99,8 +101,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /ledgers/{ledgerSeq}/operations</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/ledgers/operations/">Operations for
-   *     Ledger</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-operations">Operations
+   *     for Ledger</a>
    * @param ledgerSeq Ledger for which to get operations
    */
   public OperationsRequestBuilder forLedger(long ledgerSeq) {
@@ -111,7 +114,8 @@ public class OperationsRequestBuilder extends RequestBuilder {
   /**
    * Builds request to <code>GET /transactions/{transactionId}/operations</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/ledgers/transactions/">Operations
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transactions-operations">Operations
    *     for Transaction</a>
    * @param transactionId Transaction ID for which to get operations
    */
@@ -124,7 +128,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * Builds request to <code>GET /liquidity_pools/{poolID}/operations</code>
    *
    * @see <a
-   *     href="https://developers.stellar.org/api/resources/liquiditypools/operations/">Operations
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/lp-retrieve-related-operations">Operations
    *     for Liquidity Pool</a>
    * @param liquidityPoolId Liquidity pool for which to get operations
    */
@@ -201,7 +205,8 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link OperationResponse} implementation with {@link OperationResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms

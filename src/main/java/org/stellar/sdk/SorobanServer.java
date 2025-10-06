@@ -152,7 +152,8 @@ public class SorobanServer implements Closeable {
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
-   * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getHealth"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getHealth"
    *     target="_blank">getHealth documentation</a>
    */
   public GetHealthResponse getHealth() {
@@ -170,7 +171,8 @@ public class SorobanServer implements Closeable {
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
-   * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getFeeStats"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getFeeStats"
    *     target="_blank">getFeeStats documentation</a>
    */
   public GetFeeStatsResponse getFeeStats() {
@@ -249,7 +251,7 @@ public class SorobanServer implements Closeable {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    * @see <a
-   *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgerEntries"
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgerEntries"
    *     target="_blank">getLedgerEntries documentation</a>
    */
   public GetLedgerEntriesResponse getLedgerEntries(Collection<LedgerKey> keys) {
@@ -290,7 +292,7 @@ public class SorobanServer implements Closeable {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    * @see <a
-   *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransaction"
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransaction"
    *     target="_blank">getTransaction documentation</a>
    */
   public GetTransactionResponse getTransaction(String hash) {
@@ -371,7 +373,7 @@ public class SorobanServer implements Closeable {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    * @see <a
-   *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getTransactions"
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions"
    *     target="_blank">getTransactions documentation</a>
    */
   public GetTransactionsResponse getTransactions(GetTransactionsRequest getTransactionsRequest) {
@@ -394,7 +396,8 @@ public class SorobanServer implements Closeable {
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
-   * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgers"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgers"
    *     target="_blank">getLedgers documentation</a>
    */
   public GetLedgersResponse getLedgers(GetLedgersRequest getLedgersRequest) {
@@ -415,7 +418,8 @@ public class SorobanServer implements Closeable {
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
-   * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getEvents"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getEvents"
    *     target="_blank">getEvents documentation</a>
    */
   public GetEventsResponse getEvents(GetEventsRequest getEventsRequest) {
@@ -434,7 +438,7 @@ public class SorobanServer implements Closeable {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    * @see <a
-   *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getVersionInfo"
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getVersionInfo"
    *     target="_blank">getVersionInfo documentation</a>
    */
   public GetVersionInfoResponse getVersionInfo() {
@@ -452,7 +456,8 @@ public class SorobanServer implements Closeable {
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
-   * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getNetwork"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getNetwork"
    *     target="_blank">getNetwork documentation</a>
    */
   public GetNetworkResponse getNetwork() {
@@ -471,7 +476,7 @@ public class SorobanServer implements Closeable {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    * @see <a
-   *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLatestLedger"
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLatestLedger"
    *     target="_blank">getLatestLedger documentation</a>
    */
   public GetLatestLedgerResponse getLatestLedger() {
@@ -499,7 +504,7 @@ public class SorobanServer implements Closeable {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    * @see <a
-   *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction"
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction"
    *     target="_blank">simulateTransaction documentation</a>
    */
   public SimulateTransactionResponse simulateTransaction(
@@ -616,7 +621,7 @@ public class SorobanServer implements Closeable {
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
    * @see <a
-   *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/sendTransaction"
+   *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/sendTransaction"
    *     target="_blank">sendTransaction documentation</a>
    */
   public SendTransactionResponse sendTransaction(Transaction transaction) {

@@ -9,7 +9,8 @@ import org.stellar.sdk.Asset;
 /**
  * Represents liquidity pool response.
  *
- * @see <a href="https://developers.stellar.org/api/resources/liquiditypools/"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/resources/liquiditypools"
  *     target="_blank">Liquidity Pool documentation</a>
  * @see org.stellar.sdk.requests.LiquidityPoolsRequestBuilder
  * @see org.stellar.sdk.Server#liquidityPools()

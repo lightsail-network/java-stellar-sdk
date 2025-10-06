@@ -4,7 +4,7 @@
 [![Maven Central Version](https://img.shields.io/maven-central/v/network.lightsail/stellar-sdk)](https://central.sonatype.com/artifact/network.lightsail/stellar-sdk)
 [![javadoc](https://javadoc.io/badge2/network.lightsail/stellar-sdk/javadoc.svg)](https://javadoc.io/doc/network.lightsail/stellar-sdk)
 
-The Java Stellar SDK library provides APIs to build transactions and connect to [Horizon](https://github.com/lightsail-network/go/tree/master/services/horizon) and [Soroban-RPC Server](https://soroban.stellar.org/docs/reference/rpc).
+The Java Stellar SDK library provides APIs to build transactions and connect to [Horizon](https://developers.stellar.org/docs/data/apis/horizon) and [Soroban-RPC Server](https://soroban.stellar.org/docs/reference/rpc).
 
 ## Installation
 

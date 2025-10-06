@@ -41,7 +41,9 @@ public class LedgersRequestBuilder extends RequestBuilder {
   /**
    * Requests <code>GET /ledgers/{ledgerSeq}</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/ledgers/single/">Ledger Details</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledger">Ledger
+   *     Details</a>
    * @param ledgerSeq Ledger to fetch
    * @return {@link LedgerResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
@@ -97,7 +99,8 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link LedgerResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms

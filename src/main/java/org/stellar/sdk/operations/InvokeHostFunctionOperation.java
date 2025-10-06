@@ -245,7 +245,7 @@ public class InvokeHostFunctionOperation extends Operation {
    * @return {@link InvokeHostFunctionOperationBuilder}
    * @see org.stellar.sdk.scval.Scv
    * @see <a
-   *     href="https://developers.stellar.org/docs/smart-contracts/guides/transactions/invoke-contract-tx-sdk"
+   *     href="https://developers.stellar.org/docs/build/guides/transactions/invoke-contract-tx-sdk"
    *     target="_blank">Interacting with Contracts</a>
    */
   public static InvokeHostFunctionOperationBuilder<?, ?> invokeContractFunctionOperationBuilder(

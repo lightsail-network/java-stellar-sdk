@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.LedgerHeader;
  * Represents ledger response.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/fundamentals-and-concepts/stellar-data-structures/ledgers"
+ *     href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/ledgers"
  *     target="_blank">Ledger documentation</a>
  * @see org.stellar.sdk.requests.LedgersRequestBuilder
  * @see org.stellar.sdk.Server#ledgers()

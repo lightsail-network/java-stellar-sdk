@@ -86,7 +86,8 @@ public class TransactionBuilder {
   }
 
   /**
-   * Adds a <a href="https://developers.stellar.org/docs/glossary/transactions/#memo"
+   * Adds a <a
+   * href="https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/operations-and-transactions#memo"
    * target="_blank">memo</a> to this transaction.
    *
    * @param memo memo to add

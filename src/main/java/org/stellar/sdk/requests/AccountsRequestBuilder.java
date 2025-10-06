@@ -48,7 +48,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
   /**
    * Requests <code>GET /accounts/{account}</code>
    *
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/single/">Account
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-account">Account
    *     Details</a>
    * @param account Account to fetch
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
@@ -76,7 +77,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param signer Account ID
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/list-all-accounts">Accounts</a>
    */
   public AccountsRequestBuilder forSigner(String signer) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
@@ -97,7 +99,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param asset An issued asset
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/list-all-accounts">Accounts</a>
    */
   public AccountsRequestBuilder forAsset(AssetTypeCreditAlphaNum asset) {
     if (uriBuilder.build().queryParameter(LIQUIDITY_POOL_PARAMETER_NAME) != null) {
@@ -118,7 +121,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param liquidityPoolId Liquidity Pool ID
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/list-all-accounts">Accounts</a>
    */
   public AccountsRequestBuilder forLiquidityPool(String liquidityPoolId) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
@@ -140,7 +144,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @param sponsor Account ID
    * @return current {@link AccountsRequestBuilder} instance
-   * @see <a href="https://developers.stellar.org/api/resources/accounts/list/">Accounts</a>
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/list-all-accounts">Accounts</a>
    */
   public AccountsRequestBuilder forSponsor(String sponsor) {
     if (uriBuilder.build().queryParameter(ASSET_PARAMETER_NAME) != null) {
@@ -187,7 +192,8 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * horizon will continue to return responses as ledgers close.
    *
    * @see <a href="http://www.w3.org/TR/eventsource/" target="_blank">Server-Sent Events</a>
-   * @see <a href="https://developers.stellar.org/api/introduction/response-format/"
+   * @see <a
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/response-format"
    *     target="_blank">Response Format documentation</a>
    * @param listener {@link EventListener} implementation with {@link AccountResponse} type
    * @param reconnectTimeout Custom stream connection timeout in ms

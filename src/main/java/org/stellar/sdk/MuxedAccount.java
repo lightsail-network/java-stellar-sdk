@@ -26,7 +26,7 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
  * </ul>
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/learn/encyclopedia/transactions-specialized/pooled-accounts-muxed-accounts-memos#muxed-accounts"
+ *     href="https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos#muxed-accounts"
  *     target="_blank">Muxed Accounts</a>
  */
 @Getter

@@ -10,7 +10,7 @@ import lombok.Value;
  * Request for JSON-RPC method simulateTransaction.
  *
  * @see <a
- *     href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/simulateTransaction"
+ *     href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/simulateTransaction"
  *     target="_blank">simulateTransaction documentation</a>
  */
 @Value

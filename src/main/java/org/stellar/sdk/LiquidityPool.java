@@ -11,7 +11,7 @@ import org.stellar.sdk.xdr.LiquidityPoolType;
  * Represents a LiquidityPoolParameters object on the Stellar network.
  *
  * <p>See: <a
- * href="https://developers.stellar.org/docs/learn/encyclopedia/sdex/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools">Liquidity
+ * href="https://developers.stellar.org/docs/learn/fundamentals/liquidity-on-stellar-sdex-liquidity-pools#liquidity-pools">Liquidity
  * Pool</a>
  */
 @Value

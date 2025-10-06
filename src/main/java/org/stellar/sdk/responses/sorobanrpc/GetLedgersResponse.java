@@ -9,7 +9,7 @@ import org.stellar.sdk.xdr.LedgerHeaderHistoryEntry;
 /**
  * Response for JSON-RPC method getLedgers.
  *
- * @see <a href="https://developers.stellar.org/docs/data/rpc/api-reference/methods/getLedgers"
+ * @see <a href="https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getLedgers"
  *     target="_blank">getLedgers documentation</a>
  */
 @Value

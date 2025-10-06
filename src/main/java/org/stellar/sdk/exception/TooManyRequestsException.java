@@ -6,7 +6,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Exception thrown when too many requests were sent to the Horizon server.
  *
- * @see <a href="https://developers.stellar.org/api/introduction/rate-limiting/"
+ * @see <a
+ *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/rate-limiting"
  *     target="_blank">Rate Limiting</a>
  */
 public class TooManyRequestsException extends NetworkException {
