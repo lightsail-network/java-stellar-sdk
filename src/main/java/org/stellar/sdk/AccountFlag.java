@@ -27,9 +27,13 @@ public enum AccountFlag {
    * Authorization immutable (0x4): If this is set then none of the authorization flags can be set
    * and the account can never be deleted.
    */
-  AUTH_IMMUTABLE_FLAG(AccountFlags.AUTH_IMMUTABLE_FLAG.getValue());
+  AUTH_IMMUTABLE_FLAG(AccountFlags.AUTH_IMMUTABLE_FLAG.getValue()),
 
-  // TODO: Add Clawback Enabled flag
+  /**
+   * Authorization clawback enabled (0x8): Allows the issuing account to clawback its credit held by
+   * other accounts. This flag requires that {@link #AUTH_REVOCABLE_FLAG} is also set.
+   */
+  AUTH_CLAWBACK_ENABLED_FLAG(AccountFlags.AUTH_CLAWBACK_ENABLED_FLAG.getValue());
 
   private final int value;
 

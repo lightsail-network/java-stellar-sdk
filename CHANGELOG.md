@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update:
+- feat: add `AUTH_CLAWBACK_ENABLED_FLAG` to `AccountFlag`.
+
 ## 2.1.0
 
 ### Update:
