@@ -34,15 +34,16 @@ public class SetOptionsOperation extends Operation {
 
   /**
    * Indicates which flags to clear. For details about the flags, please refer to the <a
-   * href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
-   * You can also use {@link AccountFlag} enum.
+   * href="https://developers.stellar.org/docs/learn/glossary#flags" target="_blank">accounts
+   * doc</a>. You can also use {@link AccountFlag} enum.
    */
+  // TODO: change to EnumSet<AccountFlag> in next major release
   @Nullable private final Integer clearFlags;
 
   /**
    * Indicates which flags to set. For details about the flags, please refer to the <a
-   * href="https://developers.stellar.org/docs/glossary/accounts/" target="_blank">accounts doc</a>.
-   * You can also use {@link AccountFlag} enum.
+   * href="https://developers.stellar.org/docs/learn/glossary#flags" target="_blank">accounts
+   * doc</a>. You can also use {@link AccountFlag} enum.
    */
   @Nullable private final Integer setFlags;
 
