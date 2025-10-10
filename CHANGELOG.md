@@ -4,6 +4,7 @@
 
 ### Update:
 - feat: add `AUTH_CLAWBACK_ENABLED_FLAG` to `AccountFlag`.
+- fix: remove `diagnosticEventsXdr` from `org.stellar.sdk.responses.sorobanrpc.Events`. Use `GetTransactionResponse.diagnosticEventsXdr` and `GetTransactionsResponse.Transaction.diagnosticEventsXdr` instead. ([#744](https://github.com/stellar/java-stellar-sdk/pull/744))
 
 ## 2.1.0
 

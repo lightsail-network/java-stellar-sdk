@@ -1,5 +1,6 @@
 package org.stellar.sdk.responses.sorobanrpc;
 
+import java.util.List;
 import lombok.Value;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.TransactionEnvelope;
@@ -43,6 +44,9 @@ public class GetTransactionResponse {
   Long ledger;
 
   Long createdAt;
+
+  /** The elements inside can be parsed as {@link org.stellar.sdk.xdr.DiagnosticEvent} objects. */
+  List<String> diagnosticEventsXdr;
 
   Events events;
 

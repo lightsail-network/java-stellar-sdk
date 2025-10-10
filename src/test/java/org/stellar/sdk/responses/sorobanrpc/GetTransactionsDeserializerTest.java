@@ -91,25 +91,13 @@ public class GetTransactionsDeserializerTest {
         getTransactionsResponse.getTransactions().get(1).getCreatedAt().longValue(), 1717166042L);
     assertNotNull(getTransactionsResponse.getTransactions().get(3).getEvents());
     assertEquals(
-        getTransactionsResponse
-            .getTransactions()
-            .get(3)
-            .getEvents()
-            .getDiagnosticEventsXdr()
-            .size(),
-        21);
-    for (int i = 0; i < 21; i++) {
+        getTransactionsResponse.getTransactions().get(3).getDiagnosticEventsXdr().size(), 19);
+    for (int i = 0; i < 19; i++) {
       assertEquals(
+          getTransactionsResponse.getTransactions().get(3).getDiagnosticEventsXdr().get(i),
           getTransactionsResponse
               .getTransactions()
               .get(3)
-              .getEvents()
-              .getDiagnosticEventsXdr()
-              .get(i),
-          getTransactionsResponse
-              .getTransactions()
-              .get(3)
-              .getEvents()
               .parseDiagnosticEventsXdr()
               .get(i)
               .toXdrBase64());

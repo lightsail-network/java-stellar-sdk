@@ -5,31 +5,13 @@ import java.util.stream.Collectors;
 import lombok.Value;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.ContractEvent;
-import org.stellar.sdk.xdr.DiagnosticEvent;
 import org.stellar.sdk.xdr.TransactionEvent;
 
 @Value
 public class Events {
-  List<String> diagnosticEventsXdr;
-
   List<String> transactionEventsXdr;
 
   List<List<String>> contractEventsXdr;
-
-  /**
-   * Parses the {@code diagnosticEventsXdr} field from a list of strings to a list of {@link
-   * org.stellar.sdk.xdr.DiagnosticEvent} objects.
-   *
-   * @return a list of parsed {@link org.stellar.sdk.xdr.DiagnosticEvent} objects
-   */
-  public List<DiagnosticEvent> parseDiagnosticEventsXdr() {
-    if (diagnosticEventsXdr == null) {
-      return null;
-    }
-    return diagnosticEventsXdr.stream()
-        .map(xdr -> Util.parseXdr(xdr, DiagnosticEvent::fromXdrBase64))
-        .collect(Collectors.toList());
-  }
 
   /**
    * Parses the {@code transactionEventsXdr} field from a list of strings to a list of {@link
