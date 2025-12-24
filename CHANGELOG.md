@@ -5,6 +5,7 @@
 ### Update:
 - feat: add `AUTH_CLAWBACK_ENABLED_FLAG` to `AccountFlag`.
 - fix: remove `diagnosticEventsXdr` from `org.stellar.sdk.responses.sorobanrpc.Events`. Use `GetTransactionResponse.diagnosticEventsXdr` and `GetTransactionsResponse.Transaction.diagnosticEventsXdr` instead. ([#744](https://github.com/stellar/java-stellar-sdk/pull/744))
+- feat: add [SEP-45](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0045.md) (Stellar Web Authentication for Contract Accounts) support. Check `Sep45Challenge` class for more details. ([#746](https://github.com/stellar/java-stellar-sdk/pull/746))
 
 ## 2.1.0
 
