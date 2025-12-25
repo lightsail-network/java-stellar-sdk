@@ -268,13 +268,13 @@ public class Sep45Challenge {
       @NonNull String[] homeDomains,
       @NonNull String webAuthDomain) {
 
-    if (homeDomains == null || homeDomains.length == 0) {
-      throw new IllegalArgumentException(
+    if (homeDomains.length == 0) {
+      throw new InvalidSep45ChallengeException(
           "At least one domain name must be included in homeDomains.");
     }
 
     // Validate server account ID
-    if (StrKey.decodeVersionByte(serverAccountId) != StrKey.VersionByte.ACCOUNT_ID) {
+    if (!StrKey.isValidEd25519PublicKey(serverAccountId)) {
       throw new InvalidSep45ChallengeException(
           "serverAccountId: " + serverAccountId + " is not a valid account id");
     }

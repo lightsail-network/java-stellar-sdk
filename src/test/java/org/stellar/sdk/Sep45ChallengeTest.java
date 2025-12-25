@@ -841,8 +841,8 @@ public class Sep45ChallengeTest {
     try {
       Sep45Challenge.readChallengeAuthorizationEntries(
           xdr, SERVER_ACCOUNT, WEB_AUTH_CONTRACT, new String[] {}, WEB_AUTH_DOMAIN);
-      fail("Expected IllegalArgumentException");
-    } catch (IllegalArgumentException e) {
+      fail("Expected InvalidSep45ChallengeException");
+    } catch (InvalidSep45ChallengeException e) {
       assertTrue(e.getMessage().contains("At least one domain name must be included"));
     }
   }
