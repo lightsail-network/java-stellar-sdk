@@ -1,6 +1,7 @@
 # Changelog
 
 ## Pending
+- fix: `KeyPair.fromPublicKey` now accepts any 32-byte public key, even if it is not a valid Ed25519 public key point (e.g., all zeros like `GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF`). Such keypairs can still be used for address representation but will throw `IllegalStateException` when attempting to verify signatures.
 
 ## 2.2.0
 

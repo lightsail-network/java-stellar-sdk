@@ -25,24 +25,45 @@ import org.stellar.sdk.xdr.XdrDataOutputStream;
 
 /** Holds a Stellar keypair. */
 public class KeyPair {
-  @NonNull private final Ed25519PublicKeyParameters publicKey;
+  @NonNull private final byte[] publicKeyBytes;
   @Nullable private final Ed25519PrivateKeyParameters privateKey;
+
+  /**
+   * Cached Ed25519PublicKeyParameters for signature verification. Lazily initialized because some
+   * valid Stellar addresses (like GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF which is
+   * 32 zero bytes) are not valid Ed25519 public keys.
+   */
+  @Nullable private Ed25519PublicKeyParameters ed25519PublicKey;
 
   static {
     Security.addProvider(new BouncyCastleProvider());
   }
 
   /**
-   * Creates a new KeyPair from the given public and private keys.
+   * Creates a new KeyPair from the given public key bytes and optional private key.
    *
-   * @param publicKey The public key for this KeyPair.
+   * @param publicKeyBytes The 32-byte public key for this KeyPair.
    * @param privateKey The private key for this KeyPair or null if you want a public key only
    */
   private KeyPair(
-      @NonNull Ed25519PublicKeyParameters publicKey,
-      @Nullable Ed25519PrivateKeyParameters privateKey) {
-    this.publicKey = publicKey;
+      @NonNull byte[] publicKeyBytes, @Nullable Ed25519PrivateKeyParameters privateKey) {
+    this.publicKeyBytes = publicKeyBytes;
     this.privateKey = privateKey;
+    this.ed25519PublicKey = null;
+  }
+
+  /**
+   * Creates a new KeyPair from an Ed25519 public key and optional private key.
+   *
+   * @param ed25519PublicKey The Ed25519 public key for this KeyPair.
+   * @param privateKey The private key for this KeyPair or null if you want a public key only
+   */
+  private KeyPair(
+      @NonNull Ed25519PublicKeyParameters ed25519PublicKey,
+      @Nullable Ed25519PrivateKeyParameters privateKey) {
+    this.publicKeyBytes = ed25519PublicKey.getEncoded();
+    this.privateKey = privateKey;
+    this.ed25519PublicKey = ed25519PublicKey;
   }
 
   /** Returns true if this Keypair is capable of signing */
@@ -113,18 +134,19 @@ public class KeyPair {
   /**
    * Creates a new Stellar keypair from a 32 byte address.
    *
+   * <p>Note: This method accepts any 32-byte array as a public key, even if it is not a valid
+   * Ed25519 public key point (e.g., all zeros). Such keypairs can still be used for address
+   * representation but will throw an exception when attempting to verify signatures.
+   *
    * @param publicKey The 32 byte public key.
    * @return {@link KeyPair}
-   * @throws IllegalArgumentException if the provided public key is invalid
+   * @throws IllegalArgumentException if the provided public key is not 32 bytes
    */
   public static KeyPair fromPublicKey(byte[] publicKey) {
-    Ed25519PublicKeyParameters ed25519PublicKeyParameters;
-    try {
-      ed25519PublicKeyParameters = new Ed25519PublicKeyParameters(publicKey, 0);
-    } catch (Exception e) {
-      throw new IllegalArgumentException("Public key is invalid", e);
+    if (publicKey.length != 32) {
+      throw new IllegalArgumentException("Public key must be 32 bytes");
     }
-    return new KeyPair(ed25519PublicKeyParameters, null);
+    return new KeyPair(Arrays.copyOf(publicKey, 32), null);
   }
 
   /**
@@ -183,7 +205,7 @@ public class KeyPair {
 
   /** Returns the raw 32 byte public key. */
   public byte[] getPublicKey() {
-    return publicKey.getEncoded();
+    return Arrays.copyOf(publicKeyBytes, 32);
   }
 
   /** Returns the signature hint for this keypair. */
@@ -303,12 +325,35 @@ public class KeyPair {
    * @param data The data that was signed.
    * @param signature The signature.
    * @return True if they match, false otherwise.
+   * @throws IllegalStateException if the public key is not a valid Ed25519 public key (e.g., all
+   *     zeros)
    */
   public boolean verify(byte[] data, byte[] signature) {
+    Ed25519PublicKeyParameters ed25519Key = getEd25519PublicKey();
     Ed25519Signer verifier = new Ed25519Signer();
-    verifier.init(false, publicKey);
+    verifier.init(false, ed25519Key);
     verifier.update(data, 0, data.length);
     return verifier.verifySignature(signature);
+  }
+
+  /**
+   * Gets the Ed25519PublicKeyParameters, lazily initializing it if necessary.
+   *
+   * @return The Ed25519PublicKeyParameters for this keypair.
+   * @throws IllegalStateException if the public key bytes do not represent a valid Ed25519 public
+   *     key
+   */
+  private Ed25519PublicKeyParameters getEd25519PublicKey() {
+    if (ed25519PublicKey == null) {
+      try {
+        ed25519PublicKey = new Ed25519PublicKeyParameters(publicKeyBytes, 0);
+      } catch (Exception e) {
+        throw new IllegalStateException(
+            "Public key is not a valid Ed25519 public key. This can happen for special addresses like GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF (32 zero bytes).",
+            e);
+      }
+    }
+    return ed25519PublicKey;
   }
 
   @Override
@@ -318,7 +363,7 @@ public class KeyPair {
       return false;
     }
     KeyPair keyPair = (KeyPair) object;
-    if (!Arrays.equals(publicKey.getEncoded(), keyPair.publicKey.getEncoded())) {
+    if (!Arrays.equals(publicKeyBytes, keyPair.publicKeyBytes)) {
       return false;
     }
     // privateKey can be null
@@ -330,7 +375,7 @@ public class KeyPair {
   @Override
   public int hashCode() {
     return Objects.hash(
-        Arrays.hashCode(publicKey.getEncoded()),
+        Arrays.hashCode(publicKeyBytes),
         privateKey == null ? null : Arrays.hashCode(privateKey.getEncoded()));
   }
 
