@@ -90,4 +90,34 @@ public class MuxedAccountTest {
       assertThrows(IllegalArgumentException.class, () -> new MuxedAccount(invalidAccount));
     }
   }
+
+  @Test
+  public void testZeroPublicKeyAccount() {
+    // GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF is a valid Stellar address
+    // that corresponds to 32 zero bytes. While not a valid Ed25519 point, it should still
+    // be usable for address representation purposes.
+    String zeroAccountId = "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";
+
+    // Test creating MuxedAccount without muxed ID
+    MuxedAccount muxedAccount1 = new MuxedAccount(zeroAccountId, null);
+    assertEquals(zeroAccountId, muxedAccount1.getAccountId());
+    assertNull(muxedAccount1.getMuxedId());
+    assertEquals(zeroAccountId, muxedAccount1.getAddress());
+
+    // Test creating MuxedAccount from address string
+    MuxedAccount muxedAccount2 = new MuxedAccount(zeroAccountId);
+    assertEquals(zeroAccountId, muxedAccount2.getAccountId());
+    assertNull(muxedAccount2.getMuxedId());
+
+    // Test creating MuxedAccount with muxed ID
+    BigInteger muxedId = BigInteger.valueOf(12345);
+    MuxedAccount muxedAccount3 = new MuxedAccount(zeroAccountId, muxedId);
+    assertEquals(zeroAccountId, muxedAccount3.getAccountId());
+    assertEquals(muxedId, muxedAccount3.getMuxedId());
+
+    // Test XDR round-trip
+    org.stellar.sdk.xdr.MuxedAccount xdr = muxedAccount3.toXdr();
+    MuxedAccount fromXdr = MuxedAccount.fromXdr(xdr);
+    assertEquals(muxedAccount3, fromXdr);
+  }
 }

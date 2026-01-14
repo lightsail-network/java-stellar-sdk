@@ -75,7 +75,6 @@ class KeyPairTest :
           "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUACUSI",
           "GA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVSGZA",
           "GAXDYNIBA5E4DXR5TJN522RRYESFQ5UNUXHIPTFGVLLD5O5K552DF5Z",
-          "GAH6H2XPCZS27WMKPTZJPTDN7JMBCDHTLU5WQP7TUI2ORA2M5FY5DHNU",
           "masterpassphrasemasterpassphrase",
           "gsYRSEQhTffqA9opPepAENCr2WG6z5iBHHubxxbRzWaHf8FBWcu",
         )
@@ -101,6 +100,39 @@ class KeyPairTest :
 
         keypair.canSign() shouldBe false
         keypair.accountId shouldBe mainAccount
+      }
+
+      test("should create keypair from all-zero public key bytes") {
+        // GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF is a valid Stellar address
+        // that corresponds to 32 zero bytes. While not a valid Ed25519 point, it should still
+        // be creatable for address representation purposes.
+        val zeroPublicKey = ByteArray(32)
+        val keypair = KeyPair.fromPublicKey(zeroPublicKey)
+
+        keypair.canSign() shouldBe false
+        keypair.accountId shouldBe "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF"
+        keypair.publicKey shouldBe zeroPublicKey
+      }
+
+      test("should create keypair from account ID with invalid Ed25519 point") {
+        // This address has a valid checksum but the public key is not a valid Ed25519 point
+        val keypair =
+          KeyPair.fromAccountId("GAH6H2XPCZS27WMKPTZJPTDN7JMBCDHTLU5WQP7TUI2ORA2M5FY5DHNU")
+
+        keypair.canSign() shouldBe false
+        keypair.accountId shouldBe "GAH6H2XPCZS27WMKPTZJPTDN7JMBCDHTLU5WQP7TUI2ORA2M5FY5DHNU"
+      }
+
+      test("should throw when verifying signature with invalid Ed25519 public key") {
+        val zeroPublicKey = ByteArray(32)
+        val keypair = KeyPair.fromPublicKey(zeroPublicKey)
+
+        shouldThrow<IllegalStateException> { keypair.verify("test".toByteArray(), ByteArray(64)) }
+      }
+
+      test("should throw for public key with wrong length") {
+        shouldThrow<IllegalArgumentException> { KeyPair.fromPublicKey(ByteArray(31)) }
+        shouldThrow<IllegalArgumentException> { KeyPair.fromPublicKey(ByteArray(33)) }
       }
     }
 
