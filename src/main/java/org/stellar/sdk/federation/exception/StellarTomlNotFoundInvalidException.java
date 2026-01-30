@@ -7,4 +7,8 @@ public class StellarTomlNotFoundInvalidException extends NetworkException {
   public StellarTomlNotFoundInvalidException(Integer code) {
     super(code, null);
   }
+
+  public StellarTomlNotFoundInvalidException(String message) {
+    super(message, null, null);
+  }
 }

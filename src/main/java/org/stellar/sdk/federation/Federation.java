@@ -147,13 +147,17 @@ public class Federation {
   private HttpUrl getFederationServerUri(@NonNull String domain) {
     String uriBuilder = "https://" + domain + "/.well-known/stellar.toml";
     HttpUrl stellarTomlUri = HttpUrl.parse(uriBuilder);
-    assert stellarTomlUri != null;
+    if (stellarTomlUri == null) {
+      throw new IllegalArgumentException("Invalid domain: " + domain);
+    }
     Request request = new Request.Builder().get().url(stellarTomlUri).build();
     try (Response response = httpClient.newCall(request).execute()) {
       if (response.code() >= 300) {
         throw new StellarTomlNotFoundInvalidException(response.code());
       }
-      assert response.body() != null;
+      if (response.body() == null) {
+        throw new StellarTomlNotFoundInvalidException("Empty response body");
+      }
       Toml stellarToml = new Toml().read(response.body().string());
       String federationServer = stellarToml.getString("FEDERATION_SERVER");
       if (federationServer == null || federationServer.isEmpty()) {
