@@ -4,6 +4,7 @@
 
 ### Update
 - fix: add stricter validation for Ed25519 Signed Payload.
+- fix: replace assert statements with explicit null checks in `Federation` class to ensure validation is not bypassed when assertions are disabled.
 
 ## 2.2.1
 
