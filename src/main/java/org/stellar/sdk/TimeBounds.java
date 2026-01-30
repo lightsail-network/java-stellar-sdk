@@ -63,9 +63,16 @@ public class TimeBounds {
    *
    * @param timeout Timeout in seconds.
    * @return TimeBounds
+   * @throws IllegalArgumentException if timeout is negative or would cause overflow
    */
   public static TimeBounds expiresAfter(long timeout) {
+    if (timeout < 0) {
+      throw new IllegalArgumentException("timeout cannot be negative");
+    }
     long now = System.currentTimeMillis() / 1000L;
+    if (timeout > Long.MAX_VALUE - now) {
+      throw new IllegalArgumentException("timeout is too large, would cause overflow");
+    }
     long endTime = now + timeout;
     return new TimeBounds(0, endTime);
   }

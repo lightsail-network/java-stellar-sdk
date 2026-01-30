@@ -5,6 +5,7 @@
 ### Update
 - fix: add stricter validation for Ed25519 Signed Payload.
 - fix: replace assert statements with explicit null checks in `Federation` class to ensure validation is not bypassed when assertions are disabled.
+- fix: add overflow check in `TimeBounds.expiresAfter()` to prevent integer overflow when timeout is too large.
 
 ## 2.2.1
 
