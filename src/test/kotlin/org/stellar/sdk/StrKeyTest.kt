@@ -275,7 +275,66 @@ class StrKeyTest :
           .message shouldBe
           "Invalid data length, the length should be between 40 and 100 bytes, got 39"
       }
-      // TODO: add encode check
+
+      test("decode with zero payload length should fail") {
+        // 32 bytes public key + 4 bytes length (0) + 4 bytes padding = 40 bytes
+        // But payloadLength = 0 means padding calc gives 0, so actual = 36 bytes
+        // This will fail the minimum length check first
+        val rawKey = ByteArray(40)
+        // payload length is 0 (default), which should be rejected
+        val encoded = StrKey.encodeSignedPayload(rawKey)
+        shouldThrow<IllegalArgumentException> { StrKey.decodeSignedPayload(encoded) }
+          .message shouldBe
+          "Invalid Ed25519 Signed Payload Key, payload length must be between 1 and 64, got 0"
+      }
+
+      test("decode with payload length > 64 should fail") {
+        // Craft raw data with payload length = 65
+        val rawKey = ByteArray(100)
+        rawKey[35] = 65 // Set payload length to 65
+        val encoded = StrKey.encodeSignedPayload(rawKey)
+        shouldThrow<IllegalArgumentException> { StrKey.decodeSignedPayload(encoded) }
+          .message shouldBe
+          "Invalid Ed25519 Signed Payload Key, payload length must be between 1 and 64, got 65"
+      }
+
+      test("decode with non-zero padding should fail") {
+        // 32 bytes public key + 4 bytes length (1) + 1 byte payload + 3 bytes padding = 40 bytes
+        val rawKey = ByteArray(40)
+        rawKey[35] = 1 // payload length = 1
+        rawKey[36] = 0x42 // payload byte
+        rawKey[37] = 0x01 // non-zero padding (should be 0)
+        val encoded = StrKey.encodeSignedPayload(rawKey)
+        shouldThrow<IllegalArgumentException> { StrKey.decodeSignedPayload(encoded) }
+          .message shouldBe "Invalid Ed25519 Signed Payload Key, padding bytes must be zero"
+      }
+
+      test("encode and decode with minimum valid payload (1 byte)") {
+        // 32 bytes public key + 4 bytes length (1) + 1 byte payload + 3 bytes zero padding = 40
+        // bytes
+        val rawKey = ByteArray(40)
+        rawKey[35] = 1 // payload length = 1
+        rawKey[36] = 0x42 // payload byte
+        // padding bytes [37], [38], [39] are already 0
+
+        val encoded = StrKey.encodeSignedPayload(rawKey)
+        val decoded = StrKey.decodeSignedPayload(encoded)
+        decoded shouldBe rawKey
+      }
+
+      test("encode and decode with maximum valid payload (64 bytes)") {
+        // 32 bytes public key + 4 bytes length (64) + 64 bytes payload + 0 bytes padding = 100
+        // bytes
+        val rawKey = ByteArray(100)
+        rawKey[35] = 64 // payload length = 64
+        for (i in 0 until 64) {
+          rawKey[36 + i] = i.toByte()
+        }
+
+        val encoded = StrKey.encodeSignedPayload(rawKey)
+        val decoded = StrKey.decodeSignedPayload(encoded)
+        decoded shouldBe rawKey
+      }
     }
 
     context("should reject all invalid StrKey cases") {

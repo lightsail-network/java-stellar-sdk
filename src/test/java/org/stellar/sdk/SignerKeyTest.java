@@ -197,6 +197,7 @@ public class SignerKeyTest {
   public void testEd25519SignedPayloadConstructorValidation() {
     byte[] publicKey = new byte[32];
     byte[] validPayload = new byte[64];
+    byte[] emptyPayload = new byte[0]; // Too small
     byte[] invalidPayload = new byte[65]; // Too large
 
     // Valid construction
@@ -205,12 +206,20 @@ public class SignerKeyTest {
     assertArrayEquals(publicKey, validSignedPayload.getEd25519PublicKey());
     assertArrayEquals(validPayload, validSignedPayload.getPayload());
 
+    // Invalid construction - payload too small (empty)
+    try {
+      new SignerKey.Ed25519SignedPayload(publicKey, emptyPayload);
+      fail("Expected IllegalArgumentException for empty payload");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("must be between 1 and 64"));
+    }
+
     // Invalid construction - payload too large
     try {
       new SignerKey.Ed25519SignedPayload(publicKey, invalidPayload);
       fail("Expected IllegalArgumentException for payload too large");
     } catch (IllegalArgumentException e) {
-      assertTrue(e.getMessage().contains("Invalid payload length, must be less than 64"));
+      assertTrue(e.getMessage().contains("must be between 1 and 64"));
     }
   }
 
@@ -272,5 +281,167 @@ public class SignerKeyTest {
     assertEquals(signerKey1.hashCode(), signerKey2.hashCode());
     assertNotEquals(signerKey1, signerKey3);
     assertNotEquals(signerKey1.hashCode(), signerKey3.hashCode());
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadKeyTooShort() {
+    // Key length < 40 bytes
+    byte[] shortKey = new byte[39];
+    SignerKey signerKey =
+        new SignerKey(shortKey, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+
+    try {
+      signerKey.toEd25519SignedPayload();
+      fail("Expected IllegalArgumentException for key too short");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("must be between 40 and 100 bytes"));
+    }
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadKeyTooLong() {
+    // Key length > 100 bytes
+    byte[] longKey = new byte[101];
+    SignerKey signerKey =
+        new SignerKey(longKey, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+
+    try {
+      signerKey.toEd25519SignedPayload();
+      fail("Expected IllegalArgumentException for key too long");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("must be between 40 and 100 bytes"));
+    }
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadNegativePayloadLength() {
+    // 32 bytes public key + 4 bytes negative length + 4 bytes padding = 40 bytes
+    byte[] key = new byte[40];
+    // Set payload length to -1 (0xFFFFFFFF in big-endian)
+    key[32] = (byte) 0xFF;
+    key[33] = (byte) 0xFF;
+    key[34] = (byte) 0xFF;
+    key[35] = (byte) 0xFF;
+
+    SignerKey signerKey = new SignerKey(key, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+
+    try {
+      signerKey.toEd25519SignedPayload();
+      fail("Expected IllegalArgumentException for negative payload length");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("must be between 1 and 64"));
+    }
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadZeroPayloadLength() {
+    // 32 bytes public key + 4 bytes zero length + 4 bytes padding = 40 bytes
+    byte[] key = new byte[40];
+    // payload length is already 0 (default)
+
+    SignerKey signerKey = new SignerKey(key, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+
+    try {
+      signerKey.toEd25519SignedPayload();
+      fail("Expected IllegalArgumentException for zero payload length");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("must be between 1 and 64"));
+    }
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadPayloadLengthTooLarge() {
+    // 32 bytes public key + 4 bytes length (65) + padding = need more space
+    byte[] key = new byte[100];
+    // Set payload length to 65 (0x00000041 in big-endian)
+    key[32] = 0;
+    key[33] = 0;
+    key[34] = 0;
+    key[35] = 65;
+
+    SignerKey signerKey = new SignerKey(key, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+
+    try {
+      signerKey.toEd25519SignedPayload();
+      fail("Expected IllegalArgumentException for payload length > 64");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("must be between 1 and 64"));
+    }
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadLengthMismatch() {
+    // 32 bytes public key + 4 bytes length (1) + 1 byte payload + 3 bytes padding = 40 bytes
+    // But we provide 44 bytes total
+    byte[] key = new byte[44];
+    // Set payload length to 1
+    key[35] = 1;
+
+    SignerKey signerKey = new SignerKey(key, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+
+    try {
+      signerKey.toEd25519SignedPayload();
+      fail("Expected IllegalArgumentException for length mismatch");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("expected 40 bytes"));
+    }
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadNonZeroPadding() {
+    // 32 bytes public key + 4 bytes length (1) + 1 byte payload + 3 bytes padding = 40 bytes
+    byte[] key = new byte[40];
+    // Set payload length to 1
+    key[35] = 1;
+    // Set payload byte
+    key[36] = 0x42;
+    // Set non-zero padding (should be zeros)
+    key[37] = 0x01; // This should be 0
+
+    SignerKey signerKey = new SignerKey(key, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+
+    try {
+      signerKey.toEd25519SignedPayload();
+      fail("Expected IllegalArgumentException for non-zero padding");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("padding bytes must be zero"));
+    }
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadValidMinPayload() {
+    // 32 bytes public key + 4 bytes length (1) + 1 byte payload + 3 bytes zero padding = 40 bytes
+    byte[] key = new byte[40];
+    // Set payload length to 1 (big-endian)
+    key[35] = 1;
+    // Set payload byte
+    key[36] = 0x42;
+    // Padding bytes key[37], key[38], key[39] are already 0
+
+    SignerKey signerKey = new SignerKey(key, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+    SignerKey.Ed25519SignedPayload result = signerKey.toEd25519SignedPayload();
+
+    assertEquals(1, result.getPayload().length);
+    assertEquals(0x42, result.getPayload()[0]);
+  }
+
+  @Test
+  public void testToEd25519SignedPayloadValidMaxPayload() {
+    // 32 bytes public key + 4 bytes length (64) + 64 bytes payload + 0 bytes padding = 100 bytes
+    byte[] key = new byte[100];
+    // Set payload length to 64 (big-endian)
+    key[35] = 64;
+    // Fill payload with test data
+    for (int i = 0; i < 64; i++) {
+      key[36 + i] = (byte) i;
+    }
+
+    SignerKey signerKey = new SignerKey(key, SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD);
+    SignerKey.Ed25519SignedPayload result = signerKey.toEd25519SignedPayload();
+
+    assertEquals(64, result.getPayload().length);
+    for (int i = 0; i < 64; i++) {
+      assertEquals((byte) i, result.getPayload()[i]);
+    }
   }
 }
