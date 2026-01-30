@@ -60,6 +60,28 @@ class TimeBoundsTest :
       actualMaxTime shouldBeInRange (now + timeout - 1)..(now + timeout + 1)
     }
 
+    test("expiresAfter should throw IllegalArgumentException for negative timeout") {
+      val exception = shouldThrow<IllegalArgumentException> { TimeBounds.expiresAfter(-1) }
+      exception.message shouldBe "timeout cannot be negative"
+    }
+
+    test("expiresAfter should throw IllegalArgumentException for overflow") {
+      val exception =
+        shouldThrow<IllegalArgumentException> { TimeBounds.expiresAfter(Long.MAX_VALUE) }
+      exception.message shouldBe "timeout is too large, would cause overflow"
+    }
+
+    test("expiresAfter should handle large valid timeout") {
+      // 100 years in seconds
+      val hundredYearsInSeconds = 100L * 365 * 24 * 60 * 60
+      val timeBounds = TimeBounds.expiresAfter(hundredYearsInSeconds)
+      val now = System.currentTimeMillis() / 1000L
+
+      timeBounds.minTime.toLong() shouldBe 0
+      timeBounds.maxTime.toLong() shouldBeInRange
+        (now + hundredYearsInSeconds - 1)..(now + hundredYearsInSeconds + 1)
+    }
+
     test("should handle large time values") {
       val largeTime = Long.MAX_VALUE - 1
       val timeBounds = TimeBounds(0, largeTime)
