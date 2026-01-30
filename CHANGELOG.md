@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update
+- fix: add stricter validation for Ed25519 Signed Payload.
+
 ## 2.2.1
 
 ### Update:

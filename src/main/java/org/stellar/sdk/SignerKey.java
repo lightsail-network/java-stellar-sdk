@@ -279,8 +279,42 @@ public class SignerKey {
           "SignerKey type must be SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD");
     }
 
+    // Validate key length: min 40 bytes (32 + 4 + 4), max 100 bytes (32 + 4 + 64)
+    if (key.length < 40 || key.length > 100) {
+      throw new IllegalArgumentException(
+          "Invalid signed payload key length, must be between 40 and 100 bytes, got " + key.length);
+    }
+
     byte[] lengthBytes = Arrays.copyOfRange(key, 32, 36);
     int payloadLength = ByteBuffer.wrap(lengthBytes).getInt();
+
+    // Validate payload length: must be between 1 and 64 bytes
+    if (payloadLength < 1 || payloadLength > SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH) {
+      throw new IllegalArgumentException(
+          "Invalid payload length, must be between 1 and "
+              + SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH
+              + ", got "
+              + payloadLength);
+    }
+
+    // Validate total length matches expected (32 + 4 + payloadLength + padding)
+    int padding = (4 - payloadLength % 4) % 4;
+    int expectedLength = 32 + 4 + payloadLength + padding;
+    if (key.length != expectedLength) {
+      throw new IllegalArgumentException(
+          "Invalid signed payload key length, expected "
+              + expectedLength
+              + " bytes, got "
+              + key.length);
+    }
+
+    // Validate padding bytes are all zeros
+    for (int i = 36 + payloadLength; i < key.length; i++) {
+      if (key[i] != 0) {
+        throw new IllegalArgumentException(
+            "Invalid signed payload key, padding bytes must be zero");
+      }
+    }
 
     byte[] publicKeyBytes = Arrays.copyOfRange(key, 0, 32);
     byte[] payload = Arrays.copyOfRange(key, 36, 36 + payloadLength);
@@ -372,13 +406,16 @@ public class SignerKey {
      * Creates a new Ed25519SignedPayload.
      *
      * @param ed25519PublicKey The 32-byte Ed25519 public key
-     * @param payload The payload to be signed (maximum 64 bytes)
-     * @throws IllegalArgumentException if the payload length exceeds the maximum allowed
+     * @param payload The payload to be signed (1-64 bytes)
+     * @throws IllegalArgumentException if the payload length is not between 1 and 64
      */
     public Ed25519SignedPayload(byte[] ed25519PublicKey, byte[] payload) {
-      if (payload.length > SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH) {
+      if (payload.length < 1 || payload.length > SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH) {
         throw new IllegalArgumentException(
-            "Invalid payload length, must be less than " + SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH);
+            "Invalid payload length, must be between 1 and "
+                + SIGNED_PAYLOAD_MAX_PAYLOAD_LENGTH
+                + ", got "
+                + payload.length);
       }
       this.ed25519PublicKey = ed25519PublicKey;
       this.payload = payload;
