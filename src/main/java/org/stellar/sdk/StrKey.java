@@ -609,9 +609,25 @@ public class StrKey {
     if (VersionByte.SIGNED_PAYLOAD.getValue() == decodedVersionByte) {
       byte[] lengthBytes = Arrays.copyOfRange(data, 32, 36);
       int payloadLength = ByteBuffer.wrap(lengthBytes).getInt();
+
+      // Validate payload length: must be between 1 and 64 bytes
+      if (payloadLength < 1 || payloadLength > 64) {
+        throw new IllegalArgumentException(
+            "Invalid Ed25519 Signed Payload Key, payload length must be between 1 and 64, got "
+                + payloadLength);
+      }
+
       int padding = (4 - payloadLength % 4) % 4;
       if (data.length % 4 != 0 || payloadLength + padding != data.length - 36) {
         throw new IllegalArgumentException("Invalid Ed25519 Signed Payload Key");
+      }
+
+      // Validate padding bytes are all zeros
+      for (int i = 36 + payloadLength; i < data.length; i++) {
+        if (data[i] != 0) {
+          throw new IllegalArgumentException(
+              "Invalid Ed25519 Signed Payload Key, padding bytes must be zero");
+        }
       }
     }
 
