@@ -73,6 +73,9 @@ public class ManageDataOperation extends Operation {
       if (new XdrString(op.name).getBytes().length > 64) {
         throw new IllegalArgumentException("name cannot exceed 64 bytes");
       }
+      if (op.value != null && op.value.length > 64) {
+        throw new IllegalArgumentException("value cannot exceed 64 bytes");
+      }
       return op;
     }
   }
