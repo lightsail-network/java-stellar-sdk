@@ -3,8 +3,10 @@ package org.stellar.sdk.responses;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -702,5 +704,27 @@ public class OperationResponseTest {
     assertArrayEquals(new String[] {"authorized"}, response.getSetFlagStrings().toArray());
     assertArrayEquals(new Integer[] {4}, response.getClearFlags().toArray());
     assertArrayEquals(new String[] {"clawback_enabled"}, response.getClearFlagStrings().toArray());
+  }
+
+  @Test
+  public void testDeserializeOperationWithMissingTypeI() {
+    String json = "{\"id\": \"12345\", \"type\": \"payment\"}";
+    JsonParseException exception =
+        assertThrows(
+            JsonParseException.class,
+            () -> GsonSingleton.getInstance().fromJson(json, OperationResponse.class));
+    assertTrue(exception.getMessage().contains("Missing required field 'type_i'"));
+    assertTrue(exception.getMessage().contains("Horizon version may be outdated"));
+  }
+
+  @Test
+  public void testDeserializeOperationWithUnknownTypeI() {
+    String json = "{\"id\": \"12345\", \"type\": \"unknown\", \"type_i\": 9999}";
+    JsonParseException exception =
+        assertThrows(
+            JsonParseException.class,
+            () -> GsonSingleton.getInstance().fromJson(json, OperationResponse.class));
+    assertTrue(exception.getMessage().contains("Unknown operation type: 9999"));
+    assertTrue(exception.getMessage().contains("SDK version may be outdated"));
   }
 }

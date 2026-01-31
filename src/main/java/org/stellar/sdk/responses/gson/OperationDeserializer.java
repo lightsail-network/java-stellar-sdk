@@ -27,9 +27,15 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
             .registerTypeAdapter(Predicate.class, new PredicateDeserializer())
             .create();
 
-    int type = json.getAsJsonObject().get("type_i").getAsInt();
+    JsonElement typeElement = json.getAsJsonObject().get("type_i");
+    if (typeElement == null || typeElement.isJsonNull()) {
+      throw new JsonParseException(
+          "Missing required field 'type_i'. Your Horizon version may be outdated.");
+    }
+    int type = typeElement.getAsInt();
     if (type < 0 || type >= AllOperationTypes.length) {
-      throw new IllegalArgumentException("Invalid operation type");
+      throw new JsonParseException(
+          "Unknown operation type: " + type + ". Your SDK version may be outdated.");
     }
 
     switch (AllOperationTypes[type]) {
@@ -88,7 +94,7 @@ class OperationDeserializer implements JsonDeserializer<OperationResponse> {
       case RESTORE_FOOTPRINT:
         return gson.fromJson(json, RestoreFootprintOperationResponse.class);
       default:
-        throw new IllegalArgumentException("Invalid operation type");
+        throw new AssertionError("Unhandled operation type: " + AllOperationTypes[type]);
     }
   }
 }
