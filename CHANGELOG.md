@@ -7,6 +7,7 @@
 - fix: replace assert statements with explicit null checks in `Federation` class to ensure validation is not bypassed when assertions are disabled.
 - fix: add overflow check in `TimeBounds.expiresAfter()` to prevent integer overflow when timeout is too large.
 - fix: add validation for `ManageDataOperation` value length to ensure it does not exceed 64 bytes.
+- fix: use `StandardCharsets.UTF_8` explicitly when converting byte arrays to strings to ensure consistent behavior across different platforms.
 
 ## 2.2.1
 

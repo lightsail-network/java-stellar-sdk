@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -316,7 +317,9 @@ public class Sep10Challenge {
 
     byte[] nonce;
     try {
-      nonce = Base64Factory.getInstance().decode(new String(manageDataOperation.getValue()));
+      nonce =
+          Base64Factory.getInstance()
+              .decode(new String(manageDataOperation.getValue(), StandardCharsets.UTF_8));
     } catch (IllegalArgumentException e) {
       throw new InvalidSep10ChallengeException(
           "Failed to decode random nonce provided in ManageData operation.", e);

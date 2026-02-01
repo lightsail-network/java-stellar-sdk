@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.nio.charset.StandardCharsets;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -57,10 +58,14 @@ public class AllowTrustOperation extends Operation {
     String assetCode;
     switch (op.getAsset().getDiscriminant()) {
       case ASSET_TYPE_CREDIT_ALPHANUM4:
-        assetCode = new String(op.getAsset().getAssetCode4().getAssetCode4()).trim();
+        assetCode =
+            new String(op.getAsset().getAssetCode4().getAssetCode4(), StandardCharsets.UTF_8)
+                .trim();
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM12:
-        assetCode = new String(op.getAsset().getAssetCode12().getAssetCode12()).trim();
+        assetCode =
+            new String(op.getAsset().getAssetCode12().getAssetCode12(), StandardCharsets.UTF_8)
+                .trim();
         break;
       default:
         throw new IllegalArgumentException("Unknown asset code");
