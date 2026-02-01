@@ -1,6 +1,7 @@
 package org.stellar.sdk;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -371,25 +372,25 @@ public class Sep45Challenge {
 
       switch (key) {
         case "account":
-          account = new String(Scv.fromString(valueVal));
+          account = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
           break;
         case "home_domain":
-          homeDomain = new String(Scv.fromString(valueVal));
+          homeDomain = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
           break;
         case "nonce":
-          nonce = new String(Scv.fromString(valueVal));
+          nonce = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
           break;
         case "web_auth_domain":
-          webAuthDomainValue = new String(Scv.fromString(valueVal));
+          webAuthDomainValue = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
           break;
         case "web_auth_domain_account":
-          webAuthDomainAccount = new String(Scv.fromString(valueVal));
+          webAuthDomainAccount = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
           break;
         case "client_domain":
-          clientDomain = new String(Scv.fromString(valueVal));
+          clientDomain = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
           break;
         case "client_domain_account":
-          clientDomainAccount = new String(Scv.fromString(valueVal));
+          clientDomainAccount = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
           break;
         default:
           // Unknown argument, ignore

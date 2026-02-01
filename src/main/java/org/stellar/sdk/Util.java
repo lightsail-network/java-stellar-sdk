@@ -2,6 +2,7 @@ package org.stellar.sdk;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -95,7 +96,7 @@ public class Util {
    * @return trimmed byte array
    */
   static String paddedByteArrayToString(byte[] bytes) {
-    String[] strArray = new String(bytes).split("\0");
+    String[] strArray = new String(bytes, StandardCharsets.UTF_8).split("\0");
     if (strArray.length > 0) {
       return strArray[0];
     }
