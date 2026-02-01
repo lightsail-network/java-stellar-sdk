@@ -8,6 +8,7 @@
 - fix: add overflow check in `TimeBounds.expiresAfter()` to prevent integer overflow when timeout is too large.
 - fix: add validation for `ManageDataOperation` value length to ensure it does not exceed 64 bytes.
 - fix: use `StandardCharsets.UTF_8` explicitly when converting byte arrays to strings to ensure consistent behavior across different platforms.
+- refactor: use static initialization for `GsonSingleton` to ensure thread safety.
 
 ## 2.2.1
 
