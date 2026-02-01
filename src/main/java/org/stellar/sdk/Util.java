@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.stellar.sdk.exception.UnexpectedException;
 
 /**
@@ -14,22 +16,14 @@ import org.stellar.sdk.exception.UnexpectedException;
  * <p>note: For some reason we need to make it public, but I don't recommend to use it directly.
  */
 public class Util {
-  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-
   /**
    * Returns hex representation of <code>bytes</code> array.
    *
    * @param bytes byte array to convert to hex
-   * @return hex representation of the byte array
+   * @return hex representation of the byte array (uppercase)
    */
   public static String bytesToHex(byte[] bytes) {
-    char[] hexChars = new char[bytes.length * 2];
-    for (int j = 0; j < bytes.length; j++) {
-      int v = bytes[j] & 0xFF;
-      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
-    }
-    return new String(hexChars);
+    return Hex.encodeHexString(bytes, false);
   }
 
   /**
@@ -37,15 +31,14 @@ public class Util {
    *
    * @param s hex string to convert to byte array
    * @return byte array representation of the hex string
+   * @throws IllegalArgumentException if the string contains non-hex characters or has odd length
    */
   public static byte[] hexToBytes(String s) {
-    int len = s.length();
-    byte[] data = new byte[len / 2];
-    for (int i = 0; i < len; i += 2) {
-      data[i / 2] =
-          (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
+    try {
+      return Hex.decodeHex(s);
+    } catch (DecoderException e) {
+      throw new IllegalArgumentException("Invalid hex string: " + s, e);
     }
-    return data;
   }
 
   /**
