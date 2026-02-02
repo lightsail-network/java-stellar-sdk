@@ -35,27 +35,63 @@ public class SCSpecUDTErrorEnumV0 implements XdrElement {
   private SCSpecUDTErrorEnumCaseV0[] cases;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
+    int docSize = doc.getBytes().length;
+    if (docSize > 1024) {
+      throw new IOException("doc size " + docSize + " exceeds max size 1024");
+    }
     doc.encode(stream);
+    int libSize = lib.getBytes().length;
+    if (libSize > 80) {
+      throw new IOException("lib size " + libSize + " exceeds max size 80");
+    }
     lib.encode(stream);
+    int nameSize = name.getBytes().length;
+    if (nameSize > 60) {
+      throw new IOException("name size " + nameSize + " exceeds max size 60");
+    }
     name.encode(stream);
     int casesSize = getCases().length;
+    if (casesSize > 50) {
+      throw new IOException("cases size " + casesSize + " exceeds max size 50");
+    }
     stream.writeInt(casesSize);
     for (int i = 0; i < casesSize; i++) {
       cases[i].encode(stream);
     }
   }
 
-  public static SCSpecUDTErrorEnumV0 decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecUDTErrorEnumV0 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecUDTErrorEnumV0 decodedSCSpecUDTErrorEnumV0 = new SCSpecUDTErrorEnumV0();
-    decodedSCSpecUDTErrorEnumV0.doc = XdrString.decode(stream, Constants.SC_SPEC_DOC_LIMIT);
-    decodedSCSpecUDTErrorEnumV0.lib = XdrString.decode(stream, 80);
-    decodedSCSpecUDTErrorEnumV0.name = XdrString.decode(stream, 60);
+    decodedSCSpecUDTErrorEnumV0.doc =
+        XdrString.decode(stream, maxDepth, Constants.SC_SPEC_DOC_LIMIT);
+    decodedSCSpecUDTErrorEnumV0.lib = XdrString.decode(stream, maxDepth, 80);
+    decodedSCSpecUDTErrorEnumV0.name = XdrString.decode(stream, maxDepth, 60);
     int casesSize = stream.readInt();
+    if (casesSize < 0) {
+      throw new IOException("cases size " + casesSize + " is negative");
+    }
+    if (casesSize > 50) {
+      throw new IOException("cases size " + casesSize + " exceeds max size 50");
+    }
+    int casesRemainingInputLen = stream.getRemainingInputLen();
+    if (casesRemainingInputLen >= 0 && casesRemainingInputLen < casesSize) {
+      throw new IOException(
+          "cases size " + casesSize + " exceeds remaining input length " + casesRemainingInputLen);
+    }
     decodedSCSpecUDTErrorEnumV0.cases = new SCSpecUDTErrorEnumCaseV0[casesSize];
     for (int i = 0; i < casesSize; i++) {
-      decodedSCSpecUDTErrorEnumV0.cases[i] = SCSpecUDTErrorEnumCaseV0.decode(stream);
+      decodedSCSpecUDTErrorEnumV0.cases[i] = SCSpecUDTErrorEnumCaseV0.decode(stream, maxDepth);
     }
     return decodedSCSpecUDTErrorEnumV0;
+  }
+
+  public static SCSpecUDTErrorEnumV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecUDTErrorEnumV0 fromXdrBase64(String xdr) throws IOException {
@@ -66,6 +102,7 @@ public class SCSpecUDTErrorEnumV0 implements XdrElement {
   public static SCSpecUDTErrorEnumV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

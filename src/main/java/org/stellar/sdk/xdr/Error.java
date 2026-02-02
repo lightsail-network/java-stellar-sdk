@@ -32,14 +32,26 @@ public class Error implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     code.encode(stream);
+    int msgSize = msg.getBytes().length;
+    if (msgSize > 100) {
+      throw new IOException("msg size " + msgSize + " exceeds max size 100");
+    }
     msg.encode(stream);
   }
 
-  public static Error decode(XdrDataInputStream stream) throws IOException {
+  public static Error decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Error decodedError = new Error();
-    decodedError.code = ErrorCode.decode(stream);
-    decodedError.msg = XdrString.decode(stream, 100);
+    decodedError.code = ErrorCode.decode(stream, maxDepth);
+    decodedError.msg = XdrString.decode(stream, maxDepth, 100);
     return decodedError;
+  }
+
+  public static Error decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Error fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +62,7 @@ public class Error implements XdrElement {
   public static Error fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

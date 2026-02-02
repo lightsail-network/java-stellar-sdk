@@ -52,15 +52,24 @@ public class ClaimOfferAtomV0 implements XdrElement {
     amountBought.encode(stream);
   }
 
-  public static ClaimOfferAtomV0 decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimOfferAtomV0 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClaimOfferAtomV0 decodedClaimOfferAtomV0 = new ClaimOfferAtomV0();
-    decodedClaimOfferAtomV0.sellerEd25519 = Uint256.decode(stream);
-    decodedClaimOfferAtomV0.offerID = Int64.decode(stream);
-    decodedClaimOfferAtomV0.assetSold = Asset.decode(stream);
-    decodedClaimOfferAtomV0.amountSold = Int64.decode(stream);
-    decodedClaimOfferAtomV0.assetBought = Asset.decode(stream);
-    decodedClaimOfferAtomV0.amountBought = Int64.decode(stream);
+    decodedClaimOfferAtomV0.sellerEd25519 = Uint256.decode(stream, maxDepth);
+    decodedClaimOfferAtomV0.offerID = Int64.decode(stream, maxDepth);
+    decodedClaimOfferAtomV0.assetSold = Asset.decode(stream, maxDepth);
+    decodedClaimOfferAtomV0.amountSold = Int64.decode(stream, maxDepth);
+    decodedClaimOfferAtomV0.assetBought = Asset.decode(stream, maxDepth);
+    decodedClaimOfferAtomV0.amountBought = Int64.decode(stream, maxDepth);
     return decodedClaimOfferAtomV0;
+  }
+
+  public static ClaimOfferAtomV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClaimOfferAtomV0 fromXdrBase64(String xdr) throws IOException {
@@ -71,6 +80,7 @@ public class ClaimOfferAtomV0 implements XdrElement {
   public static ClaimOfferAtomV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

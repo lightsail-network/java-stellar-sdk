@@ -41,15 +41,32 @@ public class InvokeHostFunctionOp implements XdrElement {
     }
   }
 
-  public static InvokeHostFunctionOp decode(XdrDataInputStream stream) throws IOException {
+  public static InvokeHostFunctionOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     InvokeHostFunctionOp decodedInvokeHostFunctionOp = new InvokeHostFunctionOp();
-    decodedInvokeHostFunctionOp.hostFunction = HostFunction.decode(stream);
+    decodedInvokeHostFunctionOp.hostFunction = HostFunction.decode(stream, maxDepth);
     int authSize = stream.readInt();
+    if (authSize < 0) {
+      throw new IOException("auth size " + authSize + " is negative");
+    }
+    int authRemainingInputLen = stream.getRemainingInputLen();
+    if (authRemainingInputLen >= 0 && authRemainingInputLen < authSize) {
+      throw new IOException(
+          "auth size " + authSize + " exceeds remaining input length " + authRemainingInputLen);
+    }
     decodedInvokeHostFunctionOp.auth = new SorobanAuthorizationEntry[authSize];
     for (int i = 0; i < authSize; i++) {
-      decodedInvokeHostFunctionOp.auth[i] = SorobanAuthorizationEntry.decode(stream);
+      decodedInvokeHostFunctionOp.auth[i] = SorobanAuthorizationEntry.decode(stream, maxDepth);
     }
     return decodedInvokeHostFunctionOp;
+  }
+
+  public static InvokeHostFunctionOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static InvokeHostFunctionOp fromXdrBase64(String xdr) throws IOException {
@@ -60,6 +77,7 @@ public class InvokeHostFunctionOp implements XdrElement {
   public static InvokeHostFunctionOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -63,28 +63,38 @@ public class SCAddress implements XdrElement {
     }
   }
 
-  public static SCAddress decode(XdrDataInputStream stream) throws IOException {
+  public static SCAddress decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCAddress decodedSCAddress = new SCAddress();
-    SCAddressType discriminant = SCAddressType.decode(stream);
+    SCAddressType discriminant = SCAddressType.decode(stream, maxDepth);
     decodedSCAddress.setDiscriminant(discriminant);
     switch (decodedSCAddress.getDiscriminant()) {
       case SC_ADDRESS_TYPE_ACCOUNT:
-        decodedSCAddress.accountId = AccountID.decode(stream);
+        decodedSCAddress.accountId = AccountID.decode(stream, maxDepth);
         break;
       case SC_ADDRESS_TYPE_CONTRACT:
-        decodedSCAddress.contractId = ContractID.decode(stream);
+        decodedSCAddress.contractId = ContractID.decode(stream, maxDepth);
         break;
       case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
-        decodedSCAddress.muxedAccount = MuxedEd25519Account.decode(stream);
+        decodedSCAddress.muxedAccount = MuxedEd25519Account.decode(stream, maxDepth);
         break;
       case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
-        decodedSCAddress.claimableBalanceId = ClaimableBalanceID.decode(stream);
+        decodedSCAddress.claimableBalanceId = ClaimableBalanceID.decode(stream, maxDepth);
         break;
       case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
-        decodedSCAddress.liquidityPoolId = PoolID.decode(stream);
+        decodedSCAddress.liquidityPoolId = PoolID.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCAddress;
+  }
+
+  public static SCAddress decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCAddress fromXdrBase64(String xdr) throws IOException {
@@ -95,6 +105,7 @@ public class SCAddress implements XdrElement {
   public static SCAddress fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

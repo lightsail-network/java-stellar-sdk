@@ -64,6 +64,9 @@ public class Transaction implements XdrElement {
     cond.encode(stream);
     memo.encode(stream);
     int operationsSize = getOperations().length;
+    if (operationsSize > 100) {
+      throw new IOException("operations size " + operationsSize + " exceeds max size 100");
+    }
     stream.writeInt(operationsSize);
     for (int i = 0; i < operationsSize; i++) {
       operations[i].encode(stream);
@@ -71,20 +74,42 @@ public class Transaction implements XdrElement {
     ext.encode(stream);
   }
 
-  public static Transaction decode(XdrDataInputStream stream) throws IOException {
+  public static Transaction decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Transaction decodedTransaction = new Transaction();
-    decodedTransaction.sourceAccount = MuxedAccount.decode(stream);
-    decodedTransaction.fee = Uint32.decode(stream);
-    decodedTransaction.seqNum = SequenceNumber.decode(stream);
-    decodedTransaction.cond = Preconditions.decode(stream);
-    decodedTransaction.memo = Memo.decode(stream);
+    decodedTransaction.sourceAccount = MuxedAccount.decode(stream, maxDepth);
+    decodedTransaction.fee = Uint32.decode(stream, maxDepth);
+    decodedTransaction.seqNum = SequenceNumber.decode(stream, maxDepth);
+    decodedTransaction.cond = Preconditions.decode(stream, maxDepth);
+    decodedTransaction.memo = Memo.decode(stream, maxDepth);
     int operationsSize = stream.readInt();
+    if (operationsSize < 0) {
+      throw new IOException("operations size " + operationsSize + " is negative");
+    }
+    if (operationsSize > 100) {
+      throw new IOException("operations size " + operationsSize + " exceeds max size 100");
+    }
+    int operationsRemainingInputLen = stream.getRemainingInputLen();
+    if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationsSize) {
+      throw new IOException(
+          "operations size "
+              + operationsSize
+              + " exceeds remaining input length "
+              + operationsRemainingInputLen);
+    }
     decodedTransaction.operations = new Operation[operationsSize];
     for (int i = 0; i < operationsSize; i++) {
-      decodedTransaction.operations[i] = Operation.decode(stream);
+      decodedTransaction.operations[i] = Operation.decode(stream, maxDepth);
     }
-    decodedTransaction.ext = TransactionExt.decode(stream);
+    decodedTransaction.ext = TransactionExt.decode(stream, maxDepth);
     return decodedTransaction;
+  }
+
+  public static Transaction decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Transaction fromXdrBase64(String xdr) throws IOException {
@@ -95,6 +120,7 @@ public class Transaction implements XdrElement {
   public static Transaction fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -130,7 +156,12 @@ public class Transaction implements XdrElement {
       }
     }
 
-    public static TransactionExt decode(XdrDataInputStream stream) throws IOException {
+    public static TransactionExt decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       TransactionExt decodedTransactionExt = new TransactionExt();
       Integer discriminant = stream.readInt();
       decodedTransactionExt.setDiscriminant(discriminant);
@@ -138,10 +169,16 @@ public class Transaction implements XdrElement {
         case 0:
           break;
         case 1:
-          decodedTransactionExt.sorobanData = SorobanTransactionData.decode(stream);
+          decodedTransactionExt.sorobanData = SorobanTransactionData.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedTransactionExt;
+    }
+
+    public static TransactionExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static TransactionExt fromXdrBase64(String xdr) throws IOException {
@@ -152,6 +189,7 @@ public class Transaction implements XdrElement {
     public static TransactionExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

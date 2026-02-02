@@ -53,12 +53,21 @@ public class SorobanTransactionData implements XdrElement {
     resourceFee.encode(stream);
   }
 
-  public static SorobanTransactionData decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanTransactionData decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanTransactionData decodedSorobanTransactionData = new SorobanTransactionData();
-    decodedSorobanTransactionData.ext = SorobanTransactionDataExt.decode(stream);
-    decodedSorobanTransactionData.resources = SorobanResources.decode(stream);
-    decodedSorobanTransactionData.resourceFee = Int64.decode(stream);
+    decodedSorobanTransactionData.ext = SorobanTransactionDataExt.decode(stream, maxDepth);
+    decodedSorobanTransactionData.resources = SorobanResources.decode(stream, maxDepth);
+    decodedSorobanTransactionData.resourceFee = Int64.decode(stream, maxDepth);
     return decodedSorobanTransactionData;
+  }
+
+  public static SorobanTransactionData decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanTransactionData fromXdrBase64(String xdr) throws IOException {
@@ -69,6 +78,7 @@ public class SorobanTransactionData implements XdrElement {
   public static SorobanTransactionData fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -104,7 +114,12 @@ public class SorobanTransactionData implements XdrElement {
       }
     }
 
-    public static SorobanTransactionDataExt decode(XdrDataInputStream stream) throws IOException {
+    public static SorobanTransactionDataExt decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       SorobanTransactionDataExt decodedSorobanTransactionDataExt = new SorobanTransactionDataExt();
       Integer discriminant = stream.readInt();
       decodedSorobanTransactionDataExt.setDiscriminant(discriminant);
@@ -112,10 +127,17 @@ public class SorobanTransactionData implements XdrElement {
         case 0:
           break;
         case 1:
-          decodedSorobanTransactionDataExt.resourceExt = SorobanResourcesExtV0.decode(stream);
+          decodedSorobanTransactionDataExt.resourceExt =
+              SorobanResourcesExtV0.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedSorobanTransactionDataExt;
+    }
+
+    public static SorobanTransactionDataExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static SorobanTransactionDataExt fromXdrBase64(String xdr) throws IOException {
@@ -126,6 +148,7 @@ public class SorobanTransactionData implements XdrElement {
     public static SorobanTransactionDataExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

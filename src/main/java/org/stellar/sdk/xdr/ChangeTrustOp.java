@@ -37,11 +37,19 @@ public class ChangeTrustOp implements XdrElement {
     limit.encode(stream);
   }
 
-  public static ChangeTrustOp decode(XdrDataInputStream stream) throws IOException {
+  public static ChangeTrustOp decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ChangeTrustOp decodedChangeTrustOp = new ChangeTrustOp();
-    decodedChangeTrustOp.line = ChangeTrustAsset.decode(stream);
-    decodedChangeTrustOp.limit = Int64.decode(stream);
+    decodedChangeTrustOp.line = ChangeTrustAsset.decode(stream, maxDepth);
+    decodedChangeTrustOp.limit = Int64.decode(stream, maxDepth);
     return decodedChangeTrustOp;
+  }
+
+  public static ChangeTrustOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ChangeTrustOp fromXdrBase64(String xdr) throws IOException {
@@ -52,6 +60,7 @@ public class ChangeTrustOp implements XdrElement {
   public static ChangeTrustOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

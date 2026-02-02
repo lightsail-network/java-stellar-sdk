@@ -35,14 +35,24 @@ public class SignedTimeSlicedSurveyResponseMessage implements XdrElement {
     response.encode(stream);
   }
 
-  public static SignedTimeSlicedSurveyResponseMessage decode(XdrDataInputStream stream)
-      throws IOException {
+  public static SignedTimeSlicedSurveyResponseMessage decode(
+      XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SignedTimeSlicedSurveyResponseMessage decodedSignedTimeSlicedSurveyResponseMessage =
         new SignedTimeSlicedSurveyResponseMessage();
-    decodedSignedTimeSlicedSurveyResponseMessage.responseSignature = Signature.decode(stream);
+    decodedSignedTimeSlicedSurveyResponseMessage.responseSignature =
+        Signature.decode(stream, maxDepth);
     decodedSignedTimeSlicedSurveyResponseMessage.response =
-        TimeSlicedSurveyResponseMessage.decode(stream);
+        TimeSlicedSurveyResponseMessage.decode(stream, maxDepth);
     return decodedSignedTimeSlicedSurveyResponseMessage;
+  }
+
+  public static SignedTimeSlicedSurveyResponseMessage decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SignedTimeSlicedSurveyResponseMessage fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +64,7 @@ public class SignedTimeSlicedSurveyResponseMessage implements XdrElement {
       throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

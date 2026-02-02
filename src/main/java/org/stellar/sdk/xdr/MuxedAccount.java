@@ -49,19 +49,29 @@ public class MuxedAccount implements XdrElement {
     }
   }
 
-  public static MuxedAccount decode(XdrDataInputStream stream) throws IOException {
+  public static MuxedAccount decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     MuxedAccount decodedMuxedAccount = new MuxedAccount();
-    CryptoKeyType discriminant = CryptoKeyType.decode(stream);
+    CryptoKeyType discriminant = CryptoKeyType.decode(stream, maxDepth);
     decodedMuxedAccount.setDiscriminant(discriminant);
     switch (decodedMuxedAccount.getDiscriminant()) {
       case KEY_TYPE_ED25519:
-        decodedMuxedAccount.ed25519 = Uint256.decode(stream);
+        decodedMuxedAccount.ed25519 = Uint256.decode(stream, maxDepth);
         break;
       case KEY_TYPE_MUXED_ED25519:
-        decodedMuxedAccount.med25519 = MuxedAccountMed25519.decode(stream);
+        decodedMuxedAccount.med25519 = MuxedAccountMed25519.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedMuxedAccount;
+  }
+
+  public static MuxedAccount decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static MuxedAccount fromXdrBase64(String xdr) throws IOException {
@@ -72,6 +82,7 @@ public class MuxedAccount implements XdrElement {
   public static MuxedAccount fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -99,11 +110,20 @@ public class MuxedAccount implements XdrElement {
       ed25519.encode(stream);
     }
 
-    public static MuxedAccountMed25519 decode(XdrDataInputStream stream) throws IOException {
+    public static MuxedAccountMed25519 decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       MuxedAccountMed25519 decodedMuxedAccountMed25519 = new MuxedAccountMed25519();
-      decodedMuxedAccountMed25519.id = Uint64.decode(stream);
-      decodedMuxedAccountMed25519.ed25519 = Uint256.decode(stream);
+      decodedMuxedAccountMed25519.id = Uint64.decode(stream, maxDepth);
+      decodedMuxedAccountMed25519.ed25519 = Uint256.decode(stream, maxDepth);
       return decodedMuxedAccountMed25519;
+    }
+
+    public static MuxedAccountMed25519 decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static MuxedAccountMed25519 fromXdrBase64(String xdr) throws IOException {
@@ -114,6 +134,7 @@ public class MuxedAccount implements XdrElement {
     public static MuxedAccountMed25519 fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

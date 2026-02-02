@@ -46,13 +46,22 @@ public class SorobanResources implements XdrElement {
     writeBytes.encode(stream);
   }
 
-  public static SorobanResources decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanResources decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanResources decodedSorobanResources = new SorobanResources();
-    decodedSorobanResources.footprint = LedgerFootprint.decode(stream);
-    decodedSorobanResources.instructions = Uint32.decode(stream);
-    decodedSorobanResources.diskReadBytes = Uint32.decode(stream);
-    decodedSorobanResources.writeBytes = Uint32.decode(stream);
+    decodedSorobanResources.footprint = LedgerFootprint.decode(stream, maxDepth);
+    decodedSorobanResources.instructions = Uint32.decode(stream, maxDepth);
+    decodedSorobanResources.diskReadBytes = Uint32.decode(stream, maxDepth);
+    decodedSorobanResources.writeBytes = Uint32.decode(stream, maxDepth);
     return decodedSorobanResources;
+  }
+
+  public static SorobanResources decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanResources fromXdrBase64(String xdr) throws IOException {
@@ -63,6 +72,7 @@ public class SorobanResources implements XdrElement {
   public static SorobanResources fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

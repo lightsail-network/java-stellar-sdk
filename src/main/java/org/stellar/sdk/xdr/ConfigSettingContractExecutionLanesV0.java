@@ -33,12 +33,21 @@ public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
     ledgerMaxTxCount.encode(stream);
   }
 
-  public static ConfigSettingContractExecutionLanesV0 decode(XdrDataInputStream stream)
-      throws IOException {
+  public static ConfigSettingContractExecutionLanesV0 decode(
+      XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingContractExecutionLanesV0 decodedConfigSettingContractExecutionLanesV0 =
         new ConfigSettingContractExecutionLanesV0();
-    decodedConfigSettingContractExecutionLanesV0.ledgerMaxTxCount = Uint32.decode(stream);
+    decodedConfigSettingContractExecutionLanesV0.ledgerMaxTxCount = Uint32.decode(stream, maxDepth);
     return decodedConfigSettingContractExecutionLanesV0;
+  }
+
+  public static ConfigSettingContractExecutionLanesV0 decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingContractExecutionLanesV0 fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +59,7 @@ public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
       throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -59,16 +59,24 @@ public class ContractEvent implements XdrElement {
     body.encode(stream);
   }
 
-  public static ContractEvent decode(XdrDataInputStream stream) throws IOException {
-    ContractEvent decodedContractEvent = new ContractEvent();
-    decodedContractEvent.ext = ExtensionPoint.decode(stream);
-    int contractIDPresent = stream.readInt();
-    if (contractIDPresent != 0) {
-      decodedContractEvent.contractID = ContractID.decode(stream);
+  public static ContractEvent decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
     }
-    decodedContractEvent.type = ContractEventType.decode(stream);
-    decodedContractEvent.body = ContractEventBody.decode(stream);
+    maxDepth -= 1;
+    ContractEvent decodedContractEvent = new ContractEvent();
+    decodedContractEvent.ext = ExtensionPoint.decode(stream, maxDepth);
+    boolean contractIDPresent = stream.readXdrBoolean();
+    if (contractIDPresent) {
+      decodedContractEvent.contractID = ContractID.decode(stream, maxDepth);
+    }
+    decodedContractEvent.type = ContractEventType.decode(stream, maxDepth);
+    decodedContractEvent.body = ContractEventBody.decode(stream, maxDepth);
     return decodedContractEvent;
+  }
+
+  public static ContractEvent decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ContractEvent fromXdrBase64(String xdr) throws IOException {
@@ -79,6 +87,7 @@ public class ContractEvent implements XdrElement {
   public static ContractEvent fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -114,16 +123,27 @@ public class ContractEvent implements XdrElement {
       }
     }
 
-    public static ContractEventBody decode(XdrDataInputStream stream) throws IOException {
+    public static ContractEventBody decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       ContractEventBody decodedContractEventBody = new ContractEventBody();
       Integer discriminant = stream.readInt();
       decodedContractEventBody.setDiscriminant(discriminant);
       switch (decodedContractEventBody.getDiscriminant()) {
         case 0:
-          decodedContractEventBody.v0 = ContractEventV0.decode(stream);
+          decodedContractEventBody.v0 = ContractEventV0.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedContractEventBody;
+    }
+
+    public static ContractEventBody decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static ContractEventBody fromXdrBase64(String xdr) throws IOException {
@@ -134,6 +154,7 @@ public class ContractEvent implements XdrElement {
     public static ContractEventBody fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
 
@@ -165,15 +186,35 @@ public class ContractEvent implements XdrElement {
         data.encode(stream);
       }
 
-      public static ContractEventV0 decode(XdrDataInputStream stream) throws IOException {
+      public static ContractEventV0 decode(XdrDataInputStream stream, int maxDepth)
+          throws IOException {
+        if (maxDepth <= 0) {
+          throw new IOException("Maximum decoding depth reached");
+        }
+        maxDepth -= 1;
         ContractEventV0 decodedContractEventV0 = new ContractEventV0();
         int topicsSize = stream.readInt();
+        if (topicsSize < 0) {
+          throw new IOException("topics size " + topicsSize + " is negative");
+        }
+        int topicsRemainingInputLen = stream.getRemainingInputLen();
+        if (topicsRemainingInputLen >= 0 && topicsRemainingInputLen < topicsSize) {
+          throw new IOException(
+              "topics size "
+                  + topicsSize
+                  + " exceeds remaining input length "
+                  + topicsRemainingInputLen);
+        }
         decodedContractEventV0.topics = new SCVal[topicsSize];
         for (int i = 0; i < topicsSize; i++) {
-          decodedContractEventV0.topics[i] = SCVal.decode(stream);
+          decodedContractEventV0.topics[i] = SCVal.decode(stream, maxDepth);
         }
-        decodedContractEventV0.data = SCVal.decode(stream);
+        decodedContractEventV0.data = SCVal.decode(stream, maxDepth);
         return decodedContractEventV0;
+      }
+
+      public static ContractEventV0 decode(XdrDataInputStream stream) throws IOException {
+        return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
       }
 
       public static ContractEventV0 fromXdrBase64(String xdr) throws IOException {
@@ -184,6 +225,7 @@ public class ContractEvent implements XdrElement {
       public static ContractEventV0 fromXdrByteArray(byte[] xdr) throws IOException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+        xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
       }
     }

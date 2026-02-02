@@ -30,15 +30,27 @@ public class Curve25519Public implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int keySize = key.length;
+    if (keySize != 32) {
+      throw new IOException("key size " + keySize + " does not match fixed size 32");
+    }
     stream.write(getKey(), 0, keySize);
   }
 
-  public static Curve25519Public decode(XdrDataInputStream stream) throws IOException {
+  public static Curve25519Public decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Curve25519Public decodedCurve25519Public = new Curve25519Public();
     int keySize = 32;
     decodedCurve25519Public.key = new byte[keySize];
-    stream.read(decodedCurve25519Public.key, 0, keySize);
+    stream.readPaddedData(decodedCurve25519Public.key, 0, keySize);
     return decodedCurve25519Public;
+  }
+
+  public static Curve25519Public decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Curve25519Public fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +61,7 @@ public class Curve25519Public implements XdrElement {
   public static Curve25519Public fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

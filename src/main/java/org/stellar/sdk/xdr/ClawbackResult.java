@@ -47,9 +47,13 @@ public class ClawbackResult implements XdrElement {
     }
   }
 
-  public static ClawbackResult decode(XdrDataInputStream stream) throws IOException {
+  public static ClawbackResult decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClawbackResult decodedClawbackResult = new ClawbackResult();
-    ClawbackResultCode discriminant = ClawbackResultCode.decode(stream);
+    ClawbackResultCode discriminant = ClawbackResultCode.decode(stream, maxDepth);
     decodedClawbackResult.setDiscriminant(discriminant);
     switch (decodedClawbackResult.getDiscriminant()) {
       case CLAWBACK_SUCCESS:
@@ -59,8 +63,14 @@ public class ClawbackResult implements XdrElement {
       case CLAWBACK_NO_TRUST:
       case CLAWBACK_UNDERFUNDED:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedClawbackResult;
+  }
+
+  public static ClawbackResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClawbackResult fromXdrBase64(String xdr) throws IOException {
@@ -71,6 +81,7 @@ public class ClawbackResult implements XdrElement {
   public static ClawbackResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

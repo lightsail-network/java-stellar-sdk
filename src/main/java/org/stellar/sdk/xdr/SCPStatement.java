@@ -70,12 +70,20 @@ public class SCPStatement implements XdrElement {
     pledges.encode(stream);
   }
 
-  public static SCPStatement decode(XdrDataInputStream stream) throws IOException {
+  public static SCPStatement decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCPStatement decodedSCPStatement = new SCPStatement();
-    decodedSCPStatement.nodeID = NodeID.decode(stream);
-    decodedSCPStatement.slotIndex = Uint64.decode(stream);
-    decodedSCPStatement.pledges = SCPStatementPledges.decode(stream);
+    decodedSCPStatement.nodeID = NodeID.decode(stream, maxDepth);
+    decodedSCPStatement.slotIndex = Uint64.decode(stream, maxDepth);
+    decodedSCPStatement.pledges = SCPStatementPledges.decode(stream, maxDepth);
     return decodedSCPStatement;
+  }
+
+  public static SCPStatement decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCPStatement fromXdrBase64(String xdr) throws IOException {
@@ -86,6 +94,7 @@ public class SCPStatement implements XdrElement {
   public static SCPStatement fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -155,25 +164,36 @@ public class SCPStatement implements XdrElement {
       }
     }
 
-    public static SCPStatementPledges decode(XdrDataInputStream stream) throws IOException {
+    public static SCPStatementPledges decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       SCPStatementPledges decodedSCPStatementPledges = new SCPStatementPledges();
-      SCPStatementType discriminant = SCPStatementType.decode(stream);
+      SCPStatementType discriminant = SCPStatementType.decode(stream, maxDepth);
       decodedSCPStatementPledges.setDiscriminant(discriminant);
       switch (decodedSCPStatementPledges.getDiscriminant()) {
         case SCP_ST_PREPARE:
-          decodedSCPStatementPledges.prepare = SCPStatementPrepare.decode(stream);
+          decodedSCPStatementPledges.prepare = SCPStatementPrepare.decode(stream, maxDepth);
           break;
         case SCP_ST_CONFIRM:
-          decodedSCPStatementPledges.confirm = SCPStatementConfirm.decode(stream);
+          decodedSCPStatementPledges.confirm = SCPStatementConfirm.decode(stream, maxDepth);
           break;
         case SCP_ST_EXTERNALIZE:
-          decodedSCPStatementPledges.externalize = SCPStatementExternalize.decode(stream);
+          decodedSCPStatementPledges.externalize = SCPStatementExternalize.decode(stream, maxDepth);
           break;
         case SCP_ST_NOMINATE:
-          decodedSCPStatementPledges.nominate = SCPNomination.decode(stream);
+          decodedSCPStatementPledges.nominate = SCPNomination.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedSCPStatementPledges;
+    }
+
+    public static SCPStatementPledges decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static SCPStatementPledges fromXdrBase64(String xdr) throws IOException {
@@ -184,6 +204,7 @@ public class SCPStatement implements XdrElement {
     public static SCPStatementPledges fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
 
@@ -233,21 +254,30 @@ public class SCPStatement implements XdrElement {
         nH.encode(stream);
       }
 
-      public static SCPStatementPrepare decode(XdrDataInputStream stream) throws IOException {
+      public static SCPStatementPrepare decode(XdrDataInputStream stream, int maxDepth)
+          throws IOException {
+        if (maxDepth <= 0) {
+          throw new IOException("Maximum decoding depth reached");
+        }
+        maxDepth -= 1;
         SCPStatementPrepare decodedSCPStatementPrepare = new SCPStatementPrepare();
-        decodedSCPStatementPrepare.quorumSetHash = Hash.decode(stream);
-        decodedSCPStatementPrepare.ballot = SCPBallot.decode(stream);
-        int preparedPresent = stream.readInt();
-        if (preparedPresent != 0) {
-          decodedSCPStatementPrepare.prepared = SCPBallot.decode(stream);
+        decodedSCPStatementPrepare.quorumSetHash = Hash.decode(stream, maxDepth);
+        decodedSCPStatementPrepare.ballot = SCPBallot.decode(stream, maxDepth);
+        boolean preparedPresent = stream.readXdrBoolean();
+        if (preparedPresent) {
+          decodedSCPStatementPrepare.prepared = SCPBallot.decode(stream, maxDepth);
         }
-        int preparedPrimePresent = stream.readInt();
-        if (preparedPrimePresent != 0) {
-          decodedSCPStatementPrepare.preparedPrime = SCPBallot.decode(stream);
+        boolean preparedPrimePresent = stream.readXdrBoolean();
+        if (preparedPrimePresent) {
+          decodedSCPStatementPrepare.preparedPrime = SCPBallot.decode(stream, maxDepth);
         }
-        decodedSCPStatementPrepare.nC = Uint32.decode(stream);
-        decodedSCPStatementPrepare.nH = Uint32.decode(stream);
+        decodedSCPStatementPrepare.nC = Uint32.decode(stream, maxDepth);
+        decodedSCPStatementPrepare.nH = Uint32.decode(stream, maxDepth);
         return decodedSCPStatementPrepare;
+      }
+
+      public static SCPStatementPrepare decode(XdrDataInputStream stream) throws IOException {
+        return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
       }
 
       public static SCPStatementPrepare fromXdrBase64(String xdr) throws IOException {
@@ -258,6 +288,7 @@ public class SCPStatement implements XdrElement {
       public static SCPStatementPrepare fromXdrByteArray(byte[] xdr) throws IOException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+        xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
       }
     }
@@ -295,14 +326,23 @@ public class SCPStatement implements XdrElement {
         quorumSetHash.encode(stream);
       }
 
-      public static SCPStatementConfirm decode(XdrDataInputStream stream) throws IOException {
+      public static SCPStatementConfirm decode(XdrDataInputStream stream, int maxDepth)
+          throws IOException {
+        if (maxDepth <= 0) {
+          throw new IOException("Maximum decoding depth reached");
+        }
+        maxDepth -= 1;
         SCPStatementConfirm decodedSCPStatementConfirm = new SCPStatementConfirm();
-        decodedSCPStatementConfirm.ballot = SCPBallot.decode(stream);
-        decodedSCPStatementConfirm.nPrepared = Uint32.decode(stream);
-        decodedSCPStatementConfirm.nCommit = Uint32.decode(stream);
-        decodedSCPStatementConfirm.nH = Uint32.decode(stream);
-        decodedSCPStatementConfirm.quorumSetHash = Hash.decode(stream);
+        decodedSCPStatementConfirm.ballot = SCPBallot.decode(stream, maxDepth);
+        decodedSCPStatementConfirm.nPrepared = Uint32.decode(stream, maxDepth);
+        decodedSCPStatementConfirm.nCommit = Uint32.decode(stream, maxDepth);
+        decodedSCPStatementConfirm.nH = Uint32.decode(stream, maxDepth);
+        decodedSCPStatementConfirm.quorumSetHash = Hash.decode(stream, maxDepth);
         return decodedSCPStatementConfirm;
+      }
+
+      public static SCPStatementConfirm decode(XdrDataInputStream stream) throws IOException {
+        return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
       }
 
       public static SCPStatementConfirm fromXdrBase64(String xdr) throws IOException {
@@ -313,6 +353,7 @@ public class SCPStatement implements XdrElement {
       public static SCPStatementConfirm fromXdrByteArray(byte[] xdr) throws IOException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+        xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
       }
     }
@@ -344,12 +385,21 @@ public class SCPStatement implements XdrElement {
         commitQuorumSetHash.encode(stream);
       }
 
-      public static SCPStatementExternalize decode(XdrDataInputStream stream) throws IOException {
+      public static SCPStatementExternalize decode(XdrDataInputStream stream, int maxDepth)
+          throws IOException {
+        if (maxDepth <= 0) {
+          throw new IOException("Maximum decoding depth reached");
+        }
+        maxDepth -= 1;
         SCPStatementExternalize decodedSCPStatementExternalize = new SCPStatementExternalize();
-        decodedSCPStatementExternalize.commit = SCPBallot.decode(stream);
-        decodedSCPStatementExternalize.nH = Uint32.decode(stream);
-        decodedSCPStatementExternalize.commitQuorumSetHash = Hash.decode(stream);
+        decodedSCPStatementExternalize.commit = SCPBallot.decode(stream, maxDepth);
+        decodedSCPStatementExternalize.nH = Uint32.decode(stream, maxDepth);
+        decodedSCPStatementExternalize.commitQuorumSetHash = Hash.decode(stream, maxDepth);
         return decodedSCPStatementExternalize;
+      }
+
+      public static SCPStatementExternalize decode(XdrDataInputStream stream) throws IOException {
+        return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
       }
 
       public static SCPStatementExternalize fromXdrBase64(String xdr) throws IOException {
@@ -360,6 +410,7 @@ public class SCPStatement implements XdrElement {
       public static SCPStatementExternalize fromXdrByteArray(byte[] xdr) throws IOException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+        xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
       }
     }

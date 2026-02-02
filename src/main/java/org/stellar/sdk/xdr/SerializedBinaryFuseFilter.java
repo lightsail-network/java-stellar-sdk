@@ -64,20 +64,40 @@ public class SerializedBinaryFuseFilter implements XdrElement {
     stream.write(getFingerprints(), 0, fingerprintsSize);
   }
 
-  public static SerializedBinaryFuseFilter decode(XdrDataInputStream stream) throws IOException {
+  public static SerializedBinaryFuseFilter decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SerializedBinaryFuseFilter decodedSerializedBinaryFuseFilter = new SerializedBinaryFuseFilter();
-    decodedSerializedBinaryFuseFilter.type = BinaryFuseFilterType.decode(stream);
-    decodedSerializedBinaryFuseFilter.inputHashSeed = ShortHashSeed.decode(stream);
-    decodedSerializedBinaryFuseFilter.filterSeed = ShortHashSeed.decode(stream);
-    decodedSerializedBinaryFuseFilter.segmentLength = Uint32.decode(stream);
-    decodedSerializedBinaryFuseFilter.segementLengthMask = Uint32.decode(stream);
-    decodedSerializedBinaryFuseFilter.segmentCount = Uint32.decode(stream);
-    decodedSerializedBinaryFuseFilter.segmentCountLength = Uint32.decode(stream);
-    decodedSerializedBinaryFuseFilter.fingerprintLength = Uint32.decode(stream);
+    decodedSerializedBinaryFuseFilter.type = BinaryFuseFilterType.decode(stream, maxDepth);
+    decodedSerializedBinaryFuseFilter.inputHashSeed = ShortHashSeed.decode(stream, maxDepth);
+    decodedSerializedBinaryFuseFilter.filterSeed = ShortHashSeed.decode(stream, maxDepth);
+    decodedSerializedBinaryFuseFilter.segmentLength = Uint32.decode(stream, maxDepth);
+    decodedSerializedBinaryFuseFilter.segementLengthMask = Uint32.decode(stream, maxDepth);
+    decodedSerializedBinaryFuseFilter.segmentCount = Uint32.decode(stream, maxDepth);
+    decodedSerializedBinaryFuseFilter.segmentCountLength = Uint32.decode(stream, maxDepth);
+    decodedSerializedBinaryFuseFilter.fingerprintLength = Uint32.decode(stream, maxDepth);
     int fingerprintsSize = stream.readInt();
+    if (fingerprintsSize < 0) {
+      throw new IOException("fingerprints size " + fingerprintsSize + " is negative");
+    }
+    int fingerprintsRemainingInputLen = stream.getRemainingInputLen();
+    if (fingerprintsRemainingInputLen >= 0 && fingerprintsRemainingInputLen < fingerprintsSize) {
+      throw new IOException(
+          "fingerprints size "
+              + fingerprintsSize
+              + " exceeds remaining input length "
+              + fingerprintsRemainingInputLen);
+    }
     decodedSerializedBinaryFuseFilter.fingerprints = new byte[fingerprintsSize];
-    stream.read(decodedSerializedBinaryFuseFilter.fingerprints, 0, fingerprintsSize);
+    stream.readPaddedData(decodedSerializedBinaryFuseFilter.fingerprints, 0, fingerprintsSize);
     return decodedSerializedBinaryFuseFilter;
+  }
+
+  public static SerializedBinaryFuseFilter decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SerializedBinaryFuseFilter fromXdrBase64(String xdr) throws IOException {
@@ -88,6 +108,7 @@ public class SerializedBinaryFuseFilter implements XdrElement {
   public static SerializedBinaryFuseFilter fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

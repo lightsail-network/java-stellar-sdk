@@ -47,6 +47,10 @@ public class Memo implements XdrElement {
       case MEMO_NONE:
         break;
       case MEMO_TEXT:
+        int textSize = text.getBytes().length;
+        if (textSize > 28) {
+          throw new IOException("text size " + textSize + " exceeds max size 28");
+        }
         text.encode(stream);
         break;
       case MEMO_ID:
@@ -61,27 +65,37 @@ public class Memo implements XdrElement {
     }
   }
 
-  public static Memo decode(XdrDataInputStream stream) throws IOException {
+  public static Memo decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Memo decodedMemo = new Memo();
-    MemoType discriminant = MemoType.decode(stream);
+    MemoType discriminant = MemoType.decode(stream, maxDepth);
     decodedMemo.setDiscriminant(discriminant);
     switch (decodedMemo.getDiscriminant()) {
       case MEMO_NONE:
         break;
       case MEMO_TEXT:
-        decodedMemo.text = XdrString.decode(stream, 28);
+        decodedMemo.text = XdrString.decode(stream, maxDepth, 28);
         break;
       case MEMO_ID:
-        decodedMemo.id = Uint64.decode(stream);
+        decodedMemo.id = Uint64.decode(stream, maxDepth);
         break;
       case MEMO_HASH:
-        decodedMemo.hash = Hash.decode(stream);
+        decodedMemo.hash = Hash.decode(stream, maxDepth);
         break;
       case MEMO_RETURN:
-        decodedMemo.retHash = Hash.decode(stream);
+        decodedMemo.retHash = Hash.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedMemo;
+  }
+
+  public static Memo decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Memo fromXdrBase64(String xdr) throws IOException {
@@ -92,6 +106,7 @@ public class Memo implements XdrElement {
   public static Memo fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

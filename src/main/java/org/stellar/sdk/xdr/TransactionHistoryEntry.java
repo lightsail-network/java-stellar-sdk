@@ -47,12 +47,21 @@ public class TransactionHistoryEntry implements XdrElement {
     ext.encode(stream);
   }
 
-  public static TransactionHistoryEntry decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionHistoryEntry decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionHistoryEntry decodedTransactionHistoryEntry = new TransactionHistoryEntry();
-    decodedTransactionHistoryEntry.ledgerSeq = Uint32.decode(stream);
-    decodedTransactionHistoryEntry.txSet = TransactionSet.decode(stream);
-    decodedTransactionHistoryEntry.ext = TransactionHistoryEntryExt.decode(stream);
+    decodedTransactionHistoryEntry.ledgerSeq = Uint32.decode(stream, maxDepth);
+    decodedTransactionHistoryEntry.txSet = TransactionSet.decode(stream, maxDepth);
+    decodedTransactionHistoryEntry.ext = TransactionHistoryEntryExt.decode(stream, maxDepth);
     return decodedTransactionHistoryEntry;
+  }
+
+  public static TransactionHistoryEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionHistoryEntry fromXdrBase64(String xdr) throws IOException {
@@ -63,6 +72,7 @@ public class TransactionHistoryEntry implements XdrElement {
   public static TransactionHistoryEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -98,7 +108,12 @@ public class TransactionHistoryEntry implements XdrElement {
       }
     }
 
-    public static TransactionHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
+    public static TransactionHistoryEntryExt decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       TransactionHistoryEntryExt decodedTransactionHistoryEntryExt =
           new TransactionHistoryEntryExt();
       Integer discriminant = stream.readInt();
@@ -108,10 +123,16 @@ public class TransactionHistoryEntry implements XdrElement {
           break;
         case 1:
           decodedTransactionHistoryEntryExt.generalizedTxSet =
-              GeneralizedTransactionSet.decode(stream);
+              GeneralizedTransactionSet.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedTransactionHistoryEntryExt;
+    }
+
+    public static TransactionHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static TransactionHistoryEntryExt fromXdrBase64(String xdr) throws IOException {
@@ -122,6 +143,7 @@ public class TransactionHistoryEntry implements XdrElement {
     public static TransactionHistoryEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

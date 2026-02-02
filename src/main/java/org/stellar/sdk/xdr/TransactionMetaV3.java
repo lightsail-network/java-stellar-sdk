@@ -57,21 +57,41 @@ public class TransactionMetaV3 implements XdrElement {
     }
   }
 
-  public static TransactionMetaV3 decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionMetaV3 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionMetaV3 decodedTransactionMetaV3 = new TransactionMetaV3();
-    decodedTransactionMetaV3.ext = ExtensionPoint.decode(stream);
-    decodedTransactionMetaV3.txChangesBefore = LedgerEntryChanges.decode(stream);
+    decodedTransactionMetaV3.ext = ExtensionPoint.decode(stream, maxDepth);
+    decodedTransactionMetaV3.txChangesBefore = LedgerEntryChanges.decode(stream, maxDepth);
     int operationsSize = stream.readInt();
+    if (operationsSize < 0) {
+      throw new IOException("operations size " + operationsSize + " is negative");
+    }
+    int operationsRemainingInputLen = stream.getRemainingInputLen();
+    if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationsSize) {
+      throw new IOException(
+          "operations size "
+              + operationsSize
+              + " exceeds remaining input length "
+              + operationsRemainingInputLen);
+    }
     decodedTransactionMetaV3.operations = new OperationMeta[operationsSize];
     for (int i = 0; i < operationsSize; i++) {
-      decodedTransactionMetaV3.operations[i] = OperationMeta.decode(stream);
+      decodedTransactionMetaV3.operations[i] = OperationMeta.decode(stream, maxDepth);
     }
-    decodedTransactionMetaV3.txChangesAfter = LedgerEntryChanges.decode(stream);
-    int sorobanMetaPresent = stream.readInt();
-    if (sorobanMetaPresent != 0) {
-      decodedTransactionMetaV3.sorobanMeta = SorobanTransactionMeta.decode(stream);
+    decodedTransactionMetaV3.txChangesAfter = LedgerEntryChanges.decode(stream, maxDepth);
+    boolean sorobanMetaPresent = stream.readXdrBoolean();
+    if (sorobanMetaPresent) {
+      decodedTransactionMetaV3.sorobanMeta = SorobanTransactionMeta.decode(stream, maxDepth);
     }
     return decodedTransactionMetaV3;
+  }
+
+  public static TransactionMetaV3 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionMetaV3 fromXdrBase64(String xdr) throws IOException {
@@ -82,6 +102,7 @@ public class TransactionMetaV3 implements XdrElement {
   public static TransactionMetaV3 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

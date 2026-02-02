@@ -101,14 +101,22 @@ public class Operation implements XdrElement {
     body.encode(stream);
   }
 
-  public static Operation decode(XdrDataInputStream stream) throws IOException {
-    Operation decodedOperation = new Operation();
-    int sourceAccountPresent = stream.readInt();
-    if (sourceAccountPresent != 0) {
-      decodedOperation.sourceAccount = MuxedAccount.decode(stream);
+  public static Operation decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
     }
-    decodedOperation.body = OperationBody.decode(stream);
+    maxDepth -= 1;
+    Operation decodedOperation = new Operation();
+    boolean sourceAccountPresent = stream.readXdrBoolean();
+    if (sourceAccountPresent) {
+      decodedOperation.sourceAccount = MuxedAccount.decode(stream, maxDepth);
+    }
+    decodedOperation.body = OperationBody.decode(stream, maxDepth);
     return decodedOperation;
+  }
+
+  public static Operation decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Operation fromXdrBase64(String xdr) throws IOException {
@@ -119,6 +127,7 @@ public class Operation implements XdrElement {
   public static Operation fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -302,95 +311,111 @@ public class Operation implements XdrElement {
       }
     }
 
-    public static OperationBody decode(XdrDataInputStream stream) throws IOException {
+    public static OperationBody decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       OperationBody decodedOperationBody = new OperationBody();
-      OperationType discriminant = OperationType.decode(stream);
+      OperationType discriminant = OperationType.decode(stream, maxDepth);
       decodedOperationBody.setDiscriminant(discriminant);
       switch (decodedOperationBody.getDiscriminant()) {
         case CREATE_ACCOUNT:
-          decodedOperationBody.createAccountOp = CreateAccountOp.decode(stream);
+          decodedOperationBody.createAccountOp = CreateAccountOp.decode(stream, maxDepth);
           break;
         case PAYMENT:
-          decodedOperationBody.paymentOp = PaymentOp.decode(stream);
+          decodedOperationBody.paymentOp = PaymentOp.decode(stream, maxDepth);
           break;
         case PATH_PAYMENT_STRICT_RECEIVE:
           decodedOperationBody.pathPaymentStrictReceiveOp =
-              PathPaymentStrictReceiveOp.decode(stream);
+              PathPaymentStrictReceiveOp.decode(stream, maxDepth);
           break;
         case MANAGE_SELL_OFFER:
-          decodedOperationBody.manageSellOfferOp = ManageSellOfferOp.decode(stream);
+          decodedOperationBody.manageSellOfferOp = ManageSellOfferOp.decode(stream, maxDepth);
           break;
         case CREATE_PASSIVE_SELL_OFFER:
-          decodedOperationBody.createPassiveSellOfferOp = CreatePassiveSellOfferOp.decode(stream);
+          decodedOperationBody.createPassiveSellOfferOp =
+              CreatePassiveSellOfferOp.decode(stream, maxDepth);
           break;
         case SET_OPTIONS:
-          decodedOperationBody.setOptionsOp = SetOptionsOp.decode(stream);
+          decodedOperationBody.setOptionsOp = SetOptionsOp.decode(stream, maxDepth);
           break;
         case CHANGE_TRUST:
-          decodedOperationBody.changeTrustOp = ChangeTrustOp.decode(stream);
+          decodedOperationBody.changeTrustOp = ChangeTrustOp.decode(stream, maxDepth);
           break;
         case ALLOW_TRUST:
-          decodedOperationBody.allowTrustOp = AllowTrustOp.decode(stream);
+          decodedOperationBody.allowTrustOp = AllowTrustOp.decode(stream, maxDepth);
           break;
         case ACCOUNT_MERGE:
-          decodedOperationBody.destination = MuxedAccount.decode(stream);
+          decodedOperationBody.destination = MuxedAccount.decode(stream, maxDepth);
           break;
         case INFLATION:
           break;
         case MANAGE_DATA:
-          decodedOperationBody.manageDataOp = ManageDataOp.decode(stream);
+          decodedOperationBody.manageDataOp = ManageDataOp.decode(stream, maxDepth);
           break;
         case BUMP_SEQUENCE:
-          decodedOperationBody.bumpSequenceOp = BumpSequenceOp.decode(stream);
+          decodedOperationBody.bumpSequenceOp = BumpSequenceOp.decode(stream, maxDepth);
           break;
         case MANAGE_BUY_OFFER:
-          decodedOperationBody.manageBuyOfferOp = ManageBuyOfferOp.decode(stream);
+          decodedOperationBody.manageBuyOfferOp = ManageBuyOfferOp.decode(stream, maxDepth);
           break;
         case PATH_PAYMENT_STRICT_SEND:
-          decodedOperationBody.pathPaymentStrictSendOp = PathPaymentStrictSendOp.decode(stream);
+          decodedOperationBody.pathPaymentStrictSendOp =
+              PathPaymentStrictSendOp.decode(stream, maxDepth);
           break;
         case CREATE_CLAIMABLE_BALANCE:
-          decodedOperationBody.createClaimableBalanceOp = CreateClaimableBalanceOp.decode(stream);
+          decodedOperationBody.createClaimableBalanceOp =
+              CreateClaimableBalanceOp.decode(stream, maxDepth);
           break;
         case CLAIM_CLAIMABLE_BALANCE:
-          decodedOperationBody.claimClaimableBalanceOp = ClaimClaimableBalanceOp.decode(stream);
+          decodedOperationBody.claimClaimableBalanceOp =
+              ClaimClaimableBalanceOp.decode(stream, maxDepth);
           break;
         case BEGIN_SPONSORING_FUTURE_RESERVES:
           decodedOperationBody.beginSponsoringFutureReservesOp =
-              BeginSponsoringFutureReservesOp.decode(stream);
+              BeginSponsoringFutureReservesOp.decode(stream, maxDepth);
           break;
         case END_SPONSORING_FUTURE_RESERVES:
           break;
         case REVOKE_SPONSORSHIP:
-          decodedOperationBody.revokeSponsorshipOp = RevokeSponsorshipOp.decode(stream);
+          decodedOperationBody.revokeSponsorshipOp = RevokeSponsorshipOp.decode(stream, maxDepth);
           break;
         case CLAWBACK:
-          decodedOperationBody.clawbackOp = ClawbackOp.decode(stream);
+          decodedOperationBody.clawbackOp = ClawbackOp.decode(stream, maxDepth);
           break;
         case CLAWBACK_CLAIMABLE_BALANCE:
           decodedOperationBody.clawbackClaimableBalanceOp =
-              ClawbackClaimableBalanceOp.decode(stream);
+              ClawbackClaimableBalanceOp.decode(stream, maxDepth);
           break;
         case SET_TRUST_LINE_FLAGS:
-          decodedOperationBody.setTrustLineFlagsOp = SetTrustLineFlagsOp.decode(stream);
+          decodedOperationBody.setTrustLineFlagsOp = SetTrustLineFlagsOp.decode(stream, maxDepth);
           break;
         case LIQUIDITY_POOL_DEPOSIT:
-          decodedOperationBody.liquidityPoolDepositOp = LiquidityPoolDepositOp.decode(stream);
+          decodedOperationBody.liquidityPoolDepositOp =
+              LiquidityPoolDepositOp.decode(stream, maxDepth);
           break;
         case LIQUIDITY_POOL_WITHDRAW:
-          decodedOperationBody.liquidityPoolWithdrawOp = LiquidityPoolWithdrawOp.decode(stream);
+          decodedOperationBody.liquidityPoolWithdrawOp =
+              LiquidityPoolWithdrawOp.decode(stream, maxDepth);
           break;
         case INVOKE_HOST_FUNCTION:
-          decodedOperationBody.invokeHostFunctionOp = InvokeHostFunctionOp.decode(stream);
+          decodedOperationBody.invokeHostFunctionOp = InvokeHostFunctionOp.decode(stream, maxDepth);
           break;
         case EXTEND_FOOTPRINT_TTL:
-          decodedOperationBody.extendFootprintTTLOp = ExtendFootprintTTLOp.decode(stream);
+          decodedOperationBody.extendFootprintTTLOp = ExtendFootprintTTLOp.decode(stream, maxDepth);
           break;
         case RESTORE_FOOTPRINT:
-          decodedOperationBody.restoreFootprintOp = RestoreFootprintOp.decode(stream);
+          decodedOperationBody.restoreFootprintOp = RestoreFootprintOp.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedOperationBody;
+    }
+
+    public static OperationBody decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static OperationBody fromXdrBase64(String xdr) throws IOException {
@@ -401,6 +426,7 @@ public class Operation implements XdrElement {
     public static OperationBody fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

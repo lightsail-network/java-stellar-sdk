@@ -35,11 +35,19 @@ public class SCPEnvelope implements XdrElement {
     signature.encode(stream);
   }
 
-  public static SCPEnvelope decode(XdrDataInputStream stream) throws IOException {
+  public static SCPEnvelope decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCPEnvelope decodedSCPEnvelope = new SCPEnvelope();
-    decodedSCPEnvelope.statement = SCPStatement.decode(stream);
-    decodedSCPEnvelope.signature = Signature.decode(stream);
+    decodedSCPEnvelope.statement = SCPStatement.decode(stream, maxDepth);
+    decodedSCPEnvelope.signature = Signature.decode(stream, maxDepth);
     return decodedSCPEnvelope;
+  }
+
+  public static SCPEnvelope decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCPEnvelope fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class SCPEnvelope implements XdrElement {
   public static SCPEnvelope fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

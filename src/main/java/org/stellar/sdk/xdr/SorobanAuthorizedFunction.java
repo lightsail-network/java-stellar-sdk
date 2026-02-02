@@ -59,23 +59,36 @@ public class SorobanAuthorizedFunction implements XdrElement {
     }
   }
 
-  public static SorobanAuthorizedFunction decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanAuthorizedFunction decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanAuthorizedFunction decodedSorobanAuthorizedFunction = new SorobanAuthorizedFunction();
-    SorobanAuthorizedFunctionType discriminant = SorobanAuthorizedFunctionType.decode(stream);
+    SorobanAuthorizedFunctionType discriminant =
+        SorobanAuthorizedFunctionType.decode(stream, maxDepth);
     decodedSorobanAuthorizedFunction.setDiscriminant(discriminant);
     switch (decodedSorobanAuthorizedFunction.getDiscriminant()) {
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
-        decodedSorobanAuthorizedFunction.contractFn = InvokeContractArgs.decode(stream);
+        decodedSorobanAuthorizedFunction.contractFn = InvokeContractArgs.decode(stream, maxDepth);
         break;
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
-        decodedSorobanAuthorizedFunction.createContractHostFn = CreateContractArgs.decode(stream);
+        decodedSorobanAuthorizedFunction.createContractHostFn =
+            CreateContractArgs.decode(stream, maxDepth);
         break;
       case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
         decodedSorobanAuthorizedFunction.createContractV2HostFn =
-            CreateContractArgsV2.decode(stream);
+            CreateContractArgsV2.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSorobanAuthorizedFunction;
+  }
+
+  public static SorobanAuthorizedFunction decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanAuthorizedFunction fromXdrBase64(String xdr) throws IOException {
@@ -86,6 +99,7 @@ public class SorobanAuthorizedFunction implements XdrElement {
   public static SorobanAuthorizedFunction fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

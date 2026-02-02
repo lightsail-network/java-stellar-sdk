@@ -44,14 +44,23 @@ public class SurveyRequestMessage implements XdrElement {
     commandType.encode(stream);
   }
 
-  public static SurveyRequestMessage decode(XdrDataInputStream stream) throws IOException {
+  public static SurveyRequestMessage decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SurveyRequestMessage decodedSurveyRequestMessage = new SurveyRequestMessage();
-    decodedSurveyRequestMessage.surveyorPeerID = NodeID.decode(stream);
-    decodedSurveyRequestMessage.surveyedPeerID = NodeID.decode(stream);
-    decodedSurveyRequestMessage.ledgerNum = Uint32.decode(stream);
-    decodedSurveyRequestMessage.encryptionKey = Curve25519Public.decode(stream);
-    decodedSurveyRequestMessage.commandType = SurveyMessageCommandType.decode(stream);
+    decodedSurveyRequestMessage.surveyorPeerID = NodeID.decode(stream, maxDepth);
+    decodedSurveyRequestMessage.surveyedPeerID = NodeID.decode(stream, maxDepth);
+    decodedSurveyRequestMessage.ledgerNum = Uint32.decode(stream, maxDepth);
+    decodedSurveyRequestMessage.encryptionKey = Curve25519Public.decode(stream, maxDepth);
+    decodedSurveyRequestMessage.commandType = SurveyMessageCommandType.decode(stream, maxDepth);
     return decodedSurveyRequestMessage;
+  }
+
+  public static SurveyRequestMessage decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SurveyRequestMessage fromXdrBase64(String xdr) throws IOException {
@@ -62,6 +71,7 @@ public class SurveyRequestMessage implements XdrElement {
   public static SurveyRequestMessage fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

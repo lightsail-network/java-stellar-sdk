@@ -35,11 +35,19 @@ public class DiagnosticEvent implements XdrElement {
     event.encode(stream);
   }
 
-  public static DiagnosticEvent decode(XdrDataInputStream stream) throws IOException {
+  public static DiagnosticEvent decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     DiagnosticEvent decodedDiagnosticEvent = new DiagnosticEvent();
-    decodedDiagnosticEvent.inSuccessfulContractCall = stream.readInt() == 1 ? true : false;
-    decodedDiagnosticEvent.event = ContractEvent.decode(stream);
+    decodedDiagnosticEvent.inSuccessfulContractCall = stream.readXdrBoolean();
+    decodedDiagnosticEvent.event = ContractEvent.decode(stream, maxDepth);
     return decodedDiagnosticEvent;
+  }
+
+  public static DiagnosticEvent decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static DiagnosticEvent fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class DiagnosticEvent implements XdrElement {
   public static DiagnosticEvent fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

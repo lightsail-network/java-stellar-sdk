@@ -32,10 +32,18 @@ public class SendMore implements XdrElement {
     numMessages.encode(stream);
   }
 
-  public static SendMore decode(XdrDataInputStream stream) throws IOException {
+  public static SendMore decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SendMore decodedSendMore = new SendMore();
-    decodedSendMore.numMessages = Uint32.decode(stream);
+    decodedSendMore.numMessages = Uint32.decode(stream, maxDepth);
     return decodedSendMore;
+  }
+
+  public static SendMore decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SendMore fromXdrBase64(String xdr) throws IOException {
@@ -46,6 +54,7 @@ public class SendMore implements XdrElement {
   public static SendMore fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

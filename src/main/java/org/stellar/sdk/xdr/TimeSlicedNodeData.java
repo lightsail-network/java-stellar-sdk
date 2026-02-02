@@ -65,19 +65,28 @@ public class TimeSlicedNodeData implements XdrElement {
     maxOutboundPeerCount.encode(stream);
   }
 
-  public static TimeSlicedNodeData decode(XdrDataInputStream stream) throws IOException {
+  public static TimeSlicedNodeData decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TimeSlicedNodeData decodedTimeSlicedNodeData = new TimeSlicedNodeData();
-    decodedTimeSlicedNodeData.addedAuthenticatedPeers = Uint32.decode(stream);
-    decodedTimeSlicedNodeData.droppedAuthenticatedPeers = Uint32.decode(stream);
-    decodedTimeSlicedNodeData.totalInboundPeerCount = Uint32.decode(stream);
-    decodedTimeSlicedNodeData.totalOutboundPeerCount = Uint32.decode(stream);
-    decodedTimeSlicedNodeData.p75SCPFirstToSelfLatencyMs = Uint32.decode(stream);
-    decodedTimeSlicedNodeData.p75SCPSelfToOtherLatencyMs = Uint32.decode(stream);
-    decodedTimeSlicedNodeData.lostSyncCount = Uint32.decode(stream);
-    decodedTimeSlicedNodeData.isValidator = stream.readInt() == 1 ? true : false;
-    decodedTimeSlicedNodeData.maxInboundPeerCount = Uint32.decode(stream);
-    decodedTimeSlicedNodeData.maxOutboundPeerCount = Uint32.decode(stream);
+    decodedTimeSlicedNodeData.addedAuthenticatedPeers = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedNodeData.droppedAuthenticatedPeers = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedNodeData.totalInboundPeerCount = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedNodeData.totalOutboundPeerCount = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedNodeData.p75SCPFirstToSelfLatencyMs = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedNodeData.p75SCPSelfToOtherLatencyMs = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedNodeData.lostSyncCount = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedNodeData.isValidator = stream.readXdrBoolean();
+    decodedTimeSlicedNodeData.maxInboundPeerCount = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedNodeData.maxOutboundPeerCount = Uint32.decode(stream, maxDepth);
     return decodedTimeSlicedNodeData;
+  }
+
+  public static TimeSlicedNodeData decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TimeSlicedNodeData fromXdrBase64(String xdr) throws IOException {
@@ -88,6 +97,7 @@ public class TimeSlicedNodeData implements XdrElement {
   public static TimeSlicedNodeData fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

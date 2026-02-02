@@ -57,9 +57,13 @@ public class PaymentResult implements XdrElement {
     }
   }
 
-  public static PaymentResult decode(XdrDataInputStream stream) throws IOException {
+  public static PaymentResult decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PaymentResult decodedPaymentResult = new PaymentResult();
-    PaymentResultCode discriminant = PaymentResultCode.decode(stream);
+    PaymentResultCode discriminant = PaymentResultCode.decode(stream, maxDepth);
     decodedPaymentResult.setDiscriminant(discriminant);
     switch (decodedPaymentResult.getDiscriminant()) {
       case PAYMENT_SUCCESS:
@@ -74,8 +78,14 @@ public class PaymentResult implements XdrElement {
       case PAYMENT_LINE_FULL:
       case PAYMENT_NO_ISSUER:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedPaymentResult;
+  }
+
+  public static PaymentResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PaymentResult fromXdrBase64(String xdr) throws IOException {
@@ -86,6 +96,7 @@ public class PaymentResult implements XdrElement {
   public static PaymentResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

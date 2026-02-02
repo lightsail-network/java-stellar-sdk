@@ -108,45 +108,53 @@ public class SetOptionsOp implements XdrElement {
     }
   }
 
-  public static SetOptionsOp decode(XdrDataInputStream stream) throws IOException {
+  public static SetOptionsOp decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SetOptionsOp decodedSetOptionsOp = new SetOptionsOp();
-    int inflationDestPresent = stream.readInt();
-    if (inflationDestPresent != 0) {
-      decodedSetOptionsOp.inflationDest = AccountID.decode(stream);
+    boolean inflationDestPresent = stream.readXdrBoolean();
+    if (inflationDestPresent) {
+      decodedSetOptionsOp.inflationDest = AccountID.decode(stream, maxDepth);
     }
-    int clearFlagsPresent = stream.readInt();
-    if (clearFlagsPresent != 0) {
-      decodedSetOptionsOp.clearFlags = Uint32.decode(stream);
+    boolean clearFlagsPresent = stream.readXdrBoolean();
+    if (clearFlagsPresent) {
+      decodedSetOptionsOp.clearFlags = Uint32.decode(stream, maxDepth);
     }
-    int setFlagsPresent = stream.readInt();
-    if (setFlagsPresent != 0) {
-      decodedSetOptionsOp.setFlags = Uint32.decode(stream);
+    boolean setFlagsPresent = stream.readXdrBoolean();
+    if (setFlagsPresent) {
+      decodedSetOptionsOp.setFlags = Uint32.decode(stream, maxDepth);
     }
-    int masterWeightPresent = stream.readInt();
-    if (masterWeightPresent != 0) {
-      decodedSetOptionsOp.masterWeight = Uint32.decode(stream);
+    boolean masterWeightPresent = stream.readXdrBoolean();
+    if (masterWeightPresent) {
+      decodedSetOptionsOp.masterWeight = Uint32.decode(stream, maxDepth);
     }
-    int lowThresholdPresent = stream.readInt();
-    if (lowThresholdPresent != 0) {
-      decodedSetOptionsOp.lowThreshold = Uint32.decode(stream);
+    boolean lowThresholdPresent = stream.readXdrBoolean();
+    if (lowThresholdPresent) {
+      decodedSetOptionsOp.lowThreshold = Uint32.decode(stream, maxDepth);
     }
-    int medThresholdPresent = stream.readInt();
-    if (medThresholdPresent != 0) {
-      decodedSetOptionsOp.medThreshold = Uint32.decode(stream);
+    boolean medThresholdPresent = stream.readXdrBoolean();
+    if (medThresholdPresent) {
+      decodedSetOptionsOp.medThreshold = Uint32.decode(stream, maxDepth);
     }
-    int highThresholdPresent = stream.readInt();
-    if (highThresholdPresent != 0) {
-      decodedSetOptionsOp.highThreshold = Uint32.decode(stream);
+    boolean highThresholdPresent = stream.readXdrBoolean();
+    if (highThresholdPresent) {
+      decodedSetOptionsOp.highThreshold = Uint32.decode(stream, maxDepth);
     }
-    int homeDomainPresent = stream.readInt();
-    if (homeDomainPresent != 0) {
-      decodedSetOptionsOp.homeDomain = String32.decode(stream);
+    boolean homeDomainPresent = stream.readXdrBoolean();
+    if (homeDomainPresent) {
+      decodedSetOptionsOp.homeDomain = String32.decode(stream, maxDepth);
     }
-    int signerPresent = stream.readInt();
-    if (signerPresent != 0) {
-      decodedSetOptionsOp.signer = Signer.decode(stream);
+    boolean signerPresent = stream.readXdrBoolean();
+    if (signerPresent) {
+      decodedSetOptionsOp.signer = Signer.decode(stream, maxDepth);
     }
     return decodedSetOptionsOp;
+  }
+
+  public static SetOptionsOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SetOptionsOp fromXdrBase64(String xdr) throws IOException {
@@ -157,6 +165,7 @@ public class SetOptionsOp implements XdrElement {
   public static SetOptionsOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

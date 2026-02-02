@@ -49,10 +49,16 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     }
   }
 
-  public static LiquidityPoolWithdrawResult decode(XdrDataInputStream stream) throws IOException {
+  public static LiquidityPoolWithdrawResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LiquidityPoolWithdrawResult decodedLiquidityPoolWithdrawResult =
         new LiquidityPoolWithdrawResult();
-    LiquidityPoolWithdrawResultCode discriminant = LiquidityPoolWithdrawResultCode.decode(stream);
+    LiquidityPoolWithdrawResultCode discriminant =
+        LiquidityPoolWithdrawResultCode.decode(stream, maxDepth);
     decodedLiquidityPoolWithdrawResult.setDiscriminant(discriminant);
     switch (decodedLiquidityPoolWithdrawResult.getDiscriminant()) {
       case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
@@ -63,8 +69,14 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
       case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
       case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedLiquidityPoolWithdrawResult;
+  }
+
+  public static LiquidityPoolWithdrawResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LiquidityPoolWithdrawResult fromXdrBase64(String xdr) throws IOException {
@@ -75,6 +87,7 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
   public static LiquidityPoolWithdrawResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

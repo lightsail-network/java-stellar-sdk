@@ -39,15 +39,35 @@ public class LedgerSCPMessages implements XdrElement {
     }
   }
 
-  public static LedgerSCPMessages decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerSCPMessages decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerSCPMessages decodedLedgerSCPMessages = new LedgerSCPMessages();
-    decodedLedgerSCPMessages.ledgerSeq = Uint32.decode(stream);
+    decodedLedgerSCPMessages.ledgerSeq = Uint32.decode(stream, maxDepth);
     int messagesSize = stream.readInt();
+    if (messagesSize < 0) {
+      throw new IOException("messages size " + messagesSize + " is negative");
+    }
+    int messagesRemainingInputLen = stream.getRemainingInputLen();
+    if (messagesRemainingInputLen >= 0 && messagesRemainingInputLen < messagesSize) {
+      throw new IOException(
+          "messages size "
+              + messagesSize
+              + " exceeds remaining input length "
+              + messagesRemainingInputLen);
+    }
     decodedLedgerSCPMessages.messages = new SCPEnvelope[messagesSize];
     for (int i = 0; i < messagesSize; i++) {
-      decodedLedgerSCPMessages.messages[i] = SCPEnvelope.decode(stream);
+      decodedLedgerSCPMessages.messages[i] = SCPEnvelope.decode(stream, maxDepth);
     }
     return decodedLedgerSCPMessages;
+  }
+
+  public static LedgerSCPMessages decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerSCPMessages fromXdrBase64(String xdr) throws IOException {
@@ -58,6 +78,7 @@ public class LedgerSCPMessages implements XdrElement {
   public static LedgerSCPMessages fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

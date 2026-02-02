@@ -25,15 +25,26 @@ public class Uint256 implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int uint256Size = uint256.length;
+    if (uint256Size != 32) {
+      throw new IOException("uint256 size " + uint256Size + " does not match fixed size 32");
+    }
     stream.write(getUint256(), 0, uint256Size);
   }
 
-  public static Uint256 decode(XdrDataInputStream stream) throws IOException {
+  public static Uint256 decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Uint256 decodedUint256 = new Uint256();
     int uint256Size = 32;
     decodedUint256.uint256 = new byte[uint256Size];
-    stream.read(decodedUint256.uint256, 0, uint256Size);
+    stream.readPaddedData(decodedUint256.uint256, 0, uint256Size);
     return decodedUint256;
+  }
+
+  public static Uint256 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Uint256 fromXdrBase64(String xdr) throws IOException {
@@ -44,6 +55,7 @@ public class Uint256 implements XdrElement {
   public static Uint256 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

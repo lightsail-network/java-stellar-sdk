@@ -59,9 +59,14 @@ public class SetOptionsResult implements XdrElement {
     }
   }
 
-  public static SetOptionsResult decode(XdrDataInputStream stream) throws IOException {
+  public static SetOptionsResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SetOptionsResult decodedSetOptionsResult = new SetOptionsResult();
-    SetOptionsResultCode discriminant = SetOptionsResultCode.decode(stream);
+    SetOptionsResultCode discriminant = SetOptionsResultCode.decode(stream, maxDepth);
     decodedSetOptionsResult.setDiscriminant(discriminant);
     switch (decodedSetOptionsResult.getDiscriminant()) {
       case SET_OPTIONS_SUCCESS:
@@ -77,8 +82,14 @@ public class SetOptionsResult implements XdrElement {
       case SET_OPTIONS_INVALID_HOME_DOMAIN:
       case SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSetOptionsResult;
+  }
+
+  public static SetOptionsResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SetOptionsResult fromXdrBase64(String xdr) throws IOException {
@@ -89,6 +100,7 @@ public class SetOptionsResult implements XdrElement {
   public static SetOptionsResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

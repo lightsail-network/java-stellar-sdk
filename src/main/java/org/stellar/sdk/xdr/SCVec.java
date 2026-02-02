@@ -31,14 +31,30 @@ public class SCVec implements XdrElement {
     }
   }
 
-  public static SCVec decode(XdrDataInputStream stream) throws IOException {
+  public static SCVec decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCVec decodedSCVec = new SCVec();
     int SCVecSize = stream.readInt();
+    if (SCVecSize < 0) {
+      throw new IOException("SCVec size " + SCVecSize + " is negative");
+    }
+    int SCVecRemainingInputLen = stream.getRemainingInputLen();
+    if (SCVecRemainingInputLen >= 0 && SCVecRemainingInputLen < SCVecSize) {
+      throw new IOException(
+          "SCVec size " + SCVecSize + " exceeds remaining input length " + SCVecRemainingInputLen);
+    }
     decodedSCVec.SCVec = new SCVal[SCVecSize];
     for (int i = 0; i < SCVecSize; i++) {
-      decodedSCVec.SCVec[i] = SCVal.decode(stream);
+      decodedSCVec.SCVec[i] = SCVal.decode(stream, maxDepth);
     }
     return decodedSCVec;
+  }
+
+  public static SCVec decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCVec fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +65,7 @@ public class SCVec implements XdrElement {
   public static SCVec fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

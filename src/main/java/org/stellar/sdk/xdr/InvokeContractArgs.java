@@ -41,16 +41,33 @@ public class InvokeContractArgs implements XdrElement {
     }
   }
 
-  public static InvokeContractArgs decode(XdrDataInputStream stream) throws IOException {
+  public static InvokeContractArgs decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     InvokeContractArgs decodedInvokeContractArgs = new InvokeContractArgs();
-    decodedInvokeContractArgs.contractAddress = SCAddress.decode(stream);
-    decodedInvokeContractArgs.functionName = SCSymbol.decode(stream);
+    decodedInvokeContractArgs.contractAddress = SCAddress.decode(stream, maxDepth);
+    decodedInvokeContractArgs.functionName = SCSymbol.decode(stream, maxDepth);
     int argsSize = stream.readInt();
+    if (argsSize < 0) {
+      throw new IOException("args size " + argsSize + " is negative");
+    }
+    int argsRemainingInputLen = stream.getRemainingInputLen();
+    if (argsRemainingInputLen >= 0 && argsRemainingInputLen < argsSize) {
+      throw new IOException(
+          "args size " + argsSize + " exceeds remaining input length " + argsRemainingInputLen);
+    }
     decodedInvokeContractArgs.args = new SCVal[argsSize];
     for (int i = 0; i < argsSize; i++) {
-      decodedInvokeContractArgs.args[i] = SCVal.decode(stream);
+      decodedInvokeContractArgs.args[i] = SCVal.decode(stream, maxDepth);
     }
     return decodedInvokeContractArgs;
+  }
+
+  public static InvokeContractArgs decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static InvokeContractArgs fromXdrBase64(String xdr) throws IOException {
@@ -61,6 +78,7 @@ public class InvokeContractArgs implements XdrElement {
   public static InvokeContractArgs fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -69,31 +69,41 @@ public class SCSpecEntry implements XdrElement {
     }
   }
 
-  public static SCSpecEntry decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecEntry decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecEntry decodedSCSpecEntry = new SCSpecEntry();
-    SCSpecEntryKind discriminant = SCSpecEntryKind.decode(stream);
+    SCSpecEntryKind discriminant = SCSpecEntryKind.decode(stream, maxDepth);
     decodedSCSpecEntry.setDiscriminant(discriminant);
     switch (decodedSCSpecEntry.getDiscriminant()) {
       case SC_SPEC_ENTRY_FUNCTION_V0:
-        decodedSCSpecEntry.functionV0 = SCSpecFunctionV0.decode(stream);
+        decodedSCSpecEntry.functionV0 = SCSpecFunctionV0.decode(stream, maxDepth);
         break;
       case SC_SPEC_ENTRY_UDT_STRUCT_V0:
-        decodedSCSpecEntry.udtStructV0 = SCSpecUDTStructV0.decode(stream);
+        decodedSCSpecEntry.udtStructV0 = SCSpecUDTStructV0.decode(stream, maxDepth);
         break;
       case SC_SPEC_ENTRY_UDT_UNION_V0:
-        decodedSCSpecEntry.udtUnionV0 = SCSpecUDTUnionV0.decode(stream);
+        decodedSCSpecEntry.udtUnionV0 = SCSpecUDTUnionV0.decode(stream, maxDepth);
         break;
       case SC_SPEC_ENTRY_UDT_ENUM_V0:
-        decodedSCSpecEntry.udtEnumV0 = SCSpecUDTEnumV0.decode(stream);
+        decodedSCSpecEntry.udtEnumV0 = SCSpecUDTEnumV0.decode(stream, maxDepth);
         break;
       case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
-        decodedSCSpecEntry.udtErrorEnumV0 = SCSpecUDTErrorEnumV0.decode(stream);
+        decodedSCSpecEntry.udtErrorEnumV0 = SCSpecUDTErrorEnumV0.decode(stream, maxDepth);
         break;
       case SC_SPEC_ENTRY_EVENT_V0:
-        decodedSCSpecEntry.eventV0 = SCSpecEventV0.decode(stream);
+        decodedSCSpecEntry.eventV0 = SCSpecEventV0.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCSpecEntry;
+  }
+
+  public static SCSpecEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecEntry fromXdrBase64(String xdr) throws IOException {
@@ -104,6 +114,7 @@ public class SCSpecEntry implements XdrElement {
   public static SCSpecEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

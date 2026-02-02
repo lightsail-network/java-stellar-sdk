@@ -38,12 +38,20 @@ public class AuthCert implements XdrElement {
     sig.encode(stream);
   }
 
-  public static AuthCert decode(XdrDataInputStream stream) throws IOException {
+  public static AuthCert decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     AuthCert decodedAuthCert = new AuthCert();
-    decodedAuthCert.pubkey = Curve25519Public.decode(stream);
-    decodedAuthCert.expiration = Uint64.decode(stream);
-    decodedAuthCert.sig = Signature.decode(stream);
+    decodedAuthCert.pubkey = Curve25519Public.decode(stream, maxDepth);
+    decodedAuthCert.expiration = Uint64.decode(stream, maxDepth);
+    decodedAuthCert.sig = Signature.decode(stream, maxDepth);
     return decodedAuthCert;
+  }
+
+  public static AuthCert decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static AuthCert fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +62,7 @@ public class AuthCert implements XdrElement {
   public static AuthCert fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

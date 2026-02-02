@@ -61,13 +61,17 @@ public class SCError implements XdrElement {
     }
   }
 
-  public static SCError decode(XdrDataInputStream stream) throws IOException {
+  public static SCError decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCError decodedSCError = new SCError();
-    SCErrorType discriminant = SCErrorType.decode(stream);
+    SCErrorType discriminant = SCErrorType.decode(stream, maxDepth);
     decodedSCError.setDiscriminant(discriminant);
     switch (decodedSCError.getDiscriminant()) {
       case SCE_CONTRACT:
-        decodedSCError.contractCode = Uint32.decode(stream);
+        decodedSCError.contractCode = Uint32.decode(stream, maxDepth);
         break;
       case SCE_WASM_VM:
       case SCE_CONTEXT:
@@ -78,10 +82,16 @@ public class SCError implements XdrElement {
       case SCE_BUDGET:
       case SCE_VALUE:
       case SCE_AUTH:
-        decodedSCError.code = SCErrorCode.decode(stream);
+        decodedSCError.code = SCErrorCode.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCError;
+  }
+
+  public static SCError decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCError fromXdrBase64(String xdr) throws IOException {
@@ -92,6 +102,7 @@ public class SCError implements XdrElement {
   public static SCError fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -115,9 +115,13 @@ public class SCSpecTypeDef implements XdrElement {
     }
   }
 
-  public static SCSpecTypeDef decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecTypeDef decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecTypeDef decodedSCSpecTypeDef = new SCSpecTypeDef();
-    SCSpecType discriminant = SCSpecType.decode(stream);
+    SCSpecType discriminant = SCSpecType.decode(stream, maxDepth);
     decodedSCSpecTypeDef.setDiscriminant(discriminant);
     switch (decodedSCSpecTypeDef.getDiscriminant()) {
       case SC_SPEC_TYPE_VAL:
@@ -141,28 +145,34 @@ public class SCSpecTypeDef implements XdrElement {
       case SC_SPEC_TYPE_MUXED_ADDRESS:
         break;
       case SC_SPEC_TYPE_OPTION:
-        decodedSCSpecTypeDef.option = SCSpecTypeOption.decode(stream);
+        decodedSCSpecTypeDef.option = SCSpecTypeOption.decode(stream, maxDepth);
         break;
       case SC_SPEC_TYPE_RESULT:
-        decodedSCSpecTypeDef.result = SCSpecTypeResult.decode(stream);
+        decodedSCSpecTypeDef.result = SCSpecTypeResult.decode(stream, maxDepth);
         break;
       case SC_SPEC_TYPE_VEC:
-        decodedSCSpecTypeDef.vec = SCSpecTypeVec.decode(stream);
+        decodedSCSpecTypeDef.vec = SCSpecTypeVec.decode(stream, maxDepth);
         break;
       case SC_SPEC_TYPE_MAP:
-        decodedSCSpecTypeDef.map = SCSpecTypeMap.decode(stream);
+        decodedSCSpecTypeDef.map = SCSpecTypeMap.decode(stream, maxDepth);
         break;
       case SC_SPEC_TYPE_TUPLE:
-        decodedSCSpecTypeDef.tuple = SCSpecTypeTuple.decode(stream);
+        decodedSCSpecTypeDef.tuple = SCSpecTypeTuple.decode(stream, maxDepth);
         break;
       case SC_SPEC_TYPE_BYTES_N:
-        decodedSCSpecTypeDef.bytesN = SCSpecTypeBytesN.decode(stream);
+        decodedSCSpecTypeDef.bytesN = SCSpecTypeBytesN.decode(stream, maxDepth);
         break;
       case SC_SPEC_TYPE_UDT:
-        decodedSCSpecTypeDef.udt = SCSpecTypeUDT.decode(stream);
+        decodedSCSpecTypeDef.udt = SCSpecTypeUDT.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCSpecTypeDef;
+  }
+
+  public static SCSpecTypeDef decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecTypeDef fromXdrBase64(String xdr) throws IOException {
@@ -173,6 +183,7 @@ public class SCSpecTypeDef implements XdrElement {
   public static SCSpecTypeDef fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

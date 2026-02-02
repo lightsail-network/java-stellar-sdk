@@ -35,11 +35,20 @@ public class CreateContractArgs implements XdrElement {
     executable.encode(stream);
   }
 
-  public static CreateContractArgs decode(XdrDataInputStream stream) throws IOException {
+  public static CreateContractArgs decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     CreateContractArgs decodedCreateContractArgs = new CreateContractArgs();
-    decodedCreateContractArgs.contractIDPreimage = ContractIDPreimage.decode(stream);
-    decodedCreateContractArgs.executable = ContractExecutable.decode(stream);
+    decodedCreateContractArgs.contractIDPreimage = ContractIDPreimage.decode(stream, maxDepth);
+    decodedCreateContractArgs.executable = ContractExecutable.decode(stream, maxDepth);
     return decodedCreateContractArgs;
+  }
+
+  public static CreateContractArgs decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static CreateContractArgs fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +59,7 @@ public class CreateContractArgs implements XdrElement {
   public static CreateContractArgs fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

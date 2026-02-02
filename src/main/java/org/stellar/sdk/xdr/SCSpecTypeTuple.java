@@ -30,20 +30,45 @@ public class SCSpecTypeTuple implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int valueTypesSize = getValueTypes().length;
+    if (valueTypesSize > 12) {
+      throw new IOException("valueTypes size " + valueTypesSize + " exceeds max size 12");
+    }
     stream.writeInt(valueTypesSize);
     for (int i = 0; i < valueTypesSize; i++) {
       valueTypes[i].encode(stream);
     }
   }
 
-  public static SCSpecTypeTuple decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecTypeTuple decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecTypeTuple decodedSCSpecTypeTuple = new SCSpecTypeTuple();
     int valueTypesSize = stream.readInt();
+    if (valueTypesSize < 0) {
+      throw new IOException("valueTypes size " + valueTypesSize + " is negative");
+    }
+    if (valueTypesSize > 12) {
+      throw new IOException("valueTypes size " + valueTypesSize + " exceeds max size 12");
+    }
+    int valueTypesRemainingInputLen = stream.getRemainingInputLen();
+    if (valueTypesRemainingInputLen >= 0 && valueTypesRemainingInputLen < valueTypesSize) {
+      throw new IOException(
+          "valueTypes size "
+              + valueTypesSize
+              + " exceeds remaining input length "
+              + valueTypesRemainingInputLen);
+    }
     decodedSCSpecTypeTuple.valueTypes = new SCSpecTypeDef[valueTypesSize];
     for (int i = 0; i < valueTypesSize; i++) {
-      decodedSCSpecTypeTuple.valueTypes[i] = SCSpecTypeDef.decode(stream);
+      decodedSCSpecTypeTuple.valueTypes[i] = SCSpecTypeDef.decode(stream, maxDepth);
     }
     return decodedSCSpecTypeTuple;
+  }
+
+  public static SCSpecTypeTuple decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecTypeTuple fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +79,7 @@ public class SCSpecTypeTuple implements XdrElement {
   public static SCSpecTypeTuple fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

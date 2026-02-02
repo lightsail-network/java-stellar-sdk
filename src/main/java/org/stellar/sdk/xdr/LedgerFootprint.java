@@ -43,19 +43,49 @@ public class LedgerFootprint implements XdrElement {
     }
   }
 
-  public static LedgerFootprint decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerFootprint decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerFootprint decodedLedgerFootprint = new LedgerFootprint();
     int readOnlySize = stream.readInt();
+    if (readOnlySize < 0) {
+      throw new IOException("readOnly size " + readOnlySize + " is negative");
+    }
+    int readOnlyRemainingInputLen = stream.getRemainingInputLen();
+    if (readOnlyRemainingInputLen >= 0 && readOnlyRemainingInputLen < readOnlySize) {
+      throw new IOException(
+          "readOnly size "
+              + readOnlySize
+              + " exceeds remaining input length "
+              + readOnlyRemainingInputLen);
+    }
     decodedLedgerFootprint.readOnly = new LedgerKey[readOnlySize];
     for (int i = 0; i < readOnlySize; i++) {
-      decodedLedgerFootprint.readOnly[i] = LedgerKey.decode(stream);
+      decodedLedgerFootprint.readOnly[i] = LedgerKey.decode(stream, maxDepth);
     }
     int readWriteSize = stream.readInt();
+    if (readWriteSize < 0) {
+      throw new IOException("readWrite size " + readWriteSize + " is negative");
+    }
+    int readWriteRemainingInputLen = stream.getRemainingInputLen();
+    if (readWriteRemainingInputLen >= 0 && readWriteRemainingInputLen < readWriteSize) {
+      throw new IOException(
+          "readWrite size "
+              + readWriteSize
+              + " exceeds remaining input length "
+              + readWriteRemainingInputLen);
+    }
     decodedLedgerFootprint.readWrite = new LedgerKey[readWriteSize];
     for (int i = 0; i < readWriteSize; i++) {
-      decodedLedgerFootprint.readWrite[i] = LedgerKey.decode(stream);
+      decodedLedgerFootprint.readWrite[i] = LedgerKey.decode(stream, maxDepth);
     }
     return decodedLedgerFootprint;
+  }
+
+  public static LedgerFootprint decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerFootprint fromXdrBase64(String xdr) throws IOException {
@@ -66,6 +96,7 @@ public class LedgerFootprint implements XdrElement {
   public static LedgerFootprint fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

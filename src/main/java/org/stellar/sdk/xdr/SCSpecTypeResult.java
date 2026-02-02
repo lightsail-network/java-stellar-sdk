@@ -35,11 +35,20 @@ public class SCSpecTypeResult implements XdrElement {
     errorType.encode(stream);
   }
 
-  public static SCSpecTypeResult decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecTypeResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecTypeResult decodedSCSpecTypeResult = new SCSpecTypeResult();
-    decodedSCSpecTypeResult.okType = SCSpecTypeDef.decode(stream);
-    decodedSCSpecTypeResult.errorType = SCSpecTypeDef.decode(stream);
+    decodedSCSpecTypeResult.okType = SCSpecTypeDef.decode(stream, maxDepth);
+    decodedSCSpecTypeResult.errorType = SCSpecTypeDef.decode(stream, maxDepth);
     return decodedSCSpecTypeResult;
+  }
+
+  public static SCSpecTypeResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecTypeResult fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +59,7 @@ public class SCSpecTypeResult implements XdrElement {
   public static SCSpecTypeResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

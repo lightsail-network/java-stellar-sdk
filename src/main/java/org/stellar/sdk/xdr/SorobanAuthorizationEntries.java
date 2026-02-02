@@ -31,17 +31,39 @@ public class SorobanAuthorizationEntries implements XdrElement {
     }
   }
 
-  public static SorobanAuthorizationEntries decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanAuthorizationEntries decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanAuthorizationEntries decodedSorobanAuthorizationEntries =
         new SorobanAuthorizationEntries();
     int SorobanAuthorizationEntriesSize = stream.readInt();
+    if (SorobanAuthorizationEntriesSize < 0) {
+      throw new IOException(
+          "SorobanAuthorizationEntries size " + SorobanAuthorizationEntriesSize + " is negative");
+    }
+    int SorobanAuthorizationEntriesRemainingInputLen = stream.getRemainingInputLen();
+    if (SorobanAuthorizationEntriesRemainingInputLen >= 0
+        && SorobanAuthorizationEntriesRemainingInputLen < SorobanAuthorizationEntriesSize) {
+      throw new IOException(
+          "SorobanAuthorizationEntries size "
+              + SorobanAuthorizationEntriesSize
+              + " exceeds remaining input length "
+              + SorobanAuthorizationEntriesRemainingInputLen);
+    }
     decodedSorobanAuthorizationEntries.SorobanAuthorizationEntries =
         new SorobanAuthorizationEntry[SorobanAuthorizationEntriesSize];
     for (int i = 0; i < SorobanAuthorizationEntriesSize; i++) {
       decodedSorobanAuthorizationEntries.SorobanAuthorizationEntries[i] =
-          SorobanAuthorizationEntry.decode(stream);
+          SorobanAuthorizationEntry.decode(stream, maxDepth);
     }
     return decodedSorobanAuthorizationEntries;
+  }
+
+  public static SorobanAuthorizationEntries decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanAuthorizationEntries fromXdrBase64(String xdr) throws IOException {
@@ -52,6 +74,7 @@ public class SorobanAuthorizationEntries implements XdrElement {
   public static SorobanAuthorizationEntries fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -39,12 +39,21 @@ public class ContractCostParamEntry implements XdrElement {
     linearTerm.encode(stream);
   }
 
-  public static ContractCostParamEntry decode(XdrDataInputStream stream) throws IOException {
+  public static ContractCostParamEntry decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ContractCostParamEntry decodedContractCostParamEntry = new ContractCostParamEntry();
-    decodedContractCostParamEntry.ext = ExtensionPoint.decode(stream);
-    decodedContractCostParamEntry.constTerm = Int64.decode(stream);
-    decodedContractCostParamEntry.linearTerm = Int64.decode(stream);
+    decodedContractCostParamEntry.ext = ExtensionPoint.decode(stream, maxDepth);
+    decodedContractCostParamEntry.constTerm = Int64.decode(stream, maxDepth);
+    decodedContractCostParamEntry.linearTerm = Int64.decode(stream, maxDepth);
     return decodedContractCostParamEntry;
+  }
+
+  public static ContractCostParamEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ContractCostParamEntry fromXdrBase64(String xdr) throws IOException {
@@ -55,6 +64,7 @@ public class ContractCostParamEntry implements XdrElement {
   public static ContractCostParamEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

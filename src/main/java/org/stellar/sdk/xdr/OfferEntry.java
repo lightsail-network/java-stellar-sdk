@@ -66,17 +66,25 @@ public class OfferEntry implements XdrElement {
     ext.encode(stream);
   }
 
-  public static OfferEntry decode(XdrDataInputStream stream) throws IOException {
+  public static OfferEntry decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     OfferEntry decodedOfferEntry = new OfferEntry();
-    decodedOfferEntry.sellerID = AccountID.decode(stream);
-    decodedOfferEntry.offerID = Int64.decode(stream);
-    decodedOfferEntry.selling = Asset.decode(stream);
-    decodedOfferEntry.buying = Asset.decode(stream);
-    decodedOfferEntry.amount = Int64.decode(stream);
-    decodedOfferEntry.price = Price.decode(stream);
-    decodedOfferEntry.flags = Uint32.decode(stream);
-    decodedOfferEntry.ext = OfferEntryExt.decode(stream);
+    decodedOfferEntry.sellerID = AccountID.decode(stream, maxDepth);
+    decodedOfferEntry.offerID = Int64.decode(stream, maxDepth);
+    decodedOfferEntry.selling = Asset.decode(stream, maxDepth);
+    decodedOfferEntry.buying = Asset.decode(stream, maxDepth);
+    decodedOfferEntry.amount = Int64.decode(stream, maxDepth);
+    decodedOfferEntry.price = Price.decode(stream, maxDepth);
+    decodedOfferEntry.flags = Uint32.decode(stream, maxDepth);
+    decodedOfferEntry.ext = OfferEntryExt.decode(stream, maxDepth);
     return decodedOfferEntry;
+  }
+
+  public static OfferEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static OfferEntry fromXdrBase64(String xdr) throws IOException {
@@ -87,6 +95,7 @@ public class OfferEntry implements XdrElement {
   public static OfferEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -116,15 +125,25 @@ public class OfferEntry implements XdrElement {
       }
     }
 
-    public static OfferEntryExt decode(XdrDataInputStream stream) throws IOException {
+    public static OfferEntryExt decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       OfferEntryExt decodedOfferEntryExt = new OfferEntryExt();
       Integer discriminant = stream.readInt();
       decodedOfferEntryExt.setDiscriminant(discriminant);
       switch (decodedOfferEntryExt.getDiscriminant()) {
         case 0:
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedOfferEntryExt;
+    }
+
+    public static OfferEntryExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static OfferEntryExt fromXdrBase64(String xdr) throws IOException {
@@ -135,6 +154,7 @@ public class OfferEntry implements XdrElement {
     public static OfferEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

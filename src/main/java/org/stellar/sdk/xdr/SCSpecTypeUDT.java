@@ -29,13 +29,25 @@ public class SCSpecTypeUDT implements XdrElement {
   private XdrString name;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
+    int nameSize = name.getBytes().length;
+    if (nameSize > 60) {
+      throw new IOException("name size " + nameSize + " exceeds max size 60");
+    }
     name.encode(stream);
   }
 
-  public static SCSpecTypeUDT decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecTypeUDT decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecTypeUDT decodedSCSpecTypeUDT = new SCSpecTypeUDT();
-    decodedSCSpecTypeUDT.name = XdrString.decode(stream, 60);
+    decodedSCSpecTypeUDT.name = XdrString.decode(stream, maxDepth, 60);
     return decodedSCSpecTypeUDT;
+  }
+
+  public static SCSpecTypeUDT decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecTypeUDT fromXdrBase64(String xdr) throws IOException {
@@ -46,6 +58,7 @@ public class SCSpecTypeUDT implements XdrElement {
   public static SCSpecTypeUDT fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

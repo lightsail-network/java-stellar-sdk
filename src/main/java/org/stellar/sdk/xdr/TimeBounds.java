@@ -35,11 +35,19 @@ public class TimeBounds implements XdrElement {
     maxTime.encode(stream);
   }
 
-  public static TimeBounds decode(XdrDataInputStream stream) throws IOException {
+  public static TimeBounds decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TimeBounds decodedTimeBounds = new TimeBounds();
-    decodedTimeBounds.minTime = TimePoint.decode(stream);
-    decodedTimeBounds.maxTime = TimePoint.decode(stream);
+    decodedTimeBounds.minTime = TimePoint.decode(stream, maxDepth);
+    decodedTimeBounds.maxTime = TimePoint.decode(stream, maxDepth);
     return decodedTimeBounds;
+  }
+
+  public static TimeBounds decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TimeBounds fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class TimeBounds implements XdrElement {
   public static TimeBounds fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -65,13 +65,18 @@ public class ManageSellOfferResult implements XdrElement {
     }
   }
 
-  public static ManageSellOfferResult decode(XdrDataInputStream stream) throws IOException {
+  public static ManageSellOfferResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ManageSellOfferResult decodedManageSellOfferResult = new ManageSellOfferResult();
-    ManageSellOfferResultCode discriminant = ManageSellOfferResultCode.decode(stream);
+    ManageSellOfferResultCode discriminant = ManageSellOfferResultCode.decode(stream, maxDepth);
     decodedManageSellOfferResult.setDiscriminant(discriminant);
     switch (decodedManageSellOfferResult.getDiscriminant()) {
       case MANAGE_SELL_OFFER_SUCCESS:
-        decodedManageSellOfferResult.success = ManageOfferSuccessResult.decode(stream);
+        decodedManageSellOfferResult.success = ManageOfferSuccessResult.decode(stream, maxDepth);
         break;
       case MANAGE_SELL_OFFER_MALFORMED:
       case MANAGE_SELL_OFFER_SELL_NO_TRUST:
@@ -86,8 +91,14 @@ public class ManageSellOfferResult implements XdrElement {
       case MANAGE_SELL_OFFER_NOT_FOUND:
       case MANAGE_SELL_OFFER_LOW_RESERVE:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedManageSellOfferResult;
+  }
+
+  public static ManageSellOfferResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ManageSellOfferResult fromXdrBase64(String xdr) throws IOException {
@@ -98,6 +109,7 @@ public class ManageSellOfferResult implements XdrElement {
   public static ManageSellOfferResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

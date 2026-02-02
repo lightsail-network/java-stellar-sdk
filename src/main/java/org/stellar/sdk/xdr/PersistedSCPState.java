@@ -45,19 +45,30 @@ public class PersistedSCPState implements XdrElement {
     }
   }
 
-  public static PersistedSCPState decode(XdrDataInputStream stream) throws IOException {
+  public static PersistedSCPState decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PersistedSCPState decodedPersistedSCPState = new PersistedSCPState();
     Integer discriminant = stream.readInt();
     decodedPersistedSCPState.setDiscriminant(discriminant);
     switch (decodedPersistedSCPState.getDiscriminant()) {
       case 0:
-        decodedPersistedSCPState.v0 = PersistedSCPStateV0.decode(stream);
+        decodedPersistedSCPState.v0 = PersistedSCPStateV0.decode(stream, maxDepth);
         break;
       case 1:
-        decodedPersistedSCPState.v1 = PersistedSCPStateV1.decode(stream);
+        decodedPersistedSCPState.v1 = PersistedSCPStateV1.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedPersistedSCPState;
+  }
+
+  public static PersistedSCPState decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PersistedSCPState fromXdrBase64(String xdr) throws IOException {
@@ -68,6 +79,7 @@ public class PersistedSCPState implements XdrElement {
   public static PersistedSCPState fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

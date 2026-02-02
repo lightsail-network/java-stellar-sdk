@@ -43,7 +43,12 @@ public class SorobanTransactionMetaExt implements XdrElement {
     }
   }
 
-  public static SorobanTransactionMetaExt decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanTransactionMetaExt decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanTransactionMetaExt decodedSorobanTransactionMetaExt = new SorobanTransactionMetaExt();
     Integer discriminant = stream.readInt();
     decodedSorobanTransactionMetaExt.setDiscriminant(discriminant);
@@ -51,10 +56,16 @@ public class SorobanTransactionMetaExt implements XdrElement {
       case 0:
         break;
       case 1:
-        decodedSorobanTransactionMetaExt.v1 = SorobanTransactionMetaExtV1.decode(stream);
+        decodedSorobanTransactionMetaExt.v1 = SorobanTransactionMetaExtV1.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSorobanTransactionMetaExt;
+  }
+
+  public static SorobanTransactionMetaExt decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanTransactionMetaExt fromXdrBase64(String xdr) throws IOException {
@@ -65,6 +76,7 @@ public class SorobanTransactionMetaExt implements XdrElement {
   public static SorobanTransactionMetaExt fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

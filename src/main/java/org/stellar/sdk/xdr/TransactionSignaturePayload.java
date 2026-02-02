@@ -43,13 +43,22 @@ public class TransactionSignaturePayload implements XdrElement {
     taggedTransaction.encode(stream);
   }
 
-  public static TransactionSignaturePayload decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionSignaturePayload decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionSignaturePayload decodedTransactionSignaturePayload =
         new TransactionSignaturePayload();
-    decodedTransactionSignaturePayload.networkId = Hash.decode(stream);
+    decodedTransactionSignaturePayload.networkId = Hash.decode(stream, maxDepth);
     decodedTransactionSignaturePayload.taggedTransaction =
-        TransactionSignaturePayloadTaggedTransaction.decode(stream);
+        TransactionSignaturePayloadTaggedTransaction.decode(stream, maxDepth);
     return decodedTransactionSignaturePayload;
+  }
+
+  public static TransactionSignaturePayload decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionSignaturePayload fromXdrBase64(String xdr) throws IOException {
@@ -60,6 +69,7 @@ public class TransactionSignaturePayload implements XdrElement {
   public static TransactionSignaturePayload fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -98,23 +108,35 @@ public class TransactionSignaturePayload implements XdrElement {
       }
     }
 
-    public static TransactionSignaturePayloadTaggedTransaction decode(XdrDataInputStream stream)
-        throws IOException {
+    public static TransactionSignaturePayloadTaggedTransaction decode(
+        XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       TransactionSignaturePayloadTaggedTransaction
           decodedTransactionSignaturePayloadTaggedTransaction =
               new TransactionSignaturePayloadTaggedTransaction();
-      EnvelopeType discriminant = EnvelopeType.decode(stream);
+      EnvelopeType discriminant = EnvelopeType.decode(stream, maxDepth);
       decodedTransactionSignaturePayloadTaggedTransaction.setDiscriminant(discriminant);
       switch (decodedTransactionSignaturePayloadTaggedTransaction.getDiscriminant()) {
         case ENVELOPE_TYPE_TX:
-          decodedTransactionSignaturePayloadTaggedTransaction.tx = Transaction.decode(stream);
+          decodedTransactionSignaturePayloadTaggedTransaction.tx =
+              Transaction.decode(stream, maxDepth);
           break;
         case ENVELOPE_TYPE_TX_FEE_BUMP:
           decodedTransactionSignaturePayloadTaggedTransaction.feeBump =
-              FeeBumpTransaction.decode(stream);
+              FeeBumpTransaction.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedTransactionSignaturePayloadTaggedTransaction;
+    }
+
+    public static TransactionSignaturePayloadTaggedTransaction decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static TransactionSignaturePayloadTaggedTransaction fromXdrBase64(String xdr)
@@ -127,6 +149,7 @@ public class TransactionSignaturePayload implements XdrElement {
         throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

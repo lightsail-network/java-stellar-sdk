@@ -36,14 +36,34 @@ public class TransactionResultSet implements XdrElement {
     }
   }
 
-  public static TransactionResultSet decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionResultSet decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionResultSet decodedTransactionResultSet = new TransactionResultSet();
     int resultsSize = stream.readInt();
+    if (resultsSize < 0) {
+      throw new IOException("results size " + resultsSize + " is negative");
+    }
+    int resultsRemainingInputLen = stream.getRemainingInputLen();
+    if (resultsRemainingInputLen >= 0 && resultsRemainingInputLen < resultsSize) {
+      throw new IOException(
+          "results size "
+              + resultsSize
+              + " exceeds remaining input length "
+              + resultsRemainingInputLen);
+    }
     decodedTransactionResultSet.results = new TransactionResultPair[resultsSize];
     for (int i = 0; i < resultsSize; i++) {
-      decodedTransactionResultSet.results[i] = TransactionResultPair.decode(stream);
+      decodedTransactionResultSet.results[i] = TransactionResultPair.decode(stream, maxDepth);
     }
     return decodedTransactionResultSet;
+  }
+
+  public static TransactionResultSet decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionResultSet fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +74,7 @@ public class TransactionResultSet implements XdrElement {
   public static TransactionResultSet fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

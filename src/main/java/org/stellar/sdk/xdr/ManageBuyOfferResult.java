@@ -65,13 +65,18 @@ public class ManageBuyOfferResult implements XdrElement {
     }
   }
 
-  public static ManageBuyOfferResult decode(XdrDataInputStream stream) throws IOException {
+  public static ManageBuyOfferResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ManageBuyOfferResult decodedManageBuyOfferResult = new ManageBuyOfferResult();
-    ManageBuyOfferResultCode discriminant = ManageBuyOfferResultCode.decode(stream);
+    ManageBuyOfferResultCode discriminant = ManageBuyOfferResultCode.decode(stream, maxDepth);
     decodedManageBuyOfferResult.setDiscriminant(discriminant);
     switch (decodedManageBuyOfferResult.getDiscriminant()) {
       case MANAGE_BUY_OFFER_SUCCESS:
-        decodedManageBuyOfferResult.success = ManageOfferSuccessResult.decode(stream);
+        decodedManageBuyOfferResult.success = ManageOfferSuccessResult.decode(stream, maxDepth);
         break;
       case MANAGE_BUY_OFFER_MALFORMED:
       case MANAGE_BUY_OFFER_SELL_NO_TRUST:
@@ -86,8 +91,14 @@ public class ManageBuyOfferResult implements XdrElement {
       case MANAGE_BUY_OFFER_NOT_FOUND:
       case MANAGE_BUY_OFFER_LOW_RESERVE:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedManageBuyOfferResult;
+  }
+
+  public static ManageBuyOfferResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ManageBuyOfferResult fromXdrBase64(String xdr) throws IOException {
@@ -98,6 +109,7 @@ public class ManageBuyOfferResult implements XdrElement {
   public static ManageBuyOfferResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

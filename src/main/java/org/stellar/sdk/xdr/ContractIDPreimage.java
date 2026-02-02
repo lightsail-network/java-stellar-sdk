@@ -49,19 +49,31 @@ public class ContractIDPreimage implements XdrElement {
     }
   }
 
-  public static ContractIDPreimage decode(XdrDataInputStream stream) throws IOException {
+  public static ContractIDPreimage decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ContractIDPreimage decodedContractIDPreimage = new ContractIDPreimage();
-    ContractIDPreimageType discriminant = ContractIDPreimageType.decode(stream);
+    ContractIDPreimageType discriminant = ContractIDPreimageType.decode(stream, maxDepth);
     decodedContractIDPreimage.setDiscriminant(discriminant);
     switch (decodedContractIDPreimage.getDiscriminant()) {
       case CONTRACT_ID_PREIMAGE_FROM_ADDRESS:
-        decodedContractIDPreimage.fromAddress = ContractIDPreimageFromAddress.decode(stream);
+        decodedContractIDPreimage.fromAddress =
+            ContractIDPreimageFromAddress.decode(stream, maxDepth);
         break;
       case CONTRACT_ID_PREIMAGE_FROM_ASSET:
-        decodedContractIDPreimage.fromAsset = Asset.decode(stream);
+        decodedContractIDPreimage.fromAsset = Asset.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedContractIDPreimage;
+  }
+
+  public static ContractIDPreimage decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ContractIDPreimage fromXdrBase64(String xdr) throws IOException {
@@ -72,6 +84,7 @@ public class ContractIDPreimage implements XdrElement {
   public static ContractIDPreimage fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -99,13 +112,22 @@ public class ContractIDPreimage implements XdrElement {
       salt.encode(stream);
     }
 
-    public static ContractIDPreimageFromAddress decode(XdrDataInputStream stream)
+    public static ContractIDPreimageFromAddress decode(XdrDataInputStream stream, int maxDepth)
         throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       ContractIDPreimageFromAddress decodedContractIDPreimageFromAddress =
           new ContractIDPreimageFromAddress();
-      decodedContractIDPreimageFromAddress.address = SCAddress.decode(stream);
-      decodedContractIDPreimageFromAddress.salt = Uint256.decode(stream);
+      decodedContractIDPreimageFromAddress.address = SCAddress.decode(stream, maxDepth);
+      decodedContractIDPreimageFromAddress.salt = Uint256.decode(stream, maxDepth);
       return decodedContractIDPreimageFromAddress;
+    }
+
+    public static ContractIDPreimageFromAddress decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static ContractIDPreimageFromAddress fromXdrBase64(String xdr) throws IOException {
@@ -116,6 +138,7 @@ public class ContractIDPreimage implements XdrElement {
     public static ContractIDPreimageFromAddress fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

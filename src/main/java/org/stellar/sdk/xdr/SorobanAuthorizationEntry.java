@@ -35,11 +35,21 @@ public class SorobanAuthorizationEntry implements XdrElement {
     rootInvocation.encode(stream);
   }
 
-  public static SorobanAuthorizationEntry decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanAuthorizationEntry decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanAuthorizationEntry decodedSorobanAuthorizationEntry = new SorobanAuthorizationEntry();
-    decodedSorobanAuthorizationEntry.credentials = SorobanCredentials.decode(stream);
-    decodedSorobanAuthorizationEntry.rootInvocation = SorobanAuthorizedInvocation.decode(stream);
+    decodedSorobanAuthorizationEntry.credentials = SorobanCredentials.decode(stream, maxDepth);
+    decodedSorobanAuthorizationEntry.rootInvocation =
+        SorobanAuthorizedInvocation.decode(stream, maxDepth);
     return decodedSorobanAuthorizationEntry;
+  }
+
+  public static SorobanAuthorizationEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanAuthorizationEntry fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +60,7 @@ public class SorobanAuthorizationEntry implements XdrElement {
   public static SorobanAuthorizationEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

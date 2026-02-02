@@ -24,14 +24,28 @@ public class XdrString implements XdrElement {
     stream.write(this.bytes, 0, this.bytes.length);
   }
 
-  public static XdrString decode(XdrDataInputStream stream, int maxSize) throws IOException {
+  public static XdrString decode(XdrDataInputStream stream, int maxDepth, int maxSize)
+      throws IOException {
+    // maxDepth is intentionally not checked - XdrString is a leaf type with no recursive decoding
     int size = stream.readInt();
+    if (size < 0) {
+      throw new IOException("String length " + size + " is negative");
+    }
     if (size > maxSize) {
-      throw new IllegalArgumentException("String length " + size + " exceeds max size " + maxSize);
+      throw new IOException("String length " + size + " exceeds max size " + maxSize);
+    }
+    int remainingInputLen = stream.getRemainingInputLen();
+    if (remainingInputLen >= 0 && remainingInputLen < size) {
+      throw new IOException(
+          "String length " + size + " exceeds remaining input length " + remainingInputLen);
     }
     byte[] bytes = new byte[size];
-    stream.read(bytes);
+    stream.readPaddedData(bytes, 0, size);
     return new XdrString(bytes);
+  }
+
+  public static XdrString decode(XdrDataInputStream stream, int maxSize) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH, maxSize);
   }
 
   public static XdrString fromXdrBase64(String xdr, int maxSize) throws IOException {
@@ -46,11 +60,15 @@ public class XdrString implements XdrElement {
   public static XdrString fromXdrByteArray(byte[] xdr, int maxSize) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream, maxSize);
   }
 
   public static XdrString fromXdrByteArray(byte[] xdr) throws IOException {
-    return fromXdrByteArray(xdr, Integer.MAX_VALUE);
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
+    return decode(xdrDataInputStream, Integer.MAX_VALUE);
   }
 
   @Override

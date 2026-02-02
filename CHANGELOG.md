@@ -10,6 +10,18 @@
 - fix: use `StandardCharsets.UTF_8` explicitly when converting byte arrays to strings to ensure consistent behavior across different platforms.
 - refactor: use static initialization for `GsonSingleton` to ensure thread safety.
 - fix: use `commons-codec` for hex encoding/decoding in `Util` class to properly validate input and throw clear exceptions for invalid hex strings.
+- fix: improve XDR decoding security and correctness.
+  - Add decoding depth limit to prevent stack overflow (default: 200)
+  - Add input length tracking to prevent DoS via oversized allocations
+  - Validate variable-length array/opaque/string sizes before allocation
+  - Validate variable-length types don't exceed declared max size
+  - Validate fixed-length opaque/array sizes match declared size
+  - Fix short read handling for opaque/string with proper padding
+  - Remove incorrect auto-padding from read(byte[], int, int)
+  - Reject unknown union discriminant values when no default arm
+  - Validate boolean/optional flags are strictly 0 or 1 per RFC 4506
+  - Fix EOF handling in single-byte read
+  - Deprecate unsafe readIntArray/readFloatArray/readDoubleArray methods
 
 ## 2.2.1
 

@@ -49,6 +49,10 @@ public class Hello implements XdrElement {
     overlayVersion.encode(stream);
     overlayMinVersion.encode(stream);
     networkID.encode(stream);
+    int versionStrSize = versionStr.getBytes().length;
+    if (versionStrSize > 100) {
+      throw new IOException("versionStr size " + versionStrSize + " exceeds max size 100");
+    }
     versionStr.encode(stream);
     stream.writeInt(listeningPort);
     peerID.encode(stream);
@@ -56,18 +60,26 @@ public class Hello implements XdrElement {
     nonce.encode(stream);
   }
 
-  public static Hello decode(XdrDataInputStream stream) throws IOException {
+  public static Hello decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Hello decodedHello = new Hello();
-    decodedHello.ledgerVersion = Uint32.decode(stream);
-    decodedHello.overlayVersion = Uint32.decode(stream);
-    decodedHello.overlayMinVersion = Uint32.decode(stream);
-    decodedHello.networkID = Hash.decode(stream);
-    decodedHello.versionStr = XdrString.decode(stream, 100);
+    decodedHello.ledgerVersion = Uint32.decode(stream, maxDepth);
+    decodedHello.overlayVersion = Uint32.decode(stream, maxDepth);
+    decodedHello.overlayMinVersion = Uint32.decode(stream, maxDepth);
+    decodedHello.networkID = Hash.decode(stream, maxDepth);
+    decodedHello.versionStr = XdrString.decode(stream, maxDepth, 100);
     decodedHello.listeningPort = stream.readInt();
-    decodedHello.peerID = NodeID.decode(stream);
-    decodedHello.cert = AuthCert.decode(stream);
-    decodedHello.nonce = Uint256.decode(stream);
+    decodedHello.peerID = NodeID.decode(stream, maxDepth);
+    decodedHello.cert = AuthCert.decode(stream, maxDepth);
+    decodedHello.nonce = Uint256.decode(stream, maxDepth);
     return decodedHello;
+  }
+
+  public static Hello decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Hello fromXdrBase64(String xdr) throws IOException {
@@ -78,6 +90,7 @@ public class Hello implements XdrElement {
   public static Hello fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

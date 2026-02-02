@@ -41,13 +41,22 @@ public class SorobanAddressCredentials implements XdrElement {
     signature.encode(stream);
   }
 
-  public static SorobanAddressCredentials decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanAddressCredentials decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanAddressCredentials decodedSorobanAddressCredentials = new SorobanAddressCredentials();
-    decodedSorobanAddressCredentials.address = SCAddress.decode(stream);
-    decodedSorobanAddressCredentials.nonce = Int64.decode(stream);
-    decodedSorobanAddressCredentials.signatureExpirationLedger = Uint32.decode(stream);
-    decodedSorobanAddressCredentials.signature = SCVal.decode(stream);
+    decodedSorobanAddressCredentials.address = SCAddress.decode(stream, maxDepth);
+    decodedSorobanAddressCredentials.nonce = Int64.decode(stream, maxDepth);
+    decodedSorobanAddressCredentials.signatureExpirationLedger = Uint32.decode(stream, maxDepth);
+    decodedSorobanAddressCredentials.signature = SCVal.decode(stream, maxDepth);
     return decodedSorobanAddressCredentials;
+  }
+
+  public static SorobanAddressCredentials decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanAddressCredentials fromXdrBase64(String xdr) throws IOException {
@@ -58,6 +67,7 @@ public class SorobanAddressCredentials implements XdrElement {
   public static SorobanAddressCredentials fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

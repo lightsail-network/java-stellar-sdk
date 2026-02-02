@@ -55,9 +55,14 @@ public class ChangeTrustResult implements XdrElement {
     }
   }
 
-  public static ChangeTrustResult decode(XdrDataInputStream stream) throws IOException {
+  public static ChangeTrustResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ChangeTrustResult decodedChangeTrustResult = new ChangeTrustResult();
-    ChangeTrustResultCode discriminant = ChangeTrustResultCode.decode(stream);
+    ChangeTrustResultCode discriminant = ChangeTrustResultCode.decode(stream, maxDepth);
     decodedChangeTrustResult.setDiscriminant(discriminant);
     switch (decodedChangeTrustResult.getDiscriminant()) {
       case CHANGE_TRUST_SUCCESS:
@@ -71,8 +76,14 @@ public class ChangeTrustResult implements XdrElement {
       case CHANGE_TRUST_CANNOT_DELETE:
       case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedChangeTrustResult;
+  }
+
+  public static ChangeTrustResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ChangeTrustResult fromXdrBase64(String xdr) throws IOException {
@@ -83,6 +94,7 @@ public class ChangeTrustResult implements XdrElement {
   public static ChangeTrustResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

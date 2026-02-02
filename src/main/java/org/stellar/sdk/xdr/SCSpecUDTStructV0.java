@@ -35,27 +35,65 @@ public class SCSpecUDTStructV0 implements XdrElement {
   private SCSpecUDTStructFieldV0[] fields;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
+    int docSize = doc.getBytes().length;
+    if (docSize > 1024) {
+      throw new IOException("doc size " + docSize + " exceeds max size 1024");
+    }
     doc.encode(stream);
+    int libSize = lib.getBytes().length;
+    if (libSize > 80) {
+      throw new IOException("lib size " + libSize + " exceeds max size 80");
+    }
     lib.encode(stream);
+    int nameSize = name.getBytes().length;
+    if (nameSize > 60) {
+      throw new IOException("name size " + nameSize + " exceeds max size 60");
+    }
     name.encode(stream);
     int fieldsSize = getFields().length;
+    if (fieldsSize > 40) {
+      throw new IOException("fields size " + fieldsSize + " exceeds max size 40");
+    }
     stream.writeInt(fieldsSize);
     for (int i = 0; i < fieldsSize; i++) {
       fields[i].encode(stream);
     }
   }
 
-  public static SCSpecUDTStructV0 decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecUDTStructV0 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecUDTStructV0 decodedSCSpecUDTStructV0 = new SCSpecUDTStructV0();
-    decodedSCSpecUDTStructV0.doc = XdrString.decode(stream, Constants.SC_SPEC_DOC_LIMIT);
-    decodedSCSpecUDTStructV0.lib = XdrString.decode(stream, 80);
-    decodedSCSpecUDTStructV0.name = XdrString.decode(stream, 60);
+    decodedSCSpecUDTStructV0.doc = XdrString.decode(stream, maxDepth, Constants.SC_SPEC_DOC_LIMIT);
+    decodedSCSpecUDTStructV0.lib = XdrString.decode(stream, maxDepth, 80);
+    decodedSCSpecUDTStructV0.name = XdrString.decode(stream, maxDepth, 60);
     int fieldsSize = stream.readInt();
+    if (fieldsSize < 0) {
+      throw new IOException("fields size " + fieldsSize + " is negative");
+    }
+    if (fieldsSize > 40) {
+      throw new IOException("fields size " + fieldsSize + " exceeds max size 40");
+    }
+    int fieldsRemainingInputLen = stream.getRemainingInputLen();
+    if (fieldsRemainingInputLen >= 0 && fieldsRemainingInputLen < fieldsSize) {
+      throw new IOException(
+          "fields size "
+              + fieldsSize
+              + " exceeds remaining input length "
+              + fieldsRemainingInputLen);
+    }
     decodedSCSpecUDTStructV0.fields = new SCSpecUDTStructFieldV0[fieldsSize];
     for (int i = 0; i < fieldsSize; i++) {
-      decodedSCSpecUDTStructV0.fields[i] = SCSpecUDTStructFieldV0.decode(stream);
+      decodedSCSpecUDTStructV0.fields[i] = SCSpecUDTStructFieldV0.decode(stream, maxDepth);
     }
     return decodedSCSpecUDTStructV0;
+  }
+
+  public static SCSpecUDTStructV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecUDTStructV0 fromXdrBase64(String xdr) throws IOException {
@@ -66,6 +104,7 @@ public class SCSpecUDTStructV0 implements XdrElement {
   public static SCSpecUDTStructV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -30,7 +30,9 @@ public enum SurveyMessageCommandType implements XdrElement {
     return value;
   }
 
-  public static SurveyMessageCommandType decode(XdrDataInputStream stream) throws IOException {
+  public static SurveyMessageCommandType decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    // maxDepth is intentionally not checked - enums are leaf types with no recursive decoding
     int value = stream.readInt();
     switch (value) {
       case 1:
@@ -38,6 +40,10 @@ public enum SurveyMessageCommandType implements XdrElement {
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
+  }
+
+  public static SurveyMessageCommandType decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -52,6 +58,7 @@ public enum SurveyMessageCommandType implements XdrElement {
   public static SurveyMessageCommandType fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -46,12 +46,16 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
     }
   }
 
-  public static BeginSponsoringFutureReservesResult decode(XdrDataInputStream stream)
+  public static BeginSponsoringFutureReservesResult decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     BeginSponsoringFutureReservesResult decodedBeginSponsoringFutureReservesResult =
         new BeginSponsoringFutureReservesResult();
     BeginSponsoringFutureReservesResultCode discriminant =
-        BeginSponsoringFutureReservesResultCode.decode(stream);
+        BeginSponsoringFutureReservesResultCode.decode(stream, maxDepth);
     decodedBeginSponsoringFutureReservesResult.setDiscriminant(discriminant);
     switch (decodedBeginSponsoringFutureReservesResult.getDiscriminant()) {
       case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
@@ -60,8 +64,15 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
       case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
       case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedBeginSponsoringFutureReservesResult;
+  }
+
+  public static BeginSponsoringFutureReservesResult decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static BeginSponsoringFutureReservesResult fromXdrBase64(String xdr) throws IOException {
@@ -73,6 +84,7 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
       throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

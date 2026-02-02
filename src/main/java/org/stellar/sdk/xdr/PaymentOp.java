@@ -38,12 +38,20 @@ public class PaymentOp implements XdrElement {
     amount.encode(stream);
   }
 
-  public static PaymentOp decode(XdrDataInputStream stream) throws IOException {
+  public static PaymentOp decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PaymentOp decodedPaymentOp = new PaymentOp();
-    decodedPaymentOp.destination = MuxedAccount.decode(stream);
-    decodedPaymentOp.asset = Asset.decode(stream);
-    decodedPaymentOp.amount = Int64.decode(stream);
+    decodedPaymentOp.destination = MuxedAccount.decode(stream, maxDepth);
+    decodedPaymentOp.asset = Asset.decode(stream, maxDepth);
+    decodedPaymentOp.amount = Int64.decode(stream, maxDepth);
     return decodedPaymentOp;
+  }
+
+  public static PaymentOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PaymentOp fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +62,7 @@ public class PaymentOp implements XdrElement {
   public static PaymentOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

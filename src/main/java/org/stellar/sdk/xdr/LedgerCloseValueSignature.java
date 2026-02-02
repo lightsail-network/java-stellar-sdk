@@ -35,11 +35,20 @@ public class LedgerCloseValueSignature implements XdrElement {
     signature.encode(stream);
   }
 
-  public static LedgerCloseValueSignature decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerCloseValueSignature decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerCloseValueSignature decodedLedgerCloseValueSignature = new LedgerCloseValueSignature();
-    decodedLedgerCloseValueSignature.nodeID = NodeID.decode(stream);
-    decodedLedgerCloseValueSignature.signature = Signature.decode(stream);
+    decodedLedgerCloseValueSignature.nodeID = NodeID.decode(stream, maxDepth);
+    decodedLedgerCloseValueSignature.signature = Signature.decode(stream, maxDepth);
     return decodedLedgerCloseValueSignature;
+  }
+
+  public static LedgerCloseValueSignature decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerCloseValueSignature fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +59,7 @@ public class LedgerCloseValueSignature implements XdrElement {
   public static LedgerCloseValueSignature fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

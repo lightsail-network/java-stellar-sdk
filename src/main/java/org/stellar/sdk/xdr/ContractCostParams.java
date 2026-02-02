@@ -25,21 +25,51 @@ public class ContractCostParams implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int ContractCostParamsSize = getContractCostParams().length;
+    if (ContractCostParamsSize > 1024) {
+      throw new IOException(
+          "ContractCostParams size " + ContractCostParamsSize + " exceeds max size 1024");
+    }
     stream.writeInt(ContractCostParamsSize);
     for (int i = 0; i < ContractCostParamsSize; i++) {
       ContractCostParams[i].encode(stream);
     }
   }
 
-  public static ContractCostParams decode(XdrDataInputStream stream) throws IOException {
+  public static ContractCostParams decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ContractCostParams decodedContractCostParams = new ContractCostParams();
     int ContractCostParamsSize = stream.readInt();
+    if (ContractCostParamsSize < 0) {
+      throw new IOException("ContractCostParams size " + ContractCostParamsSize + " is negative");
+    }
+    if (ContractCostParamsSize > 1024) {
+      throw new IOException(
+          "ContractCostParams size " + ContractCostParamsSize + " exceeds max size 1024");
+    }
+    int ContractCostParamsRemainingInputLen = stream.getRemainingInputLen();
+    if (ContractCostParamsRemainingInputLen >= 0
+        && ContractCostParamsRemainingInputLen < ContractCostParamsSize) {
+      throw new IOException(
+          "ContractCostParams size "
+              + ContractCostParamsSize
+              + " exceeds remaining input length "
+              + ContractCostParamsRemainingInputLen);
+    }
     decodedContractCostParams.ContractCostParams =
         new ContractCostParamEntry[ContractCostParamsSize];
     for (int i = 0; i < ContractCostParamsSize; i++) {
-      decodedContractCostParams.ContractCostParams[i] = ContractCostParamEntry.decode(stream);
+      decodedContractCostParams.ContractCostParams[i] =
+          ContractCostParamEntry.decode(stream, maxDepth);
     }
     return decodedContractCostParams;
+  }
+
+  public static ContractCostParams decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ContractCostParams fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +80,7 @@ public class ContractCostParams implements XdrElement {
   public static ContractCostParams fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }
