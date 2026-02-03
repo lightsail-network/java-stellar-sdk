@@ -8,10 +8,12 @@ import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.stellar.sdk.SslCertificateUtils
+import org.stellar.sdk.federation.exception.FederationResponseTooLargeException
 import org.stellar.sdk.federation.exception.FederationServerInvalidException
 import org.stellar.sdk.federation.exception.NoFederationServerException
 import org.stellar.sdk.federation.exception.NotFoundException
 import org.stellar.sdk.federation.exception.StellarTomlNotFoundInvalidException
+import org.stellar.sdk.federation.exception.StellarTomlTooLargeException
 
 class FederationTest :
   FunSpec({
@@ -162,5 +164,66 @@ class FederationTest :
       mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(stellarToml))
 
       shouldThrow<FederationServerInvalidException> { federation().resolveAddress("bob*$domain") }
+    }
+
+    test("stellar.toml too large throws exception") {
+      // Create a response larger than 100KB limit
+      val largeBody = buildString {
+        append("""FEDERATION_SERVER = "https://$domain/federation"""")
+        append("\n")
+        while (length < 110 * 1024) { // 110KB > 100KB limit
+          append("# padding comment to make the file larger\n")
+        }
+      }
+
+      mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(largeBody))
+
+      shouldThrow<StellarTomlTooLargeException> { federation().resolveAddress("bob*$domain") }
+    }
+
+    test("federation response too large throws exception") {
+      val stellarToml = """FEDERATION_SERVER = "https://$domain/federation""""
+      // Create a federation response larger than 100KB
+      val largeResponse = buildString {
+        append("""{"stellar_address":"bob*$domain","account_id":"GABC","memo":"""")
+        while (length < 110 * 1024) { // 110KB > 100KB limit
+          append("x")
+        }
+        append(""""}""")
+      }
+
+      mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(stellarToml))
+      mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(largeResponse))
+
+      shouldThrow<FederationResponseTooLargeException> {
+        federation().resolveAddress("bob*$domain")
+      }
+    }
+
+    test("utf8 bom is stripped from stellar.toml") {
+      // UTF-8 BOM (0xEF 0xBB 0xBF) + content
+      val bom = byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
+      val content = """FEDERATION_SERVER = "https://$domain/federation""""
+      val bodyWithBom = bom + content.toByteArray(Charsets.UTF_8)
+
+      val successResponse =
+        """
+        {
+          "stellar_address": "bob*$domain",
+          "account_id": "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY"
+        }
+      """
+          .trimIndent()
+
+      mockWebServer.enqueue(
+        MockResponse()
+          .setResponseCode(200)
+          .setHeader("Content-Type", "text/plain; charset=utf-8")
+          .setBody(okio.Buffer().write(bodyWithBom))
+      )
+      mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(successResponse))
+
+      val response = federation().resolveAddress("bob*$domain")
+      response.accountId shouldBe "GCW667JUHCOP5Y7KY6KGDHNPHFM4CS3FCBQ7QWDUALXTX3PGXLSOEALY"
     }
   })

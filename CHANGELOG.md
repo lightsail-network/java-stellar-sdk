@@ -3,6 +3,7 @@
 ## Pending
 
 ### Update
+- fix: prevent DoS attacks in `Federation` by limiting stellar.toml and federation response sizes to 100KB, adding proper timeouts, and handling UTF-8 BOM.
 - fix: add stricter validation for Ed25519 Signed Payload.
 - fix: replace assert statements with explicit null checks in `Federation` class to ensure validation is not bypassed when assertions are disabled.
 - fix: add overflow check in `TimeBounds.expiresAfter()` to prevent integer overflow when timeout is too large.
