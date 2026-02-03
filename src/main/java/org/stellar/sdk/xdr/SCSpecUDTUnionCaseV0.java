@@ -45,19 +45,30 @@ public class SCSpecUDTUnionCaseV0 implements XdrElement {
     }
   }
 
-  public static SCSpecUDTUnionCaseV0 decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecUDTUnionCaseV0 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecUDTUnionCaseV0 decodedSCSpecUDTUnionCaseV0 = new SCSpecUDTUnionCaseV0();
-    SCSpecUDTUnionCaseV0Kind discriminant = SCSpecUDTUnionCaseV0Kind.decode(stream);
+    SCSpecUDTUnionCaseV0Kind discriminant = SCSpecUDTUnionCaseV0Kind.decode(stream, maxDepth);
     decodedSCSpecUDTUnionCaseV0.setDiscriminant(discriminant);
     switch (decodedSCSpecUDTUnionCaseV0.getDiscriminant()) {
       case SC_SPEC_UDT_UNION_CASE_VOID_V0:
-        decodedSCSpecUDTUnionCaseV0.voidCase = SCSpecUDTUnionCaseVoidV0.decode(stream);
+        decodedSCSpecUDTUnionCaseV0.voidCase = SCSpecUDTUnionCaseVoidV0.decode(stream, maxDepth);
         break;
       case SC_SPEC_UDT_UNION_CASE_TUPLE_V0:
-        decodedSCSpecUDTUnionCaseV0.tupleCase = SCSpecUDTUnionCaseTupleV0.decode(stream);
+        decodedSCSpecUDTUnionCaseV0.tupleCase = SCSpecUDTUnionCaseTupleV0.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCSpecUDTUnionCaseV0;
+  }
+
+  public static SCSpecUDTUnionCaseV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecUDTUnionCaseV0 fromXdrBase64(String xdr) throws IOException {
@@ -68,6 +79,7 @@ public class SCSpecUDTUnionCaseV0 implements XdrElement {
   public static SCSpecUDTUnionCaseV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

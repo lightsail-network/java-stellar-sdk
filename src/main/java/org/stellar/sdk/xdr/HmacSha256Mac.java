@@ -30,15 +30,26 @@ public class HmacSha256Mac implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int macSize = mac.length;
+    if (macSize != 32) {
+      throw new IOException("mac size " + macSize + " does not match fixed size 32");
+    }
     stream.write(getMac(), 0, macSize);
   }
 
-  public static HmacSha256Mac decode(XdrDataInputStream stream) throws IOException {
+  public static HmacSha256Mac decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     HmacSha256Mac decodedHmacSha256Mac = new HmacSha256Mac();
     int macSize = 32;
     decodedHmacSha256Mac.mac = new byte[macSize];
-    stream.read(decodedHmacSha256Mac.mac, 0, macSize);
+    stream.readPaddedData(decodedHmacSha256Mac.mac, 0, macSize);
     return decodedHmacSha256Mac;
+  }
+
+  public static HmacSha256Mac decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static HmacSha256Mac fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +60,7 @@ public class HmacSha256Mac implements XdrElement {
   public static HmacSha256Mac fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

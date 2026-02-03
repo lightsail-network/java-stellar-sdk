@@ -35,11 +35,19 @@ public class DontHave implements XdrElement {
     reqHash.encode(stream);
   }
 
-  public static DontHave decode(XdrDataInputStream stream) throws IOException {
+  public static DontHave decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     DontHave decodedDontHave = new DontHave();
-    decodedDontHave.type = MessageType.decode(stream);
-    decodedDontHave.reqHash = Uint256.decode(stream);
+    decodedDontHave.type = MessageType.decode(stream, maxDepth);
+    decodedDontHave.reqHash = Uint256.decode(stream, maxDepth);
     return decodedDontHave;
+  }
+
+  public static DontHave decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static DontHave fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class DontHave implements XdrElement {
   public static DontHave fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

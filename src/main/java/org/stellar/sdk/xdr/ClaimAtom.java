@@ -51,22 +51,32 @@ public class ClaimAtom implements XdrElement {
     }
   }
 
-  public static ClaimAtom decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimAtom decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClaimAtom decodedClaimAtom = new ClaimAtom();
-    ClaimAtomType discriminant = ClaimAtomType.decode(stream);
+    ClaimAtomType discriminant = ClaimAtomType.decode(stream, maxDepth);
     decodedClaimAtom.setDiscriminant(discriminant);
     switch (decodedClaimAtom.getDiscriminant()) {
       case CLAIM_ATOM_TYPE_V0:
-        decodedClaimAtom.v0 = ClaimOfferAtomV0.decode(stream);
+        decodedClaimAtom.v0 = ClaimOfferAtomV0.decode(stream, maxDepth);
         break;
       case CLAIM_ATOM_TYPE_ORDER_BOOK:
-        decodedClaimAtom.orderBook = ClaimOfferAtom.decode(stream);
+        decodedClaimAtom.orderBook = ClaimOfferAtom.decode(stream, maxDepth);
         break;
       case CLAIM_ATOM_TYPE_LIQUIDITY_POOL:
-        decodedClaimAtom.liquidityPool = ClaimLiquidityAtom.decode(stream);
+        decodedClaimAtom.liquidityPool = ClaimLiquidityAtom.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedClaimAtom;
+  }
+
+  public static ClaimAtom decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClaimAtom fromXdrBase64(String xdr) throws IOException {
@@ -77,6 +87,7 @@ public class ClaimAtom implements XdrElement {
   public static ClaimAtom fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

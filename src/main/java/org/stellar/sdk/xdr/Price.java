@@ -35,11 +35,19 @@ public class Price implements XdrElement {
     d.encode(stream);
   }
 
-  public static Price decode(XdrDataInputStream stream) throws IOException {
+  public static Price decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Price decodedPrice = new Price();
-    decodedPrice.n = Int32.decode(stream);
-    decodedPrice.d = Int32.decode(stream);
+    decodedPrice.n = Int32.decode(stream, maxDepth);
+    decodedPrice.d = Int32.decode(stream, maxDepth);
     return decodedPrice;
+  }
+
+  public static Price decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Price fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class Price implements XdrElement {
   public static Price fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

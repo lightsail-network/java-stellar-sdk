@@ -91,27 +91,44 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     sorobanStateRentFeeGrowthFactor.encode(stream);
   }
 
-  public static ConfigSettingContractLedgerCostV0 decode(XdrDataInputStream stream)
+  public static ConfigSettingContractLedgerCostV0 decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingContractLedgerCostV0 decodedConfigSettingContractLedgerCostV0 =
         new ConfigSettingContractLedgerCostV0();
-    decodedConfigSettingContractLedgerCostV0.ledgerMaxDiskReadEntries = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.ledgerMaxDiskReadBytes = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.ledgerMaxWriteLedgerEntries = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.ledgerMaxWriteBytes = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.txMaxDiskReadEntries = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.txMaxDiskReadBytes = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.txMaxWriteLedgerEntries = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.txMaxWriteBytes = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.feeDiskReadLedgerEntry = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.feeWriteLedgerEntry = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.feeDiskRead1KB = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.sorobanStateTargetSizeBytes = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.rentFee1KBSorobanStateSizeLow = Int64.decode(stream);
-    decodedConfigSettingContractLedgerCostV0.rentFee1KBSorobanStateSizeHigh = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostV0.ledgerMaxDiskReadEntries =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.ledgerMaxDiskReadBytes =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.ledgerMaxWriteLedgerEntries =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.ledgerMaxWriteBytes = Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.txMaxDiskReadEntries = Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.txMaxDiskReadBytes = Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.txMaxWriteLedgerEntries =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.txMaxWriteBytes = Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.feeDiskReadLedgerEntry =
+        Int64.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.feeWriteLedgerEntry = Int64.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.feeDiskRead1KB = Int64.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.sorobanStateTargetSizeBytes =
+        Int64.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.rentFee1KBSorobanStateSizeLow =
+        Int64.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostV0.rentFee1KBSorobanStateSizeHigh =
+        Int64.decode(stream, maxDepth);
     decodedConfigSettingContractLedgerCostV0.sorobanStateRentFeeGrowthFactor =
-        Uint32.decode(stream);
+        Uint32.decode(stream, maxDepth);
     return decodedConfigSettingContractLedgerCostV0;
+  }
+
+  public static ConfigSettingContractLedgerCostV0 decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingContractLedgerCostV0 fromXdrBase64(String xdr) throws IOException {
@@ -122,6 +139,7 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
   public static ConfigSettingContractLedgerCostV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

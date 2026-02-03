@@ -45,9 +45,15 @@ public class ExtendFootprintTTLResult implements XdrElement {
     }
   }
 
-  public static ExtendFootprintTTLResult decode(XdrDataInputStream stream) throws IOException {
+  public static ExtendFootprintTTLResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ExtendFootprintTTLResult decodedExtendFootprintTTLResult = new ExtendFootprintTTLResult();
-    ExtendFootprintTTLResultCode discriminant = ExtendFootprintTTLResultCode.decode(stream);
+    ExtendFootprintTTLResultCode discriminant =
+        ExtendFootprintTTLResultCode.decode(stream, maxDepth);
     decodedExtendFootprintTTLResult.setDiscriminant(discriminant);
     switch (decodedExtendFootprintTTLResult.getDiscriminant()) {
       case EXTEND_FOOTPRINT_TTL_SUCCESS:
@@ -56,8 +62,14 @@ public class ExtendFootprintTTLResult implements XdrElement {
       case EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED:
       case EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedExtendFootprintTTLResult;
+  }
+
+  public static ExtendFootprintTTLResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ExtendFootprintTTLResult fromXdrBase64(String xdr) throws IOException {
@@ -68,6 +80,7 @@ public class ExtendFootprintTTLResult implements XdrElement {
   public static ExtendFootprintTTLResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

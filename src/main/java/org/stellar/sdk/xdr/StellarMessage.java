@@ -118,6 +118,9 @@ public class StellarMessage implements XdrElement {
         break;
       case PEERS:
         int peersSize = getPeers().length;
+        if (peersSize > 100) {
+          throw new IOException("peers size " + peersSize + " exceeds max size 100");
+        }
         stream.writeInt(peersSize);
         for (int i = 0; i < peersSize; i++) {
           peers[i].encode(stream);
@@ -174,84 +177,108 @@ public class StellarMessage implements XdrElement {
     }
   }
 
-  public static StellarMessage decode(XdrDataInputStream stream) throws IOException {
+  public static StellarMessage decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     StellarMessage decodedStellarMessage = new StellarMessage();
-    MessageType discriminant = MessageType.decode(stream);
+    MessageType discriminant = MessageType.decode(stream, maxDepth);
     decodedStellarMessage.setDiscriminant(discriminant);
     switch (decodedStellarMessage.getDiscriminant()) {
       case ERROR_MSG:
-        decodedStellarMessage.error = Error.decode(stream);
+        decodedStellarMessage.error = Error.decode(stream, maxDepth);
         break;
       case HELLO:
-        decodedStellarMessage.hello = Hello.decode(stream);
+        decodedStellarMessage.hello = Hello.decode(stream, maxDepth);
         break;
       case AUTH:
-        decodedStellarMessage.auth = Auth.decode(stream);
+        decodedStellarMessage.auth = Auth.decode(stream, maxDepth);
         break;
       case DONT_HAVE:
-        decodedStellarMessage.dontHave = DontHave.decode(stream);
+        decodedStellarMessage.dontHave = DontHave.decode(stream, maxDepth);
         break;
       case PEERS:
         int peersSize = stream.readInt();
+        if (peersSize < 0) {
+          throw new IOException("peers size " + peersSize + " is negative");
+        }
+        if (peersSize > 100) {
+          throw new IOException("peers size " + peersSize + " exceeds max size 100");
+        }
+        int peersRemainingInputLen = stream.getRemainingInputLen();
+        if (peersRemainingInputLen >= 0 && peersRemainingInputLen < peersSize) {
+          throw new IOException(
+              "peers size "
+                  + peersSize
+                  + " exceeds remaining input length "
+                  + peersRemainingInputLen);
+        }
         decodedStellarMessage.peers = new PeerAddress[peersSize];
         for (int i = 0; i < peersSize; i++) {
-          decodedStellarMessage.peers[i] = PeerAddress.decode(stream);
+          decodedStellarMessage.peers[i] = PeerAddress.decode(stream, maxDepth);
         }
         break;
       case GET_TX_SET:
-        decodedStellarMessage.txSetHash = Uint256.decode(stream);
+        decodedStellarMessage.txSetHash = Uint256.decode(stream, maxDepth);
         break;
       case TX_SET:
-        decodedStellarMessage.txSet = TransactionSet.decode(stream);
+        decodedStellarMessage.txSet = TransactionSet.decode(stream, maxDepth);
         break;
       case GENERALIZED_TX_SET:
-        decodedStellarMessage.generalizedTxSet = GeneralizedTransactionSet.decode(stream);
+        decodedStellarMessage.generalizedTxSet = GeneralizedTransactionSet.decode(stream, maxDepth);
         break;
       case TRANSACTION:
-        decodedStellarMessage.transaction = TransactionEnvelope.decode(stream);
+        decodedStellarMessage.transaction = TransactionEnvelope.decode(stream, maxDepth);
         break;
       case TIME_SLICED_SURVEY_REQUEST:
         decodedStellarMessage.signedTimeSlicedSurveyRequestMessage =
-            SignedTimeSlicedSurveyRequestMessage.decode(stream);
+            SignedTimeSlicedSurveyRequestMessage.decode(stream, maxDepth);
         break;
       case TIME_SLICED_SURVEY_RESPONSE:
         decodedStellarMessage.signedTimeSlicedSurveyResponseMessage =
-            SignedTimeSlicedSurveyResponseMessage.decode(stream);
+            SignedTimeSlicedSurveyResponseMessage.decode(stream, maxDepth);
         break;
       case TIME_SLICED_SURVEY_START_COLLECTING:
         decodedStellarMessage.signedTimeSlicedSurveyStartCollectingMessage =
-            SignedTimeSlicedSurveyStartCollectingMessage.decode(stream);
+            SignedTimeSlicedSurveyStartCollectingMessage.decode(stream, maxDepth);
         break;
       case TIME_SLICED_SURVEY_STOP_COLLECTING:
         decodedStellarMessage.signedTimeSlicedSurveyStopCollectingMessage =
-            SignedTimeSlicedSurveyStopCollectingMessage.decode(stream);
+            SignedTimeSlicedSurveyStopCollectingMessage.decode(stream, maxDepth);
         break;
       case GET_SCP_QUORUMSET:
-        decodedStellarMessage.qSetHash = Uint256.decode(stream);
+        decodedStellarMessage.qSetHash = Uint256.decode(stream, maxDepth);
         break;
       case SCP_QUORUMSET:
-        decodedStellarMessage.qSet = SCPQuorumSet.decode(stream);
+        decodedStellarMessage.qSet = SCPQuorumSet.decode(stream, maxDepth);
         break;
       case SCP_MESSAGE:
-        decodedStellarMessage.envelope = SCPEnvelope.decode(stream);
+        decodedStellarMessage.envelope = SCPEnvelope.decode(stream, maxDepth);
         break;
       case GET_SCP_STATE:
-        decodedStellarMessage.getSCPLedgerSeq = Uint32.decode(stream);
+        decodedStellarMessage.getSCPLedgerSeq = Uint32.decode(stream, maxDepth);
         break;
       case SEND_MORE:
-        decodedStellarMessage.sendMoreMessage = SendMore.decode(stream);
+        decodedStellarMessage.sendMoreMessage = SendMore.decode(stream, maxDepth);
         break;
       case SEND_MORE_EXTENDED:
-        decodedStellarMessage.sendMoreExtendedMessage = SendMoreExtended.decode(stream);
+        decodedStellarMessage.sendMoreExtendedMessage = SendMoreExtended.decode(stream, maxDepth);
         break;
       case FLOOD_ADVERT:
-        decodedStellarMessage.floodAdvert = FloodAdvert.decode(stream);
+        decodedStellarMessage.floodAdvert = FloodAdvert.decode(stream, maxDepth);
         break;
       case FLOOD_DEMAND:
-        decodedStellarMessage.floodDemand = FloodDemand.decode(stream);
+        decodedStellarMessage.floodDemand = FloodDemand.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedStellarMessage;
+  }
+
+  public static StellarMessage decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static StellarMessage fromXdrBase64(String xdr) throws IOException {
@@ -262,6 +289,7 @@ public class StellarMessage implements XdrElement {
   public static StellarMessage fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

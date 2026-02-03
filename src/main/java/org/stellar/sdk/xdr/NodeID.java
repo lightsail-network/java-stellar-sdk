@@ -27,10 +27,18 @@ public class NodeID implements XdrElement {
     NodeID.encode(stream);
   }
 
-  public static NodeID decode(XdrDataInputStream stream) throws IOException {
+  public static NodeID decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     NodeID decodedNodeID = new NodeID();
-    decodedNodeID.NodeID = PublicKey.decode(stream);
+    decodedNodeID.NodeID = PublicKey.decode(stream, maxDepth);
     return decodedNodeID;
+  }
+
+  public static NodeID decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static NodeID fromXdrBase64(String xdr) throws IOException {
@@ -41,6 +49,7 @@ public class NodeID implements XdrElement {
   public static NodeID fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

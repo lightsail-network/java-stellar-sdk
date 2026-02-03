@@ -60,24 +60,34 @@ public class TrustLineAsset implements XdrElement {
     }
   }
 
-  public static TrustLineAsset decode(XdrDataInputStream stream) throws IOException {
+  public static TrustLineAsset decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TrustLineAsset decodedTrustLineAsset = new TrustLineAsset();
-    AssetType discriminant = AssetType.decode(stream);
+    AssetType discriminant = AssetType.decode(stream, maxDepth);
     decodedTrustLineAsset.setDiscriminant(discriminant);
     switch (decodedTrustLineAsset.getDiscriminant()) {
       case ASSET_TYPE_NATIVE:
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM4:
-        decodedTrustLineAsset.alphaNum4 = AlphaNum4.decode(stream);
+        decodedTrustLineAsset.alphaNum4 = AlphaNum4.decode(stream, maxDepth);
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM12:
-        decodedTrustLineAsset.alphaNum12 = AlphaNum12.decode(stream);
+        decodedTrustLineAsset.alphaNum12 = AlphaNum12.decode(stream, maxDepth);
         break;
       case ASSET_TYPE_POOL_SHARE:
-        decodedTrustLineAsset.liquidityPoolID = PoolID.decode(stream);
+        decodedTrustLineAsset.liquidityPoolID = PoolID.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedTrustLineAsset;
+  }
+
+  public static TrustLineAsset decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TrustLineAsset fromXdrBase64(String xdr) throws IOException {
@@ -88,6 +98,7 @@ public class TrustLineAsset implements XdrElement {
   public static TrustLineAsset fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

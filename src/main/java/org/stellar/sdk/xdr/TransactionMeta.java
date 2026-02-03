@@ -67,32 +67,53 @@ public class TransactionMeta implements XdrElement {
     }
   }
 
-  public static TransactionMeta decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionMeta decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionMeta decodedTransactionMeta = new TransactionMeta();
     Integer discriminant = stream.readInt();
     decodedTransactionMeta.setDiscriminant(discriminant);
     switch (decodedTransactionMeta.getDiscriminant()) {
       case 0:
         int operationsSize = stream.readInt();
+        if (operationsSize < 0) {
+          throw new IOException("operations size " + operationsSize + " is negative");
+        }
+        int operationsRemainingInputLen = stream.getRemainingInputLen();
+        if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationsSize) {
+          throw new IOException(
+              "operations size "
+                  + operationsSize
+                  + " exceeds remaining input length "
+                  + operationsRemainingInputLen);
+        }
         decodedTransactionMeta.operations = new OperationMeta[operationsSize];
         for (int i = 0; i < operationsSize; i++) {
-          decodedTransactionMeta.operations[i] = OperationMeta.decode(stream);
+          decodedTransactionMeta.operations[i] = OperationMeta.decode(stream, maxDepth);
         }
         break;
       case 1:
-        decodedTransactionMeta.v1 = TransactionMetaV1.decode(stream);
+        decodedTransactionMeta.v1 = TransactionMetaV1.decode(stream, maxDepth);
         break;
       case 2:
-        decodedTransactionMeta.v2 = TransactionMetaV2.decode(stream);
+        decodedTransactionMeta.v2 = TransactionMetaV2.decode(stream, maxDepth);
         break;
       case 3:
-        decodedTransactionMeta.v3 = TransactionMetaV3.decode(stream);
+        decodedTransactionMeta.v3 = TransactionMetaV3.decode(stream, maxDepth);
         break;
       case 4:
-        decodedTransactionMeta.v4 = TransactionMetaV4.decode(stream);
+        decodedTransactionMeta.v4 = TransactionMetaV4.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedTransactionMeta;
+  }
+
+  public static TransactionMeta decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionMeta fromXdrBase64(String xdr) throws IOException {
@@ -103,6 +124,7 @@ public class TransactionMeta implements XdrElement {
   public static TransactionMeta fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

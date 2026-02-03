@@ -35,11 +35,19 @@ public class InflationPayout implements XdrElement {
     amount.encode(stream);
   }
 
-  public static InflationPayout decode(XdrDataInputStream stream) throws IOException {
+  public static InflationPayout decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     InflationPayout decodedInflationPayout = new InflationPayout();
-    decodedInflationPayout.destination = AccountID.decode(stream);
-    decodedInflationPayout.amount = Int64.decode(stream);
+    decodedInflationPayout.destination = AccountID.decode(stream, maxDepth);
+    decodedInflationPayout.amount = Int64.decode(stream, maxDepth);
     return decodedInflationPayout;
+  }
+
+  public static InflationPayout decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static InflationPayout fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class InflationPayout implements XdrElement {
   public static InflationPayout fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

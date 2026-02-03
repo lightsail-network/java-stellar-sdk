@@ -39,14 +39,23 @@ public class SCContractInstance implements XdrElement {
     }
   }
 
-  public static SCContractInstance decode(XdrDataInputStream stream) throws IOException {
+  public static SCContractInstance decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCContractInstance decodedSCContractInstance = new SCContractInstance();
-    decodedSCContractInstance.executable = ContractExecutable.decode(stream);
-    int storagePresent = stream.readInt();
-    if (storagePresent != 0) {
-      decodedSCContractInstance.storage = SCMap.decode(stream);
+    decodedSCContractInstance.executable = ContractExecutable.decode(stream, maxDepth);
+    boolean storagePresent = stream.readXdrBoolean();
+    if (storagePresent) {
+      decodedSCContractInstance.storage = SCMap.decode(stream, maxDepth);
     }
     return decodedSCContractInstance;
+  }
+
+  public static SCContractInstance decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCContractInstance fromXdrBase64(String xdr) throws IOException {
@@ -57,6 +66,7 @@ public class SCContractInstance implements XdrElement {
   public static SCContractInstance fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

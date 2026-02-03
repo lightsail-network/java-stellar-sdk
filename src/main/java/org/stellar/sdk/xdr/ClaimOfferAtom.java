@@ -52,15 +52,23 @@ public class ClaimOfferAtom implements XdrElement {
     amountBought.encode(stream);
   }
 
-  public static ClaimOfferAtom decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimOfferAtom decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClaimOfferAtom decodedClaimOfferAtom = new ClaimOfferAtom();
-    decodedClaimOfferAtom.sellerID = AccountID.decode(stream);
-    decodedClaimOfferAtom.offerID = Int64.decode(stream);
-    decodedClaimOfferAtom.assetSold = Asset.decode(stream);
-    decodedClaimOfferAtom.amountSold = Int64.decode(stream);
-    decodedClaimOfferAtom.assetBought = Asset.decode(stream);
-    decodedClaimOfferAtom.amountBought = Int64.decode(stream);
+    decodedClaimOfferAtom.sellerID = AccountID.decode(stream, maxDepth);
+    decodedClaimOfferAtom.offerID = Int64.decode(stream, maxDepth);
+    decodedClaimOfferAtom.assetSold = Asset.decode(stream, maxDepth);
+    decodedClaimOfferAtom.amountSold = Int64.decode(stream, maxDepth);
+    decodedClaimOfferAtom.assetBought = Asset.decode(stream, maxDepth);
+    decodedClaimOfferAtom.amountBought = Int64.decode(stream, maxDepth);
     return decodedClaimOfferAtom;
+  }
+
+  public static ClaimOfferAtom decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClaimOfferAtom fromXdrBase64(String xdr) throws IOException {
@@ -71,6 +79,7 @@ public class ClaimOfferAtom implements XdrElement {
   public static ClaimOfferAtom fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

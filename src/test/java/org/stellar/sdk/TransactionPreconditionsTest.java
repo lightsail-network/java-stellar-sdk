@@ -113,7 +113,7 @@ public class TransactionPreconditionsTest {
         TransactionPreconditions.builder()
             .timeBounds(new TimeBounds(1, 2))
             .minSeqNumber(3L)
-            .extraSigners(Arrays.asList(signerKey, signerKey, signerKey))
+            .extraSigners(Arrays.asList(signerKey, signerKey))
             .build();
 
     Preconditions xdr = preconditions.toXdr();
@@ -136,7 +136,7 @@ public class TransactionPreconditionsTest {
     assertEquals(xdr.getV2().getMinSeqLedgerGap().getUint32().getNumber().intValue(), 0);
     // xdr encoding requires non-null for min seq age
     assertEquals(xdr.getV2().getMinSeqAge().getDuration().getUint64().getNumber().longValue(), 0);
-    assertEquals(xdr.getV2().getExtraSigners().length, 3);
+    assertEquals(xdr.getV2().getExtraSigners().length, 2);
   }
 
   @Test

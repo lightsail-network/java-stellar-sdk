@@ -38,11 +38,18 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     stream.write(getBytes());
   }
 
-  public static XdrUnsignedHyperInteger decode(XdrDataInputStream stream) throws IOException {
+  public static XdrUnsignedHyperInteger decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    // maxDepth is intentionally not checked - XdrUnsignedHyperInteger is a leaf type with no
+    // recursive decoding
     byte[] bytes = new byte[8];
     stream.readFully(bytes);
     BigInteger uint64 = new BigInteger(1, bytes);
     return new XdrUnsignedHyperInteger(uint64);
+  }
+
+  public static XdrUnsignedHyperInteger decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   private byte[] getBytes() {

@@ -47,22 +47,43 @@ public class InflationResult implements XdrElement {
     }
   }
 
-  public static InflationResult decode(XdrDataInputStream stream) throws IOException {
+  public static InflationResult decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     InflationResult decodedInflationResult = new InflationResult();
-    InflationResultCode discriminant = InflationResultCode.decode(stream);
+    InflationResultCode discriminant = InflationResultCode.decode(stream, maxDepth);
     decodedInflationResult.setDiscriminant(discriminant);
     switch (decodedInflationResult.getDiscriminant()) {
       case INFLATION_SUCCESS:
         int payoutsSize = stream.readInt();
+        if (payoutsSize < 0) {
+          throw new IOException("payouts size " + payoutsSize + " is negative");
+        }
+        int payoutsRemainingInputLen = stream.getRemainingInputLen();
+        if (payoutsRemainingInputLen >= 0 && payoutsRemainingInputLen < payoutsSize) {
+          throw new IOException(
+              "payouts size "
+                  + payoutsSize
+                  + " exceeds remaining input length "
+                  + payoutsRemainingInputLen);
+        }
         decodedInflationResult.payouts = new InflationPayout[payoutsSize];
         for (int i = 0; i < payoutsSize; i++) {
-          decodedInflationResult.payouts[i] = InflationPayout.decode(stream);
+          decodedInflationResult.payouts[i] = InflationPayout.decode(stream, maxDepth);
         }
         break;
       case INFLATION_NOT_TIME:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedInflationResult;
+  }
+
+  public static InflationResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static InflationResult fromXdrBase64(String xdr) throws IOException {
@@ -73,6 +94,7 @@ public class InflationResult implements XdrElement {
   public static InflationResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

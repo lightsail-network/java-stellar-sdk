@@ -27,10 +27,18 @@ public class Duration implements XdrElement {
     Duration.encode(stream);
   }
 
-  public static Duration decode(XdrDataInputStream stream) throws IOException {
+  public static Duration decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Duration decodedDuration = new Duration();
-    decodedDuration.Duration = Uint64.decode(stream);
+    decodedDuration.Duration = Uint64.decode(stream, maxDepth);
     return decodedDuration;
+  }
+
+  public static Duration decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Duration fromXdrBase64(String xdr) throws IOException {
@@ -41,6 +49,7 @@ public class Duration implements XdrElement {
   public static Duration fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

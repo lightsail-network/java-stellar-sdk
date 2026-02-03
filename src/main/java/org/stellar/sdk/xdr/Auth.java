@@ -32,10 +32,18 @@ public class Auth implements XdrElement {
     stream.writeInt(flags);
   }
 
-  public static Auth decode(XdrDataInputStream stream) throws IOException {
+  public static Auth decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Auth decodedAuth = new Auth();
     decodedAuth.flags = stream.readInt();
     return decodedAuth;
+  }
+
+  public static Auth decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Auth fromXdrBase64(String xdr) throws IOException {
@@ -46,6 +54,7 @@ public class Auth implements XdrElement {
   public static Auth fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

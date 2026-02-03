@@ -38,12 +38,21 @@ public class TransactionResultMeta implements XdrElement {
     txApplyProcessing.encode(stream);
   }
 
-  public static TransactionResultMeta decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionResultMeta decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionResultMeta decodedTransactionResultMeta = new TransactionResultMeta();
-    decodedTransactionResultMeta.result = TransactionResultPair.decode(stream);
-    decodedTransactionResultMeta.feeProcessing = LedgerEntryChanges.decode(stream);
-    decodedTransactionResultMeta.txApplyProcessing = TransactionMeta.decode(stream);
+    decodedTransactionResultMeta.result = TransactionResultPair.decode(stream, maxDepth);
+    decodedTransactionResultMeta.feeProcessing = LedgerEntryChanges.decode(stream, maxDepth);
+    decodedTransactionResultMeta.txApplyProcessing = TransactionMeta.decode(stream, maxDepth);
     return decodedTransactionResultMeta;
+  }
+
+  public static TransactionResultMeta decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionResultMeta fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +63,7 @@ public class TransactionResultMeta implements XdrElement {
   public static TransactionResultMeta fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

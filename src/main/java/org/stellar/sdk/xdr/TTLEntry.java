@@ -35,11 +35,19 @@ public class TTLEntry implements XdrElement {
     liveUntilLedgerSeq.encode(stream);
   }
 
-  public static TTLEntry decode(XdrDataInputStream stream) throws IOException {
+  public static TTLEntry decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TTLEntry decodedTTLEntry = new TTLEntry();
-    decodedTTLEntry.keyHash = Hash.decode(stream);
-    decodedTTLEntry.liveUntilLedgerSeq = Uint32.decode(stream);
+    decodedTTLEntry.keyHash = Hash.decode(stream, maxDepth);
+    decodedTTLEntry.liveUntilLedgerSeq = Uint32.decode(stream, maxDepth);
     return decodedTTLEntry;
+  }
+
+  public static TTLEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TTLEntry fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class TTLEntry implements XdrElement {
   public static TTLEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

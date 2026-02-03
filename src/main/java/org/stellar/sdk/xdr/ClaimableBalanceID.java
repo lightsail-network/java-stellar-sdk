@@ -39,16 +39,27 @@ public class ClaimableBalanceID implements XdrElement {
     }
   }
 
-  public static ClaimableBalanceID decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimableBalanceID decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClaimableBalanceID decodedClaimableBalanceID = new ClaimableBalanceID();
-    ClaimableBalanceIDType discriminant = ClaimableBalanceIDType.decode(stream);
+    ClaimableBalanceIDType discriminant = ClaimableBalanceIDType.decode(stream, maxDepth);
     decodedClaimableBalanceID.setDiscriminant(discriminant);
     switch (decodedClaimableBalanceID.getDiscriminant()) {
       case CLAIMABLE_BALANCE_ID_TYPE_V0:
-        decodedClaimableBalanceID.v0 = Hash.decode(stream);
+        decodedClaimableBalanceID.v0 = Hash.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedClaimableBalanceID;
+  }
+
+  public static ClaimableBalanceID decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClaimableBalanceID fromXdrBase64(String xdr) throws IOException {
@@ -59,6 +70,7 @@ public class ClaimableBalanceID implements XdrElement {
   public static ClaimableBalanceID fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

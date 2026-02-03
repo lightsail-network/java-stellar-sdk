@@ -27,10 +27,18 @@ public class SCString implements XdrElement {
     SCString.encode(stream);
   }
 
-  public static SCString decode(XdrDataInputStream stream) throws IOException {
+  public static SCString decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCString decodedSCString = new SCString();
-    decodedSCString.SCString = XdrString.decode(stream, Integer.MAX_VALUE);
+    decodedSCString.SCString = XdrString.decode(stream, maxDepth, Integer.MAX_VALUE);
     return decodedSCString;
+  }
+
+  public static SCString decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCString fromXdrBase64(String xdr) throws IOException {
@@ -41,6 +49,7 @@ public class SCString implements XdrElement {
   public static SCString fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

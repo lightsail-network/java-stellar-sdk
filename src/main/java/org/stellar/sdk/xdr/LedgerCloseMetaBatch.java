@@ -47,16 +47,37 @@ public class LedgerCloseMetaBatch implements XdrElement {
     }
   }
 
-  public static LedgerCloseMetaBatch decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerCloseMetaBatch decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerCloseMetaBatch decodedLedgerCloseMetaBatch = new LedgerCloseMetaBatch();
-    decodedLedgerCloseMetaBatch.startSequence = Uint32.decode(stream);
-    decodedLedgerCloseMetaBatch.endSequence = Uint32.decode(stream);
+    decodedLedgerCloseMetaBatch.startSequence = Uint32.decode(stream, maxDepth);
+    decodedLedgerCloseMetaBatch.endSequence = Uint32.decode(stream, maxDepth);
     int ledgerCloseMetasSize = stream.readInt();
+    if (ledgerCloseMetasSize < 0) {
+      throw new IOException("ledgerCloseMetas size " + ledgerCloseMetasSize + " is negative");
+    }
+    int ledgerCloseMetasRemainingInputLen = stream.getRemainingInputLen();
+    if (ledgerCloseMetasRemainingInputLen >= 0
+        && ledgerCloseMetasRemainingInputLen < ledgerCloseMetasSize) {
+      throw new IOException(
+          "ledgerCloseMetas size "
+              + ledgerCloseMetasSize
+              + " exceeds remaining input length "
+              + ledgerCloseMetasRemainingInputLen);
+    }
     decodedLedgerCloseMetaBatch.ledgerCloseMetas = new LedgerCloseMeta[ledgerCloseMetasSize];
     for (int i = 0; i < ledgerCloseMetasSize; i++) {
-      decodedLedgerCloseMetaBatch.ledgerCloseMetas[i] = LedgerCloseMeta.decode(stream);
+      decodedLedgerCloseMetaBatch.ledgerCloseMetas[i] = LedgerCloseMeta.decode(stream, maxDepth);
     }
     return decodedLedgerCloseMetaBatch;
+  }
+
+  public static LedgerCloseMetaBatch decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerCloseMetaBatch fromXdrBase64(String xdr) throws IOException {
@@ -67,6 +88,7 @@ public class LedgerCloseMetaBatch implements XdrElement {
   public static LedgerCloseMetaBatch fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

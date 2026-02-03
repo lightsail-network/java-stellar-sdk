@@ -30,15 +30,26 @@ public class ShortHashSeed implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int seedSize = seed.length;
+    if (seedSize != 16) {
+      throw new IOException("seed size " + seedSize + " does not match fixed size 16");
+    }
     stream.write(getSeed(), 0, seedSize);
   }
 
-  public static ShortHashSeed decode(XdrDataInputStream stream) throws IOException {
+  public static ShortHashSeed decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ShortHashSeed decodedShortHashSeed = new ShortHashSeed();
     int seedSize = 16;
     decodedShortHashSeed.seed = new byte[seedSize];
-    stream.read(decodedShortHashSeed.seed, 0, seedSize);
+    stream.readPaddedData(decodedShortHashSeed.seed, 0, seedSize);
     return decodedShortHashSeed;
+  }
+
+  public static ShortHashSeed decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ShortHashSeed fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +60,7 @@ public class ShortHashSeed implements XdrElement {
   public static ShortHashSeed fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

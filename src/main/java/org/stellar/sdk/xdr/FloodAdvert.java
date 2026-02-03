@@ -32,10 +32,18 @@ public class FloodAdvert implements XdrElement {
     txHashes.encode(stream);
   }
 
-  public static FloodAdvert decode(XdrDataInputStream stream) throws IOException {
+  public static FloodAdvert decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     FloodAdvert decodedFloodAdvert = new FloodAdvert();
-    decodedFloodAdvert.txHashes = TxAdvertVector.decode(stream);
+    decodedFloodAdvert.txHashes = TxAdvertVector.decode(stream, maxDepth);
     return decodedFloodAdvert;
+  }
+
+  public static FloodAdvert decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static FloodAdvert fromXdrBase64(String xdr) throws IOException {
@@ -46,6 +54,7 @@ public class FloodAdvert implements XdrElement {
   public static FloodAdvert fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

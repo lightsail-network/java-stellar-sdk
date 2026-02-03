@@ -134,43 +134,53 @@ public class LedgerKey implements XdrElement {
     }
   }
 
-  public static LedgerKey decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerKey decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerKey decodedLedgerKey = new LedgerKey();
-    LedgerEntryType discriminant = LedgerEntryType.decode(stream);
+    LedgerEntryType discriminant = LedgerEntryType.decode(stream, maxDepth);
     decodedLedgerKey.setDiscriminant(discriminant);
     switch (decodedLedgerKey.getDiscriminant()) {
       case ACCOUNT:
-        decodedLedgerKey.account = LedgerKeyAccount.decode(stream);
+        decodedLedgerKey.account = LedgerKeyAccount.decode(stream, maxDepth);
         break;
       case TRUSTLINE:
-        decodedLedgerKey.trustLine = LedgerKeyTrustLine.decode(stream);
+        decodedLedgerKey.trustLine = LedgerKeyTrustLine.decode(stream, maxDepth);
         break;
       case OFFER:
-        decodedLedgerKey.offer = LedgerKeyOffer.decode(stream);
+        decodedLedgerKey.offer = LedgerKeyOffer.decode(stream, maxDepth);
         break;
       case DATA:
-        decodedLedgerKey.data = LedgerKeyData.decode(stream);
+        decodedLedgerKey.data = LedgerKeyData.decode(stream, maxDepth);
         break;
       case CLAIMABLE_BALANCE:
-        decodedLedgerKey.claimableBalance = LedgerKeyClaimableBalance.decode(stream);
+        decodedLedgerKey.claimableBalance = LedgerKeyClaimableBalance.decode(stream, maxDepth);
         break;
       case LIQUIDITY_POOL:
-        decodedLedgerKey.liquidityPool = LedgerKeyLiquidityPool.decode(stream);
+        decodedLedgerKey.liquidityPool = LedgerKeyLiquidityPool.decode(stream, maxDepth);
         break;
       case CONTRACT_DATA:
-        decodedLedgerKey.contractData = LedgerKeyContractData.decode(stream);
+        decodedLedgerKey.contractData = LedgerKeyContractData.decode(stream, maxDepth);
         break;
       case CONTRACT_CODE:
-        decodedLedgerKey.contractCode = LedgerKeyContractCode.decode(stream);
+        decodedLedgerKey.contractCode = LedgerKeyContractCode.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING:
-        decodedLedgerKey.configSetting = LedgerKeyConfigSetting.decode(stream);
+        decodedLedgerKey.configSetting = LedgerKeyConfigSetting.decode(stream, maxDepth);
         break;
       case TTL:
-        decodedLedgerKey.ttl = LedgerKeyTtl.decode(stream);
+        decodedLedgerKey.ttl = LedgerKeyTtl.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedLedgerKey;
+  }
+
+  public static LedgerKey decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerKey fromXdrBase64(String xdr) throws IOException {
@@ -181,6 +191,7 @@ public class LedgerKey implements XdrElement {
   public static LedgerKey fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -205,10 +216,19 @@ public class LedgerKey implements XdrElement {
       accountID.encode(stream);
     }
 
-    public static LedgerKeyAccount decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyAccount decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyAccount decodedLedgerKeyAccount = new LedgerKeyAccount();
-      decodedLedgerKeyAccount.accountID = AccountID.decode(stream);
+      decodedLedgerKeyAccount.accountID = AccountID.decode(stream, maxDepth);
       return decodedLedgerKeyAccount;
+    }
+
+    public static LedgerKeyAccount decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyAccount fromXdrBase64(String xdr) throws IOException {
@@ -219,6 +239,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyAccount fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -247,11 +268,20 @@ public class LedgerKey implements XdrElement {
       asset.encode(stream);
     }
 
-    public static LedgerKeyTrustLine decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyTrustLine decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyTrustLine decodedLedgerKeyTrustLine = new LedgerKeyTrustLine();
-      decodedLedgerKeyTrustLine.accountID = AccountID.decode(stream);
-      decodedLedgerKeyTrustLine.asset = TrustLineAsset.decode(stream);
+      decodedLedgerKeyTrustLine.accountID = AccountID.decode(stream, maxDepth);
+      decodedLedgerKeyTrustLine.asset = TrustLineAsset.decode(stream, maxDepth);
       return decodedLedgerKeyTrustLine;
+    }
+
+    public static LedgerKeyTrustLine decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyTrustLine fromXdrBase64(String xdr) throws IOException {
@@ -262,6 +292,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyTrustLine fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -290,11 +321,20 @@ public class LedgerKey implements XdrElement {
       offerID.encode(stream);
     }
 
-    public static LedgerKeyOffer decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyOffer decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyOffer decodedLedgerKeyOffer = new LedgerKeyOffer();
-      decodedLedgerKeyOffer.sellerID = AccountID.decode(stream);
-      decodedLedgerKeyOffer.offerID = Int64.decode(stream);
+      decodedLedgerKeyOffer.sellerID = AccountID.decode(stream, maxDepth);
+      decodedLedgerKeyOffer.offerID = Int64.decode(stream, maxDepth);
       return decodedLedgerKeyOffer;
+    }
+
+    public static LedgerKeyOffer decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyOffer fromXdrBase64(String xdr) throws IOException {
@@ -305,6 +345,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyOffer fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -333,11 +374,19 @@ public class LedgerKey implements XdrElement {
       dataName.encode(stream);
     }
 
-    public static LedgerKeyData decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyData decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyData decodedLedgerKeyData = new LedgerKeyData();
-      decodedLedgerKeyData.accountID = AccountID.decode(stream);
-      decodedLedgerKeyData.dataName = String64.decode(stream);
+      decodedLedgerKeyData.accountID = AccountID.decode(stream, maxDepth);
+      decodedLedgerKeyData.dataName = String64.decode(stream, maxDepth);
       return decodedLedgerKeyData;
+    }
+
+    public static LedgerKeyData decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyData fromXdrBase64(String xdr) throws IOException {
@@ -348,6 +397,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyData fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -373,10 +423,19 @@ public class LedgerKey implements XdrElement {
       balanceID.encode(stream);
     }
 
-    public static LedgerKeyClaimableBalance decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyClaimableBalance decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyClaimableBalance decodedLedgerKeyClaimableBalance = new LedgerKeyClaimableBalance();
-      decodedLedgerKeyClaimableBalance.balanceID = ClaimableBalanceID.decode(stream);
+      decodedLedgerKeyClaimableBalance.balanceID = ClaimableBalanceID.decode(stream, maxDepth);
       return decodedLedgerKeyClaimableBalance;
+    }
+
+    public static LedgerKeyClaimableBalance decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyClaimableBalance fromXdrBase64(String xdr) throws IOException {
@@ -387,6 +446,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyClaimableBalance fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -412,10 +472,19 @@ public class LedgerKey implements XdrElement {
       liquidityPoolID.encode(stream);
     }
 
-    public static LedgerKeyLiquidityPool decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyLiquidityPool decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyLiquidityPool decodedLedgerKeyLiquidityPool = new LedgerKeyLiquidityPool();
-      decodedLedgerKeyLiquidityPool.liquidityPoolID = PoolID.decode(stream);
+      decodedLedgerKeyLiquidityPool.liquidityPoolID = PoolID.decode(stream, maxDepth);
       return decodedLedgerKeyLiquidityPool;
+    }
+
+    public static LedgerKeyLiquidityPool decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyLiquidityPool fromXdrBase64(String xdr) throws IOException {
@@ -426,6 +495,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyLiquidityPool fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -457,12 +527,21 @@ public class LedgerKey implements XdrElement {
       durability.encode(stream);
     }
 
-    public static LedgerKeyContractData decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyContractData decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyContractData decodedLedgerKeyContractData = new LedgerKeyContractData();
-      decodedLedgerKeyContractData.contract = SCAddress.decode(stream);
-      decodedLedgerKeyContractData.key = SCVal.decode(stream);
-      decodedLedgerKeyContractData.durability = ContractDataDurability.decode(stream);
+      decodedLedgerKeyContractData.contract = SCAddress.decode(stream, maxDepth);
+      decodedLedgerKeyContractData.key = SCVal.decode(stream, maxDepth);
+      decodedLedgerKeyContractData.durability = ContractDataDurability.decode(stream, maxDepth);
       return decodedLedgerKeyContractData;
+    }
+
+    public static LedgerKeyContractData decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyContractData fromXdrBase64(String xdr) throws IOException {
@@ -473,6 +552,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyContractData fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -498,10 +578,19 @@ public class LedgerKey implements XdrElement {
       hash.encode(stream);
     }
 
-    public static LedgerKeyContractCode decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyContractCode decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyContractCode decodedLedgerKeyContractCode = new LedgerKeyContractCode();
-      decodedLedgerKeyContractCode.hash = Hash.decode(stream);
+      decodedLedgerKeyContractCode.hash = Hash.decode(stream, maxDepth);
       return decodedLedgerKeyContractCode;
+    }
+
+    public static LedgerKeyContractCode decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyContractCode fromXdrBase64(String xdr) throws IOException {
@@ -512,6 +601,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyContractCode fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -537,10 +627,19 @@ public class LedgerKey implements XdrElement {
       configSettingID.encode(stream);
     }
 
-    public static LedgerKeyConfigSetting decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyConfigSetting decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyConfigSetting decodedLedgerKeyConfigSetting = new LedgerKeyConfigSetting();
-      decodedLedgerKeyConfigSetting.configSettingID = ConfigSettingID.decode(stream);
+      decodedLedgerKeyConfigSetting.configSettingID = ConfigSettingID.decode(stream, maxDepth);
       return decodedLedgerKeyConfigSetting;
+    }
+
+    public static LedgerKeyConfigSetting decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyConfigSetting fromXdrBase64(String xdr) throws IOException {
@@ -551,6 +650,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyConfigSetting fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -577,10 +677,18 @@ public class LedgerKey implements XdrElement {
       keyHash.encode(stream);
     }
 
-    public static LedgerKeyTtl decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerKeyTtl decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerKeyTtl decodedLedgerKeyTtl = new LedgerKeyTtl();
-      decodedLedgerKeyTtl.keyHash = Hash.decode(stream);
+      decodedLedgerKeyTtl.keyHash = Hash.decode(stream, maxDepth);
       return decodedLedgerKeyTtl;
+    }
+
+    public static LedgerKeyTtl decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerKeyTtl fromXdrBase64(String xdr) throws IOException {
@@ -591,6 +699,7 @@ public class LedgerKey implements XdrElement {
     public static LedgerKeyTtl fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

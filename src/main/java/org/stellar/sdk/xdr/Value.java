@@ -29,12 +29,28 @@ public class Value implements XdrElement {
     stream.write(getValue(), 0, ValueSize);
   }
 
-  public static Value decode(XdrDataInputStream stream) throws IOException {
+  public static Value decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Value decodedValue = new Value();
     int ValueSize = stream.readInt();
+    if (ValueSize < 0) {
+      throw new IOException("Value size " + ValueSize + " is negative");
+    }
+    int ValueRemainingInputLen = stream.getRemainingInputLen();
+    if (ValueRemainingInputLen >= 0 && ValueRemainingInputLen < ValueSize) {
+      throw new IOException(
+          "Value size " + ValueSize + " exceeds remaining input length " + ValueRemainingInputLen);
+    }
     decodedValue.Value = new byte[ValueSize];
-    stream.read(decodedValue.Value, 0, ValueSize);
+    stream.readPaddedData(decodedValue.Value, 0, ValueSize);
     return decodedValue;
+  }
+
+  public static Value decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Value fromXdrBase64(String xdr) throws IOException {
@@ -45,6 +61,7 @@ public class Value implements XdrElement {
   public static Value fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

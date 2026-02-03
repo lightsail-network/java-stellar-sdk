@@ -25,16 +25,41 @@ public class Signature implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int SignatureSize = Signature.length;
+    if (SignatureSize > 64) {
+      throw new IOException("Signature size " + SignatureSize + " exceeds max size 64");
+    }
     stream.writeInt(SignatureSize);
     stream.write(getSignature(), 0, SignatureSize);
   }
 
-  public static Signature decode(XdrDataInputStream stream) throws IOException {
+  public static Signature decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Signature decodedSignature = new Signature();
     int SignatureSize = stream.readInt();
+    if (SignatureSize < 0) {
+      throw new IOException("Signature size " + SignatureSize + " is negative");
+    }
+    if (SignatureSize > 64) {
+      throw new IOException("Signature size " + SignatureSize + " exceeds max size 64");
+    }
+    int SignatureRemainingInputLen = stream.getRemainingInputLen();
+    if (SignatureRemainingInputLen >= 0 && SignatureRemainingInputLen < SignatureSize) {
+      throw new IOException(
+          "Signature size "
+              + SignatureSize
+              + " exceeds remaining input length "
+              + SignatureRemainingInputLen);
+    }
     decodedSignature.Signature = new byte[SignatureSize];
-    stream.read(decodedSignature.Signature, 0, SignatureSize);
+    stream.readPaddedData(decodedSignature.Signature, 0, SignatureSize);
     return decodedSignature;
+  }
+
+  public static Signature decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Signature fromXdrBase64(String xdr) throws IOException {
@@ -45,6 +70,7 @@ public class Signature implements XdrElement {
   public static Signature fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

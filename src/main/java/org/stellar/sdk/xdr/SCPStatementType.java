@@ -36,7 +36,9 @@ public enum SCPStatementType implements XdrElement {
     return value;
   }
 
-  public static SCPStatementType decode(XdrDataInputStream stream) throws IOException {
+  public static SCPStatementType decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    // maxDepth is intentionally not checked - enums are leaf types with no recursive decoding
     int value = stream.readInt();
     switch (value) {
       case 0:
@@ -52,6 +54,10 @@ public enum SCPStatementType implements XdrElement {
     }
   }
 
+  public static SCPStatementType decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
+  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(value);
   }
@@ -64,6 +70,7 @@ public enum SCPStatementType implements XdrElement {
   public static SCPStatementType fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

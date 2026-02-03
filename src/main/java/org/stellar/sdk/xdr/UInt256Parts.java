@@ -40,13 +40,21 @@ public class UInt256Parts implements XdrElement {
     lo_lo.encode(stream);
   }
 
-  public static UInt256Parts decode(XdrDataInputStream stream) throws IOException {
+  public static UInt256Parts decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     UInt256Parts decodedUInt256Parts = new UInt256Parts();
-    decodedUInt256Parts.hi_hi = Uint64.decode(stream);
-    decodedUInt256Parts.hi_lo = Uint64.decode(stream);
-    decodedUInt256Parts.lo_hi = Uint64.decode(stream);
-    decodedUInt256Parts.lo_lo = Uint64.decode(stream);
+    decodedUInt256Parts.hi_hi = Uint64.decode(stream, maxDepth);
+    decodedUInt256Parts.hi_lo = Uint64.decode(stream, maxDepth);
+    decodedUInt256Parts.lo_hi = Uint64.decode(stream, maxDepth);
+    decodedUInt256Parts.lo_lo = Uint64.decode(stream, maxDepth);
     return decodedUInt256Parts;
+  }
+
+  public static UInt256Parts decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static UInt256Parts fromXdrBase64(String xdr) throws IOException {
@@ -57,6 +65,7 @@ public class UInt256Parts implements XdrElement {
   public static UInt256Parts fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

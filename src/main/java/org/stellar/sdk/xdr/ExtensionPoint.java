@@ -37,15 +37,25 @@ public class ExtensionPoint implements XdrElement {
     }
   }
 
-  public static ExtensionPoint decode(XdrDataInputStream stream) throws IOException {
+  public static ExtensionPoint decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ExtensionPoint decodedExtensionPoint = new ExtensionPoint();
     Integer discriminant = stream.readInt();
     decodedExtensionPoint.setDiscriminant(discriminant);
     switch (decodedExtensionPoint.getDiscriminant()) {
       case 0:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedExtensionPoint;
+  }
+
+  public static ExtensionPoint decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ExtensionPoint fromXdrBase64(String xdr) throws IOException {
@@ -56,6 +66,7 @@ public class ExtensionPoint implements XdrElement {
   public static ExtensionPoint fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

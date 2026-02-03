@@ -42,16 +42,27 @@ public class SCEnvMetaEntry implements XdrElement {
     }
   }
 
-  public static SCEnvMetaEntry decode(XdrDataInputStream stream) throws IOException {
+  public static SCEnvMetaEntry decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCEnvMetaEntry decodedSCEnvMetaEntry = new SCEnvMetaEntry();
-    SCEnvMetaKind discriminant = SCEnvMetaKind.decode(stream);
+    SCEnvMetaKind discriminant = SCEnvMetaKind.decode(stream, maxDepth);
     decodedSCEnvMetaEntry.setDiscriminant(discriminant);
     switch (decodedSCEnvMetaEntry.getDiscriminant()) {
       case SC_ENV_META_KIND_INTERFACE_VERSION:
-        decodedSCEnvMetaEntry.interfaceVersion = SCEnvMetaEntryInterfaceVersion.decode(stream);
+        decodedSCEnvMetaEntry.interfaceVersion =
+            SCEnvMetaEntryInterfaceVersion.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCEnvMetaEntry;
+  }
+
+  public static SCEnvMetaEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCEnvMetaEntry fromXdrBase64(String xdr) throws IOException {
@@ -62,6 +73,7 @@ public class SCEnvMetaEntry implements XdrElement {
   public static SCEnvMetaEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -88,13 +100,22 @@ public class SCEnvMetaEntry implements XdrElement {
       preRelease.encode(stream);
     }
 
-    public static SCEnvMetaEntryInterfaceVersion decode(XdrDataInputStream stream)
+    public static SCEnvMetaEntryInterfaceVersion decode(XdrDataInputStream stream, int maxDepth)
         throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       SCEnvMetaEntryInterfaceVersion decodedSCEnvMetaEntryInterfaceVersion =
           new SCEnvMetaEntryInterfaceVersion();
-      decodedSCEnvMetaEntryInterfaceVersion.protocol = Uint32.decode(stream);
-      decodedSCEnvMetaEntryInterfaceVersion.preRelease = Uint32.decode(stream);
+      decodedSCEnvMetaEntryInterfaceVersion.protocol = Uint32.decode(stream, maxDepth);
+      decodedSCEnvMetaEntryInterfaceVersion.preRelease = Uint32.decode(stream, maxDepth);
       return decodedSCEnvMetaEntryInterfaceVersion;
+    }
+
+    public static SCEnvMetaEntryInterfaceVersion decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static SCEnvMetaEntryInterfaceVersion fromXdrBase64(String xdr) throws IOException {
@@ -105,6 +126,7 @@ public class SCEnvMetaEntry implements XdrElement {
     public static SCEnvMetaEntryInterfaceVersion fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

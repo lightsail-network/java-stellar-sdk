@@ -35,11 +35,19 @@ public class SCSpecTypeMap implements XdrElement {
     valueType.encode(stream);
   }
 
-  public static SCSpecTypeMap decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecTypeMap decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecTypeMap decodedSCSpecTypeMap = new SCSpecTypeMap();
-    decodedSCSpecTypeMap.keyType = SCSpecTypeDef.decode(stream);
-    decodedSCSpecTypeMap.valueType = SCSpecTypeDef.decode(stream);
+    decodedSCSpecTypeMap.keyType = SCSpecTypeDef.decode(stream, maxDepth);
+    decodedSCSpecTypeMap.valueType = SCSpecTypeDef.decode(stream, maxDepth);
     return decodedSCSpecTypeMap;
+  }
+
+  public static SCSpecTypeMap decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecTypeMap fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class SCSpecTypeMap implements XdrElement {
   public static SCSpecTypeMap fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

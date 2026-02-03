@@ -14,7 +14,7 @@ xdr/Stellar-contract-config-setting.x \
 xdr/Stellar-exporter.x
 
 # xdrgen commit to use, see https://github.com/stellar/xdrgen
-XDRGEN_COMMIT=6b98787dcbb2b6407880adec5f74c6d88975ab0f
+XDRGEN_COMMIT=621d042b824f67ac65cc53d0e5e381e24aed4583
 # stellar-xdr commit to use, see https://github.com/stellar/stellar-xdr
 XDR_COMMIT=4b7a2ef7931ab2ca2499be68d849f38190b443ca
 

@@ -25,20 +25,46 @@ public class TxAdvertVector implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int TxAdvertVectorSize = getTxAdvertVector().length;
+    if (TxAdvertVectorSize > 1000) {
+      throw new IOException("TxAdvertVector size " + TxAdvertVectorSize + " exceeds max size 1000");
+    }
     stream.writeInt(TxAdvertVectorSize);
     for (int i = 0; i < TxAdvertVectorSize; i++) {
       TxAdvertVector[i].encode(stream);
     }
   }
 
-  public static TxAdvertVector decode(XdrDataInputStream stream) throws IOException {
+  public static TxAdvertVector decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TxAdvertVector decodedTxAdvertVector = new TxAdvertVector();
     int TxAdvertVectorSize = stream.readInt();
+    if (TxAdvertVectorSize < 0) {
+      throw new IOException("TxAdvertVector size " + TxAdvertVectorSize + " is negative");
+    }
+    if (TxAdvertVectorSize > 1000) {
+      throw new IOException("TxAdvertVector size " + TxAdvertVectorSize + " exceeds max size 1000");
+    }
+    int TxAdvertVectorRemainingInputLen = stream.getRemainingInputLen();
+    if (TxAdvertVectorRemainingInputLen >= 0
+        && TxAdvertVectorRemainingInputLen < TxAdvertVectorSize) {
+      throw new IOException(
+          "TxAdvertVector size "
+              + TxAdvertVectorSize
+              + " exceeds remaining input length "
+              + TxAdvertVectorRemainingInputLen);
+    }
     decodedTxAdvertVector.TxAdvertVector = new Hash[TxAdvertVectorSize];
     for (int i = 0; i < TxAdvertVectorSize; i++) {
-      decodedTxAdvertVector.TxAdvertVector[i] = Hash.decode(stream);
+      decodedTxAdvertVector.TxAdvertVector[i] = Hash.decode(stream, maxDepth);
     }
     return decodedTxAdvertVector;
+  }
+
+  public static TxAdvertVector decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TxAdvertVector fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +75,7 @@ public class TxAdvertVector implements XdrElement {
   public static TxAdvertVector fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

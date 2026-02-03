@@ -53,6 +53,9 @@ public class StellarValue implements XdrElement {
     txSetHash.encode(stream);
     closeTime.encode(stream);
     int upgradesSize = getUpgrades().length;
+    if (upgradesSize > 6) {
+      throw new IOException("upgrades size " + upgradesSize + " exceeds max size 6");
+    }
     stream.writeInt(upgradesSize);
     for (int i = 0; i < upgradesSize; i++) {
       upgrades[i].encode(stream);
@@ -60,17 +63,39 @@ public class StellarValue implements XdrElement {
     ext.encode(stream);
   }
 
-  public static StellarValue decode(XdrDataInputStream stream) throws IOException {
+  public static StellarValue decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     StellarValue decodedStellarValue = new StellarValue();
-    decodedStellarValue.txSetHash = Hash.decode(stream);
-    decodedStellarValue.closeTime = TimePoint.decode(stream);
+    decodedStellarValue.txSetHash = Hash.decode(stream, maxDepth);
+    decodedStellarValue.closeTime = TimePoint.decode(stream, maxDepth);
     int upgradesSize = stream.readInt();
+    if (upgradesSize < 0) {
+      throw new IOException("upgrades size " + upgradesSize + " is negative");
+    }
+    if (upgradesSize > 6) {
+      throw new IOException("upgrades size " + upgradesSize + " exceeds max size 6");
+    }
+    int upgradesRemainingInputLen = stream.getRemainingInputLen();
+    if (upgradesRemainingInputLen >= 0 && upgradesRemainingInputLen < upgradesSize) {
+      throw new IOException(
+          "upgrades size "
+              + upgradesSize
+              + " exceeds remaining input length "
+              + upgradesRemainingInputLen);
+    }
     decodedStellarValue.upgrades = new UpgradeType[upgradesSize];
     for (int i = 0; i < upgradesSize; i++) {
-      decodedStellarValue.upgrades[i] = UpgradeType.decode(stream);
+      decodedStellarValue.upgrades[i] = UpgradeType.decode(stream, maxDepth);
     }
-    decodedStellarValue.ext = StellarValueExt.decode(stream);
+    decodedStellarValue.ext = StellarValueExt.decode(stream, maxDepth);
     return decodedStellarValue;
+  }
+
+  public static StellarValue decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static StellarValue fromXdrBase64(String xdr) throws IOException {
@@ -81,6 +106,7 @@ public class StellarValue implements XdrElement {
   public static StellarValue fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -116,18 +142,30 @@ public class StellarValue implements XdrElement {
       }
     }
 
-    public static StellarValueExt decode(XdrDataInputStream stream) throws IOException {
+    public static StellarValueExt decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       StellarValueExt decodedStellarValueExt = new StellarValueExt();
-      StellarValueType discriminant = StellarValueType.decode(stream);
+      StellarValueType discriminant = StellarValueType.decode(stream, maxDepth);
       decodedStellarValueExt.setDiscriminant(discriminant);
       switch (decodedStellarValueExt.getDiscriminant()) {
         case STELLAR_VALUE_BASIC:
           break;
         case STELLAR_VALUE_SIGNED:
-          decodedStellarValueExt.lcValueSignature = LedgerCloseValueSignature.decode(stream);
+          decodedStellarValueExt.lcValueSignature =
+              LedgerCloseValueSignature.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedStellarValueExt;
+    }
+
+    public static StellarValueExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static StellarValueExt fromXdrBase64(String xdr) throws IOException {
@@ -138,6 +176,7 @@ public class StellarValue implements XdrElement {
     public static StellarValueExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

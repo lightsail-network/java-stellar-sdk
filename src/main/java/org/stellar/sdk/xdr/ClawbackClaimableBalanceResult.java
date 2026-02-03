@@ -46,12 +46,16 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
     }
   }
 
-  public static ClawbackClaimableBalanceResult decode(XdrDataInputStream stream)
+  public static ClawbackClaimableBalanceResult decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClawbackClaimableBalanceResult decodedClawbackClaimableBalanceResult =
         new ClawbackClaimableBalanceResult();
     ClawbackClaimableBalanceResultCode discriminant =
-        ClawbackClaimableBalanceResultCode.decode(stream);
+        ClawbackClaimableBalanceResultCode.decode(stream, maxDepth);
     decodedClawbackClaimableBalanceResult.setDiscriminant(discriminant);
     switch (decodedClawbackClaimableBalanceResult.getDiscriminant()) {
       case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
@@ -60,8 +64,15 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
       case CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER:
       case CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedClawbackClaimableBalanceResult;
+  }
+
+  public static ClawbackClaimableBalanceResult decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClawbackClaimableBalanceResult fromXdrBase64(String xdr) throws IOException {
@@ -72,6 +83,7 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
   public static ClawbackClaimableBalanceResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

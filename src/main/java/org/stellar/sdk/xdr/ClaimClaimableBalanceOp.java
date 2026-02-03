@@ -32,10 +32,19 @@ public class ClaimClaimableBalanceOp implements XdrElement {
     balanceID.encode(stream);
   }
 
-  public static ClaimClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimClaimableBalanceOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClaimClaimableBalanceOp decodedClaimClaimableBalanceOp = new ClaimClaimableBalanceOp();
-    decodedClaimClaimableBalanceOp.balanceID = ClaimableBalanceID.decode(stream);
+    decodedClaimClaimableBalanceOp.balanceID = ClaimableBalanceID.decode(stream, maxDepth);
     return decodedClaimClaimableBalanceOp;
+  }
+
+  public static ClaimClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClaimClaimableBalanceOp fromXdrBase64(String xdr) throws IOException {
@@ -46,6 +55,7 @@ public class ClaimClaimableBalanceOp implements XdrElement {
   public static ClaimClaimableBalanceOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -59,27 +59,45 @@ public class HostFunction implements XdrElement {
     }
   }
 
-  public static HostFunction decode(XdrDataInputStream stream) throws IOException {
+  public static HostFunction decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     HostFunction decodedHostFunction = new HostFunction();
-    HostFunctionType discriminant = HostFunctionType.decode(stream);
+    HostFunctionType discriminant = HostFunctionType.decode(stream, maxDepth);
     decodedHostFunction.setDiscriminant(discriminant);
     switch (decodedHostFunction.getDiscriminant()) {
       case HOST_FUNCTION_TYPE_INVOKE_CONTRACT:
-        decodedHostFunction.invokeContract = InvokeContractArgs.decode(stream);
+        decodedHostFunction.invokeContract = InvokeContractArgs.decode(stream, maxDepth);
         break;
       case HOST_FUNCTION_TYPE_CREATE_CONTRACT:
-        decodedHostFunction.createContract = CreateContractArgs.decode(stream);
+        decodedHostFunction.createContract = CreateContractArgs.decode(stream, maxDepth);
         break;
       case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
         int wasmSize = stream.readInt();
+        if (wasmSize < 0) {
+          throw new IOException("wasm size " + wasmSize + " is negative");
+        }
+        int wasmRemainingInputLen = stream.getRemainingInputLen();
+        if (wasmRemainingInputLen >= 0 && wasmRemainingInputLen < wasmSize) {
+          throw new IOException(
+              "wasm size " + wasmSize + " exceeds remaining input length " + wasmRemainingInputLen);
+        }
         decodedHostFunction.wasm = new byte[wasmSize];
-        stream.read(decodedHostFunction.wasm, 0, wasmSize);
+        stream.readPaddedData(decodedHostFunction.wasm, 0, wasmSize);
         break;
       case HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
-        decodedHostFunction.createContractV2 = CreateContractArgsV2.decode(stream);
+        decodedHostFunction.createContractV2 = CreateContractArgsV2.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedHostFunction;
+  }
+
+  public static HostFunction decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static HostFunction fromXdrBase64(String xdr) throws IOException {
@@ -90,6 +108,7 @@ public class HostFunction implements XdrElement {
   public static HostFunction fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

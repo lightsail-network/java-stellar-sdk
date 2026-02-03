@@ -49,15 +49,35 @@ public class ManageOfferSuccessResult implements XdrElement {
     offer.encode(stream);
   }
 
-  public static ManageOfferSuccessResult decode(XdrDataInputStream stream) throws IOException {
+  public static ManageOfferSuccessResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ManageOfferSuccessResult decodedManageOfferSuccessResult = new ManageOfferSuccessResult();
     int offersClaimedSize = stream.readInt();
+    if (offersClaimedSize < 0) {
+      throw new IOException("offersClaimed size " + offersClaimedSize + " is negative");
+    }
+    int offersClaimedRemainingInputLen = stream.getRemainingInputLen();
+    if (offersClaimedRemainingInputLen >= 0 && offersClaimedRemainingInputLen < offersClaimedSize) {
+      throw new IOException(
+          "offersClaimed size "
+              + offersClaimedSize
+              + " exceeds remaining input length "
+              + offersClaimedRemainingInputLen);
+    }
     decodedManageOfferSuccessResult.offersClaimed = new ClaimAtom[offersClaimedSize];
     for (int i = 0; i < offersClaimedSize; i++) {
-      decodedManageOfferSuccessResult.offersClaimed[i] = ClaimAtom.decode(stream);
+      decodedManageOfferSuccessResult.offersClaimed[i] = ClaimAtom.decode(stream, maxDepth);
     }
-    decodedManageOfferSuccessResult.offer = ManageOfferSuccessResultOffer.decode(stream);
+    decodedManageOfferSuccessResult.offer = ManageOfferSuccessResultOffer.decode(stream, maxDepth);
     return decodedManageOfferSuccessResult;
+  }
+
+  public static ManageOfferSuccessResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ManageOfferSuccessResult fromXdrBase64(String xdr) throws IOException {
@@ -68,6 +88,7 @@ public class ManageOfferSuccessResult implements XdrElement {
   public static ManageOfferSuccessResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -105,21 +126,32 @@ public class ManageOfferSuccessResult implements XdrElement {
       }
     }
 
-    public static ManageOfferSuccessResultOffer decode(XdrDataInputStream stream)
+    public static ManageOfferSuccessResultOffer decode(XdrDataInputStream stream, int maxDepth)
         throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       ManageOfferSuccessResultOffer decodedManageOfferSuccessResultOffer =
           new ManageOfferSuccessResultOffer();
-      ManageOfferEffect discriminant = ManageOfferEffect.decode(stream);
+      ManageOfferEffect discriminant = ManageOfferEffect.decode(stream, maxDepth);
       decodedManageOfferSuccessResultOffer.setDiscriminant(discriminant);
       switch (decodedManageOfferSuccessResultOffer.getDiscriminant()) {
         case MANAGE_OFFER_CREATED:
         case MANAGE_OFFER_UPDATED:
-          decodedManageOfferSuccessResultOffer.offer = OfferEntry.decode(stream);
+          decodedManageOfferSuccessResultOffer.offer = OfferEntry.decode(stream, maxDepth);
           break;
         case MANAGE_OFFER_DELETED:
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedManageOfferSuccessResultOffer;
+    }
+
+    public static ManageOfferSuccessResultOffer decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static ManageOfferSuccessResultOffer fromXdrBase64(String xdr) throws IOException {
@@ -130,6 +162,7 @@ public class ManageOfferSuccessResult implements XdrElement {
     public static ManageOfferSuccessResultOffer fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

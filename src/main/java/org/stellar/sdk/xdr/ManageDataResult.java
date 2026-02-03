@@ -47,9 +47,14 @@ public class ManageDataResult implements XdrElement {
     }
   }
 
-  public static ManageDataResult decode(XdrDataInputStream stream) throws IOException {
+  public static ManageDataResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ManageDataResult decodedManageDataResult = new ManageDataResult();
-    ManageDataResultCode discriminant = ManageDataResultCode.decode(stream);
+    ManageDataResultCode discriminant = ManageDataResultCode.decode(stream, maxDepth);
     decodedManageDataResult.setDiscriminant(discriminant);
     switch (decodedManageDataResult.getDiscriminant()) {
       case MANAGE_DATA_SUCCESS:
@@ -59,8 +64,14 @@ public class ManageDataResult implements XdrElement {
       case MANAGE_DATA_LOW_RESERVE:
       case MANAGE_DATA_INVALID_NAME:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedManageDataResult;
+  }
+
+  public static ManageDataResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ManageDataResult fromXdrBase64(String xdr) throws IOException {
@@ -71,6 +82,7 @@ public class ManageDataResult implements XdrElement {
   public static ManageDataResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

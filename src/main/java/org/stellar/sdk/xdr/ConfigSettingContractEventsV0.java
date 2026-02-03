@@ -37,12 +37,22 @@ public class ConfigSettingContractEventsV0 implements XdrElement {
     feeContractEvents1KB.encode(stream);
   }
 
-  public static ConfigSettingContractEventsV0 decode(XdrDataInputStream stream) throws IOException {
+  public static ConfigSettingContractEventsV0 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingContractEventsV0 decodedConfigSettingContractEventsV0 =
         new ConfigSettingContractEventsV0();
-    decodedConfigSettingContractEventsV0.txMaxContractEventsSizeBytes = Uint32.decode(stream);
-    decodedConfigSettingContractEventsV0.feeContractEvents1KB = Int64.decode(stream);
+    decodedConfigSettingContractEventsV0.txMaxContractEventsSizeBytes =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractEventsV0.feeContractEvents1KB = Int64.decode(stream, maxDepth);
     return decodedConfigSettingContractEventsV0;
+  }
+
+  public static ConfigSettingContractEventsV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingContractEventsV0 fromXdrBase64(String xdr) throws IOException {
@@ -53,6 +63,7 @@ public class ConfigSettingContractEventsV0 implements XdrElement {
   public static ConfigSettingContractEventsV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

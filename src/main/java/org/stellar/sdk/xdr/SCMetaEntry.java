@@ -39,16 +39,26 @@ public class SCMetaEntry implements XdrElement {
     }
   }
 
-  public static SCMetaEntry decode(XdrDataInputStream stream) throws IOException {
+  public static SCMetaEntry decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCMetaEntry decodedSCMetaEntry = new SCMetaEntry();
-    SCMetaKind discriminant = SCMetaKind.decode(stream);
+    SCMetaKind discriminant = SCMetaKind.decode(stream, maxDepth);
     decodedSCMetaEntry.setDiscriminant(discriminant);
     switch (decodedSCMetaEntry.getDiscriminant()) {
       case SC_META_V0:
-        decodedSCMetaEntry.v0 = SCMetaV0.decode(stream);
+        decodedSCMetaEntry.v0 = SCMetaV0.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCMetaEntry;
+  }
+
+  public static SCMetaEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCMetaEntry fromXdrBase64(String xdr) throws IOException {
@@ -59,6 +69,7 @@ public class SCMetaEntry implements XdrElement {
   public static SCMetaEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -93,38 +93,103 @@ public class LedgerCloseMetaV1 implements XdrElement {
     }
   }
 
-  public static LedgerCloseMetaV1 decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerCloseMetaV1 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerCloseMetaV1 decodedLedgerCloseMetaV1 = new LedgerCloseMetaV1();
-    decodedLedgerCloseMetaV1.ext = LedgerCloseMetaExt.decode(stream);
-    decodedLedgerCloseMetaV1.ledgerHeader = LedgerHeaderHistoryEntry.decode(stream);
-    decodedLedgerCloseMetaV1.txSet = GeneralizedTransactionSet.decode(stream);
+    decodedLedgerCloseMetaV1.ext = LedgerCloseMetaExt.decode(stream, maxDepth);
+    decodedLedgerCloseMetaV1.ledgerHeader = LedgerHeaderHistoryEntry.decode(stream, maxDepth);
+    decodedLedgerCloseMetaV1.txSet = GeneralizedTransactionSet.decode(stream, maxDepth);
     int txProcessingSize = stream.readInt();
+    if (txProcessingSize < 0) {
+      throw new IOException("txProcessing size " + txProcessingSize + " is negative");
+    }
+    int txProcessingRemainingInputLen = stream.getRemainingInputLen();
+    if (txProcessingRemainingInputLen >= 0 && txProcessingRemainingInputLen < txProcessingSize) {
+      throw new IOException(
+          "txProcessing size "
+              + txProcessingSize
+              + " exceeds remaining input length "
+              + txProcessingRemainingInputLen);
+    }
     decodedLedgerCloseMetaV1.txProcessing = new TransactionResultMeta[txProcessingSize];
     for (int i = 0; i < txProcessingSize; i++) {
-      decodedLedgerCloseMetaV1.txProcessing[i] = TransactionResultMeta.decode(stream);
+      decodedLedgerCloseMetaV1.txProcessing[i] = TransactionResultMeta.decode(stream, maxDepth);
     }
     int upgradesProcessingSize = stream.readInt();
+    if (upgradesProcessingSize < 0) {
+      throw new IOException("upgradesProcessing size " + upgradesProcessingSize + " is negative");
+    }
+    int upgradesProcessingRemainingInputLen = stream.getRemainingInputLen();
+    if (upgradesProcessingRemainingInputLen >= 0
+        && upgradesProcessingRemainingInputLen < upgradesProcessingSize) {
+      throw new IOException(
+          "upgradesProcessing size "
+              + upgradesProcessingSize
+              + " exceeds remaining input length "
+              + upgradesProcessingRemainingInputLen);
+    }
     decodedLedgerCloseMetaV1.upgradesProcessing = new UpgradeEntryMeta[upgradesProcessingSize];
     for (int i = 0; i < upgradesProcessingSize; i++) {
-      decodedLedgerCloseMetaV1.upgradesProcessing[i] = UpgradeEntryMeta.decode(stream);
+      decodedLedgerCloseMetaV1.upgradesProcessing[i] = UpgradeEntryMeta.decode(stream, maxDepth);
     }
     int scpInfoSize = stream.readInt();
+    if (scpInfoSize < 0) {
+      throw new IOException("scpInfo size " + scpInfoSize + " is negative");
+    }
+    int scpInfoRemainingInputLen = stream.getRemainingInputLen();
+    if (scpInfoRemainingInputLen >= 0 && scpInfoRemainingInputLen < scpInfoSize) {
+      throw new IOException(
+          "scpInfo size "
+              + scpInfoSize
+              + " exceeds remaining input length "
+              + scpInfoRemainingInputLen);
+    }
     decodedLedgerCloseMetaV1.scpInfo = new SCPHistoryEntry[scpInfoSize];
     for (int i = 0; i < scpInfoSize; i++) {
-      decodedLedgerCloseMetaV1.scpInfo[i] = SCPHistoryEntry.decode(stream);
+      decodedLedgerCloseMetaV1.scpInfo[i] = SCPHistoryEntry.decode(stream, maxDepth);
     }
-    decodedLedgerCloseMetaV1.totalByteSizeOfLiveSorobanState = Uint64.decode(stream);
+    decodedLedgerCloseMetaV1.totalByteSizeOfLiveSorobanState = Uint64.decode(stream, maxDepth);
     int evictedKeysSize = stream.readInt();
+    if (evictedKeysSize < 0) {
+      throw new IOException("evictedKeys size " + evictedKeysSize + " is negative");
+    }
+    int evictedKeysRemainingInputLen = stream.getRemainingInputLen();
+    if (evictedKeysRemainingInputLen >= 0 && evictedKeysRemainingInputLen < evictedKeysSize) {
+      throw new IOException(
+          "evictedKeys size "
+              + evictedKeysSize
+              + " exceeds remaining input length "
+              + evictedKeysRemainingInputLen);
+    }
     decodedLedgerCloseMetaV1.evictedKeys = new LedgerKey[evictedKeysSize];
     for (int i = 0; i < evictedKeysSize; i++) {
-      decodedLedgerCloseMetaV1.evictedKeys[i] = LedgerKey.decode(stream);
+      decodedLedgerCloseMetaV1.evictedKeys[i] = LedgerKey.decode(stream, maxDepth);
     }
     int unusedSize = stream.readInt();
+    if (unusedSize < 0) {
+      throw new IOException("unused size " + unusedSize + " is negative");
+    }
+    int unusedRemainingInputLen = stream.getRemainingInputLen();
+    if (unusedRemainingInputLen >= 0 && unusedRemainingInputLen < unusedSize) {
+      throw new IOException(
+          "unused size "
+              + unusedSize
+              + " exceeds remaining input length "
+              + unusedRemainingInputLen);
+    }
     decodedLedgerCloseMetaV1.unused = new LedgerEntry[unusedSize];
     for (int i = 0; i < unusedSize; i++) {
-      decodedLedgerCloseMetaV1.unused[i] = LedgerEntry.decode(stream);
+      decodedLedgerCloseMetaV1.unused[i] = LedgerEntry.decode(stream, maxDepth);
     }
     return decodedLedgerCloseMetaV1;
+  }
+
+  public static LedgerCloseMetaV1 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerCloseMetaV1 fromXdrBase64(String xdr) throws IOException {
@@ -135,6 +200,7 @@ public class LedgerCloseMetaV1 implements XdrElement {
   public static LedgerCloseMetaV1 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

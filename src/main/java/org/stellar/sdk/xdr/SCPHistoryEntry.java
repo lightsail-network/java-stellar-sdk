@@ -39,16 +39,26 @@ public class SCPHistoryEntry implements XdrElement {
     }
   }
 
-  public static SCPHistoryEntry decode(XdrDataInputStream stream) throws IOException {
+  public static SCPHistoryEntry decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCPHistoryEntry decodedSCPHistoryEntry = new SCPHistoryEntry();
     Integer discriminant = stream.readInt();
     decodedSCPHistoryEntry.setDiscriminant(discriminant);
     switch (decodedSCPHistoryEntry.getDiscriminant()) {
       case 0:
-        decodedSCPHistoryEntry.v0 = SCPHistoryEntryV0.decode(stream);
+        decodedSCPHistoryEntry.v0 = SCPHistoryEntryV0.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCPHistoryEntry;
+  }
+
+  public static SCPHistoryEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCPHistoryEntry fromXdrBase64(String xdr) throws IOException {
@@ -59,6 +69,7 @@ public class SCPHistoryEntry implements XdrElement {
   public static SCPHistoryEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

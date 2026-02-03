@@ -25,21 +25,52 @@ public class TimeSlicedPeerDataList implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int TimeSlicedPeerDataListSize = getTimeSlicedPeerDataList().length;
+    if (TimeSlicedPeerDataListSize > 25) {
+      throw new IOException(
+          "TimeSlicedPeerDataList size " + TimeSlicedPeerDataListSize + " exceeds max size 25");
+    }
     stream.writeInt(TimeSlicedPeerDataListSize);
     for (int i = 0; i < TimeSlicedPeerDataListSize; i++) {
       TimeSlicedPeerDataList[i].encode(stream);
     }
   }
 
-  public static TimeSlicedPeerDataList decode(XdrDataInputStream stream) throws IOException {
+  public static TimeSlicedPeerDataList decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TimeSlicedPeerDataList decodedTimeSlicedPeerDataList = new TimeSlicedPeerDataList();
     int TimeSlicedPeerDataListSize = stream.readInt();
+    if (TimeSlicedPeerDataListSize < 0) {
+      throw new IOException(
+          "TimeSlicedPeerDataList size " + TimeSlicedPeerDataListSize + " is negative");
+    }
+    if (TimeSlicedPeerDataListSize > 25) {
+      throw new IOException(
+          "TimeSlicedPeerDataList size " + TimeSlicedPeerDataListSize + " exceeds max size 25");
+    }
+    int TimeSlicedPeerDataListRemainingInputLen = stream.getRemainingInputLen();
+    if (TimeSlicedPeerDataListRemainingInputLen >= 0
+        && TimeSlicedPeerDataListRemainingInputLen < TimeSlicedPeerDataListSize) {
+      throw new IOException(
+          "TimeSlicedPeerDataList size "
+              + TimeSlicedPeerDataListSize
+              + " exceeds remaining input length "
+              + TimeSlicedPeerDataListRemainingInputLen);
+    }
     decodedTimeSlicedPeerDataList.TimeSlicedPeerDataList =
         new TimeSlicedPeerData[TimeSlicedPeerDataListSize];
     for (int i = 0; i < TimeSlicedPeerDataListSize; i++) {
-      decodedTimeSlicedPeerDataList.TimeSlicedPeerDataList[i] = TimeSlicedPeerData.decode(stream);
+      decodedTimeSlicedPeerDataList.TimeSlicedPeerDataList[i] =
+          TimeSlicedPeerData.decode(stream, maxDepth);
     }
     return decodedTimeSlicedPeerDataList;
+  }
+
+  public static TimeSlicedPeerDataList decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TimeSlicedPeerDataList fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +81,7 @@ public class TimeSlicedPeerDataList implements XdrElement {
   public static TimeSlicedPeerDataList fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

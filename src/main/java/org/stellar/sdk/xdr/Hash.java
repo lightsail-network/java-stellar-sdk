@@ -25,15 +25,26 @@ public class Hash implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int HashSize = Hash.length;
+    if (HashSize != 32) {
+      throw new IOException("Hash size " + HashSize + " does not match fixed size 32");
+    }
     stream.write(getHash(), 0, HashSize);
   }
 
-  public static Hash decode(XdrDataInputStream stream) throws IOException {
+  public static Hash decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Hash decodedHash = new Hash();
     int HashSize = 32;
     decodedHash.Hash = new byte[HashSize];
-    stream.read(decodedHash.Hash, 0, HashSize);
+    stream.readPaddedData(decodedHash.Hash, 0, HashSize);
     return decodedHash;
+  }
+
+  public static Hash decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Hash fromXdrBase64(String xdr) throws IOException {
@@ -44,6 +55,7 @@ public class Hash implements XdrElement {
   public static Hash fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

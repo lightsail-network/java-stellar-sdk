@@ -42,14 +42,23 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
     feeTxSize1KB.encode(stream);
   }
 
-  public static ConfigSettingContractBandwidthV0 decode(XdrDataInputStream stream)
+  public static ConfigSettingContractBandwidthV0 decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingContractBandwidthV0 decodedConfigSettingContractBandwidthV0 =
         new ConfigSettingContractBandwidthV0();
-    decodedConfigSettingContractBandwidthV0.ledgerMaxTxsSizeBytes = Uint32.decode(stream);
-    decodedConfigSettingContractBandwidthV0.txMaxSizeBytes = Uint32.decode(stream);
-    decodedConfigSettingContractBandwidthV0.feeTxSize1KB = Int64.decode(stream);
+    decodedConfigSettingContractBandwidthV0.ledgerMaxTxsSizeBytes = Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractBandwidthV0.txMaxSizeBytes = Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractBandwidthV0.feeTxSize1KB = Int64.decode(stream, maxDepth);
     return decodedConfigSettingContractBandwidthV0;
+  }
+
+  public static ConfigSettingContractBandwidthV0 decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingContractBandwidthV0 fromXdrBase64(String xdr) throws IOException {
@@ -60,6 +69,7 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
   public static ConfigSettingContractBandwidthV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

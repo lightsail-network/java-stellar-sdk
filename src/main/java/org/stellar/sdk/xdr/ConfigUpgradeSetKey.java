@@ -34,11 +34,20 @@ public class ConfigUpgradeSetKey implements XdrElement {
     contentHash.encode(stream);
   }
 
-  public static ConfigUpgradeSetKey decode(XdrDataInputStream stream) throws IOException {
+  public static ConfigUpgradeSetKey decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigUpgradeSetKey decodedConfigUpgradeSetKey = new ConfigUpgradeSetKey();
-    decodedConfigUpgradeSetKey.contractID = ContractID.decode(stream);
-    decodedConfigUpgradeSetKey.contentHash = Hash.decode(stream);
+    decodedConfigUpgradeSetKey.contractID = ContractID.decode(stream, maxDepth);
+    decodedConfigUpgradeSetKey.contentHash = Hash.decode(stream, maxDepth);
     return decodedConfigUpgradeSetKey;
+  }
+
+  public static ConfigUpgradeSetKey decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigUpgradeSetKey fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +58,7 @@ public class ConfigUpgradeSetKey implements XdrElement {
   public static ConfigUpgradeSetKey fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

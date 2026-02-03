@@ -39,16 +39,26 @@ public class PublicKey implements XdrElement {
     }
   }
 
-  public static PublicKey decode(XdrDataInputStream stream) throws IOException {
+  public static PublicKey decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PublicKey decodedPublicKey = new PublicKey();
-    PublicKeyType discriminant = PublicKeyType.decode(stream);
+    PublicKeyType discriminant = PublicKeyType.decode(stream, maxDepth);
     decodedPublicKey.setDiscriminant(discriminant);
     switch (decodedPublicKey.getDiscriminant()) {
       case PUBLIC_KEY_TYPE_ED25519:
-        decodedPublicKey.ed25519 = Uint256.decode(stream);
+        decodedPublicKey.ed25519 = Uint256.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedPublicKey;
+  }
+
+  public static PublicKey decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PublicKey fromXdrBase64(String xdr) throws IOException {
@@ -59,6 +69,7 @@ public class PublicKey implements XdrElement {
   public static PublicKey fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

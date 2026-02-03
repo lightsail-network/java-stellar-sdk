@@ -34,11 +34,19 @@ public class UInt128Parts implements XdrElement {
     lo.encode(stream);
   }
 
-  public static UInt128Parts decode(XdrDataInputStream stream) throws IOException {
+  public static UInt128Parts decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     UInt128Parts decodedUInt128Parts = new UInt128Parts();
-    decodedUInt128Parts.hi = Uint64.decode(stream);
-    decodedUInt128Parts.lo = Uint64.decode(stream);
+    decodedUInt128Parts.hi = Uint64.decode(stream, maxDepth);
+    decodedUInt128Parts.lo = Uint64.decode(stream, maxDepth);
     return decodedUInt128Parts;
+  }
+
+  public static UInt128Parts decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static UInt128Parts fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +57,7 @@ public class UInt128Parts implements XdrElement {
   public static UInt128Parts fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

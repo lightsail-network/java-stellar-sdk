@@ -51,22 +51,32 @@ public class LedgerCloseMeta implements XdrElement {
     }
   }
 
-  public static LedgerCloseMeta decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerCloseMeta decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerCloseMeta decodedLedgerCloseMeta = new LedgerCloseMeta();
     Integer discriminant = stream.readInt();
     decodedLedgerCloseMeta.setDiscriminant(discriminant);
     switch (decodedLedgerCloseMeta.getDiscriminant()) {
       case 0:
-        decodedLedgerCloseMeta.v0 = LedgerCloseMetaV0.decode(stream);
+        decodedLedgerCloseMeta.v0 = LedgerCloseMetaV0.decode(stream, maxDepth);
         break;
       case 1:
-        decodedLedgerCloseMeta.v1 = LedgerCloseMetaV1.decode(stream);
+        decodedLedgerCloseMeta.v1 = LedgerCloseMetaV1.decode(stream, maxDepth);
         break;
       case 2:
-        decodedLedgerCloseMeta.v2 = LedgerCloseMetaV2.decode(stream);
+        decodedLedgerCloseMeta.v2 = LedgerCloseMetaV2.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedLedgerCloseMeta;
+  }
+
+  public static LedgerCloseMeta decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerCloseMeta fromXdrBase64(String xdr) throws IOException {
@@ -77,6 +87,7 @@ public class LedgerCloseMeta implements XdrElement {
   public static LedgerCloseMeta fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

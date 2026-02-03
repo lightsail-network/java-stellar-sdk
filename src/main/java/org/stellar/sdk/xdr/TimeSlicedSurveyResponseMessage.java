@@ -35,13 +35,23 @@ public class TimeSlicedSurveyResponseMessage implements XdrElement {
     nonce.encode(stream);
   }
 
-  public static TimeSlicedSurveyResponseMessage decode(XdrDataInputStream stream)
+  public static TimeSlicedSurveyResponseMessage decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TimeSlicedSurveyResponseMessage decodedTimeSlicedSurveyResponseMessage =
         new TimeSlicedSurveyResponseMessage();
-    decodedTimeSlicedSurveyResponseMessage.response = SurveyResponseMessage.decode(stream);
-    decodedTimeSlicedSurveyResponseMessage.nonce = Uint32.decode(stream);
+    decodedTimeSlicedSurveyResponseMessage.response =
+        SurveyResponseMessage.decode(stream, maxDepth);
+    decodedTimeSlicedSurveyResponseMessage.nonce = Uint32.decode(stream, maxDepth);
     return decodedTimeSlicedSurveyResponseMessage;
+  }
+
+  public static TimeSlicedSurveyResponseMessage decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TimeSlicedSurveyResponseMessage fromXdrBase64(String xdr) throws IOException {
@@ -52,6 +62,7 @@ public class TimeSlicedSurveyResponseMessage implements XdrElement {
   public static TimeSlicedSurveyResponseMessage fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

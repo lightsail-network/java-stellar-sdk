@@ -35,14 +35,34 @@ public class ConfigUpgradeSet implements XdrElement {
     }
   }
 
-  public static ConfigUpgradeSet decode(XdrDataInputStream stream) throws IOException {
+  public static ConfigUpgradeSet decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigUpgradeSet decodedConfigUpgradeSet = new ConfigUpgradeSet();
     int updatedEntrySize = stream.readInt();
+    if (updatedEntrySize < 0) {
+      throw new IOException("updatedEntry size " + updatedEntrySize + " is negative");
+    }
+    int updatedEntryRemainingInputLen = stream.getRemainingInputLen();
+    if (updatedEntryRemainingInputLen >= 0 && updatedEntryRemainingInputLen < updatedEntrySize) {
+      throw new IOException(
+          "updatedEntry size "
+              + updatedEntrySize
+              + " exceeds remaining input length "
+              + updatedEntryRemainingInputLen);
+    }
     decodedConfigUpgradeSet.updatedEntry = new ConfigSettingEntry[updatedEntrySize];
     for (int i = 0; i < updatedEntrySize; i++) {
-      decodedConfigUpgradeSet.updatedEntry[i] = ConfigSettingEntry.decode(stream);
+      decodedConfigUpgradeSet.updatedEntry[i] = ConfigSettingEntry.decode(stream, maxDepth);
     }
     return decodedConfigUpgradeSet;
+  }
+
+  public static ConfigUpgradeSet decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigUpgradeSet fromXdrBase64(String xdr) throws IOException {
@@ -53,6 +73,7 @@ public class ConfigUpgradeSet implements XdrElement {
   public static ConfigUpgradeSet fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

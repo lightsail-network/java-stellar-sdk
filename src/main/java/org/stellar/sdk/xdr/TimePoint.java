@@ -27,10 +27,18 @@ public class TimePoint implements XdrElement {
     TimePoint.encode(stream);
   }
 
-  public static TimePoint decode(XdrDataInputStream stream) throws IOException {
+  public static TimePoint decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TimePoint decodedTimePoint = new TimePoint();
-    decodedTimePoint.TimePoint = Uint64.decode(stream);
+    decodedTimePoint.TimePoint = Uint64.decode(stream, maxDepth);
     return decodedTimePoint;
+  }
+
+  public static TimePoint decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TimePoint fromXdrBase64(String xdr) throws IOException {
@@ -41,6 +49,7 @@ public class TimePoint implements XdrElement {
   public static TimePoint fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

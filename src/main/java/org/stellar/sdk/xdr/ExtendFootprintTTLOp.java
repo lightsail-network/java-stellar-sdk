@@ -35,11 +35,20 @@ public class ExtendFootprintTTLOp implements XdrElement {
     extendTo.encode(stream);
   }
 
-  public static ExtendFootprintTTLOp decode(XdrDataInputStream stream) throws IOException {
+  public static ExtendFootprintTTLOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ExtendFootprintTTLOp decodedExtendFootprintTTLOp = new ExtendFootprintTTLOp();
-    decodedExtendFootprintTTLOp.ext = ExtensionPoint.decode(stream);
-    decodedExtendFootprintTTLOp.extendTo = Uint32.decode(stream);
+    decodedExtendFootprintTTLOp.ext = ExtensionPoint.decode(stream, maxDepth);
+    decodedExtendFootprintTTLOp.extendTo = Uint32.decode(stream, maxDepth);
     return decodedExtendFootprintTTLOp;
+  }
+
+  public static ExtendFootprintTTLOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ExtendFootprintTTLOp fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +59,7 @@ public class ExtendFootprintTTLOp implements XdrElement {
   public static ExtendFootprintTTLOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

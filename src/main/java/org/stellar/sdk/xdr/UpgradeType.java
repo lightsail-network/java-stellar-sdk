@@ -25,16 +25,41 @@ public class UpgradeType implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int UpgradeTypeSize = UpgradeType.length;
+    if (UpgradeTypeSize > 128) {
+      throw new IOException("UpgradeType size " + UpgradeTypeSize + " exceeds max size 128");
+    }
     stream.writeInt(UpgradeTypeSize);
     stream.write(getUpgradeType(), 0, UpgradeTypeSize);
   }
 
-  public static UpgradeType decode(XdrDataInputStream stream) throws IOException {
+  public static UpgradeType decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     UpgradeType decodedUpgradeType = new UpgradeType();
     int UpgradeTypeSize = stream.readInt();
+    if (UpgradeTypeSize < 0) {
+      throw new IOException("UpgradeType size " + UpgradeTypeSize + " is negative");
+    }
+    if (UpgradeTypeSize > 128) {
+      throw new IOException("UpgradeType size " + UpgradeTypeSize + " exceeds max size 128");
+    }
+    int UpgradeTypeRemainingInputLen = stream.getRemainingInputLen();
+    if (UpgradeTypeRemainingInputLen >= 0 && UpgradeTypeRemainingInputLen < UpgradeTypeSize) {
+      throw new IOException(
+          "UpgradeType size "
+              + UpgradeTypeSize
+              + " exceeds remaining input length "
+              + UpgradeTypeRemainingInputLen);
+    }
     decodedUpgradeType.UpgradeType = new byte[UpgradeTypeSize];
-    stream.read(decodedUpgradeType.UpgradeType, 0, UpgradeTypeSize);
+    stream.readPaddedData(decodedUpgradeType.UpgradeType, 0, UpgradeTypeSize);
     return decodedUpgradeType;
+  }
+
+  public static UpgradeType decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static UpgradeType fromXdrBase64(String xdr) throws IOException {
@@ -45,6 +70,7 @@ public class UpgradeType implements XdrElement {
   public static UpgradeType fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

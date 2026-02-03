@@ -32,10 +32,17 @@ public class XdrUnsignedInteger implements XdrElement {
     this.number = number.longValue();
   }
 
-  public static XdrUnsignedInteger decode(XdrDataInputStream stream) throws IOException {
+  public static XdrUnsignedInteger decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    // maxDepth is intentionally not checked - XdrUnsignedInteger is a leaf type with no recursive
+    // decoding
     int intValue = stream.readInt();
     long uint32Value = Integer.toUnsignedLong(intValue);
     return new XdrUnsignedInteger(uint32Value);
+  }
+
+  public static XdrUnsignedInteger decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   @Override

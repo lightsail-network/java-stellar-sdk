@@ -45,12 +45,20 @@ public class PeerAddress implements XdrElement {
     numFailures.encode(stream);
   }
 
-  public static PeerAddress decode(XdrDataInputStream stream) throws IOException {
+  public static PeerAddress decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PeerAddress decodedPeerAddress = new PeerAddress();
-    decodedPeerAddress.ip = PeerAddressIp.decode(stream);
-    decodedPeerAddress.port = Uint32.decode(stream);
-    decodedPeerAddress.numFailures = Uint32.decode(stream);
+    decodedPeerAddress.ip = PeerAddressIp.decode(stream, maxDepth);
+    decodedPeerAddress.port = Uint32.decode(stream, maxDepth);
+    decodedPeerAddress.numFailures = Uint32.decode(stream, maxDepth);
     return decodedPeerAddress;
+  }
+
+  public static PeerAddress decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PeerAddress fromXdrBase64(String xdr) throws IOException {
@@ -61,6 +69,7 @@ public class PeerAddress implements XdrElement {
   public static PeerAddress fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -91,32 +100,48 @@ public class PeerAddress implements XdrElement {
       switch (discriminant) {
         case IPv4:
           int ipv4Size = ipv4.length;
+          if (ipv4Size != 4) {
+            throw new IOException("ipv4 size " + ipv4Size + " does not match fixed size 4");
+          }
           stream.write(getIpv4(), 0, ipv4Size);
           break;
         case IPv6:
           int ipv6Size = ipv6.length;
+          if (ipv6Size != 16) {
+            throw new IOException("ipv6 size " + ipv6Size + " does not match fixed size 16");
+          }
           stream.write(getIpv6(), 0, ipv6Size);
           break;
       }
     }
 
-    public static PeerAddressIp decode(XdrDataInputStream stream) throws IOException {
+    public static PeerAddressIp decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       PeerAddressIp decodedPeerAddressIp = new PeerAddressIp();
-      IPAddrType discriminant = IPAddrType.decode(stream);
+      IPAddrType discriminant = IPAddrType.decode(stream, maxDepth);
       decodedPeerAddressIp.setDiscriminant(discriminant);
       switch (decodedPeerAddressIp.getDiscriminant()) {
         case IPv4:
           int ipv4Size = 4;
           decodedPeerAddressIp.ipv4 = new byte[ipv4Size];
-          stream.read(decodedPeerAddressIp.ipv4, 0, ipv4Size);
+          stream.readPaddedData(decodedPeerAddressIp.ipv4, 0, ipv4Size);
           break;
         case IPv6:
           int ipv6Size = 16;
           decodedPeerAddressIp.ipv6 = new byte[ipv6Size];
-          stream.read(decodedPeerAddressIp.ipv6, 0, ipv6Size);
+          stream.readPaddedData(decodedPeerAddressIp.ipv6, 0, ipv6Size);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedPeerAddressIp;
+    }
+
+    public static PeerAddressIp decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static PeerAddressIp fromXdrBase64(String xdr) throws IOException {
@@ -127,6 +152,7 @@ public class PeerAddress implements XdrElement {
     public static PeerAddressIp fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

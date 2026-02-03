@@ -32,12 +32,21 @@ public class ConfigSettingContractHistoricalDataV0 implements XdrElement {
     feeHistorical1KB.encode(stream);
   }
 
-  public static ConfigSettingContractHistoricalDataV0 decode(XdrDataInputStream stream)
-      throws IOException {
+  public static ConfigSettingContractHistoricalDataV0 decode(
+      XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingContractHistoricalDataV0 decodedConfigSettingContractHistoricalDataV0 =
         new ConfigSettingContractHistoricalDataV0();
-    decodedConfigSettingContractHistoricalDataV0.feeHistorical1KB = Int64.decode(stream);
+    decodedConfigSettingContractHistoricalDataV0.feeHistorical1KB = Int64.decode(stream, maxDepth);
     return decodedConfigSettingContractHistoricalDataV0;
+  }
+
+  public static ConfigSettingContractHistoricalDataV0 decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingContractHistoricalDataV0 fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +58,7 @@ public class ConfigSettingContractHistoricalDataV0 implements XdrElement {
       throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

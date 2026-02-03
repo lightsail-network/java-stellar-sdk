@@ -46,6 +46,10 @@ public class AccountEntryExtensionV2 implements XdrElement {
     numSponsored.encode(stream);
     numSponsoring.encode(stream);
     int signerSponsoringIDsSize = getSignerSponsoringIDs().length;
+    if (signerSponsoringIDsSize > 20) {
+      throw new IOException(
+          "signerSponsoringIDs size " + signerSponsoringIDsSize + " exceeds max size 20");
+    }
     stream.writeInt(signerSponsoringIDsSize);
     for (int i = 0; i < signerSponsoringIDsSize; i++) {
       signerSponsoringIDs[i].encode(stream);
@@ -53,18 +57,44 @@ public class AccountEntryExtensionV2 implements XdrElement {
     ext.encode(stream);
   }
 
-  public static AccountEntryExtensionV2 decode(XdrDataInputStream stream) throws IOException {
+  public static AccountEntryExtensionV2 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     AccountEntryExtensionV2 decodedAccountEntryExtensionV2 = new AccountEntryExtensionV2();
-    decodedAccountEntryExtensionV2.numSponsored = Uint32.decode(stream);
-    decodedAccountEntryExtensionV2.numSponsoring = Uint32.decode(stream);
+    decodedAccountEntryExtensionV2.numSponsored = Uint32.decode(stream, maxDepth);
+    decodedAccountEntryExtensionV2.numSponsoring = Uint32.decode(stream, maxDepth);
     int signerSponsoringIDsSize = stream.readInt();
+    if (signerSponsoringIDsSize < 0) {
+      throw new IOException("signerSponsoringIDs size " + signerSponsoringIDsSize + " is negative");
+    }
+    if (signerSponsoringIDsSize > 20) {
+      throw new IOException(
+          "signerSponsoringIDs size " + signerSponsoringIDsSize + " exceeds max size 20");
+    }
+    int signerSponsoringIDsRemainingInputLen = stream.getRemainingInputLen();
+    if (signerSponsoringIDsRemainingInputLen >= 0
+        && signerSponsoringIDsRemainingInputLen < signerSponsoringIDsSize) {
+      throw new IOException(
+          "signerSponsoringIDs size "
+              + signerSponsoringIDsSize
+              + " exceeds remaining input length "
+              + signerSponsoringIDsRemainingInputLen);
+    }
     decodedAccountEntryExtensionV2.signerSponsoringIDs =
         new SponsorshipDescriptor[signerSponsoringIDsSize];
     for (int i = 0; i < signerSponsoringIDsSize; i++) {
-      decodedAccountEntryExtensionV2.signerSponsoringIDs[i] = SponsorshipDescriptor.decode(stream);
+      decodedAccountEntryExtensionV2.signerSponsoringIDs[i] =
+          SponsorshipDescriptor.decode(stream, maxDepth);
     }
-    decodedAccountEntryExtensionV2.ext = AccountEntryExtensionV2Ext.decode(stream);
+    decodedAccountEntryExtensionV2.ext = AccountEntryExtensionV2Ext.decode(stream, maxDepth);
     return decodedAccountEntryExtensionV2;
+  }
+
+  public static AccountEntryExtensionV2 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static AccountEntryExtensionV2 fromXdrBase64(String xdr) throws IOException {
@@ -75,6 +105,7 @@ public class AccountEntryExtensionV2 implements XdrElement {
   public static AccountEntryExtensionV2 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -110,7 +141,12 @@ public class AccountEntryExtensionV2 implements XdrElement {
       }
     }
 
-    public static AccountEntryExtensionV2Ext decode(XdrDataInputStream stream) throws IOException {
+    public static AccountEntryExtensionV2Ext decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       AccountEntryExtensionV2Ext decodedAccountEntryExtensionV2Ext =
           new AccountEntryExtensionV2Ext();
       Integer discriminant = stream.readInt();
@@ -119,10 +155,16 @@ public class AccountEntryExtensionV2 implements XdrElement {
         case 0:
           break;
         case 3:
-          decodedAccountEntryExtensionV2Ext.v3 = AccountEntryExtensionV3.decode(stream);
+          decodedAccountEntryExtensionV2Ext.v3 = AccountEntryExtensionV3.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedAccountEntryExtensionV2Ext;
+    }
+
+    public static AccountEntryExtensionV2Ext decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static AccountEntryExtensionV2Ext fromXdrBase64(String xdr) throws IOException {
@@ -133,6 +175,7 @@ public class AccountEntryExtensionV2 implements XdrElement {
     public static AccountEntryExtensionV2Ext fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

@@ -76,17 +76,21 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
     }
   }
 
-  public static PathPaymentStrictReceiveResult decode(XdrDataInputStream stream)
+  public static PathPaymentStrictReceiveResult decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PathPaymentStrictReceiveResult decodedPathPaymentStrictReceiveResult =
         new PathPaymentStrictReceiveResult();
     PathPaymentStrictReceiveResultCode discriminant =
-        PathPaymentStrictReceiveResultCode.decode(stream);
+        PathPaymentStrictReceiveResultCode.decode(stream, maxDepth);
     decodedPathPaymentStrictReceiveResult.setDiscriminant(discriminant);
     switch (decodedPathPaymentStrictReceiveResult.getDiscriminant()) {
       case PATH_PAYMENT_STRICT_RECEIVE_SUCCESS:
         decodedPathPaymentStrictReceiveResult.success =
-            PathPaymentStrictReceiveResultSuccess.decode(stream);
+            PathPaymentStrictReceiveResultSuccess.decode(stream, maxDepth);
         break;
       case PATH_PAYMENT_STRICT_RECEIVE_MALFORMED:
       case PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED:
@@ -98,14 +102,21 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
       case PATH_PAYMENT_STRICT_RECEIVE_LINE_FULL:
         break;
       case PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER:
-        decodedPathPaymentStrictReceiveResult.noIssuer = Asset.decode(stream);
+        decodedPathPaymentStrictReceiveResult.noIssuer = Asset.decode(stream, maxDepth);
         break;
       case PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS:
       case PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF:
       case PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedPathPaymentStrictReceiveResult;
+  }
+
+  public static PathPaymentStrictReceiveResult decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PathPaymentStrictReceiveResult fromXdrBase64(String xdr) throws IOException {
@@ -116,6 +127,7 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
   public static PathPaymentStrictReceiveResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -147,17 +159,38 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
       last.encode(stream);
     }
 
-    public static PathPaymentStrictReceiveResultSuccess decode(XdrDataInputStream stream)
-        throws IOException {
+    public static PathPaymentStrictReceiveResultSuccess decode(
+        XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       PathPaymentStrictReceiveResultSuccess decodedPathPaymentStrictReceiveResultSuccess =
           new PathPaymentStrictReceiveResultSuccess();
       int offersSize = stream.readInt();
+      if (offersSize < 0) {
+        throw new IOException("offers size " + offersSize + " is negative");
+      }
+      int offersRemainingInputLen = stream.getRemainingInputLen();
+      if (offersRemainingInputLen >= 0 && offersRemainingInputLen < offersSize) {
+        throw new IOException(
+            "offers size "
+                + offersSize
+                + " exceeds remaining input length "
+                + offersRemainingInputLen);
+      }
       decodedPathPaymentStrictReceiveResultSuccess.offers = new ClaimAtom[offersSize];
       for (int i = 0; i < offersSize; i++) {
-        decodedPathPaymentStrictReceiveResultSuccess.offers[i] = ClaimAtom.decode(stream);
+        decodedPathPaymentStrictReceiveResultSuccess.offers[i] = ClaimAtom.decode(stream, maxDepth);
       }
-      decodedPathPaymentStrictReceiveResultSuccess.last = SimplePaymentResult.decode(stream);
+      decodedPathPaymentStrictReceiveResultSuccess.last =
+          SimplePaymentResult.decode(stream, maxDepth);
       return decodedPathPaymentStrictReceiveResultSuccess;
+    }
+
+    public static PathPaymentStrictReceiveResultSuccess decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static PathPaymentStrictReceiveResultSuccess fromXdrBase64(String xdr)
@@ -170,6 +203,7 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
         throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

@@ -35,11 +35,19 @@ public class SCPBallot implements XdrElement {
     value.encode(stream);
   }
 
-  public static SCPBallot decode(XdrDataInputStream stream) throws IOException {
+  public static SCPBallot decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCPBallot decodedSCPBallot = new SCPBallot();
-    decodedSCPBallot.counter = Uint32.decode(stream);
-    decodedSCPBallot.value = Value.decode(stream);
+    decodedSCPBallot.counter = Uint32.decode(stream, maxDepth);
+    decodedSCPBallot.value = Value.decode(stream, maxDepth);
     return decodedSCPBallot;
+  }
+
+  public static SCPBallot decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCPBallot fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class SCPBallot implements XdrElement {
   public static SCPBallot fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

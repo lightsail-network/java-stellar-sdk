@@ -48,13 +48,21 @@ public class DataEntry implements XdrElement {
     ext.encode(stream);
   }
 
-  public static DataEntry decode(XdrDataInputStream stream) throws IOException {
+  public static DataEntry decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     DataEntry decodedDataEntry = new DataEntry();
-    decodedDataEntry.accountID = AccountID.decode(stream);
-    decodedDataEntry.dataName = String64.decode(stream);
-    decodedDataEntry.dataValue = DataValue.decode(stream);
-    decodedDataEntry.ext = DataEntryExt.decode(stream);
+    decodedDataEntry.accountID = AccountID.decode(stream, maxDepth);
+    decodedDataEntry.dataName = String64.decode(stream, maxDepth);
+    decodedDataEntry.dataValue = DataValue.decode(stream, maxDepth);
+    decodedDataEntry.ext = DataEntryExt.decode(stream, maxDepth);
     return decodedDataEntry;
+  }
+
+  public static DataEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static DataEntry fromXdrBase64(String xdr) throws IOException {
@@ -65,6 +73,7 @@ public class DataEntry implements XdrElement {
   public static DataEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -94,15 +103,25 @@ public class DataEntry implements XdrElement {
       }
     }
 
-    public static DataEntryExt decode(XdrDataInputStream stream) throws IOException {
+    public static DataEntryExt decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       DataEntryExt decodedDataEntryExt = new DataEntryExt();
       Integer discriminant = stream.readInt();
       decodedDataEntryExt.setDiscriminant(discriminant);
       switch (decodedDataEntryExt.getDiscriminant()) {
         case 0:
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedDataEntryExt;
+    }
+
+    public static DataEntryExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static DataEntryExt fromXdrBase64(String xdr) throws IOException {
@@ -113,6 +132,7 @@ public class DataEntry implements XdrElement {
     public static DataEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

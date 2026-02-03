@@ -47,14 +47,23 @@ public class ManageBuyOfferOp implements XdrElement {
     offerID.encode(stream);
   }
 
-  public static ManageBuyOfferOp decode(XdrDataInputStream stream) throws IOException {
+  public static ManageBuyOfferOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ManageBuyOfferOp decodedManageBuyOfferOp = new ManageBuyOfferOp();
-    decodedManageBuyOfferOp.selling = Asset.decode(stream);
-    decodedManageBuyOfferOp.buying = Asset.decode(stream);
-    decodedManageBuyOfferOp.buyAmount = Int64.decode(stream);
-    decodedManageBuyOfferOp.price = Price.decode(stream);
-    decodedManageBuyOfferOp.offerID = Int64.decode(stream);
+    decodedManageBuyOfferOp.selling = Asset.decode(stream, maxDepth);
+    decodedManageBuyOfferOp.buying = Asset.decode(stream, maxDepth);
+    decodedManageBuyOfferOp.buyAmount = Int64.decode(stream, maxDepth);
+    decodedManageBuyOfferOp.price = Price.decode(stream, maxDepth);
+    decodedManageBuyOfferOp.offerID = Int64.decode(stream, maxDepth);
     return decodedManageBuyOfferOp;
+  }
+
+  public static ManageBuyOfferOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ManageBuyOfferOp fromXdrBase64(String xdr) throws IOException {
@@ -65,6 +74,7 @@ public class ManageBuyOfferOp implements XdrElement {
   public static ManageBuyOfferOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

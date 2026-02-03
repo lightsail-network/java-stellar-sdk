@@ -184,83 +184,93 @@ public class SCVal implements XdrElement {
     }
   }
 
-  public static SCVal decode(XdrDataInputStream stream) throws IOException {
+  public static SCVal decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCVal decodedSCVal = new SCVal();
-    SCValType discriminant = SCValType.decode(stream);
+    SCValType discriminant = SCValType.decode(stream, maxDepth);
     decodedSCVal.setDiscriminant(discriminant);
     switch (decodedSCVal.getDiscriminant()) {
       case SCV_BOOL:
-        decodedSCVal.b = stream.readInt() == 1 ? true : false;
+        decodedSCVal.b = stream.readXdrBoolean();
         break;
       case SCV_VOID:
         break;
       case SCV_ERROR:
-        decodedSCVal.error = SCError.decode(stream);
+        decodedSCVal.error = SCError.decode(stream, maxDepth);
         break;
       case SCV_U32:
-        decodedSCVal.u32 = Uint32.decode(stream);
+        decodedSCVal.u32 = Uint32.decode(stream, maxDepth);
         break;
       case SCV_I32:
-        decodedSCVal.i32 = Int32.decode(stream);
+        decodedSCVal.i32 = Int32.decode(stream, maxDepth);
         break;
       case SCV_U64:
-        decodedSCVal.u64 = Uint64.decode(stream);
+        decodedSCVal.u64 = Uint64.decode(stream, maxDepth);
         break;
       case SCV_I64:
-        decodedSCVal.i64 = Int64.decode(stream);
+        decodedSCVal.i64 = Int64.decode(stream, maxDepth);
         break;
       case SCV_TIMEPOINT:
-        decodedSCVal.timepoint = TimePoint.decode(stream);
+        decodedSCVal.timepoint = TimePoint.decode(stream, maxDepth);
         break;
       case SCV_DURATION:
-        decodedSCVal.duration = Duration.decode(stream);
+        decodedSCVal.duration = Duration.decode(stream, maxDepth);
         break;
       case SCV_U128:
-        decodedSCVal.u128 = UInt128Parts.decode(stream);
+        decodedSCVal.u128 = UInt128Parts.decode(stream, maxDepth);
         break;
       case SCV_I128:
-        decodedSCVal.i128 = Int128Parts.decode(stream);
+        decodedSCVal.i128 = Int128Parts.decode(stream, maxDepth);
         break;
       case SCV_U256:
-        decodedSCVal.u256 = UInt256Parts.decode(stream);
+        decodedSCVal.u256 = UInt256Parts.decode(stream, maxDepth);
         break;
       case SCV_I256:
-        decodedSCVal.i256 = Int256Parts.decode(stream);
+        decodedSCVal.i256 = Int256Parts.decode(stream, maxDepth);
         break;
       case SCV_BYTES:
-        decodedSCVal.bytes = SCBytes.decode(stream);
+        decodedSCVal.bytes = SCBytes.decode(stream, maxDepth);
         break;
       case SCV_STRING:
-        decodedSCVal.str = SCString.decode(stream);
+        decodedSCVal.str = SCString.decode(stream, maxDepth);
         break;
       case SCV_SYMBOL:
-        decodedSCVal.sym = SCSymbol.decode(stream);
+        decodedSCVal.sym = SCSymbol.decode(stream, maxDepth);
         break;
       case SCV_VEC:
-        int vecPresent = stream.readInt();
-        if (vecPresent != 0) {
-          decodedSCVal.vec = SCVec.decode(stream);
+        boolean vecPresent = stream.readXdrBoolean();
+        if (vecPresent) {
+          decodedSCVal.vec = SCVec.decode(stream, maxDepth);
         }
         break;
       case SCV_MAP:
-        int mapPresent = stream.readInt();
-        if (mapPresent != 0) {
-          decodedSCVal.map = SCMap.decode(stream);
+        boolean mapPresent = stream.readXdrBoolean();
+        if (mapPresent) {
+          decodedSCVal.map = SCMap.decode(stream, maxDepth);
         }
         break;
       case SCV_ADDRESS:
-        decodedSCVal.address = SCAddress.decode(stream);
+        decodedSCVal.address = SCAddress.decode(stream, maxDepth);
         break;
       case SCV_CONTRACT_INSTANCE:
-        decodedSCVal.instance = SCContractInstance.decode(stream);
+        decodedSCVal.instance = SCContractInstance.decode(stream, maxDepth);
         break;
       case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
         break;
       case SCV_LEDGER_KEY_NONCE:
-        decodedSCVal.nonce_key = SCNonceKey.decode(stream);
+        decodedSCVal.nonce_key = SCNonceKey.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSCVal;
+  }
+
+  public static SCVal decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCVal fromXdrBase64(String xdr) throws IOException {
@@ -271,6 +281,7 @@ public class SCVal implements XdrElement {
   public static SCVal fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

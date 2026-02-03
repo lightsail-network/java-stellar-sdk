@@ -38,12 +38,20 @@ public class ClawbackOp implements XdrElement {
     amount.encode(stream);
   }
 
-  public static ClawbackOp decode(XdrDataInputStream stream) throws IOException {
+  public static ClawbackOp decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClawbackOp decodedClawbackOp = new ClawbackOp();
-    decodedClawbackOp.asset = Asset.decode(stream);
-    decodedClawbackOp.from = MuxedAccount.decode(stream);
-    decodedClawbackOp.amount = Int64.decode(stream);
+    decodedClawbackOp.asset = Asset.decode(stream, maxDepth);
+    decodedClawbackOp.from = MuxedAccount.decode(stream, maxDepth);
+    decodedClawbackOp.amount = Int64.decode(stream, maxDepth);
     return decodedClawbackOp;
+  }
+
+  public static ClawbackOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClawbackOp fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +62,7 @@ public class ClawbackOp implements XdrElement {
   public static ClawbackOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

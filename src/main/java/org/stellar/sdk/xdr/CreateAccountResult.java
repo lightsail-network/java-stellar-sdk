@@ -47,9 +47,14 @@ public class CreateAccountResult implements XdrElement {
     }
   }
 
-  public static CreateAccountResult decode(XdrDataInputStream stream) throws IOException {
+  public static CreateAccountResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     CreateAccountResult decodedCreateAccountResult = new CreateAccountResult();
-    CreateAccountResultCode discriminant = CreateAccountResultCode.decode(stream);
+    CreateAccountResultCode discriminant = CreateAccountResultCode.decode(stream, maxDepth);
     decodedCreateAccountResult.setDiscriminant(discriminant);
     switch (decodedCreateAccountResult.getDiscriminant()) {
       case CREATE_ACCOUNT_SUCCESS:
@@ -59,8 +64,14 @@ public class CreateAccountResult implements XdrElement {
       case CREATE_ACCOUNT_LOW_RESERVE:
       case CREATE_ACCOUNT_ALREADY_EXIST:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedCreateAccountResult;
+  }
+
+  public static CreateAccountResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static CreateAccountResult fromXdrBase64(String xdr) throws IOException {
@@ -71,6 +82,7 @@ public class CreateAccountResult implements XdrElement {
   public static CreateAccountResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

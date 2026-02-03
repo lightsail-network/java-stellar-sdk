@@ -43,7 +43,12 @@ public class LedgerCloseMetaExt implements XdrElement {
     }
   }
 
-  public static LedgerCloseMetaExt decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerCloseMetaExt decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerCloseMetaExt decodedLedgerCloseMetaExt = new LedgerCloseMetaExt();
     Integer discriminant = stream.readInt();
     decodedLedgerCloseMetaExt.setDiscriminant(discriminant);
@@ -51,10 +56,16 @@ public class LedgerCloseMetaExt implements XdrElement {
       case 0:
         break;
       case 1:
-        decodedLedgerCloseMetaExt.v1 = LedgerCloseMetaExtV1.decode(stream);
+        decodedLedgerCloseMetaExt.v1 = LedgerCloseMetaExtV1.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedLedgerCloseMetaExt;
+  }
+
+  public static LedgerCloseMetaExt decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerCloseMetaExt fromXdrBase64(String xdr) throws IOException {
@@ -65,6 +76,7 @@ public class LedgerCloseMetaExt implements XdrElement {
   public static LedgerCloseMetaExt fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

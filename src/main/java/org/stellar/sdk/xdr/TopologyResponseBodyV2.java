@@ -38,12 +38,21 @@ public class TopologyResponseBodyV2 implements XdrElement {
     nodeData.encode(stream);
   }
 
-  public static TopologyResponseBodyV2 decode(XdrDataInputStream stream) throws IOException {
+  public static TopologyResponseBodyV2 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TopologyResponseBodyV2 decodedTopologyResponseBodyV2 = new TopologyResponseBodyV2();
-    decodedTopologyResponseBodyV2.inboundPeers = TimeSlicedPeerDataList.decode(stream);
-    decodedTopologyResponseBodyV2.outboundPeers = TimeSlicedPeerDataList.decode(stream);
-    decodedTopologyResponseBodyV2.nodeData = TimeSlicedNodeData.decode(stream);
+    decodedTopologyResponseBodyV2.inboundPeers = TimeSlicedPeerDataList.decode(stream, maxDepth);
+    decodedTopologyResponseBodyV2.outboundPeers = TimeSlicedPeerDataList.decode(stream, maxDepth);
+    decodedTopologyResponseBodyV2.nodeData = TimeSlicedNodeData.decode(stream, maxDepth);
     return decodedTopologyResponseBodyV2;
+  }
+
+  public static TopologyResponseBodyV2 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TopologyResponseBodyV2 fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +63,7 @@ public class TopologyResponseBodyV2 implements XdrElement {
   public static TopologyResponseBodyV2 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -39,15 +39,35 @@ public class SCPHistoryEntryV0 implements XdrElement {
     ledgerMessages.encode(stream);
   }
 
-  public static SCPHistoryEntryV0 decode(XdrDataInputStream stream) throws IOException {
+  public static SCPHistoryEntryV0 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCPHistoryEntryV0 decodedSCPHistoryEntryV0 = new SCPHistoryEntryV0();
     int quorumSetsSize = stream.readInt();
+    if (quorumSetsSize < 0) {
+      throw new IOException("quorumSets size " + quorumSetsSize + " is negative");
+    }
+    int quorumSetsRemainingInputLen = stream.getRemainingInputLen();
+    if (quorumSetsRemainingInputLen >= 0 && quorumSetsRemainingInputLen < quorumSetsSize) {
+      throw new IOException(
+          "quorumSets size "
+              + quorumSetsSize
+              + " exceeds remaining input length "
+              + quorumSetsRemainingInputLen);
+    }
     decodedSCPHistoryEntryV0.quorumSets = new SCPQuorumSet[quorumSetsSize];
     for (int i = 0; i < quorumSetsSize; i++) {
-      decodedSCPHistoryEntryV0.quorumSets[i] = SCPQuorumSet.decode(stream);
+      decodedSCPHistoryEntryV0.quorumSets[i] = SCPQuorumSet.decode(stream, maxDepth);
     }
-    decodedSCPHistoryEntryV0.ledgerMessages = LedgerSCPMessages.decode(stream);
+    decodedSCPHistoryEntryV0.ledgerMessages = LedgerSCPMessages.decode(stream, maxDepth);
     return decodedSCPHistoryEntryV0;
+  }
+
+  public static SCPHistoryEntryV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCPHistoryEntryV0 fromXdrBase64(String xdr) throws IOException {
@@ -58,6 +78,7 @@ public class SCPHistoryEntryV0 implements XdrElement {
   public static SCPHistoryEntryV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

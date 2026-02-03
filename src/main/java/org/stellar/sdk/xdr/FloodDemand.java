@@ -32,10 +32,18 @@ public class FloodDemand implements XdrElement {
     txHashes.encode(stream);
   }
 
-  public static FloodDemand decode(XdrDataInputStream stream) throws IOException {
+  public static FloodDemand decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     FloodDemand decodedFloodDemand = new FloodDemand();
-    decodedFloodDemand.txHashes = TxDemandVector.decode(stream);
+    decodedFloodDemand.txHashes = TxDemandVector.decode(stream, maxDepth);
     return decodedFloodDemand;
+  }
+
+  public static FloodDemand decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static FloodDemand fromXdrBase64(String xdr) throws IOException {
@@ -46,6 +54,7 @@ public class FloodDemand implements XdrElement {
   public static FloodDemand fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

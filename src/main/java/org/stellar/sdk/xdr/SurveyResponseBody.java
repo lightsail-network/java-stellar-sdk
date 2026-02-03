@@ -39,16 +39,28 @@ public class SurveyResponseBody implements XdrElement {
     }
   }
 
-  public static SurveyResponseBody decode(XdrDataInputStream stream) throws IOException {
+  public static SurveyResponseBody decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SurveyResponseBody decodedSurveyResponseBody = new SurveyResponseBody();
-    SurveyMessageResponseType discriminant = SurveyMessageResponseType.decode(stream);
+    SurveyMessageResponseType discriminant = SurveyMessageResponseType.decode(stream, maxDepth);
     decodedSurveyResponseBody.setDiscriminant(discriminant);
     switch (decodedSurveyResponseBody.getDiscriminant()) {
       case SURVEY_TOPOLOGY_RESPONSE_V2:
-        decodedSurveyResponseBody.topologyResponseBodyV2 = TopologyResponseBodyV2.decode(stream);
+        decodedSurveyResponseBody.topologyResponseBodyV2 =
+            TopologyResponseBodyV2.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSurveyResponseBody;
+  }
+
+  public static SurveyResponseBody decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SurveyResponseBody fromXdrBase64(String xdr) throws IOException {
@@ -59,6 +71,7 @@ public class SurveyResponseBody implements XdrElement {
   public static SurveyResponseBody fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -53,21 +53,31 @@ public class Asset implements XdrElement {
     }
   }
 
-  public static Asset decode(XdrDataInputStream stream) throws IOException {
+  public static Asset decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Asset decodedAsset = new Asset();
-    AssetType discriminant = AssetType.decode(stream);
+    AssetType discriminant = AssetType.decode(stream, maxDepth);
     decodedAsset.setDiscriminant(discriminant);
     switch (decodedAsset.getDiscriminant()) {
       case ASSET_TYPE_NATIVE:
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM4:
-        decodedAsset.alphaNum4 = AlphaNum4.decode(stream);
+        decodedAsset.alphaNum4 = AlphaNum4.decode(stream, maxDepth);
         break;
       case ASSET_TYPE_CREDIT_ALPHANUM12:
-        decodedAsset.alphaNum12 = AlphaNum12.decode(stream);
+        decodedAsset.alphaNum12 = AlphaNum12.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedAsset;
+  }
+
+  public static Asset decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Asset fromXdrBase64(String xdr) throws IOException {
@@ -78,6 +88,7 @@ public class Asset implements XdrElement {
   public static Asset fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

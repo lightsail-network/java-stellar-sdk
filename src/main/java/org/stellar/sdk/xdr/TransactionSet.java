@@ -39,15 +39,31 @@ public class TransactionSet implements XdrElement {
     }
   }
 
-  public static TransactionSet decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionSet decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionSet decodedTransactionSet = new TransactionSet();
-    decodedTransactionSet.previousLedgerHash = Hash.decode(stream);
+    decodedTransactionSet.previousLedgerHash = Hash.decode(stream, maxDepth);
     int txsSize = stream.readInt();
+    if (txsSize < 0) {
+      throw new IOException("txs size " + txsSize + " is negative");
+    }
+    int txsRemainingInputLen = stream.getRemainingInputLen();
+    if (txsRemainingInputLen >= 0 && txsRemainingInputLen < txsSize) {
+      throw new IOException(
+          "txs size " + txsSize + " exceeds remaining input length " + txsRemainingInputLen);
+    }
     decodedTransactionSet.txs = new TransactionEnvelope[txsSize];
     for (int i = 0; i < txsSize; i++) {
-      decodedTransactionSet.txs[i] = TransactionEnvelope.decode(stream);
+      decodedTransactionSet.txs[i] = TransactionEnvelope.decode(stream, maxDepth);
     }
     return decodedTransactionSet;
+  }
+
+  public static TransactionSet decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionSet fromXdrBase64(String xdr) throws IOException {
@@ -58,6 +74,7 @@ public class TransactionSet implements XdrElement {
   public static TransactionSet fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -52,14 +52,20 @@ public class CreateClaimableBalanceResult implements XdrElement {
     }
   }
 
-  public static CreateClaimableBalanceResult decode(XdrDataInputStream stream) throws IOException {
+  public static CreateClaimableBalanceResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     CreateClaimableBalanceResult decodedCreateClaimableBalanceResult =
         new CreateClaimableBalanceResult();
-    CreateClaimableBalanceResultCode discriminant = CreateClaimableBalanceResultCode.decode(stream);
+    CreateClaimableBalanceResultCode discriminant =
+        CreateClaimableBalanceResultCode.decode(stream, maxDepth);
     decodedCreateClaimableBalanceResult.setDiscriminant(discriminant);
     switch (decodedCreateClaimableBalanceResult.getDiscriminant()) {
       case CREATE_CLAIMABLE_BALANCE_SUCCESS:
-        decodedCreateClaimableBalanceResult.balanceID = ClaimableBalanceID.decode(stream);
+        decodedCreateClaimableBalanceResult.balanceID = ClaimableBalanceID.decode(stream, maxDepth);
         break;
       case CREATE_CLAIMABLE_BALANCE_MALFORMED:
       case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
@@ -67,8 +73,14 @@ public class CreateClaimableBalanceResult implements XdrElement {
       case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
       case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedCreateClaimableBalanceResult;
+  }
+
+  public static CreateClaimableBalanceResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static CreateClaimableBalanceResult fromXdrBase64(String xdr) throws IOException {
@@ -79,6 +91,7 @@ public class CreateClaimableBalanceResult implements XdrElement {
   public static CreateClaimableBalanceResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -50,24 +50,66 @@ public class PersistedSCPStateV0 implements XdrElement {
     }
   }
 
-  public static PersistedSCPStateV0 decode(XdrDataInputStream stream) throws IOException {
+  public static PersistedSCPStateV0 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PersistedSCPStateV0 decodedPersistedSCPStateV0 = new PersistedSCPStateV0();
     int scpEnvelopesSize = stream.readInt();
+    if (scpEnvelopesSize < 0) {
+      throw new IOException("scpEnvelopes size " + scpEnvelopesSize + " is negative");
+    }
+    int scpEnvelopesRemainingInputLen = stream.getRemainingInputLen();
+    if (scpEnvelopesRemainingInputLen >= 0 && scpEnvelopesRemainingInputLen < scpEnvelopesSize) {
+      throw new IOException(
+          "scpEnvelopes size "
+              + scpEnvelopesSize
+              + " exceeds remaining input length "
+              + scpEnvelopesRemainingInputLen);
+    }
     decodedPersistedSCPStateV0.scpEnvelopes = new SCPEnvelope[scpEnvelopesSize];
     for (int i = 0; i < scpEnvelopesSize; i++) {
-      decodedPersistedSCPStateV0.scpEnvelopes[i] = SCPEnvelope.decode(stream);
+      decodedPersistedSCPStateV0.scpEnvelopes[i] = SCPEnvelope.decode(stream, maxDepth);
     }
     int quorumSetsSize = stream.readInt();
+    if (quorumSetsSize < 0) {
+      throw new IOException("quorumSets size " + quorumSetsSize + " is negative");
+    }
+    int quorumSetsRemainingInputLen = stream.getRemainingInputLen();
+    if (quorumSetsRemainingInputLen >= 0 && quorumSetsRemainingInputLen < quorumSetsSize) {
+      throw new IOException(
+          "quorumSets size "
+              + quorumSetsSize
+              + " exceeds remaining input length "
+              + quorumSetsRemainingInputLen);
+    }
     decodedPersistedSCPStateV0.quorumSets = new SCPQuorumSet[quorumSetsSize];
     for (int i = 0; i < quorumSetsSize; i++) {
-      decodedPersistedSCPStateV0.quorumSets[i] = SCPQuorumSet.decode(stream);
+      decodedPersistedSCPStateV0.quorumSets[i] = SCPQuorumSet.decode(stream, maxDepth);
     }
     int txSetsSize = stream.readInt();
+    if (txSetsSize < 0) {
+      throw new IOException("txSets size " + txSetsSize + " is negative");
+    }
+    int txSetsRemainingInputLen = stream.getRemainingInputLen();
+    if (txSetsRemainingInputLen >= 0 && txSetsRemainingInputLen < txSetsSize) {
+      throw new IOException(
+          "txSets size "
+              + txSetsSize
+              + " exceeds remaining input length "
+              + txSetsRemainingInputLen);
+    }
     decodedPersistedSCPStateV0.txSets = new StoredTransactionSet[txSetsSize];
     for (int i = 0; i < txSetsSize; i++) {
-      decodedPersistedSCPStateV0.txSets[i] = StoredTransactionSet.decode(stream);
+      decodedPersistedSCPStateV0.txSets[i] = StoredTransactionSet.decode(stream, maxDepth);
     }
     return decodedPersistedSCPStateV0;
+  }
+
+  public static PersistedSCPStateV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PersistedSCPStateV0 fromXdrBase64(String xdr) throws IOException {
@@ -78,6 +120,7 @@ public class PersistedSCPStateV0 implements XdrElement {
   public static PersistedSCPStateV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

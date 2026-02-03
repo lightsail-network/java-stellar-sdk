@@ -139,75 +139,105 @@ public class ConfigSettingEntry implements XdrElement {
     }
   }
 
-  public static ConfigSettingEntry decode(XdrDataInputStream stream) throws IOException {
+  public static ConfigSettingEntry decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingEntry decodedConfigSettingEntry = new ConfigSettingEntry();
-    ConfigSettingID discriminant = ConfigSettingID.decode(stream);
+    ConfigSettingID discriminant = ConfigSettingID.decode(stream, maxDepth);
     decodedConfigSettingEntry.setDiscriminant(discriminant);
     switch (decodedConfigSettingEntry.getDiscriminant()) {
       case CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES:
-        decodedConfigSettingEntry.contractMaxSizeBytes = Uint32.decode(stream);
+        decodedConfigSettingEntry.contractMaxSizeBytes = Uint32.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_COMPUTE_V0:
-        decodedConfigSettingEntry.contractCompute = ConfigSettingContractComputeV0.decode(stream);
+        decodedConfigSettingEntry.contractCompute =
+            ConfigSettingContractComputeV0.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_LEDGER_COST_V0:
         decodedConfigSettingEntry.contractLedgerCost =
-            ConfigSettingContractLedgerCostV0.decode(stream);
+            ConfigSettingContractLedgerCostV0.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0:
         decodedConfigSettingEntry.contractHistoricalData =
-            ConfigSettingContractHistoricalDataV0.decode(stream);
+            ConfigSettingContractHistoricalDataV0.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_EVENTS_V0:
-        decodedConfigSettingEntry.contractEvents = ConfigSettingContractEventsV0.decode(stream);
+        decodedConfigSettingEntry.contractEvents =
+            ConfigSettingContractEventsV0.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_BANDWIDTH_V0:
         decodedConfigSettingEntry.contractBandwidth =
-            ConfigSettingContractBandwidthV0.decode(stream);
+            ConfigSettingContractBandwidthV0.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS:
-        decodedConfigSettingEntry.contractCostParamsCpuInsns = ContractCostParams.decode(stream);
+        decodedConfigSettingEntry.contractCostParamsCpuInsns =
+            ContractCostParams.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES:
-        decodedConfigSettingEntry.contractCostParamsMemBytes = ContractCostParams.decode(stream);
+        decodedConfigSettingEntry.contractCostParamsMemBytes =
+            ContractCostParams.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES:
-        decodedConfigSettingEntry.contractDataKeySizeBytes = Uint32.decode(stream);
+        decodedConfigSettingEntry.contractDataKeySizeBytes = Uint32.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES:
-        decodedConfigSettingEntry.contractDataEntrySizeBytes = Uint32.decode(stream);
+        decodedConfigSettingEntry.contractDataEntrySizeBytes = Uint32.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_STATE_ARCHIVAL:
-        decodedConfigSettingEntry.stateArchivalSettings = StateArchivalSettings.decode(stream);
+        decodedConfigSettingEntry.stateArchivalSettings =
+            StateArchivalSettings.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
         decodedConfigSettingEntry.contractExecutionLanes =
-            ConfigSettingContractExecutionLanesV0.decode(stream);
+            ConfigSettingContractExecutionLanesV0.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
         int liveSorobanStateSizeWindowSize = stream.readInt();
+        if (liveSorobanStateSizeWindowSize < 0) {
+          throw new IOException(
+              "liveSorobanStateSizeWindow size " + liveSorobanStateSizeWindowSize + " is negative");
+        }
+        int liveSorobanStateSizeWindowRemainingInputLen = stream.getRemainingInputLen();
+        if (liveSorobanStateSizeWindowRemainingInputLen >= 0
+            && liveSorobanStateSizeWindowRemainingInputLen < liveSorobanStateSizeWindowSize) {
+          throw new IOException(
+              "liveSorobanStateSizeWindow size "
+                  + liveSorobanStateSizeWindowSize
+                  + " exceeds remaining input length "
+                  + liveSorobanStateSizeWindowRemainingInputLen);
+        }
         decodedConfigSettingEntry.liveSorobanStateSizeWindow =
             new Uint64[liveSorobanStateSizeWindowSize];
         for (int i = 0; i < liveSorobanStateSizeWindowSize; i++) {
-          decodedConfigSettingEntry.liveSorobanStateSizeWindow[i] = Uint64.decode(stream);
+          decodedConfigSettingEntry.liveSorobanStateSizeWindow[i] = Uint64.decode(stream, maxDepth);
         }
         break;
       case CONFIG_SETTING_EVICTION_ITERATOR:
-        decodedConfigSettingEntry.evictionIterator = EvictionIterator.decode(stream);
+        decodedConfigSettingEntry.evictionIterator = EvictionIterator.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
         decodedConfigSettingEntry.contractParallelCompute =
-            ConfigSettingContractParallelComputeV0.decode(stream);
+            ConfigSettingContractParallelComputeV0.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
         decodedConfigSettingEntry.contractLedgerCostExt =
-            ConfigSettingContractLedgerCostExtV0.decode(stream);
+            ConfigSettingContractLedgerCostExtV0.decode(stream, maxDepth);
         break;
       case CONFIG_SETTING_SCP_TIMING:
-        decodedConfigSettingEntry.contractSCPTiming = ConfigSettingSCPTiming.decode(stream);
+        decodedConfigSettingEntry.contractSCPTiming =
+            ConfigSettingSCPTiming.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedConfigSettingEntry;
+  }
+
+  public static ConfigSettingEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingEntry fromXdrBase64(String xdr) throws IOException {
@@ -218,6 +248,7 @@ public class ConfigSettingEntry implements XdrElement {
   public static ConfigSettingEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }
