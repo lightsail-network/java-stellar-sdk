@@ -35,21 +35,47 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
   public void encode(XdrDataOutputStream stream) throws IOException {
     tx.encode(stream);
     int signaturesSize = getSignatures().length;
+    if (signaturesSize > 20) {
+      throw new IOException("signatures size " + signaturesSize + " exceeds max size 20");
+    }
     stream.writeInt(signaturesSize);
     for (int i = 0; i < signaturesSize; i++) {
       signatures[i].encode(stream);
     }
   }
 
-  public static FeeBumpTransactionEnvelope decode(XdrDataInputStream stream) throws IOException {
+  public static FeeBumpTransactionEnvelope decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     FeeBumpTransactionEnvelope decodedFeeBumpTransactionEnvelope = new FeeBumpTransactionEnvelope();
-    decodedFeeBumpTransactionEnvelope.tx = FeeBumpTransaction.decode(stream);
+    decodedFeeBumpTransactionEnvelope.tx = FeeBumpTransaction.decode(stream, maxDepth);
     int signaturesSize = stream.readInt();
+    if (signaturesSize < 0) {
+      throw new IOException("signatures size " + signaturesSize + " is negative");
+    }
+    if (signaturesSize > 20) {
+      throw new IOException("signatures size " + signaturesSize + " exceeds max size 20");
+    }
+    int signaturesRemainingInputLen = stream.getRemainingInputLen();
+    if (signaturesRemainingInputLen >= 0 && signaturesRemainingInputLen < signaturesSize) {
+      throw new IOException(
+          "signatures size "
+              + signaturesSize
+              + " exceeds remaining input length "
+              + signaturesRemainingInputLen);
+    }
     decodedFeeBumpTransactionEnvelope.signatures = new DecoratedSignature[signaturesSize];
     for (int i = 0; i < signaturesSize; i++) {
-      decodedFeeBumpTransactionEnvelope.signatures[i] = DecoratedSignature.decode(stream);
+      decodedFeeBumpTransactionEnvelope.signatures[i] = DecoratedSignature.decode(stream, maxDepth);
     }
     return decodedFeeBumpTransactionEnvelope;
+  }
+
+  public static FeeBumpTransactionEnvelope decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static FeeBumpTransactionEnvelope fromXdrBase64(String xdr) throws IOException {
@@ -60,6 +86,7 @@ public class FeeBumpTransactionEnvelope implements XdrElement {
   public static FeeBumpTransactionEnvelope fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

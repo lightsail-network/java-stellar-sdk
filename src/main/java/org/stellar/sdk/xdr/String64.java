@@ -24,13 +24,25 @@ public class String64 implements XdrElement {
   private XdrString string64;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
+    int string64Size = string64.getBytes().length;
+    if (string64Size > 64) {
+      throw new IOException("string64 size " + string64Size + " exceeds max size 64");
+    }
     string64.encode(stream);
   }
 
-  public static String64 decode(XdrDataInputStream stream) throws IOException {
+  public static String64 decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     String64 decodedString64 = new String64();
-    decodedString64.string64 = XdrString.decode(stream, 64);
+    decodedString64.string64 = XdrString.decode(stream, maxDepth, 64);
     return decodedString64;
+  }
+
+  public static String64 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static String64 fromXdrBase64(String xdr) throws IOException {
@@ -41,6 +53,7 @@ public class String64 implements XdrElement {
   public static String64 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

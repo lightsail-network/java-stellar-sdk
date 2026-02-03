@@ -52,22 +52,33 @@ public class HotArchiveBucketEntry implements XdrElement {
     }
   }
 
-  public static HotArchiveBucketEntry decode(XdrDataInputStream stream) throws IOException {
+  public static HotArchiveBucketEntry decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     HotArchiveBucketEntry decodedHotArchiveBucketEntry = new HotArchiveBucketEntry();
-    HotArchiveBucketEntryType discriminant = HotArchiveBucketEntryType.decode(stream);
+    HotArchiveBucketEntryType discriminant = HotArchiveBucketEntryType.decode(stream, maxDepth);
     decodedHotArchiveBucketEntry.setDiscriminant(discriminant);
     switch (decodedHotArchiveBucketEntry.getDiscriminant()) {
       case HOT_ARCHIVE_ARCHIVED:
-        decodedHotArchiveBucketEntry.archivedEntry = LedgerEntry.decode(stream);
+        decodedHotArchiveBucketEntry.archivedEntry = LedgerEntry.decode(stream, maxDepth);
         break;
       case HOT_ARCHIVE_LIVE:
-        decodedHotArchiveBucketEntry.key = LedgerKey.decode(stream);
+        decodedHotArchiveBucketEntry.key = LedgerKey.decode(stream, maxDepth);
         break;
       case HOT_ARCHIVE_METAENTRY:
-        decodedHotArchiveBucketEntry.metaEntry = BucketMetadata.decode(stream);
+        decodedHotArchiveBucketEntry.metaEntry = BucketMetadata.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedHotArchiveBucketEntry;
+  }
+
+  public static HotArchiveBucketEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static HotArchiveBucketEntry fromXdrBase64(String xdr) throws IOException {
@@ -78,6 +89,7 @@ public class HotArchiveBucketEntry implements XdrElement {
   public static HotArchiveBucketEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

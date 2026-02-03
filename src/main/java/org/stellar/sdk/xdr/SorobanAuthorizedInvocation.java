@@ -39,18 +39,40 @@ public class SorobanAuthorizedInvocation implements XdrElement {
     }
   }
 
-  public static SorobanAuthorizedInvocation decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanAuthorizedInvocation decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanAuthorizedInvocation decodedSorobanAuthorizedInvocation =
         new SorobanAuthorizedInvocation();
-    decodedSorobanAuthorizedInvocation.function = SorobanAuthorizedFunction.decode(stream);
+    decodedSorobanAuthorizedInvocation.function =
+        SorobanAuthorizedFunction.decode(stream, maxDepth);
     int subInvocationsSize = stream.readInt();
+    if (subInvocationsSize < 0) {
+      throw new IOException("subInvocations size " + subInvocationsSize + " is negative");
+    }
+    int subInvocationsRemainingInputLen = stream.getRemainingInputLen();
+    if (subInvocationsRemainingInputLen >= 0
+        && subInvocationsRemainingInputLen < subInvocationsSize) {
+      throw new IOException(
+          "subInvocations size "
+              + subInvocationsSize
+              + " exceeds remaining input length "
+              + subInvocationsRemainingInputLen);
+    }
     decodedSorobanAuthorizedInvocation.subInvocations =
         new SorobanAuthorizedInvocation[subInvocationsSize];
     for (int i = 0; i < subInvocationsSize; i++) {
       decodedSorobanAuthorizedInvocation.subInvocations[i] =
-          SorobanAuthorizedInvocation.decode(stream);
+          SorobanAuthorizedInvocation.decode(stream, maxDepth);
     }
     return decodedSorobanAuthorizedInvocation;
+  }
+
+  public static SorobanAuthorizedInvocation decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanAuthorizedInvocation fromXdrBase64(String xdr) throws IOException {
@@ -61,6 +83,7 @@ public class SorobanAuthorizedInvocation implements XdrElement {
   public static SorobanAuthorizedInvocation fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

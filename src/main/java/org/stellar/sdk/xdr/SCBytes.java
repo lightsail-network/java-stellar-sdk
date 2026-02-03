@@ -29,12 +29,31 @@ public class SCBytes implements XdrElement {
     stream.write(getSCBytes(), 0, SCBytesSize);
   }
 
-  public static SCBytes decode(XdrDataInputStream stream) throws IOException {
+  public static SCBytes decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCBytes decodedSCBytes = new SCBytes();
     int SCBytesSize = stream.readInt();
+    if (SCBytesSize < 0) {
+      throw new IOException("SCBytes size " + SCBytesSize + " is negative");
+    }
+    int SCBytesRemainingInputLen = stream.getRemainingInputLen();
+    if (SCBytesRemainingInputLen >= 0 && SCBytesRemainingInputLen < SCBytesSize) {
+      throw new IOException(
+          "SCBytes size "
+              + SCBytesSize
+              + " exceeds remaining input length "
+              + SCBytesRemainingInputLen);
+    }
     decodedSCBytes.SCBytes = new byte[SCBytesSize];
-    stream.read(decodedSCBytes.SCBytes, 0, SCBytesSize);
+    stream.readPaddedData(decodedSCBytes.SCBytes, 0, SCBytesSize);
     return decodedSCBytes;
+  }
+
+  public static SCBytes decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCBytes fromXdrBase64(String xdr) throws IOException {
@@ -45,6 +64,7 @@ public class SCBytes implements XdrElement {
   public static SCBytes fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

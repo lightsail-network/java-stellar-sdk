@@ -77,10 +77,8 @@ public class XdrDataOutputStream extends DataOutputStream {
 
     public void write(byte[] b, int offset, int length) throws IOException {
       mOut.write(b, offset, length);
-      if (length > 0) {
-        mCount += length;
-        pad();
-      }
+      mCount += length;
+      pad();
     }
 
     public void pad() throws IOException {

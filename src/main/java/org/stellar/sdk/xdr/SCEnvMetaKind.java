@@ -30,7 +30,8 @@ public enum SCEnvMetaKind implements XdrElement {
     return value;
   }
 
-  public static SCEnvMetaKind decode(XdrDataInputStream stream) throws IOException {
+  public static SCEnvMetaKind decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    // maxDepth is intentionally not checked - enums are leaf types with no recursive decoding
     int value = stream.readInt();
     switch (value) {
       case 0:
@@ -38,6 +39,10 @@ public enum SCEnvMetaKind implements XdrElement {
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
+  }
+
+  public static SCEnvMetaKind decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -52,6 +57,7 @@ public enum SCEnvMetaKind implements XdrElement {
   public static SCEnvMetaKind fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

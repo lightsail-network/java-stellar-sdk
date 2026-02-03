@@ -49,9 +49,14 @@ public class SetTrustLineFlagsResult implements XdrElement {
     }
   }
 
-  public static SetTrustLineFlagsResult decode(XdrDataInputStream stream) throws IOException {
+  public static SetTrustLineFlagsResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SetTrustLineFlagsResult decodedSetTrustLineFlagsResult = new SetTrustLineFlagsResult();
-    SetTrustLineFlagsResultCode discriminant = SetTrustLineFlagsResultCode.decode(stream);
+    SetTrustLineFlagsResultCode discriminant = SetTrustLineFlagsResultCode.decode(stream, maxDepth);
     decodedSetTrustLineFlagsResult.setDiscriminant(discriminant);
     switch (decodedSetTrustLineFlagsResult.getDiscriminant()) {
       case SET_TRUST_LINE_FLAGS_SUCCESS:
@@ -62,8 +67,14 @@ public class SetTrustLineFlagsResult implements XdrElement {
       case SET_TRUST_LINE_FLAGS_INVALID_STATE:
       case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSetTrustLineFlagsResult;
+  }
+
+  public static SetTrustLineFlagsResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SetTrustLineFlagsResult fromXdrBase64(String xdr) throws IOException {
@@ -74,6 +85,7 @@ public class SetTrustLineFlagsResult implements XdrElement {
   public static SetTrustLineFlagsResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

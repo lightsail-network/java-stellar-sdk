@@ -31,16 +31,38 @@ public class ParallelTxExecutionStage implements XdrElement {
     }
   }
 
-  public static ParallelTxExecutionStage decode(XdrDataInputStream stream) throws IOException {
+  public static ParallelTxExecutionStage decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ParallelTxExecutionStage decodedParallelTxExecutionStage = new ParallelTxExecutionStage();
     int ParallelTxExecutionStageSize = stream.readInt();
+    if (ParallelTxExecutionStageSize < 0) {
+      throw new IOException(
+          "ParallelTxExecutionStage size " + ParallelTxExecutionStageSize + " is negative");
+    }
+    int ParallelTxExecutionStageRemainingInputLen = stream.getRemainingInputLen();
+    if (ParallelTxExecutionStageRemainingInputLen >= 0
+        && ParallelTxExecutionStageRemainingInputLen < ParallelTxExecutionStageSize) {
+      throw new IOException(
+          "ParallelTxExecutionStage size "
+              + ParallelTxExecutionStageSize
+              + " exceeds remaining input length "
+              + ParallelTxExecutionStageRemainingInputLen);
+    }
     decodedParallelTxExecutionStage.ParallelTxExecutionStage =
         new DependentTxCluster[ParallelTxExecutionStageSize];
     for (int i = 0; i < ParallelTxExecutionStageSize; i++) {
       decodedParallelTxExecutionStage.ParallelTxExecutionStage[i] =
-          DependentTxCluster.decode(stream);
+          DependentTxCluster.decode(stream, maxDepth);
     }
     return decodedParallelTxExecutionStage;
+  }
+
+  public static ParallelTxExecutionStage decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ParallelTxExecutionStage fromXdrBase64(String xdr) throws IOException {
@@ -51,6 +73,7 @@ public class ParallelTxExecutionStage implements XdrElement {
   public static ParallelTxExecutionStage fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

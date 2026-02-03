@@ -43,18 +43,29 @@ public class SorobanCredentials implements XdrElement {
     }
   }
 
-  public static SorobanCredentials decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanCredentials decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanCredentials decodedSorobanCredentials = new SorobanCredentials();
-    SorobanCredentialsType discriminant = SorobanCredentialsType.decode(stream);
+    SorobanCredentialsType discriminant = SorobanCredentialsType.decode(stream, maxDepth);
     decodedSorobanCredentials.setDiscriminant(discriminant);
     switch (decodedSorobanCredentials.getDiscriminant()) {
       case SOROBAN_CREDENTIALS_SOURCE_ACCOUNT:
         break;
       case SOROBAN_CREDENTIALS_ADDRESS:
-        decodedSorobanCredentials.address = SorobanAddressCredentials.decode(stream);
+        decodedSorobanCredentials.address = SorobanAddressCredentials.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSorobanCredentials;
+  }
+
+  public static SorobanCredentials decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanCredentials fromXdrBase64(String xdr) throws IOException {
@@ -65,6 +76,7 @@ public class SorobanCredentials implements XdrElement {
   public static SorobanCredentials fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -44,16 +44,35 @@ public class OperationMetaV2 implements XdrElement {
     }
   }
 
-  public static OperationMetaV2 decode(XdrDataInputStream stream) throws IOException {
+  public static OperationMetaV2 decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     OperationMetaV2 decodedOperationMetaV2 = new OperationMetaV2();
-    decodedOperationMetaV2.ext = ExtensionPoint.decode(stream);
-    decodedOperationMetaV2.changes = LedgerEntryChanges.decode(stream);
+    decodedOperationMetaV2.ext = ExtensionPoint.decode(stream, maxDepth);
+    decodedOperationMetaV2.changes = LedgerEntryChanges.decode(stream, maxDepth);
     int eventsSize = stream.readInt();
+    if (eventsSize < 0) {
+      throw new IOException("events size " + eventsSize + " is negative");
+    }
+    int eventsRemainingInputLen = stream.getRemainingInputLen();
+    if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventsSize) {
+      throw new IOException(
+          "events size "
+              + eventsSize
+              + " exceeds remaining input length "
+              + eventsRemainingInputLen);
+    }
     decodedOperationMetaV2.events = new ContractEvent[eventsSize];
     for (int i = 0; i < eventsSize; i++) {
-      decodedOperationMetaV2.events[i] = ContractEvent.decode(stream);
+      decodedOperationMetaV2.events[i] = ContractEvent.decode(stream, maxDepth);
     }
     return decodedOperationMetaV2;
+  }
+
+  public static OperationMetaV2 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static OperationMetaV2 fromXdrBase64(String xdr) throws IOException {
@@ -64,6 +83,7 @@ public class OperationMetaV2 implements XdrElement {
   public static OperationMetaV2 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

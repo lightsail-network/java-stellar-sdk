@@ -41,17 +41,28 @@ public class BumpSequenceResult implements XdrElement {
     }
   }
 
-  public static BumpSequenceResult decode(XdrDataInputStream stream) throws IOException {
+  public static BumpSequenceResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     BumpSequenceResult decodedBumpSequenceResult = new BumpSequenceResult();
-    BumpSequenceResultCode discriminant = BumpSequenceResultCode.decode(stream);
+    BumpSequenceResultCode discriminant = BumpSequenceResultCode.decode(stream, maxDepth);
     decodedBumpSequenceResult.setDiscriminant(discriminant);
     switch (decodedBumpSequenceResult.getDiscriminant()) {
       case BUMP_SEQUENCE_SUCCESS:
         break;
       case BUMP_SEQUENCE_BAD_SEQ:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedBumpSequenceResult;
+  }
+
+  public static BumpSequenceResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static BumpSequenceResult fromXdrBase64(String xdr) throws IOException {
@@ -62,6 +73,7 @@ public class BumpSequenceResult implements XdrElement {
   public static BumpSequenceResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

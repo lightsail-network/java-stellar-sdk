@@ -43,16 +43,37 @@ public class CreateContractArgsV2 implements XdrElement {
     }
   }
 
-  public static CreateContractArgsV2 decode(XdrDataInputStream stream) throws IOException {
+  public static CreateContractArgsV2 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     CreateContractArgsV2 decodedCreateContractArgsV2 = new CreateContractArgsV2();
-    decodedCreateContractArgsV2.contractIDPreimage = ContractIDPreimage.decode(stream);
-    decodedCreateContractArgsV2.executable = ContractExecutable.decode(stream);
+    decodedCreateContractArgsV2.contractIDPreimage = ContractIDPreimage.decode(stream, maxDepth);
+    decodedCreateContractArgsV2.executable = ContractExecutable.decode(stream, maxDepth);
     int constructorArgsSize = stream.readInt();
+    if (constructorArgsSize < 0) {
+      throw new IOException("constructorArgs size " + constructorArgsSize + " is negative");
+    }
+    int constructorArgsRemainingInputLen = stream.getRemainingInputLen();
+    if (constructorArgsRemainingInputLen >= 0
+        && constructorArgsRemainingInputLen < constructorArgsSize) {
+      throw new IOException(
+          "constructorArgs size "
+              + constructorArgsSize
+              + " exceeds remaining input length "
+              + constructorArgsRemainingInputLen);
+    }
     decodedCreateContractArgsV2.constructorArgs = new SCVal[constructorArgsSize];
     for (int i = 0; i < constructorArgsSize; i++) {
-      decodedCreateContractArgsV2.constructorArgs[i] = SCVal.decode(stream);
+      decodedCreateContractArgsV2.constructorArgs[i] = SCVal.decode(stream, maxDepth);
     }
     return decodedCreateContractArgsV2;
+  }
+
+  public static CreateContractArgsV2 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static CreateContractArgsV2 fromXdrBase64(String xdr) throws IOException {
@@ -63,6 +84,7 @@ public class CreateContractArgsV2 implements XdrElement {
   public static CreateContractArgsV2 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

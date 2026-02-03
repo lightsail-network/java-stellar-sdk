@@ -39,15 +39,29 @@ public class SCSpecEventV0 implements XdrElement {
   private SCSpecEventDataFormat dataFormat;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
+    int docSize = doc.getBytes().length;
+    if (docSize > 1024) {
+      throw new IOException("doc size " + docSize + " exceeds max size 1024");
+    }
     doc.encode(stream);
+    int libSize = lib.getBytes().length;
+    if (libSize > 80) {
+      throw new IOException("lib size " + libSize + " exceeds max size 80");
+    }
     lib.encode(stream);
     name.encode(stream);
     int prefixTopicsSize = getPrefixTopics().length;
+    if (prefixTopicsSize > 2) {
+      throw new IOException("prefixTopics size " + prefixTopicsSize + " exceeds max size 2");
+    }
     stream.writeInt(prefixTopicsSize);
     for (int i = 0; i < prefixTopicsSize; i++) {
       prefixTopics[i].encode(stream);
     }
     int paramsSize = getParams().length;
+    if (paramsSize > 50) {
+      throw new IOException("params size " + paramsSize + " exceeds max size 50");
+    }
     stream.writeInt(paramsSize);
     for (int i = 0; i < paramsSize; i++) {
       params[i].encode(stream);
@@ -55,23 +69,59 @@ public class SCSpecEventV0 implements XdrElement {
     dataFormat.encode(stream);
   }
 
-  public static SCSpecEventV0 decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecEventV0 decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecEventV0 decodedSCSpecEventV0 = new SCSpecEventV0();
-    decodedSCSpecEventV0.doc = XdrString.decode(stream, Constants.SC_SPEC_DOC_LIMIT);
-    decodedSCSpecEventV0.lib = XdrString.decode(stream, 80);
-    decodedSCSpecEventV0.name = SCSymbol.decode(stream);
+    decodedSCSpecEventV0.doc = XdrString.decode(stream, maxDepth, Constants.SC_SPEC_DOC_LIMIT);
+    decodedSCSpecEventV0.lib = XdrString.decode(stream, maxDepth, 80);
+    decodedSCSpecEventV0.name = SCSymbol.decode(stream, maxDepth);
     int prefixTopicsSize = stream.readInt();
+    if (prefixTopicsSize < 0) {
+      throw new IOException("prefixTopics size " + prefixTopicsSize + " is negative");
+    }
+    if (prefixTopicsSize > 2) {
+      throw new IOException("prefixTopics size " + prefixTopicsSize + " exceeds max size 2");
+    }
+    int prefixTopicsRemainingInputLen = stream.getRemainingInputLen();
+    if (prefixTopicsRemainingInputLen >= 0 && prefixTopicsRemainingInputLen < prefixTopicsSize) {
+      throw new IOException(
+          "prefixTopics size "
+              + prefixTopicsSize
+              + " exceeds remaining input length "
+              + prefixTopicsRemainingInputLen);
+    }
     decodedSCSpecEventV0.prefixTopics = new SCSymbol[prefixTopicsSize];
     for (int i = 0; i < prefixTopicsSize; i++) {
-      decodedSCSpecEventV0.prefixTopics[i] = SCSymbol.decode(stream);
+      decodedSCSpecEventV0.prefixTopics[i] = SCSymbol.decode(stream, maxDepth);
     }
     int paramsSize = stream.readInt();
+    if (paramsSize < 0) {
+      throw new IOException("params size " + paramsSize + " is negative");
+    }
+    if (paramsSize > 50) {
+      throw new IOException("params size " + paramsSize + " exceeds max size 50");
+    }
+    int paramsRemainingInputLen = stream.getRemainingInputLen();
+    if (paramsRemainingInputLen >= 0 && paramsRemainingInputLen < paramsSize) {
+      throw new IOException(
+          "params size "
+              + paramsSize
+              + " exceeds remaining input length "
+              + paramsRemainingInputLen);
+    }
     decodedSCSpecEventV0.params = new SCSpecEventParamV0[paramsSize];
     for (int i = 0; i < paramsSize; i++) {
-      decodedSCSpecEventV0.params[i] = SCSpecEventParamV0.decode(stream);
+      decodedSCSpecEventV0.params[i] = SCSpecEventParamV0.decode(stream, maxDepth);
     }
-    decodedSCSpecEventV0.dataFormat = SCSpecEventDataFormat.decode(stream);
+    decodedSCSpecEventV0.dataFormat = SCSpecEventDataFormat.decode(stream, maxDepth);
     return decodedSCSpecEventV0;
+  }
+
+  public static SCSpecEventV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecEventV0 fromXdrBase64(String xdr) throws IOException {
@@ -82,6 +132,7 @@ public class SCSpecEventV0 implements XdrElement {
   public static SCSpecEventV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

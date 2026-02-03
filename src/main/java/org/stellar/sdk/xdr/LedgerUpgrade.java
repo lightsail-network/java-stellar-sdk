@@ -78,34 +78,44 @@ public class LedgerUpgrade implements XdrElement {
     }
   }
 
-  public static LedgerUpgrade decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerUpgrade decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerUpgrade decodedLedgerUpgrade = new LedgerUpgrade();
-    LedgerUpgradeType discriminant = LedgerUpgradeType.decode(stream);
+    LedgerUpgradeType discriminant = LedgerUpgradeType.decode(stream, maxDepth);
     decodedLedgerUpgrade.setDiscriminant(discriminant);
     switch (decodedLedgerUpgrade.getDiscriminant()) {
       case LEDGER_UPGRADE_VERSION:
-        decodedLedgerUpgrade.newLedgerVersion = Uint32.decode(stream);
+        decodedLedgerUpgrade.newLedgerVersion = Uint32.decode(stream, maxDepth);
         break;
       case LEDGER_UPGRADE_BASE_FEE:
-        decodedLedgerUpgrade.newBaseFee = Uint32.decode(stream);
+        decodedLedgerUpgrade.newBaseFee = Uint32.decode(stream, maxDepth);
         break;
       case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
-        decodedLedgerUpgrade.newMaxTxSetSize = Uint32.decode(stream);
+        decodedLedgerUpgrade.newMaxTxSetSize = Uint32.decode(stream, maxDepth);
         break;
       case LEDGER_UPGRADE_BASE_RESERVE:
-        decodedLedgerUpgrade.newBaseReserve = Uint32.decode(stream);
+        decodedLedgerUpgrade.newBaseReserve = Uint32.decode(stream, maxDepth);
         break;
       case LEDGER_UPGRADE_FLAGS:
-        decodedLedgerUpgrade.newFlags = Uint32.decode(stream);
+        decodedLedgerUpgrade.newFlags = Uint32.decode(stream, maxDepth);
         break;
       case LEDGER_UPGRADE_CONFIG:
-        decodedLedgerUpgrade.newConfig = ConfigUpgradeSetKey.decode(stream);
+        decodedLedgerUpgrade.newConfig = ConfigUpgradeSetKey.decode(stream, maxDepth);
         break;
       case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
-        decodedLedgerUpgrade.newMaxSorobanTxSetSize = Uint32.decode(stream);
+        decodedLedgerUpgrade.newMaxSorobanTxSetSize = Uint32.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedLedgerUpgrade;
+  }
+
+  public static LedgerUpgrade decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerUpgrade fromXdrBase64(String xdr) throws IOException {
@@ -116,6 +126,7 @@ public class LedgerUpgrade implements XdrElement {
   public static LedgerUpgrade fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

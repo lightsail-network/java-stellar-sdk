@@ -44,14 +44,23 @@ public class LiquidityPoolDepositOp implements XdrElement {
     maxPrice.encode(stream);
   }
 
-  public static LiquidityPoolDepositOp decode(XdrDataInputStream stream) throws IOException {
+  public static LiquidityPoolDepositOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LiquidityPoolDepositOp decodedLiquidityPoolDepositOp = new LiquidityPoolDepositOp();
-    decodedLiquidityPoolDepositOp.liquidityPoolID = PoolID.decode(stream);
-    decodedLiquidityPoolDepositOp.maxAmountA = Int64.decode(stream);
-    decodedLiquidityPoolDepositOp.maxAmountB = Int64.decode(stream);
-    decodedLiquidityPoolDepositOp.minPrice = Price.decode(stream);
-    decodedLiquidityPoolDepositOp.maxPrice = Price.decode(stream);
+    decodedLiquidityPoolDepositOp.liquidityPoolID = PoolID.decode(stream, maxDepth);
+    decodedLiquidityPoolDepositOp.maxAmountA = Int64.decode(stream, maxDepth);
+    decodedLiquidityPoolDepositOp.maxAmountB = Int64.decode(stream, maxDepth);
+    decodedLiquidityPoolDepositOp.minPrice = Price.decode(stream, maxDepth);
+    decodedLiquidityPoolDepositOp.maxPrice = Price.decode(stream, maxDepth);
     return decodedLiquidityPoolDepositOp;
+  }
+
+  public static LiquidityPoolDepositOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LiquidityPoolDepositOp fromXdrBase64(String xdr) throws IOException {
@@ -62,6 +71,7 @@ public class LiquidityPoolDepositOp implements XdrElement {
   public static LiquidityPoolDepositOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

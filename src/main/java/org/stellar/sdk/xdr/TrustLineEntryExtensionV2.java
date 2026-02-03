@@ -41,11 +41,20 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
     ext.encode(stream);
   }
 
-  public static TrustLineEntryExtensionV2 decode(XdrDataInputStream stream) throws IOException {
+  public static TrustLineEntryExtensionV2 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TrustLineEntryExtensionV2 decodedTrustLineEntryExtensionV2 = new TrustLineEntryExtensionV2();
-    decodedTrustLineEntryExtensionV2.liquidityPoolUseCount = Int32.decode(stream);
-    decodedTrustLineEntryExtensionV2.ext = TrustLineEntryExtensionV2Ext.decode(stream);
+    decodedTrustLineEntryExtensionV2.liquidityPoolUseCount = Int32.decode(stream, maxDepth);
+    decodedTrustLineEntryExtensionV2.ext = TrustLineEntryExtensionV2Ext.decode(stream, maxDepth);
     return decodedTrustLineEntryExtensionV2;
+  }
+
+  public static TrustLineEntryExtensionV2 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TrustLineEntryExtensionV2 fromXdrBase64(String xdr) throws IOException {
@@ -56,6 +65,7 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
   public static TrustLineEntryExtensionV2 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -85,8 +95,12 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
       }
     }
 
-    public static TrustLineEntryExtensionV2Ext decode(XdrDataInputStream stream)
+    public static TrustLineEntryExtensionV2Ext decode(XdrDataInputStream stream, int maxDepth)
         throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       TrustLineEntryExtensionV2Ext decodedTrustLineEntryExtensionV2Ext =
           new TrustLineEntryExtensionV2Ext();
       Integer discriminant = stream.readInt();
@@ -94,8 +108,15 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
       switch (decodedTrustLineEntryExtensionV2Ext.getDiscriminant()) {
         case 0:
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedTrustLineEntryExtensionV2Ext;
+    }
+
+    public static TrustLineEntryExtensionV2Ext decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static TrustLineEntryExtensionV2Ext fromXdrBase64(String xdr) throws IOException {
@@ -106,6 +127,7 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
     public static TrustLineEntryExtensionV2Ext fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

@@ -43,16 +43,26 @@ public class Claimant implements XdrElement {
     }
   }
 
-  public static Claimant decode(XdrDataInputStream stream) throws IOException {
+  public static Claimant decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Claimant decodedClaimant = new Claimant();
-    ClaimantType discriminant = ClaimantType.decode(stream);
+    ClaimantType discriminant = ClaimantType.decode(stream, maxDepth);
     decodedClaimant.setDiscriminant(discriminant);
     switch (decodedClaimant.getDiscriminant()) {
       case CLAIMANT_TYPE_V0:
-        decodedClaimant.v0 = ClaimantV0.decode(stream);
+        decodedClaimant.v0 = ClaimantV0.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedClaimant;
+  }
+
+  public static Claimant decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Claimant fromXdrBase64(String xdr) throws IOException {
@@ -63,6 +73,7 @@ public class Claimant implements XdrElement {
   public static Claimant fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -90,11 +101,19 @@ public class Claimant implements XdrElement {
       predicate.encode(stream);
     }
 
-    public static ClaimantV0 decode(XdrDataInputStream stream) throws IOException {
+    public static ClaimantV0 decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       ClaimantV0 decodedClaimantV0 = new ClaimantV0();
-      decodedClaimantV0.destination = AccountID.decode(stream);
-      decodedClaimantV0.predicate = ClaimPredicate.decode(stream);
+      decodedClaimantV0.destination = AccountID.decode(stream, maxDepth);
+      decodedClaimantV0.predicate = ClaimPredicate.decode(stream, maxDepth);
       return decodedClaimantV0;
+    }
+
+    public static ClaimantV0 decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static ClaimantV0 fromXdrBase64(String xdr) throws IOException {
@@ -105,6 +124,7 @@ public class Claimant implements XdrElement {
     public static ClaimantV0 fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

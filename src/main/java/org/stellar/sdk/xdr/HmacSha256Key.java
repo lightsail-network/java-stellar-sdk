@@ -30,15 +30,26 @@ public class HmacSha256Key implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int keySize = key.length;
+    if (keySize != 32) {
+      throw new IOException("key size " + keySize + " does not match fixed size 32");
+    }
     stream.write(getKey(), 0, keySize);
   }
 
-  public static HmacSha256Key decode(XdrDataInputStream stream) throws IOException {
+  public static HmacSha256Key decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     HmacSha256Key decodedHmacSha256Key = new HmacSha256Key();
     int keySize = 32;
     decodedHmacSha256Key.key = new byte[keySize];
-    stream.read(decodedHmacSha256Key.key, 0, keySize);
+    stream.readPaddedData(decodedHmacSha256Key.key, 0, keySize);
     return decodedHmacSha256Key;
+  }
+
+  public static HmacSha256Key decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static HmacSha256Key fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +60,7 @@ public class HmacSha256Key implements XdrElement {
   public static HmacSha256Key fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

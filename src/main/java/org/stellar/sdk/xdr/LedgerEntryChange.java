@@ -63,28 +63,39 @@ public class LedgerEntryChange implements XdrElement {
     }
   }
 
-  public static LedgerEntryChange decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerEntryChange decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerEntryChange decodedLedgerEntryChange = new LedgerEntryChange();
-    LedgerEntryChangeType discriminant = LedgerEntryChangeType.decode(stream);
+    LedgerEntryChangeType discriminant = LedgerEntryChangeType.decode(stream, maxDepth);
     decodedLedgerEntryChange.setDiscriminant(discriminant);
     switch (decodedLedgerEntryChange.getDiscriminant()) {
       case LEDGER_ENTRY_CREATED:
-        decodedLedgerEntryChange.created = LedgerEntry.decode(stream);
+        decodedLedgerEntryChange.created = LedgerEntry.decode(stream, maxDepth);
         break;
       case LEDGER_ENTRY_UPDATED:
-        decodedLedgerEntryChange.updated = LedgerEntry.decode(stream);
+        decodedLedgerEntryChange.updated = LedgerEntry.decode(stream, maxDepth);
         break;
       case LEDGER_ENTRY_REMOVED:
-        decodedLedgerEntryChange.removed = LedgerKey.decode(stream);
+        decodedLedgerEntryChange.removed = LedgerKey.decode(stream, maxDepth);
         break;
       case LEDGER_ENTRY_STATE:
-        decodedLedgerEntryChange.state = LedgerEntry.decode(stream);
+        decodedLedgerEntryChange.state = LedgerEntry.decode(stream, maxDepth);
         break;
       case LEDGER_ENTRY_RESTORED:
-        decodedLedgerEntryChange.restored = LedgerEntry.decode(stream);
+        decodedLedgerEntryChange.restored = LedgerEntry.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedLedgerEntryChange;
+  }
+
+  public static LedgerEntryChange decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerEntryChange fromXdrBase64(String xdr) throws IOException {
@@ -95,6 +106,7 @@ public class LedgerEntryChange implements XdrElement {
   public static LedgerEntryChange fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

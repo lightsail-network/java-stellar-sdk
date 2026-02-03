@@ -51,13 +51,22 @@ public class FeeBumpTransaction implements XdrElement {
     ext.encode(stream);
   }
 
-  public static FeeBumpTransaction decode(XdrDataInputStream stream) throws IOException {
+  public static FeeBumpTransaction decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     FeeBumpTransaction decodedFeeBumpTransaction = new FeeBumpTransaction();
-    decodedFeeBumpTransaction.feeSource = MuxedAccount.decode(stream);
-    decodedFeeBumpTransaction.fee = Int64.decode(stream);
-    decodedFeeBumpTransaction.innerTx = FeeBumpTransactionInnerTx.decode(stream);
-    decodedFeeBumpTransaction.ext = FeeBumpTransactionExt.decode(stream);
+    decodedFeeBumpTransaction.feeSource = MuxedAccount.decode(stream, maxDepth);
+    decodedFeeBumpTransaction.fee = Int64.decode(stream, maxDepth);
+    decodedFeeBumpTransaction.innerTx = FeeBumpTransactionInnerTx.decode(stream, maxDepth);
+    decodedFeeBumpTransaction.ext = FeeBumpTransactionExt.decode(stream, maxDepth);
     return decodedFeeBumpTransaction;
+  }
+
+  public static FeeBumpTransaction decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static FeeBumpTransaction fromXdrBase64(String xdr) throws IOException {
@@ -68,6 +77,7 @@ public class FeeBumpTransaction implements XdrElement {
   public static FeeBumpTransaction fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -99,16 +109,27 @@ public class FeeBumpTransaction implements XdrElement {
       }
     }
 
-    public static FeeBumpTransactionInnerTx decode(XdrDataInputStream stream) throws IOException {
+    public static FeeBumpTransactionInnerTx decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       FeeBumpTransactionInnerTx decodedFeeBumpTransactionInnerTx = new FeeBumpTransactionInnerTx();
-      EnvelopeType discriminant = EnvelopeType.decode(stream);
+      EnvelopeType discriminant = EnvelopeType.decode(stream, maxDepth);
       decodedFeeBumpTransactionInnerTx.setDiscriminant(discriminant);
       switch (decodedFeeBumpTransactionInnerTx.getDiscriminant()) {
         case ENVELOPE_TYPE_TX:
-          decodedFeeBumpTransactionInnerTx.v1 = TransactionV1Envelope.decode(stream);
+          decodedFeeBumpTransactionInnerTx.v1 = TransactionV1Envelope.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedFeeBumpTransactionInnerTx;
+    }
+
+    public static FeeBumpTransactionInnerTx decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static FeeBumpTransactionInnerTx fromXdrBase64(String xdr) throws IOException {
@@ -119,6 +140,7 @@ public class FeeBumpTransaction implements XdrElement {
     public static FeeBumpTransactionInnerTx fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -149,15 +171,26 @@ public class FeeBumpTransaction implements XdrElement {
       }
     }
 
-    public static FeeBumpTransactionExt decode(XdrDataInputStream stream) throws IOException {
+    public static FeeBumpTransactionExt decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       FeeBumpTransactionExt decodedFeeBumpTransactionExt = new FeeBumpTransactionExt();
       Integer discriminant = stream.readInt();
       decodedFeeBumpTransactionExt.setDiscriminant(discriminant);
       switch (decodedFeeBumpTransactionExt.getDiscriminant()) {
         case 0:
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedFeeBumpTransactionExt;
+    }
+
+    public static FeeBumpTransactionExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static FeeBumpTransactionExt fromXdrBase64(String xdr) throws IOException {
@@ -168,6 +201,7 @@ public class FeeBumpTransaction implements XdrElement {
     public static FeeBumpTransactionExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

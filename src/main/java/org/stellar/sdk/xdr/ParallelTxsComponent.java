@@ -47,18 +47,40 @@ public class ParallelTxsComponent implements XdrElement {
     }
   }
 
-  public static ParallelTxsComponent decode(XdrDataInputStream stream) throws IOException {
+  public static ParallelTxsComponent decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ParallelTxsComponent decodedParallelTxsComponent = new ParallelTxsComponent();
-    int baseFeePresent = stream.readInt();
-    if (baseFeePresent != 0) {
-      decodedParallelTxsComponent.baseFee = Int64.decode(stream);
+    boolean baseFeePresent = stream.readXdrBoolean();
+    if (baseFeePresent) {
+      decodedParallelTxsComponent.baseFee = Int64.decode(stream, maxDepth);
     }
     int executionStagesSize = stream.readInt();
+    if (executionStagesSize < 0) {
+      throw new IOException("executionStages size " + executionStagesSize + " is negative");
+    }
+    int executionStagesRemainingInputLen = stream.getRemainingInputLen();
+    if (executionStagesRemainingInputLen >= 0
+        && executionStagesRemainingInputLen < executionStagesSize) {
+      throw new IOException(
+          "executionStages size "
+              + executionStagesSize
+              + " exceeds remaining input length "
+              + executionStagesRemainingInputLen);
+    }
     decodedParallelTxsComponent.executionStages = new ParallelTxExecutionStage[executionStagesSize];
     for (int i = 0; i < executionStagesSize; i++) {
-      decodedParallelTxsComponent.executionStages[i] = ParallelTxExecutionStage.decode(stream);
+      decodedParallelTxsComponent.executionStages[i] =
+          ParallelTxExecutionStage.decode(stream, maxDepth);
     }
     return decodedParallelTxsComponent;
+  }
+
+  public static ParallelTxsComponent decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ParallelTxsComponent fromXdrBase64(String xdr) throws IOException {
@@ -69,6 +91,7 @@ public class ParallelTxsComponent implements XdrElement {
   public static ParallelTxsComponent fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -43,17 +43,27 @@ public class TxSetComponent implements XdrElement {
     }
   }
 
-  public static TxSetComponent decode(XdrDataInputStream stream) throws IOException {
+  public static TxSetComponent decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TxSetComponent decodedTxSetComponent = new TxSetComponent();
-    TxSetComponentType discriminant = TxSetComponentType.decode(stream);
+    TxSetComponentType discriminant = TxSetComponentType.decode(stream, maxDepth);
     decodedTxSetComponent.setDiscriminant(discriminant);
     switch (decodedTxSetComponent.getDiscriminant()) {
       case TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE:
         decodedTxSetComponent.txsMaybeDiscountedFee =
-            TxSetComponentTxsMaybeDiscountedFee.decode(stream);
+            TxSetComponentTxsMaybeDiscountedFee.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedTxSetComponent;
+  }
+
+  public static TxSetComponent decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TxSetComponent fromXdrBase64(String xdr) throws IOException {
@@ -64,6 +74,7 @@ public class TxSetComponent implements XdrElement {
   public static TxSetComponent fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -100,20 +111,38 @@ public class TxSetComponent implements XdrElement {
       }
     }
 
-    public static TxSetComponentTxsMaybeDiscountedFee decode(XdrDataInputStream stream)
-        throws IOException {
+    public static TxSetComponentTxsMaybeDiscountedFee decode(
+        XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       TxSetComponentTxsMaybeDiscountedFee decodedTxSetComponentTxsMaybeDiscountedFee =
           new TxSetComponentTxsMaybeDiscountedFee();
-      int baseFeePresent = stream.readInt();
-      if (baseFeePresent != 0) {
-        decodedTxSetComponentTxsMaybeDiscountedFee.baseFee = Int64.decode(stream);
+      boolean baseFeePresent = stream.readXdrBoolean();
+      if (baseFeePresent) {
+        decodedTxSetComponentTxsMaybeDiscountedFee.baseFee = Int64.decode(stream, maxDepth);
       }
       int txsSize = stream.readInt();
+      if (txsSize < 0) {
+        throw new IOException("txs size " + txsSize + " is negative");
+      }
+      int txsRemainingInputLen = stream.getRemainingInputLen();
+      if (txsRemainingInputLen >= 0 && txsRemainingInputLen < txsSize) {
+        throw new IOException(
+            "txs size " + txsSize + " exceeds remaining input length " + txsRemainingInputLen);
+      }
       decodedTxSetComponentTxsMaybeDiscountedFee.txs = new TransactionEnvelope[txsSize];
       for (int i = 0; i < txsSize; i++) {
-        decodedTxSetComponentTxsMaybeDiscountedFee.txs[i] = TransactionEnvelope.decode(stream);
+        decodedTxSetComponentTxsMaybeDiscountedFee.txs[i] =
+            TransactionEnvelope.decode(stream, maxDepth);
       }
       return decodedTxSetComponentTxsMaybeDiscountedFee;
+    }
+
+    public static TxSetComponentTxsMaybeDiscountedFee decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static TxSetComponentTxsMaybeDiscountedFee fromXdrBase64(String xdr) throws IOException {
@@ -125,6 +154,7 @@ public class TxSetComponent implements XdrElement {
         throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

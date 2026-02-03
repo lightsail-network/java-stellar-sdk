@@ -49,10 +49,16 @@ public class ClaimClaimableBalanceResult implements XdrElement {
     }
   }
 
-  public static ClaimClaimableBalanceResult decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimClaimableBalanceResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClaimClaimableBalanceResult decodedClaimClaimableBalanceResult =
         new ClaimClaimableBalanceResult();
-    ClaimClaimableBalanceResultCode discriminant = ClaimClaimableBalanceResultCode.decode(stream);
+    ClaimClaimableBalanceResultCode discriminant =
+        ClaimClaimableBalanceResultCode.decode(stream, maxDepth);
     decodedClaimClaimableBalanceResult.setDiscriminant(discriminant);
     switch (decodedClaimClaimableBalanceResult.getDiscriminant()) {
       case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
@@ -63,8 +69,14 @@ public class ClaimClaimableBalanceResult implements XdrElement {
       case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
       case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedClaimClaimableBalanceResult;
+  }
+
+  public static ClaimClaimableBalanceResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClaimClaimableBalanceResult fromXdrBase64(String xdr) throws IOException {
@@ -75,6 +87,7 @@ public class ClaimClaimableBalanceResult implements XdrElement {
   public static ClaimClaimableBalanceResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

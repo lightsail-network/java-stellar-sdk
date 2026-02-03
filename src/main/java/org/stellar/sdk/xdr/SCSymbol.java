@@ -24,13 +24,25 @@ public class SCSymbol implements XdrElement {
   private XdrString SCSymbol;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
+    int SCSymbolSize = SCSymbol.getBytes().length;
+    if (SCSymbolSize > 32) {
+      throw new IOException("SCSymbol size " + SCSymbolSize + " exceeds max size 32");
+    }
     SCSymbol.encode(stream);
   }
 
-  public static SCSymbol decode(XdrDataInputStream stream) throws IOException {
+  public static SCSymbol decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSymbol decodedSCSymbol = new SCSymbol();
-    decodedSCSymbol.SCSymbol = XdrString.decode(stream, Constants.SCSYMBOL_LIMIT);
+    decodedSCSymbol.SCSymbol = XdrString.decode(stream, maxDepth, Constants.SCSYMBOL_LIMIT);
     return decodedSCSymbol;
+  }
+
+  public static SCSymbol decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSymbol fromXdrBase64(String xdr) throws IOException {
@@ -41,6 +53,7 @@ public class SCSymbol implements XdrElement {
   public static SCSymbol fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -39,17 +39,37 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
     }
   }
 
-  public static InvokeHostFunctionSuccessPreImage decode(XdrDataInputStream stream)
+  public static InvokeHostFunctionSuccessPreImage decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     InvokeHostFunctionSuccessPreImage decodedInvokeHostFunctionSuccessPreImage =
         new InvokeHostFunctionSuccessPreImage();
-    decodedInvokeHostFunctionSuccessPreImage.returnValue = SCVal.decode(stream);
+    decodedInvokeHostFunctionSuccessPreImage.returnValue = SCVal.decode(stream, maxDepth);
     int eventsSize = stream.readInt();
+    if (eventsSize < 0) {
+      throw new IOException("events size " + eventsSize + " is negative");
+    }
+    int eventsRemainingInputLen = stream.getRemainingInputLen();
+    if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventsSize) {
+      throw new IOException(
+          "events size "
+              + eventsSize
+              + " exceeds remaining input length "
+              + eventsRemainingInputLen);
+    }
     decodedInvokeHostFunctionSuccessPreImage.events = new ContractEvent[eventsSize];
     for (int i = 0; i < eventsSize; i++) {
-      decodedInvokeHostFunctionSuccessPreImage.events[i] = ContractEvent.decode(stream);
+      decodedInvokeHostFunctionSuccessPreImage.events[i] = ContractEvent.decode(stream, maxDepth);
     }
     return decodedInvokeHostFunctionSuccessPreImage;
+  }
+
+  public static InvokeHostFunctionSuccessPreImage decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static InvokeHostFunctionSuccessPreImage fromXdrBase64(String xdr) throws IOException {
@@ -60,6 +80,7 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
   public static InvokeHostFunctionSuccessPreImage fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

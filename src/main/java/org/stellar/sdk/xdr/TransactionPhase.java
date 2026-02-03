@@ -49,23 +49,47 @@ public class TransactionPhase implements XdrElement {
     }
   }
 
-  public static TransactionPhase decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionPhase decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionPhase decodedTransactionPhase = new TransactionPhase();
     Integer discriminant = stream.readInt();
     decodedTransactionPhase.setDiscriminant(discriminant);
     switch (decodedTransactionPhase.getDiscriminant()) {
       case 0:
         int v0ComponentsSize = stream.readInt();
+        if (v0ComponentsSize < 0) {
+          throw new IOException("v0Components size " + v0ComponentsSize + " is negative");
+        }
+        int v0ComponentsRemainingInputLen = stream.getRemainingInputLen();
+        if (v0ComponentsRemainingInputLen >= 0
+            && v0ComponentsRemainingInputLen < v0ComponentsSize) {
+          throw new IOException(
+              "v0Components size "
+                  + v0ComponentsSize
+                  + " exceeds remaining input length "
+                  + v0ComponentsRemainingInputLen);
+        }
         decodedTransactionPhase.v0Components = new TxSetComponent[v0ComponentsSize];
         for (int i = 0; i < v0ComponentsSize; i++) {
-          decodedTransactionPhase.v0Components[i] = TxSetComponent.decode(stream);
+          decodedTransactionPhase.v0Components[i] = TxSetComponent.decode(stream, maxDepth);
         }
         break;
       case 1:
-        decodedTransactionPhase.parallelTxsComponent = ParallelTxsComponent.decode(stream);
+        decodedTransactionPhase.parallelTxsComponent =
+            ParallelTxsComponent.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedTransactionPhase;
+  }
+
+  public static TransactionPhase decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionPhase fromXdrBase64(String xdr) throws IOException {
@@ -76,6 +100,7 @@ public class TransactionPhase implements XdrElement {
   public static TransactionPhase fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

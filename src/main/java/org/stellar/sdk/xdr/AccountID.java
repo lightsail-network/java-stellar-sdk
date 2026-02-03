@@ -27,10 +27,18 @@ public class AccountID implements XdrElement {
     AccountID.encode(stream);
   }
 
-  public static AccountID decode(XdrDataInputStream stream) throws IOException {
+  public static AccountID decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     AccountID decodedAccountID = new AccountID();
-    decodedAccountID.AccountID = PublicKey.decode(stream);
+    decodedAccountID.AccountID = PublicKey.decode(stream, maxDepth);
     return decodedAccountID;
+  }
+
+  public static AccountID decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static AccountID fromXdrBase64(String xdr) throws IOException {
@@ -41,6 +49,7 @@ public class AccountID implements XdrElement {
   public static AccountID fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

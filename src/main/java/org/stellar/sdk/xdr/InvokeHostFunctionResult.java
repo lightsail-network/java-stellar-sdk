@@ -51,13 +51,19 @@ public class InvokeHostFunctionResult implements XdrElement {
     }
   }
 
-  public static InvokeHostFunctionResult decode(XdrDataInputStream stream) throws IOException {
+  public static InvokeHostFunctionResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     InvokeHostFunctionResult decodedInvokeHostFunctionResult = new InvokeHostFunctionResult();
-    InvokeHostFunctionResultCode discriminant = InvokeHostFunctionResultCode.decode(stream);
+    InvokeHostFunctionResultCode discriminant =
+        InvokeHostFunctionResultCode.decode(stream, maxDepth);
     decodedInvokeHostFunctionResult.setDiscriminant(discriminant);
     switch (decodedInvokeHostFunctionResult.getDiscriminant()) {
       case INVOKE_HOST_FUNCTION_SUCCESS:
-        decodedInvokeHostFunctionResult.success = Hash.decode(stream);
+        decodedInvokeHostFunctionResult.success = Hash.decode(stream, maxDepth);
         break;
       case INVOKE_HOST_FUNCTION_MALFORMED:
       case INVOKE_HOST_FUNCTION_TRAPPED:
@@ -65,8 +71,14 @@ public class InvokeHostFunctionResult implements XdrElement {
       case INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED:
       case INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedInvokeHostFunctionResult;
+  }
+
+  public static InvokeHostFunctionResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static InvokeHostFunctionResult fromXdrBase64(String xdr) throws IOException {
@@ -77,6 +89,7 @@ public class InvokeHostFunctionResult implements XdrElement {
   public static InvokeHostFunctionResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

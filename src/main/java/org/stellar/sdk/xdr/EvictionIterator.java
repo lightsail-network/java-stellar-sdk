@@ -37,12 +37,21 @@ public class EvictionIterator implements XdrElement {
     bucketFileOffset.encode(stream);
   }
 
-  public static EvictionIterator decode(XdrDataInputStream stream) throws IOException {
+  public static EvictionIterator decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     EvictionIterator decodedEvictionIterator = new EvictionIterator();
-    decodedEvictionIterator.bucketListLevel = Uint32.decode(stream);
-    decodedEvictionIterator.isCurrBucket = stream.readInt() == 1 ? true : false;
-    decodedEvictionIterator.bucketFileOffset = Uint64.decode(stream);
+    decodedEvictionIterator.bucketListLevel = Uint32.decode(stream, maxDepth);
+    decodedEvictionIterator.isCurrBucket = stream.readXdrBoolean();
+    decodedEvictionIterator.bucketFileOffset = Uint64.decode(stream, maxDepth);
     return decodedEvictionIterator;
+  }
+
+  public static EvictionIterator decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static EvictionIterator fromXdrBase64(String xdr) throws IOException {
@@ -53,6 +62,7 @@ public class EvictionIterator implements XdrElement {
   public static EvictionIterator fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

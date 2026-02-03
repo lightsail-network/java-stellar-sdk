@@ -1,6 +1,5 @@
 package org.stellar.sdk;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -18,7 +17,6 @@ import org.stellar.sdk.xdr.PublicKey;
 import org.stellar.sdk.xdr.PublicKeyType;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint64;
-import org.stellar.sdk.xdr.XdrDataInputStream;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /**
@@ -457,15 +455,12 @@ public class StrKey {
         }
         break;
       case MED25519_PUBLIC_KEY:
-        XdrDataInputStream input =
-            new XdrDataInputStream(
-                new ByteArrayInputStream(
-                    decodeCheck(VersionByte.MED25519_PUBLIC_KEY, data.toCharArray())));
+        byte[] input = decodeCheck(VersionByte.MED25519_PUBLIC_KEY, data.toCharArray());
         muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
         MuxedAccount.MuxedAccountMed25519 med = new MuxedAccount.MuxedAccountMed25519();
         try {
-          med.setEd25519(Uint256.decode(input));
-          med.setId(new Uint64(XdrUnsignedHyperInteger.decode(input)));
+          med.setEd25519(Uint256.fromXdrByteArray(Arrays.copyOfRange(input, 0, 32)));
+          med.setId(Uint64.fromXdrByteArray(Arrays.copyOfRange(input, 32, 40)));
         } catch (IOException e) {
           throw new IllegalArgumentException("invalid address: " + data, e);
         }

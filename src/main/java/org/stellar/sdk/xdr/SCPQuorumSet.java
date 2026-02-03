@@ -46,20 +46,50 @@ public class SCPQuorumSet implements XdrElement {
     }
   }
 
-  public static SCPQuorumSet decode(XdrDataInputStream stream) throws IOException {
+  public static SCPQuorumSet decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCPQuorumSet decodedSCPQuorumSet = new SCPQuorumSet();
-    decodedSCPQuorumSet.threshold = Uint32.decode(stream);
+    decodedSCPQuorumSet.threshold = Uint32.decode(stream, maxDepth);
     int validatorsSize = stream.readInt();
+    if (validatorsSize < 0) {
+      throw new IOException("validators size " + validatorsSize + " is negative");
+    }
+    int validatorsRemainingInputLen = stream.getRemainingInputLen();
+    if (validatorsRemainingInputLen >= 0 && validatorsRemainingInputLen < validatorsSize) {
+      throw new IOException(
+          "validators size "
+              + validatorsSize
+              + " exceeds remaining input length "
+              + validatorsRemainingInputLen);
+    }
     decodedSCPQuorumSet.validators = new NodeID[validatorsSize];
     for (int i = 0; i < validatorsSize; i++) {
-      decodedSCPQuorumSet.validators[i] = NodeID.decode(stream);
+      decodedSCPQuorumSet.validators[i] = NodeID.decode(stream, maxDepth);
     }
     int innerSetsSize = stream.readInt();
+    if (innerSetsSize < 0) {
+      throw new IOException("innerSets size " + innerSetsSize + " is negative");
+    }
+    int innerSetsRemainingInputLen = stream.getRemainingInputLen();
+    if (innerSetsRemainingInputLen >= 0 && innerSetsRemainingInputLen < innerSetsSize) {
+      throw new IOException(
+          "innerSets size "
+              + innerSetsSize
+              + " exceeds remaining input length "
+              + innerSetsRemainingInputLen);
+    }
     decodedSCPQuorumSet.innerSets = new SCPQuorumSet[innerSetsSize];
     for (int i = 0; i < innerSetsSize; i++) {
-      decodedSCPQuorumSet.innerSets[i] = SCPQuorumSet.decode(stream);
+      decodedSCPQuorumSet.innerSets[i] = SCPQuorumSet.decode(stream, maxDepth);
     }
     return decodedSCPQuorumSet;
+  }
+
+  public static SCPQuorumSet decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCPQuorumSet fromXdrBase64(String xdr) throws IOException {
@@ -70,6 +100,7 @@ public class SCPQuorumSet implements XdrElement {
   public static SCPQuorumSet fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -31,7 +31,7 @@ public class AccountEntryDecodeTest {
     bldr.numSubEntries(new Uint32(new XdrUnsignedInteger(0)));
     bldr.flags(new Uint32(new XdrUnsignedInteger(0)));
     bldr.homeDomain(new String32(new XdrString("")));
-    bldr.thresholds(new Thresholds(new byte[3]));
+    bldr.thresholds(new Thresholds(new byte[4]));
     bldr.ext(
         AccountEntry.AccountEntryExt.builder()
             .discriminant(1)

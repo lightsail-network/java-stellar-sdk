@@ -55,13 +55,18 @@ public class AccountMergeResult implements XdrElement {
     }
   }
 
-  public static AccountMergeResult decode(XdrDataInputStream stream) throws IOException {
+  public static AccountMergeResult decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     AccountMergeResult decodedAccountMergeResult = new AccountMergeResult();
-    AccountMergeResultCode discriminant = AccountMergeResultCode.decode(stream);
+    AccountMergeResultCode discriminant = AccountMergeResultCode.decode(stream, maxDepth);
     decodedAccountMergeResult.setDiscriminant(discriminant);
     switch (decodedAccountMergeResult.getDiscriminant()) {
       case ACCOUNT_MERGE_SUCCESS:
-        decodedAccountMergeResult.sourceAccountBalance = Int64.decode(stream);
+        decodedAccountMergeResult.sourceAccountBalance = Int64.decode(stream, maxDepth);
         break;
       case ACCOUNT_MERGE_MALFORMED:
       case ACCOUNT_MERGE_NO_ACCOUNT:
@@ -71,8 +76,14 @@ public class AccountMergeResult implements XdrElement {
       case ACCOUNT_MERGE_DEST_FULL:
       case ACCOUNT_MERGE_IS_SPONSOR:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedAccountMergeResult;
+  }
+
+  public static AccountMergeResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static AccountMergeResult fromXdrBase64(String xdr) throws IOException {
@@ -83,6 +94,7 @@ public class AccountMergeResult implements XdrElement {
   public static AccountMergeResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

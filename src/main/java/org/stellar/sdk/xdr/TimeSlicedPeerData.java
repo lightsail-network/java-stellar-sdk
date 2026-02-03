@@ -35,11 +35,20 @@ public class TimeSlicedPeerData implements XdrElement {
     averageLatencyMs.encode(stream);
   }
 
-  public static TimeSlicedPeerData decode(XdrDataInputStream stream) throws IOException {
+  public static TimeSlicedPeerData decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TimeSlicedPeerData decodedTimeSlicedPeerData = new TimeSlicedPeerData();
-    decodedTimeSlicedPeerData.peerStats = PeerStats.decode(stream);
-    decodedTimeSlicedPeerData.averageLatencyMs = Uint32.decode(stream);
+    decodedTimeSlicedPeerData.peerStats = PeerStats.decode(stream, maxDepth);
+    decodedTimeSlicedPeerData.averageLatencyMs = Uint32.decode(stream, maxDepth);
     return decodedTimeSlicedPeerData;
+  }
+
+  public static TimeSlicedPeerData decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TimeSlicedPeerData fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +59,7 @@ public class TimeSlicedPeerData implements XdrElement {
   public static TimeSlicedPeerData fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

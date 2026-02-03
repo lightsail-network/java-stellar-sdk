@@ -34,11 +34,20 @@ public class TransactionEvent implements XdrElement {
     event.encode(stream);
   }
 
-  public static TransactionEvent decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionEvent decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionEvent decodedTransactionEvent = new TransactionEvent();
-    decodedTransactionEvent.stage = TransactionEventStage.decode(stream);
-    decodedTransactionEvent.event = ContractEvent.decode(stream);
+    decodedTransactionEvent.stage = TransactionEventStage.decode(stream, maxDepth);
+    decodedTransactionEvent.event = ContractEvent.decode(stream, maxDepth);
     return decodedTransactionEvent;
+  }
+
+  public static TransactionEvent decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionEvent fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +58,7 @@ public class TransactionEvent implements XdrElement {
   public static TransactionEvent fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -45,12 +45,21 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     ext.encode(stream);
   }
 
-  public static LedgerHeaderHistoryEntry decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerHeaderHistoryEntry decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerHeaderHistoryEntry decodedLedgerHeaderHistoryEntry = new LedgerHeaderHistoryEntry();
-    decodedLedgerHeaderHistoryEntry.hash = Hash.decode(stream);
-    decodedLedgerHeaderHistoryEntry.header = LedgerHeader.decode(stream);
-    decodedLedgerHeaderHistoryEntry.ext = LedgerHeaderHistoryEntryExt.decode(stream);
+    decodedLedgerHeaderHistoryEntry.hash = Hash.decode(stream, maxDepth);
+    decodedLedgerHeaderHistoryEntry.header = LedgerHeader.decode(stream, maxDepth);
+    decodedLedgerHeaderHistoryEntry.ext = LedgerHeaderHistoryEntryExt.decode(stream, maxDepth);
     return decodedLedgerHeaderHistoryEntry;
+  }
+
+  public static LedgerHeaderHistoryEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerHeaderHistoryEntry fromXdrBase64(String xdr) throws IOException {
@@ -61,6 +70,7 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
   public static LedgerHeaderHistoryEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -90,7 +100,12 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
       }
     }
 
-    public static LedgerHeaderHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerHeaderHistoryEntryExt decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerHeaderHistoryEntryExt decodedLedgerHeaderHistoryEntryExt =
           new LedgerHeaderHistoryEntryExt();
       Integer discriminant = stream.readInt();
@@ -98,8 +113,14 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
       switch (decodedLedgerHeaderHistoryEntryExt.getDiscriminant()) {
         case 0:
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedLedgerHeaderHistoryEntryExt;
+    }
+
+    public static LedgerHeaderHistoryEntryExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerHeaderHistoryEntryExt fromXdrBase64(String xdr) throws IOException {
@@ -110,6 +131,7 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
     public static LedgerHeaderHistoryEntryExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

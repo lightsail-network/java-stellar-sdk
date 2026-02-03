@@ -27,10 +27,18 @@ public class Uint32 implements XdrElement {
     uint32.encode(stream);
   }
 
-  public static Uint32 decode(XdrDataInputStream stream) throws IOException {
+  public static Uint32 decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Uint32 decodedUint32 = new Uint32();
-    decodedUint32.uint32 = XdrUnsignedInteger.decode(stream);
+    decodedUint32.uint32 = XdrUnsignedInteger.decode(stream, maxDepth);
     return decodedUint32;
+  }
+
+  public static Uint32 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Uint32 fromXdrBase64(String xdr) throws IOException {
@@ -41,6 +49,7 @@ public class Uint32 implements XdrElement {
   public static Uint32 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

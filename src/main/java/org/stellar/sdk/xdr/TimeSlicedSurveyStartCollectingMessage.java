@@ -38,14 +38,23 @@ public class TimeSlicedSurveyStartCollectingMessage implements XdrElement {
     ledgerNum.encode(stream);
   }
 
-  public static TimeSlicedSurveyStartCollectingMessage decode(XdrDataInputStream stream)
-      throws IOException {
+  public static TimeSlicedSurveyStartCollectingMessage decode(
+      XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TimeSlicedSurveyStartCollectingMessage decodedTimeSlicedSurveyStartCollectingMessage =
         new TimeSlicedSurveyStartCollectingMessage();
-    decodedTimeSlicedSurveyStartCollectingMessage.surveyorID = NodeID.decode(stream);
-    decodedTimeSlicedSurveyStartCollectingMessage.nonce = Uint32.decode(stream);
-    decodedTimeSlicedSurveyStartCollectingMessage.ledgerNum = Uint32.decode(stream);
+    decodedTimeSlicedSurveyStartCollectingMessage.surveyorID = NodeID.decode(stream, maxDepth);
+    decodedTimeSlicedSurveyStartCollectingMessage.nonce = Uint32.decode(stream, maxDepth);
+    decodedTimeSlicedSurveyStartCollectingMessage.ledgerNum = Uint32.decode(stream, maxDepth);
     return decodedTimeSlicedSurveyStartCollectingMessage;
+  }
+
+  public static TimeSlicedSurveyStartCollectingMessage decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TimeSlicedSurveyStartCollectingMessage fromXdrBase64(String xdr)
@@ -58,6 +67,7 @@ public class TimeSlicedSurveyStartCollectingMessage implements XdrElement {
       throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

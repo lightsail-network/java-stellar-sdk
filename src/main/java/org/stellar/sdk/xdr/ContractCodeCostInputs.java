@@ -61,20 +61,29 @@ public class ContractCodeCostInputs implements XdrElement {
     nDataSegmentBytes.encode(stream);
   }
 
-  public static ContractCodeCostInputs decode(XdrDataInputStream stream) throws IOException {
+  public static ContractCodeCostInputs decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ContractCodeCostInputs decodedContractCodeCostInputs = new ContractCodeCostInputs();
-    decodedContractCodeCostInputs.ext = ExtensionPoint.decode(stream);
-    decodedContractCodeCostInputs.nInstructions = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nFunctions = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nGlobals = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nTableEntries = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nTypes = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nDataSegments = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nElemSegments = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nImports = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nExports = Uint32.decode(stream);
-    decodedContractCodeCostInputs.nDataSegmentBytes = Uint32.decode(stream);
+    decodedContractCodeCostInputs.ext = ExtensionPoint.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nInstructions = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nFunctions = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nGlobals = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nTableEntries = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nTypes = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nDataSegments = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nElemSegments = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nImports = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nExports = Uint32.decode(stream, maxDepth);
+    decodedContractCodeCostInputs.nDataSegmentBytes = Uint32.decode(stream, maxDepth);
     return decodedContractCodeCostInputs;
+  }
+
+  public static ContractCodeCostInputs decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ContractCodeCostInputs fromXdrBase64(String xdr) throws IOException {
@@ -85,6 +94,7 @@ public class ContractCodeCostInputs implements XdrElement {
   public static ContractCodeCostInputs fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

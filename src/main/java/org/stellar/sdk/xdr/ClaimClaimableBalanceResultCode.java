@@ -40,8 +40,9 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
     return value;
   }
 
-  public static ClaimClaimableBalanceResultCode decode(XdrDataInputStream stream)
+  public static ClaimClaimableBalanceResultCode decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    // maxDepth is intentionally not checked - enums are leaf types with no recursive decoding
     int value = stream.readInt();
     switch (value) {
       case 0:
@@ -61,6 +62,11 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
     }
   }
 
+  public static ClaimClaimableBalanceResultCode decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
+  }
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(value);
   }
@@ -73,6 +79,7 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
   public static ClaimClaimableBalanceResultCode fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

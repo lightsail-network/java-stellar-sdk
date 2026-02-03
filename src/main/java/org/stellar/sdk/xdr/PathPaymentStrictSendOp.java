@@ -49,25 +49,48 @@ public class PathPaymentStrictSendOp implements XdrElement {
     destAsset.encode(stream);
     destMin.encode(stream);
     int pathSize = getPath().length;
+    if (pathSize > 5) {
+      throw new IOException("path size " + pathSize + " exceeds max size 5");
+    }
     stream.writeInt(pathSize);
     for (int i = 0; i < pathSize; i++) {
       path[i].encode(stream);
     }
   }
 
-  public static PathPaymentStrictSendOp decode(XdrDataInputStream stream) throws IOException {
+  public static PathPaymentStrictSendOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PathPaymentStrictSendOp decodedPathPaymentStrictSendOp = new PathPaymentStrictSendOp();
-    decodedPathPaymentStrictSendOp.sendAsset = Asset.decode(stream);
-    decodedPathPaymentStrictSendOp.sendAmount = Int64.decode(stream);
-    decodedPathPaymentStrictSendOp.destination = MuxedAccount.decode(stream);
-    decodedPathPaymentStrictSendOp.destAsset = Asset.decode(stream);
-    decodedPathPaymentStrictSendOp.destMin = Int64.decode(stream);
+    decodedPathPaymentStrictSendOp.sendAsset = Asset.decode(stream, maxDepth);
+    decodedPathPaymentStrictSendOp.sendAmount = Int64.decode(stream, maxDepth);
+    decodedPathPaymentStrictSendOp.destination = MuxedAccount.decode(stream, maxDepth);
+    decodedPathPaymentStrictSendOp.destAsset = Asset.decode(stream, maxDepth);
+    decodedPathPaymentStrictSendOp.destMin = Int64.decode(stream, maxDepth);
     int pathSize = stream.readInt();
+    if (pathSize < 0) {
+      throw new IOException("path size " + pathSize + " is negative");
+    }
+    if (pathSize > 5) {
+      throw new IOException("path size " + pathSize + " exceeds max size 5");
+    }
+    int pathRemainingInputLen = stream.getRemainingInputLen();
+    if (pathRemainingInputLen >= 0 && pathRemainingInputLen < pathSize) {
+      throw new IOException(
+          "path size " + pathSize + " exceeds remaining input length " + pathRemainingInputLen);
+    }
     decodedPathPaymentStrictSendOp.path = new Asset[pathSize];
     for (int i = 0; i < pathSize; i++) {
-      decodedPathPaymentStrictSendOp.path[i] = Asset.decode(stream);
+      decodedPathPaymentStrictSendOp.path[i] = Asset.decode(stream, maxDepth);
     }
     return decodedPathPaymentStrictSendOp;
+  }
+
+  public static PathPaymentStrictSendOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PathPaymentStrictSendOp fromXdrBase64(String xdr) throws IOException {
@@ -78,6 +101,7 @@ public class PathPaymentStrictSendOp implements XdrElement {
   public static PathPaymentStrictSendOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

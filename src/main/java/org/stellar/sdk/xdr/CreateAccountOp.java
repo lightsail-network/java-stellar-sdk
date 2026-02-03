@@ -35,11 +35,19 @@ public class CreateAccountOp implements XdrElement {
     startingBalance.encode(stream);
   }
 
-  public static CreateAccountOp decode(XdrDataInputStream stream) throws IOException {
+  public static CreateAccountOp decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     CreateAccountOp decodedCreateAccountOp = new CreateAccountOp();
-    decodedCreateAccountOp.destination = AccountID.decode(stream);
-    decodedCreateAccountOp.startingBalance = Int64.decode(stream);
+    decodedCreateAccountOp.destination = AccountID.decode(stream, maxDepth);
+    decodedCreateAccountOp.startingBalance = Int64.decode(stream, maxDepth);
     return decodedCreateAccountOp;
+  }
+
+  public static CreateAccountOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static CreateAccountOp fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class CreateAccountOp implements XdrElement {
   public static CreateAccountOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

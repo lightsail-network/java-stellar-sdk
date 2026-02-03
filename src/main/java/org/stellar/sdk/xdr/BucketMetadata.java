@@ -45,11 +45,19 @@ public class BucketMetadata implements XdrElement {
     ext.encode(stream);
   }
 
-  public static BucketMetadata decode(XdrDataInputStream stream) throws IOException {
+  public static BucketMetadata decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     BucketMetadata decodedBucketMetadata = new BucketMetadata();
-    decodedBucketMetadata.ledgerVersion = Uint32.decode(stream);
-    decodedBucketMetadata.ext = BucketMetadataExt.decode(stream);
+    decodedBucketMetadata.ledgerVersion = Uint32.decode(stream, maxDepth);
+    decodedBucketMetadata.ext = BucketMetadataExt.decode(stream, maxDepth);
     return decodedBucketMetadata;
+  }
+
+  public static BucketMetadata decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static BucketMetadata fromXdrBase64(String xdr) throws IOException {
@@ -60,6 +68,7 @@ public class BucketMetadata implements XdrElement {
   public static BucketMetadata fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -95,7 +104,12 @@ public class BucketMetadata implements XdrElement {
       }
     }
 
-    public static BucketMetadataExt decode(XdrDataInputStream stream) throws IOException {
+    public static BucketMetadataExt decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       BucketMetadataExt decodedBucketMetadataExt = new BucketMetadataExt();
       Integer discriminant = stream.readInt();
       decodedBucketMetadataExt.setDiscriminant(discriminant);
@@ -103,10 +117,16 @@ public class BucketMetadata implements XdrElement {
         case 0:
           break;
         case 1:
-          decodedBucketMetadataExt.bucketListType = BucketListType.decode(stream);
+          decodedBucketMetadataExt.bucketListType = BucketListType.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedBucketMetadataExt;
+    }
+
+    public static BucketMetadataExt decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static BucketMetadataExt fromXdrBase64(String xdr) throws IOException {
@@ -117,6 +137,7 @@ public class BucketMetadata implements XdrElement {
     public static BucketMetadataExt fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

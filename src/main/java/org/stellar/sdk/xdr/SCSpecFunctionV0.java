@@ -35,35 +35,82 @@ public class SCSpecFunctionV0 implements XdrElement {
   private SCSpecTypeDef[] outputs;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
+    int docSize = doc.getBytes().length;
+    if (docSize > 1024) {
+      throw new IOException("doc size " + docSize + " exceeds max size 1024");
+    }
     doc.encode(stream);
     name.encode(stream);
     int inputsSize = getInputs().length;
+    if (inputsSize > 10) {
+      throw new IOException("inputs size " + inputsSize + " exceeds max size 10");
+    }
     stream.writeInt(inputsSize);
     for (int i = 0; i < inputsSize; i++) {
       inputs[i].encode(stream);
     }
     int outputsSize = getOutputs().length;
+    if (outputsSize > 1) {
+      throw new IOException("outputs size " + outputsSize + " exceeds max size 1");
+    }
     stream.writeInt(outputsSize);
     for (int i = 0; i < outputsSize; i++) {
       outputs[i].encode(stream);
     }
   }
 
-  public static SCSpecFunctionV0 decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecFunctionV0 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecFunctionV0 decodedSCSpecFunctionV0 = new SCSpecFunctionV0();
-    decodedSCSpecFunctionV0.doc = XdrString.decode(stream, Constants.SC_SPEC_DOC_LIMIT);
-    decodedSCSpecFunctionV0.name = SCSymbol.decode(stream);
+    decodedSCSpecFunctionV0.doc = XdrString.decode(stream, maxDepth, Constants.SC_SPEC_DOC_LIMIT);
+    decodedSCSpecFunctionV0.name = SCSymbol.decode(stream, maxDepth);
     int inputsSize = stream.readInt();
+    if (inputsSize < 0) {
+      throw new IOException("inputs size " + inputsSize + " is negative");
+    }
+    if (inputsSize > 10) {
+      throw new IOException("inputs size " + inputsSize + " exceeds max size 10");
+    }
+    int inputsRemainingInputLen = stream.getRemainingInputLen();
+    if (inputsRemainingInputLen >= 0 && inputsRemainingInputLen < inputsSize) {
+      throw new IOException(
+          "inputs size "
+              + inputsSize
+              + " exceeds remaining input length "
+              + inputsRemainingInputLen);
+    }
     decodedSCSpecFunctionV0.inputs = new SCSpecFunctionInputV0[inputsSize];
     for (int i = 0; i < inputsSize; i++) {
-      decodedSCSpecFunctionV0.inputs[i] = SCSpecFunctionInputV0.decode(stream);
+      decodedSCSpecFunctionV0.inputs[i] = SCSpecFunctionInputV0.decode(stream, maxDepth);
     }
     int outputsSize = stream.readInt();
+    if (outputsSize < 0) {
+      throw new IOException("outputs size " + outputsSize + " is negative");
+    }
+    if (outputsSize > 1) {
+      throw new IOException("outputs size " + outputsSize + " exceeds max size 1");
+    }
+    int outputsRemainingInputLen = stream.getRemainingInputLen();
+    if (outputsRemainingInputLen >= 0 && outputsRemainingInputLen < outputsSize) {
+      throw new IOException(
+          "outputs size "
+              + outputsSize
+              + " exceeds remaining input length "
+              + outputsRemainingInputLen);
+    }
     decodedSCSpecFunctionV0.outputs = new SCSpecTypeDef[outputsSize];
     for (int i = 0; i < outputsSize; i++) {
-      decodedSCSpecFunctionV0.outputs[i] = SCSpecTypeDef.decode(stream);
+      decodedSCSpecFunctionV0.outputs[i] = SCSpecTypeDef.decode(stream, maxDepth);
     }
     return decodedSCSpecFunctionV0;
+  }
+
+  public static SCSpecFunctionV0 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecFunctionV0 fromXdrBase64(String xdr) throws IOException {
@@ -74,6 +121,7 @@ public class SCSpecFunctionV0 implements XdrElement {
   public static SCSpecFunctionV0 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

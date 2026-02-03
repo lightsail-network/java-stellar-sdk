@@ -41,13 +41,22 @@ public class CreatePassiveSellOfferOp implements XdrElement {
     price.encode(stream);
   }
 
-  public static CreatePassiveSellOfferOp decode(XdrDataInputStream stream) throws IOException {
+  public static CreatePassiveSellOfferOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     CreatePassiveSellOfferOp decodedCreatePassiveSellOfferOp = new CreatePassiveSellOfferOp();
-    decodedCreatePassiveSellOfferOp.selling = Asset.decode(stream);
-    decodedCreatePassiveSellOfferOp.buying = Asset.decode(stream);
-    decodedCreatePassiveSellOfferOp.amount = Int64.decode(stream);
-    decodedCreatePassiveSellOfferOp.price = Price.decode(stream);
+    decodedCreatePassiveSellOfferOp.selling = Asset.decode(stream, maxDepth);
+    decodedCreatePassiveSellOfferOp.buying = Asset.decode(stream, maxDepth);
+    decodedCreatePassiveSellOfferOp.amount = Int64.decode(stream, maxDepth);
+    decodedCreatePassiveSellOfferOp.price = Price.decode(stream, maxDepth);
     return decodedCreatePassiveSellOfferOp;
+  }
+
+  public static CreatePassiveSellOfferOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static CreatePassiveSellOfferOp fromXdrBase64(String xdr) throws IOException {
@@ -58,6 +67,7 @@ public class CreatePassiveSellOfferOp implements XdrElement {
   public static CreatePassiveSellOfferOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

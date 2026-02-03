@@ -35,11 +35,20 @@ public class DecoratedSignature implements XdrElement {
     signature.encode(stream);
   }
 
-  public static DecoratedSignature decode(XdrDataInputStream stream) throws IOException {
+  public static DecoratedSignature decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     DecoratedSignature decodedDecoratedSignature = new DecoratedSignature();
-    decodedDecoratedSignature.hint = SignatureHint.decode(stream);
-    decodedDecoratedSignature.signature = Signature.decode(stream);
+    decodedDecoratedSignature.hint = SignatureHint.decode(stream, maxDepth);
+    decodedDecoratedSignature.signature = Signature.decode(stream, maxDepth);
     return decodedDecoratedSignature;
+  }
+
+  public static DecoratedSignature decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static DecoratedSignature fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +59,7 @@ public class DecoratedSignature implements XdrElement {
   public static DecoratedSignature fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

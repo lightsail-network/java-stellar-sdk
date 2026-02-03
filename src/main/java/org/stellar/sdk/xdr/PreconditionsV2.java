@@ -83,34 +83,59 @@ public class PreconditionsV2 implements XdrElement {
     minSeqAge.encode(stream);
     minSeqLedgerGap.encode(stream);
     int extraSignersSize = getExtraSigners().length;
+    if (extraSignersSize > 2) {
+      throw new IOException("extraSigners size " + extraSignersSize + " exceeds max size 2");
+    }
     stream.writeInt(extraSignersSize);
     for (int i = 0; i < extraSignersSize; i++) {
       extraSigners[i].encode(stream);
     }
   }
 
-  public static PreconditionsV2 decode(XdrDataInputStream stream) throws IOException {
+  public static PreconditionsV2 decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PreconditionsV2 decodedPreconditionsV2 = new PreconditionsV2();
-    int timeBoundsPresent = stream.readInt();
-    if (timeBoundsPresent != 0) {
-      decodedPreconditionsV2.timeBounds = TimeBounds.decode(stream);
+    boolean timeBoundsPresent = stream.readXdrBoolean();
+    if (timeBoundsPresent) {
+      decodedPreconditionsV2.timeBounds = TimeBounds.decode(stream, maxDepth);
     }
-    int ledgerBoundsPresent = stream.readInt();
-    if (ledgerBoundsPresent != 0) {
-      decodedPreconditionsV2.ledgerBounds = LedgerBounds.decode(stream);
+    boolean ledgerBoundsPresent = stream.readXdrBoolean();
+    if (ledgerBoundsPresent) {
+      decodedPreconditionsV2.ledgerBounds = LedgerBounds.decode(stream, maxDepth);
     }
-    int minSeqNumPresent = stream.readInt();
-    if (minSeqNumPresent != 0) {
-      decodedPreconditionsV2.minSeqNum = SequenceNumber.decode(stream);
+    boolean minSeqNumPresent = stream.readXdrBoolean();
+    if (minSeqNumPresent) {
+      decodedPreconditionsV2.minSeqNum = SequenceNumber.decode(stream, maxDepth);
     }
-    decodedPreconditionsV2.minSeqAge = Duration.decode(stream);
-    decodedPreconditionsV2.minSeqLedgerGap = Uint32.decode(stream);
+    decodedPreconditionsV2.minSeqAge = Duration.decode(stream, maxDepth);
+    decodedPreconditionsV2.minSeqLedgerGap = Uint32.decode(stream, maxDepth);
     int extraSignersSize = stream.readInt();
+    if (extraSignersSize < 0) {
+      throw new IOException("extraSigners size " + extraSignersSize + " is negative");
+    }
+    if (extraSignersSize > 2) {
+      throw new IOException("extraSigners size " + extraSignersSize + " exceeds max size 2");
+    }
+    int extraSignersRemainingInputLen = stream.getRemainingInputLen();
+    if (extraSignersRemainingInputLen >= 0 && extraSignersRemainingInputLen < extraSignersSize) {
+      throw new IOException(
+          "extraSigners size "
+              + extraSignersSize
+              + " exceeds remaining input length "
+              + extraSignersRemainingInputLen);
+    }
     decodedPreconditionsV2.extraSigners = new SignerKey[extraSignersSize];
     for (int i = 0; i < extraSignersSize; i++) {
-      decodedPreconditionsV2.extraSigners[i] = SignerKey.decode(stream);
+      decodedPreconditionsV2.extraSigners[i] = SignerKey.decode(stream, maxDepth);
     }
     return decodedPreconditionsV2;
+  }
+
+  public static PreconditionsV2 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PreconditionsV2 fromXdrBase64(String xdr) throws IOException {
@@ -121,6 +146,7 @@ public class PreconditionsV2 implements XdrElement {
   public static PreconditionsV2 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -49,19 +49,30 @@ public class RevokeSponsorshipOp implements XdrElement {
     }
   }
 
-  public static RevokeSponsorshipOp decode(XdrDataInputStream stream) throws IOException {
+  public static RevokeSponsorshipOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     RevokeSponsorshipOp decodedRevokeSponsorshipOp = new RevokeSponsorshipOp();
-    RevokeSponsorshipType discriminant = RevokeSponsorshipType.decode(stream);
+    RevokeSponsorshipType discriminant = RevokeSponsorshipType.decode(stream, maxDepth);
     decodedRevokeSponsorshipOp.setDiscriminant(discriminant);
     switch (decodedRevokeSponsorshipOp.getDiscriminant()) {
       case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
-        decodedRevokeSponsorshipOp.ledgerKey = LedgerKey.decode(stream);
+        decodedRevokeSponsorshipOp.ledgerKey = LedgerKey.decode(stream, maxDepth);
         break;
       case REVOKE_SPONSORSHIP_SIGNER:
-        decodedRevokeSponsorshipOp.signer = RevokeSponsorshipOpSigner.decode(stream);
+        decodedRevokeSponsorshipOp.signer = RevokeSponsorshipOpSigner.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedRevokeSponsorshipOp;
+  }
+
+  public static RevokeSponsorshipOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static RevokeSponsorshipOp fromXdrBase64(String xdr) throws IOException {
@@ -72,6 +83,7 @@ public class RevokeSponsorshipOp implements XdrElement {
   public static RevokeSponsorshipOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -99,11 +111,20 @@ public class RevokeSponsorshipOp implements XdrElement {
       signerKey.encode(stream);
     }
 
-    public static RevokeSponsorshipOpSigner decode(XdrDataInputStream stream) throws IOException {
+    public static RevokeSponsorshipOpSigner decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       RevokeSponsorshipOpSigner decodedRevokeSponsorshipOpSigner = new RevokeSponsorshipOpSigner();
-      decodedRevokeSponsorshipOpSigner.accountID = AccountID.decode(stream);
-      decodedRevokeSponsorshipOpSigner.signerKey = SignerKey.decode(stream);
+      decodedRevokeSponsorshipOpSigner.accountID = AccountID.decode(stream, maxDepth);
+      decodedRevokeSponsorshipOpSigner.signerKey = SignerKey.decode(stream, maxDepth);
       return decodedRevokeSponsorshipOpSigner;
+    }
+
+    public static RevokeSponsorshipOpSigner decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static RevokeSponsorshipOpSigner fromXdrBase64(String xdr) throws IOException {
@@ -114,6 +135,7 @@ public class RevokeSponsorshipOp implements XdrElement {
     public static RevokeSponsorshipOpSigner fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

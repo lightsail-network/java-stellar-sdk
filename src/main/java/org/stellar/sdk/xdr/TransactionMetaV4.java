@@ -72,31 +72,74 @@ public class TransactionMetaV4 implements XdrElement {
     }
   }
 
-  public static TransactionMetaV4 decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionMetaV4 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionMetaV4 decodedTransactionMetaV4 = new TransactionMetaV4();
-    decodedTransactionMetaV4.ext = ExtensionPoint.decode(stream);
-    decodedTransactionMetaV4.txChangesBefore = LedgerEntryChanges.decode(stream);
+    decodedTransactionMetaV4.ext = ExtensionPoint.decode(stream, maxDepth);
+    decodedTransactionMetaV4.txChangesBefore = LedgerEntryChanges.decode(stream, maxDepth);
     int operationsSize = stream.readInt();
+    if (operationsSize < 0) {
+      throw new IOException("operations size " + operationsSize + " is negative");
+    }
+    int operationsRemainingInputLen = stream.getRemainingInputLen();
+    if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationsSize) {
+      throw new IOException(
+          "operations size "
+              + operationsSize
+              + " exceeds remaining input length "
+              + operationsRemainingInputLen);
+    }
     decodedTransactionMetaV4.operations = new OperationMetaV2[operationsSize];
     for (int i = 0; i < operationsSize; i++) {
-      decodedTransactionMetaV4.operations[i] = OperationMetaV2.decode(stream);
+      decodedTransactionMetaV4.operations[i] = OperationMetaV2.decode(stream, maxDepth);
     }
-    decodedTransactionMetaV4.txChangesAfter = LedgerEntryChanges.decode(stream);
-    int sorobanMetaPresent = stream.readInt();
-    if (sorobanMetaPresent != 0) {
-      decodedTransactionMetaV4.sorobanMeta = SorobanTransactionMetaV2.decode(stream);
+    decodedTransactionMetaV4.txChangesAfter = LedgerEntryChanges.decode(stream, maxDepth);
+    boolean sorobanMetaPresent = stream.readXdrBoolean();
+    if (sorobanMetaPresent) {
+      decodedTransactionMetaV4.sorobanMeta = SorobanTransactionMetaV2.decode(stream, maxDepth);
     }
     int eventsSize = stream.readInt();
+    if (eventsSize < 0) {
+      throw new IOException("events size " + eventsSize + " is negative");
+    }
+    int eventsRemainingInputLen = stream.getRemainingInputLen();
+    if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventsSize) {
+      throw new IOException(
+          "events size "
+              + eventsSize
+              + " exceeds remaining input length "
+              + eventsRemainingInputLen);
+    }
     decodedTransactionMetaV4.events = new TransactionEvent[eventsSize];
     for (int i = 0; i < eventsSize; i++) {
-      decodedTransactionMetaV4.events[i] = TransactionEvent.decode(stream);
+      decodedTransactionMetaV4.events[i] = TransactionEvent.decode(stream, maxDepth);
     }
     int diagnosticEventsSize = stream.readInt();
+    if (diagnosticEventsSize < 0) {
+      throw new IOException("diagnosticEvents size " + diagnosticEventsSize + " is negative");
+    }
+    int diagnosticEventsRemainingInputLen = stream.getRemainingInputLen();
+    if (diagnosticEventsRemainingInputLen >= 0
+        && diagnosticEventsRemainingInputLen < diagnosticEventsSize) {
+      throw new IOException(
+          "diagnosticEvents size "
+              + diagnosticEventsSize
+              + " exceeds remaining input length "
+              + diagnosticEventsRemainingInputLen);
+    }
     decodedTransactionMetaV4.diagnosticEvents = new DiagnosticEvent[diagnosticEventsSize];
     for (int i = 0; i < diagnosticEventsSize; i++) {
-      decodedTransactionMetaV4.diagnosticEvents[i] = DiagnosticEvent.decode(stream);
+      decodedTransactionMetaV4.diagnosticEvents[i] = DiagnosticEvent.decode(stream, maxDepth);
     }
     return decodedTransactionMetaV4;
+  }
+
+  public static TransactionMetaV4 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionMetaV4 fromXdrBase64(String xdr) throws IOException {
@@ -107,6 +150,7 @@ public class TransactionMetaV4 implements XdrElement {
   public static TransactionMetaV4 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

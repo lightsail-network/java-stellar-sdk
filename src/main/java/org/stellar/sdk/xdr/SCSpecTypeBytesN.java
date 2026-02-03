@@ -32,10 +32,19 @@ public class SCSpecTypeBytesN implements XdrElement {
     n.encode(stream);
   }
 
-  public static SCSpecTypeBytesN decode(XdrDataInputStream stream) throws IOException {
+  public static SCSpecTypeBytesN decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCSpecTypeBytesN decodedSCSpecTypeBytesN = new SCSpecTypeBytesN();
-    decodedSCSpecTypeBytesN.n = Uint32.decode(stream);
+    decodedSCSpecTypeBytesN.n = Uint32.decode(stream, maxDepth);
     return decodedSCSpecTypeBytesN;
+  }
+
+  public static SCSpecTypeBytesN decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCSpecTypeBytesN fromXdrBase64(String xdr) throws IOException {
@@ -46,6 +55,7 @@ public class SCSpecTypeBytesN implements XdrElement {
   public static SCSpecTypeBytesN fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

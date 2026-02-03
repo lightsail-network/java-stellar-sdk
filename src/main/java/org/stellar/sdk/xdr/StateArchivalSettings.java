@@ -70,19 +70,30 @@ public class StateArchivalSettings implements XdrElement {
     startingEvictionScanLevel.encode(stream);
   }
 
-  public static StateArchivalSettings decode(XdrDataInputStream stream) throws IOException {
+  public static StateArchivalSettings decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     StateArchivalSettings decodedStateArchivalSettings = new StateArchivalSettings();
-    decodedStateArchivalSettings.maxEntryTTL = Uint32.decode(stream);
-    decodedStateArchivalSettings.minTemporaryTTL = Uint32.decode(stream);
-    decodedStateArchivalSettings.minPersistentTTL = Uint32.decode(stream);
-    decodedStateArchivalSettings.persistentRentRateDenominator = Int64.decode(stream);
-    decodedStateArchivalSettings.tempRentRateDenominator = Int64.decode(stream);
-    decodedStateArchivalSettings.maxEntriesToArchive = Uint32.decode(stream);
-    decodedStateArchivalSettings.liveSorobanStateSizeWindowSampleSize = Uint32.decode(stream);
-    decodedStateArchivalSettings.liveSorobanStateSizeWindowSamplePeriod = Uint32.decode(stream);
-    decodedStateArchivalSettings.evictionScanSize = Uint32.decode(stream);
-    decodedStateArchivalSettings.startingEvictionScanLevel = Uint32.decode(stream);
+    decodedStateArchivalSettings.maxEntryTTL = Uint32.decode(stream, maxDepth);
+    decodedStateArchivalSettings.minTemporaryTTL = Uint32.decode(stream, maxDepth);
+    decodedStateArchivalSettings.minPersistentTTL = Uint32.decode(stream, maxDepth);
+    decodedStateArchivalSettings.persistentRentRateDenominator = Int64.decode(stream, maxDepth);
+    decodedStateArchivalSettings.tempRentRateDenominator = Int64.decode(stream, maxDepth);
+    decodedStateArchivalSettings.maxEntriesToArchive = Uint32.decode(stream, maxDepth);
+    decodedStateArchivalSettings.liveSorobanStateSizeWindowSampleSize =
+        Uint32.decode(stream, maxDepth);
+    decodedStateArchivalSettings.liveSorobanStateSizeWindowSamplePeriod =
+        Uint32.decode(stream, maxDepth);
+    decodedStateArchivalSettings.evictionScanSize = Uint32.decode(stream, maxDepth);
+    decodedStateArchivalSettings.startingEvictionScanLevel = Uint32.decode(stream, maxDepth);
     return decodedStateArchivalSettings;
+  }
+
+  public static StateArchivalSettings decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static StateArchivalSettings fromXdrBase64(String xdr) throws IOException {
@@ -93,6 +104,7 @@ public class StateArchivalSettings implements XdrElement {
   public static StateArchivalSettings fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

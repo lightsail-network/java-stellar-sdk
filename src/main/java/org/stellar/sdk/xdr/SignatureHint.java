@@ -25,15 +25,27 @@ public class SignatureHint implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int SignatureHintSize = SignatureHint.length;
+    if (SignatureHintSize != 4) {
+      throw new IOException(
+          "SignatureHint size " + SignatureHintSize + " does not match fixed size 4");
+    }
     stream.write(getSignatureHint(), 0, SignatureHintSize);
   }
 
-  public static SignatureHint decode(XdrDataInputStream stream) throws IOException {
+  public static SignatureHint decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SignatureHint decodedSignatureHint = new SignatureHint();
     int SignatureHintSize = 4;
     decodedSignatureHint.SignatureHint = new byte[SignatureHintSize];
-    stream.read(decodedSignatureHint.SignatureHint, 0, SignatureHintSize);
+    stream.readPaddedData(decodedSignatureHint.SignatureHint, 0, SignatureHintSize);
     return decodedSignatureHint;
+  }
+
+  public static SignatureHint decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SignatureHint fromXdrBase64(String xdr) throws IOException {
@@ -44,6 +56,7 @@ public class SignatureHint implements XdrElement {
   public static SignatureHint fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

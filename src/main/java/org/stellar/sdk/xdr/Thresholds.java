@@ -25,15 +25,26 @@ public class Thresholds implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int ThresholdsSize = Thresholds.length;
+    if (ThresholdsSize != 4) {
+      throw new IOException("Thresholds size " + ThresholdsSize + " does not match fixed size 4");
+    }
     stream.write(getThresholds(), 0, ThresholdsSize);
   }
 
-  public static Thresholds decode(XdrDataInputStream stream) throws IOException {
+  public static Thresholds decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Thresholds decodedThresholds = new Thresholds();
     int ThresholdsSize = 4;
     decodedThresholds.Thresholds = new byte[ThresholdsSize];
-    stream.read(decodedThresholds.Thresholds, 0, ThresholdsSize);
+    stream.readPaddedData(decodedThresholds.Thresholds, 0, ThresholdsSize);
     return decodedThresholds;
+  }
+
+  public static Thresholds decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Thresholds fromXdrBase64(String xdr) throws IOException {
@@ -44,6 +55,7 @@ public class Thresholds implements XdrElement {
   public static Thresholds fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

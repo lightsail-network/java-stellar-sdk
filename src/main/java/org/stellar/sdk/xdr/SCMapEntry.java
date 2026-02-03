@@ -35,11 +35,19 @@ public class SCMapEntry implements XdrElement {
     val.encode(stream);
   }
 
-  public static SCMapEntry decode(XdrDataInputStream stream) throws IOException {
+  public static SCMapEntry decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCMapEntry decodedSCMapEntry = new SCMapEntry();
-    decodedSCMapEntry.key = SCVal.decode(stream);
-    decodedSCMapEntry.val = SCVal.decode(stream);
+    decodedSCMapEntry.key = SCVal.decode(stream, maxDepth);
+    decodedSCMapEntry.val = SCVal.decode(stream, maxDepth);
     return decodedSCMapEntry;
+  }
+
+  public static SCMapEntry decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCMapEntry fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class SCMapEntry implements XdrElement {
   public static SCMapEntry fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

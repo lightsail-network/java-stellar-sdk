@@ -36,22 +36,48 @@ public class CreateClaimableBalanceOp implements XdrElement {
     asset.encode(stream);
     amount.encode(stream);
     int claimantsSize = getClaimants().length;
+    if (claimantsSize > 10) {
+      throw new IOException("claimants size " + claimantsSize + " exceeds max size 10");
+    }
     stream.writeInt(claimantsSize);
     for (int i = 0; i < claimantsSize; i++) {
       claimants[i].encode(stream);
     }
   }
 
-  public static CreateClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
+  public static CreateClaimableBalanceOp decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     CreateClaimableBalanceOp decodedCreateClaimableBalanceOp = new CreateClaimableBalanceOp();
-    decodedCreateClaimableBalanceOp.asset = Asset.decode(stream);
-    decodedCreateClaimableBalanceOp.amount = Int64.decode(stream);
+    decodedCreateClaimableBalanceOp.asset = Asset.decode(stream, maxDepth);
+    decodedCreateClaimableBalanceOp.amount = Int64.decode(stream, maxDepth);
     int claimantsSize = stream.readInt();
+    if (claimantsSize < 0) {
+      throw new IOException("claimants size " + claimantsSize + " is negative");
+    }
+    if (claimantsSize > 10) {
+      throw new IOException("claimants size " + claimantsSize + " exceeds max size 10");
+    }
+    int claimantsRemainingInputLen = stream.getRemainingInputLen();
+    if (claimantsRemainingInputLen >= 0 && claimantsRemainingInputLen < claimantsSize) {
+      throw new IOException(
+          "claimants size "
+              + claimantsSize
+              + " exceeds remaining input length "
+              + claimantsRemainingInputLen);
+    }
     decodedCreateClaimableBalanceOp.claimants = new Claimant[claimantsSize];
     for (int i = 0; i < claimantsSize; i++) {
-      decodedCreateClaimableBalanceOp.claimants[i] = Claimant.decode(stream);
+      decodedCreateClaimableBalanceOp.claimants[i] = Claimant.decode(stream, maxDepth);
     }
     return decodedCreateClaimableBalanceOp;
+  }
+
+  public static CreateClaimableBalanceOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static CreateClaimableBalanceOp fromXdrBase64(String xdr) throws IOException {
@@ -62,6 +88,7 @@ public class CreateClaimableBalanceOp implements XdrElement {
   public static CreateClaimableBalanceOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

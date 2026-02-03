@@ -46,20 +46,47 @@ public class SCPNomination implements XdrElement {
     }
   }
 
-  public static SCPNomination decode(XdrDataInputStream stream) throws IOException {
+  public static SCPNomination decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCPNomination decodedSCPNomination = new SCPNomination();
-    decodedSCPNomination.quorumSetHash = Hash.decode(stream);
+    decodedSCPNomination.quorumSetHash = Hash.decode(stream, maxDepth);
     int votesSize = stream.readInt();
+    if (votesSize < 0) {
+      throw new IOException("votes size " + votesSize + " is negative");
+    }
+    int votesRemainingInputLen = stream.getRemainingInputLen();
+    if (votesRemainingInputLen >= 0 && votesRemainingInputLen < votesSize) {
+      throw new IOException(
+          "votes size " + votesSize + " exceeds remaining input length " + votesRemainingInputLen);
+    }
     decodedSCPNomination.votes = new Value[votesSize];
     for (int i = 0; i < votesSize; i++) {
-      decodedSCPNomination.votes[i] = Value.decode(stream);
+      decodedSCPNomination.votes[i] = Value.decode(stream, maxDepth);
     }
     int acceptedSize = stream.readInt();
+    if (acceptedSize < 0) {
+      throw new IOException("accepted size " + acceptedSize + " is negative");
+    }
+    int acceptedRemainingInputLen = stream.getRemainingInputLen();
+    if (acceptedRemainingInputLen >= 0 && acceptedRemainingInputLen < acceptedSize) {
+      throw new IOException(
+          "accepted size "
+              + acceptedSize
+              + " exceeds remaining input length "
+              + acceptedRemainingInputLen);
+    }
     decodedSCPNomination.accepted = new Value[acceptedSize];
     for (int i = 0; i < acceptedSize; i++) {
-      decodedSCPNomination.accepted[i] = Value.decode(stream);
+      decodedSCPNomination.accepted[i] = Value.decode(stream, maxDepth);
     }
     return decodedSCPNomination;
+  }
+
+  public static SCPNomination decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCPNomination fromXdrBase64(String xdr) throws IOException {
@@ -70,6 +97,7 @@ public class SCPNomination implements XdrElement {
   public static SCPNomination fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

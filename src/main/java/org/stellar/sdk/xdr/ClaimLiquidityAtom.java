@@ -48,14 +48,23 @@ public class ClaimLiquidityAtom implements XdrElement {
     amountBought.encode(stream);
   }
 
-  public static ClaimLiquidityAtom decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimLiquidityAtom decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClaimLiquidityAtom decodedClaimLiquidityAtom = new ClaimLiquidityAtom();
-    decodedClaimLiquidityAtom.liquidityPoolID = PoolID.decode(stream);
-    decodedClaimLiquidityAtom.assetSold = Asset.decode(stream);
-    decodedClaimLiquidityAtom.amountSold = Int64.decode(stream);
-    decodedClaimLiquidityAtom.assetBought = Asset.decode(stream);
-    decodedClaimLiquidityAtom.amountBought = Int64.decode(stream);
+    decodedClaimLiquidityAtom.liquidityPoolID = PoolID.decode(stream, maxDepth);
+    decodedClaimLiquidityAtom.assetSold = Asset.decode(stream, maxDepth);
+    decodedClaimLiquidityAtom.amountSold = Int64.decode(stream, maxDepth);
+    decodedClaimLiquidityAtom.assetBought = Asset.decode(stream, maxDepth);
+    decodedClaimLiquidityAtom.amountBought = Int64.decode(stream, maxDepth);
     return decodedClaimLiquidityAtom;
+  }
+
+  public static ClaimLiquidityAtom decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClaimLiquidityAtom fromXdrBase64(String xdr) throws IOException {
@@ -66,6 +75,7 @@ public class ClaimLiquidityAtom implements XdrElement {
   public static ClaimLiquidityAtom fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

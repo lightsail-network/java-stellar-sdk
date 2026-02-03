@@ -43,18 +43,29 @@ public class ContractExecutable implements XdrElement {
     }
   }
 
-  public static ContractExecutable decode(XdrDataInputStream stream) throws IOException {
+  public static ContractExecutable decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ContractExecutable decodedContractExecutable = new ContractExecutable();
-    ContractExecutableType discriminant = ContractExecutableType.decode(stream);
+    ContractExecutableType discriminant = ContractExecutableType.decode(stream, maxDepth);
     decodedContractExecutable.setDiscriminant(discriminant);
     switch (decodedContractExecutable.getDiscriminant()) {
       case CONTRACT_EXECUTABLE_WASM:
-        decodedContractExecutable.wasm_hash = Hash.decode(stream);
+        decodedContractExecutable.wasm_hash = Hash.decode(stream, maxDepth);
         break;
       case CONTRACT_EXECUTABLE_STELLAR_ASSET:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedContractExecutable;
+  }
+
+  public static ContractExecutable decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ContractExecutable fromXdrBase64(String xdr) throws IOException {
@@ -65,6 +76,7 @@ public class ContractExecutable implements XdrElement {
   public static ContractExecutable fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -36,13 +36,22 @@ public class ConfigSettingContractParallelComputeV0 implements XdrElement {
     ledgerMaxDependentTxClusters.encode(stream);
   }
 
-  public static ConfigSettingContractParallelComputeV0 decode(XdrDataInputStream stream)
-      throws IOException {
+  public static ConfigSettingContractParallelComputeV0 decode(
+      XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingContractParallelComputeV0 decodedConfigSettingContractParallelComputeV0 =
         new ConfigSettingContractParallelComputeV0();
     decodedConfigSettingContractParallelComputeV0.ledgerMaxDependentTxClusters =
-        Uint32.decode(stream);
+        Uint32.decode(stream, maxDepth);
     return decodedConfigSettingContractParallelComputeV0;
+  }
+
+  public static ConfigSettingContractParallelComputeV0 decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingContractParallelComputeV0 fromXdrBase64(String xdr)
@@ -55,6 +64,7 @@ public class ConfigSettingContractParallelComputeV0 implements XdrElement {
       throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

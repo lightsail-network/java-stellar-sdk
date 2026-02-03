@@ -35,11 +35,19 @@ public class Signer implements XdrElement {
     weight.encode(stream);
   }
 
-  public static Signer decode(XdrDataInputStream stream) throws IOException {
+  public static Signer decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Signer decodedSigner = new Signer();
-    decodedSigner.key = SignerKey.decode(stream);
-    decodedSigner.weight = Uint32.decode(stream);
+    decodedSigner.key = SignerKey.decode(stream, maxDepth);
+    decodedSigner.weight = Uint32.decode(stream, maxDepth);
     return decodedSigner;
+  }
+
+  public static Signer decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Signer fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class Signer implements XdrElement {
   public static Signer fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

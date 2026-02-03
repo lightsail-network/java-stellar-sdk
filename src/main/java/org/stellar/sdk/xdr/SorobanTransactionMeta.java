@@ -55,21 +55,53 @@ public class SorobanTransactionMeta implements XdrElement {
     }
   }
 
-  public static SorobanTransactionMeta decode(XdrDataInputStream stream) throws IOException {
+  public static SorobanTransactionMeta decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SorobanTransactionMeta decodedSorobanTransactionMeta = new SorobanTransactionMeta();
-    decodedSorobanTransactionMeta.ext = SorobanTransactionMetaExt.decode(stream);
+    decodedSorobanTransactionMeta.ext = SorobanTransactionMetaExt.decode(stream, maxDepth);
     int eventsSize = stream.readInt();
+    if (eventsSize < 0) {
+      throw new IOException("events size " + eventsSize + " is negative");
+    }
+    int eventsRemainingInputLen = stream.getRemainingInputLen();
+    if (eventsRemainingInputLen >= 0 && eventsRemainingInputLen < eventsSize) {
+      throw new IOException(
+          "events size "
+              + eventsSize
+              + " exceeds remaining input length "
+              + eventsRemainingInputLen);
+    }
     decodedSorobanTransactionMeta.events = new ContractEvent[eventsSize];
     for (int i = 0; i < eventsSize; i++) {
-      decodedSorobanTransactionMeta.events[i] = ContractEvent.decode(stream);
+      decodedSorobanTransactionMeta.events[i] = ContractEvent.decode(stream, maxDepth);
     }
-    decodedSorobanTransactionMeta.returnValue = SCVal.decode(stream);
+    decodedSorobanTransactionMeta.returnValue = SCVal.decode(stream, maxDepth);
     int diagnosticEventsSize = stream.readInt();
+    if (diagnosticEventsSize < 0) {
+      throw new IOException("diagnosticEvents size " + diagnosticEventsSize + " is negative");
+    }
+    int diagnosticEventsRemainingInputLen = stream.getRemainingInputLen();
+    if (diagnosticEventsRemainingInputLen >= 0
+        && diagnosticEventsRemainingInputLen < diagnosticEventsSize) {
+      throw new IOException(
+          "diagnosticEvents size "
+              + diagnosticEventsSize
+              + " exceeds remaining input length "
+              + diagnosticEventsRemainingInputLen);
+    }
     decodedSorobanTransactionMeta.diagnosticEvents = new DiagnosticEvent[diagnosticEventsSize];
     for (int i = 0; i < diagnosticEventsSize; i++) {
-      decodedSorobanTransactionMeta.diagnosticEvents[i] = DiagnosticEvent.decode(stream);
+      decodedSorobanTransactionMeta.diagnosticEvents[i] = DiagnosticEvent.decode(stream, maxDepth);
     }
     return decodedSorobanTransactionMeta;
+  }
+
+  public static SorobanTransactionMeta decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SorobanTransactionMeta fromXdrBase64(String xdr) throws IOException {
@@ -80,6 +112,7 @@ public class SorobanTransactionMeta implements XdrElement {
   public static SorobanTransactionMeta fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

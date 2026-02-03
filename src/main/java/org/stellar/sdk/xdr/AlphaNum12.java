@@ -35,11 +35,19 @@ public class AlphaNum12 implements XdrElement {
     issuer.encode(stream);
   }
 
-  public static AlphaNum12 decode(XdrDataInputStream stream) throws IOException {
+  public static AlphaNum12 decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     AlphaNum12 decodedAlphaNum12 = new AlphaNum12();
-    decodedAlphaNum12.assetCode = AssetCode12.decode(stream);
-    decodedAlphaNum12.issuer = AccountID.decode(stream);
+    decodedAlphaNum12.assetCode = AssetCode12.decode(stream, maxDepth);
+    decodedAlphaNum12.issuer = AccountID.decode(stream, maxDepth);
     return decodedAlphaNum12;
+  }
+
+  public static AlphaNum12 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static AlphaNum12 fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class AlphaNum12 implements XdrElement {
   public static AlphaNum12 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

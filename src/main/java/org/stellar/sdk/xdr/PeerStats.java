@@ -60,6 +60,10 @@ public class PeerStats implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     id.encode(stream);
+    int versionStrSize = versionStr.getBytes().length;
+    if (versionStrSize > 100) {
+      throw new IOException("versionStr size " + versionStrSize + " exceeds max size 100");
+    }
     versionStr.encode(stream);
     messagesRead.encode(stream);
     messagesWritten.encode(stream);
@@ -76,24 +80,32 @@ public class PeerStats implements XdrElement {
     duplicateFetchMessageRecv.encode(stream);
   }
 
-  public static PeerStats decode(XdrDataInputStream stream) throws IOException {
+  public static PeerStats decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     PeerStats decodedPeerStats = new PeerStats();
-    decodedPeerStats.id = NodeID.decode(stream);
-    decodedPeerStats.versionStr = XdrString.decode(stream, 100);
-    decodedPeerStats.messagesRead = Uint64.decode(stream);
-    decodedPeerStats.messagesWritten = Uint64.decode(stream);
-    decodedPeerStats.bytesRead = Uint64.decode(stream);
-    decodedPeerStats.bytesWritten = Uint64.decode(stream);
-    decodedPeerStats.secondsConnected = Uint64.decode(stream);
-    decodedPeerStats.uniqueFloodBytesRecv = Uint64.decode(stream);
-    decodedPeerStats.duplicateFloodBytesRecv = Uint64.decode(stream);
-    decodedPeerStats.uniqueFetchBytesRecv = Uint64.decode(stream);
-    decodedPeerStats.duplicateFetchBytesRecv = Uint64.decode(stream);
-    decodedPeerStats.uniqueFloodMessageRecv = Uint64.decode(stream);
-    decodedPeerStats.duplicateFloodMessageRecv = Uint64.decode(stream);
-    decodedPeerStats.uniqueFetchMessageRecv = Uint64.decode(stream);
-    decodedPeerStats.duplicateFetchMessageRecv = Uint64.decode(stream);
+    decodedPeerStats.id = NodeID.decode(stream, maxDepth);
+    decodedPeerStats.versionStr = XdrString.decode(stream, maxDepth, 100);
+    decodedPeerStats.messagesRead = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.messagesWritten = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.bytesRead = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.bytesWritten = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.secondsConnected = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.uniqueFloodBytesRecv = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.duplicateFloodBytesRecv = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.uniqueFetchBytesRecv = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.duplicateFetchBytesRecv = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.uniqueFloodMessageRecv = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.duplicateFloodMessageRecv = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.uniqueFetchMessageRecv = Uint64.decode(stream, maxDepth);
+    decodedPeerStats.duplicateFetchMessageRecv = Uint64.decode(stream, maxDepth);
     return decodedPeerStats;
+  }
+
+  public static PeerStats decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static PeerStats fromXdrBase64(String xdr) throws IOException {
@@ -104,6 +116,7 @@ public class PeerStats implements XdrElement {
   public static PeerStats fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

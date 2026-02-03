@@ -43,14 +43,28 @@ public class ConfigSettingSCPTiming implements XdrElement {
     ballotTimeoutIncrementMilliseconds.encode(stream);
   }
 
-  public static ConfigSettingSCPTiming decode(XdrDataInputStream stream) throws IOException {
+  public static ConfigSettingSCPTiming decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingSCPTiming decodedConfigSettingSCPTiming = new ConfigSettingSCPTiming();
-    decodedConfigSettingSCPTiming.ledgerTargetCloseTimeMilliseconds = Uint32.decode(stream);
-    decodedConfigSettingSCPTiming.nominationTimeoutInitialMilliseconds = Uint32.decode(stream);
-    decodedConfigSettingSCPTiming.nominationTimeoutIncrementMilliseconds = Uint32.decode(stream);
-    decodedConfigSettingSCPTiming.ballotTimeoutInitialMilliseconds = Uint32.decode(stream);
-    decodedConfigSettingSCPTiming.ballotTimeoutIncrementMilliseconds = Uint32.decode(stream);
+    decodedConfigSettingSCPTiming.ledgerTargetCloseTimeMilliseconds =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingSCPTiming.nominationTimeoutInitialMilliseconds =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingSCPTiming.nominationTimeoutIncrementMilliseconds =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingSCPTiming.ballotTimeoutInitialMilliseconds =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingSCPTiming.ballotTimeoutIncrementMilliseconds =
+        Uint32.decode(stream, maxDepth);
     return decodedConfigSettingSCPTiming;
+  }
+
+  public static ConfigSettingSCPTiming decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingSCPTiming fromXdrBase64(String xdr) throws IOException {
@@ -61,6 +75,7 @@ public class ConfigSettingSCPTiming implements XdrElement {
   public static ConfigSettingSCPTiming fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -25,16 +25,41 @@ public class EncryptedBody implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int EncryptedBodySize = EncryptedBody.length;
+    if (EncryptedBodySize > 64000) {
+      throw new IOException("EncryptedBody size " + EncryptedBodySize + " exceeds max size 64000");
+    }
     stream.writeInt(EncryptedBodySize);
     stream.write(getEncryptedBody(), 0, EncryptedBodySize);
   }
 
-  public static EncryptedBody decode(XdrDataInputStream stream) throws IOException {
+  public static EncryptedBody decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     EncryptedBody decodedEncryptedBody = new EncryptedBody();
     int EncryptedBodySize = stream.readInt();
+    if (EncryptedBodySize < 0) {
+      throw new IOException("EncryptedBody size " + EncryptedBodySize + " is negative");
+    }
+    if (EncryptedBodySize > 64000) {
+      throw new IOException("EncryptedBody size " + EncryptedBodySize + " exceeds max size 64000");
+    }
+    int EncryptedBodyRemainingInputLen = stream.getRemainingInputLen();
+    if (EncryptedBodyRemainingInputLen >= 0 && EncryptedBodyRemainingInputLen < EncryptedBodySize) {
+      throw new IOException(
+          "EncryptedBody size "
+              + EncryptedBodySize
+              + " exceeds remaining input length "
+              + EncryptedBodyRemainingInputLen);
+    }
     decodedEncryptedBody.EncryptedBody = new byte[EncryptedBodySize];
-    stream.read(decodedEncryptedBody.EncryptedBody, 0, EncryptedBodySize);
+    stream.readPaddedData(decodedEncryptedBody.EncryptedBody, 0, EncryptedBodySize);
     return decodedEncryptedBody;
+  }
+
+  public static EncryptedBody decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static EncryptedBody fromXdrBase64(String xdr) throws IOException {
@@ -45,6 +70,7 @@ public class EncryptedBody implements XdrElement {
   public static EncryptedBody fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

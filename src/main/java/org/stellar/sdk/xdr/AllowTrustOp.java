@@ -40,12 +40,20 @@ public class AllowTrustOp implements XdrElement {
     authorize.encode(stream);
   }
 
-  public static AllowTrustOp decode(XdrDataInputStream stream) throws IOException {
+  public static AllowTrustOp decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     AllowTrustOp decodedAllowTrustOp = new AllowTrustOp();
-    decodedAllowTrustOp.trustor = AccountID.decode(stream);
-    decodedAllowTrustOp.asset = AssetCode.decode(stream);
-    decodedAllowTrustOp.authorize = Uint32.decode(stream);
+    decodedAllowTrustOp.trustor = AccountID.decode(stream, maxDepth);
+    decodedAllowTrustOp.asset = AssetCode.decode(stream, maxDepth);
+    decodedAllowTrustOp.authorize = Uint32.decode(stream, maxDepth);
     return decodedAllowTrustOp;
+  }
+
+  public static AllowTrustOp decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static AllowTrustOp fromXdrBase64(String xdr) throws IOException {
@@ -56,6 +64,7 @@ public class AllowTrustOp implements XdrElement {
   public static AllowTrustOp fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

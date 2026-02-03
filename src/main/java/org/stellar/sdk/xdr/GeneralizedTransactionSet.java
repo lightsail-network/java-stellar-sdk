@@ -40,16 +40,27 @@ public class GeneralizedTransactionSet implements XdrElement {
     }
   }
 
-  public static GeneralizedTransactionSet decode(XdrDataInputStream stream) throws IOException {
+  public static GeneralizedTransactionSet decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     GeneralizedTransactionSet decodedGeneralizedTransactionSet = new GeneralizedTransactionSet();
     Integer discriminant = stream.readInt();
     decodedGeneralizedTransactionSet.setDiscriminant(discriminant);
     switch (decodedGeneralizedTransactionSet.getDiscriminant()) {
       case 1:
-        decodedGeneralizedTransactionSet.v1TxSet = TransactionSetV1.decode(stream);
+        decodedGeneralizedTransactionSet.v1TxSet = TransactionSetV1.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedGeneralizedTransactionSet;
+  }
+
+  public static GeneralizedTransactionSet decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static GeneralizedTransactionSet fromXdrBase64(String xdr) throws IOException {
@@ -60,6 +71,7 @@ public class GeneralizedTransactionSet implements XdrElement {
   public static GeneralizedTransactionSet fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

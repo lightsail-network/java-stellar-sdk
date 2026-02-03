@@ -39,13 +39,23 @@ public class ConfigSettingContractLedgerCostExtV0 implements XdrElement {
     feeWrite1KB.encode(stream);
   }
 
-  public static ConfigSettingContractLedgerCostExtV0 decode(XdrDataInputStream stream)
+  public static ConfigSettingContractLedgerCostExtV0 decode(XdrDataInputStream stream, int maxDepth)
       throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ConfigSettingContractLedgerCostExtV0 decodedConfigSettingContractLedgerCostExtV0 =
         new ConfigSettingContractLedgerCostExtV0();
-    decodedConfigSettingContractLedgerCostExtV0.txMaxFootprintEntries = Uint32.decode(stream);
-    decodedConfigSettingContractLedgerCostExtV0.feeWrite1KB = Int64.decode(stream);
+    decodedConfigSettingContractLedgerCostExtV0.txMaxFootprintEntries =
+        Uint32.decode(stream, maxDepth);
+    decodedConfigSettingContractLedgerCostExtV0.feeWrite1KB = Int64.decode(stream, maxDepth);
     return decodedConfigSettingContractLedgerCostExtV0;
+  }
+
+  public static ConfigSettingContractLedgerCostExtV0 decode(XdrDataInputStream stream)
+      throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ConfigSettingContractLedgerCostExtV0 fromXdrBase64(String xdr) throws IOException {
@@ -57,6 +67,7 @@ public class ConfigSettingContractLedgerCostExtV0 implements XdrElement {
       throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

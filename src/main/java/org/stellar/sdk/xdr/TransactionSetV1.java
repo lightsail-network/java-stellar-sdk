@@ -39,15 +39,35 @@ public class TransactionSetV1 implements XdrElement {
     }
   }
 
-  public static TransactionSetV1 decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionSetV1 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionSetV1 decodedTransactionSetV1 = new TransactionSetV1();
-    decodedTransactionSetV1.previousLedgerHash = Hash.decode(stream);
+    decodedTransactionSetV1.previousLedgerHash = Hash.decode(stream, maxDepth);
     int phasesSize = stream.readInt();
+    if (phasesSize < 0) {
+      throw new IOException("phases size " + phasesSize + " is negative");
+    }
+    int phasesRemainingInputLen = stream.getRemainingInputLen();
+    if (phasesRemainingInputLen >= 0 && phasesRemainingInputLen < phasesSize) {
+      throw new IOException(
+          "phases size "
+              + phasesSize
+              + " exceeds remaining input length "
+              + phasesRemainingInputLen);
+    }
     decodedTransactionSetV1.phases = new TransactionPhase[phasesSize];
     for (int i = 0; i < phasesSize; i++) {
-      decodedTransactionSetV1.phases[i] = TransactionPhase.decode(stream);
+      decodedTransactionSetV1.phases[i] = TransactionPhase.decode(stream, maxDepth);
     }
     return decodedTransactionSetV1;
+  }
+
+  public static TransactionSetV1 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionSetV1 fromXdrBase64(String xdr) throws IOException {
@@ -58,6 +78,7 @@ public class TransactionSetV1 implements XdrElement {
   public static TransactionSetV1 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -38,12 +38,21 @@ public class StoredDebugTransactionSet implements XdrElement {
     scpValue.encode(stream);
   }
 
-  public static StoredDebugTransactionSet decode(XdrDataInputStream stream) throws IOException {
+  public static StoredDebugTransactionSet decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     StoredDebugTransactionSet decodedStoredDebugTransactionSet = new StoredDebugTransactionSet();
-    decodedStoredDebugTransactionSet.txSet = StoredTransactionSet.decode(stream);
-    decodedStoredDebugTransactionSet.ledgerSeq = Uint32.decode(stream);
-    decodedStoredDebugTransactionSet.scpValue = StellarValue.decode(stream);
+    decodedStoredDebugTransactionSet.txSet = StoredTransactionSet.decode(stream, maxDepth);
+    decodedStoredDebugTransactionSet.ledgerSeq = Uint32.decode(stream, maxDepth);
+    decodedStoredDebugTransactionSet.scpValue = StellarValue.decode(stream, maxDepth);
     return decodedStoredDebugTransactionSet;
+  }
+
+  public static StoredDebugTransactionSet decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static StoredDebugTransactionSet fromXdrBase64(String xdr) throws IOException {
@@ -54,6 +63,7 @@ public class StoredDebugTransactionSet implements XdrElement {
   public static StoredDebugTransactionSet fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

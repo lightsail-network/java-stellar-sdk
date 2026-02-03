@@ -110,13 +110,17 @@ public class OperationResult implements XdrElement {
     }
   }
 
-  public static OperationResult decode(XdrDataInputStream stream) throws IOException {
+  public static OperationResult decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     OperationResult decodedOperationResult = new OperationResult();
-    OperationResultCode discriminant = OperationResultCode.decode(stream);
+    OperationResultCode discriminant = OperationResultCode.decode(stream, maxDepth);
     decodedOperationResult.setDiscriminant(discriminant);
     switch (decodedOperationResult.getDiscriminant()) {
       case opINNER:
-        decodedOperationResult.tr = OperationResultTr.decode(stream);
+        decodedOperationResult.tr = OperationResultTr.decode(stream, maxDepth);
         break;
       case opBAD_AUTH:
       case opNO_ACCOUNT:
@@ -125,8 +129,14 @@ public class OperationResult implements XdrElement {
       case opEXCEEDED_WORK_LIMIT:
       case opTOO_MANY_SPONSORING:
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedOperationResult;
+  }
+
+  public static OperationResult decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static OperationResult fromXdrBase64(String xdr) throws IOException {
@@ -137,6 +147,7 @@ public class OperationResult implements XdrElement {
   public static OperationResult fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -324,106 +335,123 @@ public class OperationResult implements XdrElement {
       }
     }
 
-    public static OperationResultTr decode(XdrDataInputStream stream) throws IOException {
+    public static OperationResultTr decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       OperationResultTr decodedOperationResultTr = new OperationResultTr();
-      OperationType discriminant = OperationType.decode(stream);
+      OperationType discriminant = OperationType.decode(stream, maxDepth);
       decodedOperationResultTr.setDiscriminant(discriminant);
       switch (decodedOperationResultTr.getDiscriminant()) {
         case CREATE_ACCOUNT:
-          decodedOperationResultTr.createAccountResult = CreateAccountResult.decode(stream);
+          decodedOperationResultTr.createAccountResult =
+              CreateAccountResult.decode(stream, maxDepth);
           break;
         case PAYMENT:
-          decodedOperationResultTr.paymentResult = PaymentResult.decode(stream);
+          decodedOperationResultTr.paymentResult = PaymentResult.decode(stream, maxDepth);
           break;
         case PATH_PAYMENT_STRICT_RECEIVE:
           decodedOperationResultTr.pathPaymentStrictReceiveResult =
-              PathPaymentStrictReceiveResult.decode(stream);
+              PathPaymentStrictReceiveResult.decode(stream, maxDepth);
           break;
         case MANAGE_SELL_OFFER:
-          decodedOperationResultTr.manageSellOfferResult = ManageSellOfferResult.decode(stream);
+          decodedOperationResultTr.manageSellOfferResult =
+              ManageSellOfferResult.decode(stream, maxDepth);
           break;
         case CREATE_PASSIVE_SELL_OFFER:
           decodedOperationResultTr.createPassiveSellOfferResult =
-              ManageSellOfferResult.decode(stream);
+              ManageSellOfferResult.decode(stream, maxDepth);
           break;
         case SET_OPTIONS:
-          decodedOperationResultTr.setOptionsResult = SetOptionsResult.decode(stream);
+          decodedOperationResultTr.setOptionsResult = SetOptionsResult.decode(stream, maxDepth);
           break;
         case CHANGE_TRUST:
-          decodedOperationResultTr.changeTrustResult = ChangeTrustResult.decode(stream);
+          decodedOperationResultTr.changeTrustResult = ChangeTrustResult.decode(stream, maxDepth);
           break;
         case ALLOW_TRUST:
-          decodedOperationResultTr.allowTrustResult = AllowTrustResult.decode(stream);
+          decodedOperationResultTr.allowTrustResult = AllowTrustResult.decode(stream, maxDepth);
           break;
         case ACCOUNT_MERGE:
-          decodedOperationResultTr.accountMergeResult = AccountMergeResult.decode(stream);
+          decodedOperationResultTr.accountMergeResult = AccountMergeResult.decode(stream, maxDepth);
           break;
         case INFLATION:
-          decodedOperationResultTr.inflationResult = InflationResult.decode(stream);
+          decodedOperationResultTr.inflationResult = InflationResult.decode(stream, maxDepth);
           break;
         case MANAGE_DATA:
-          decodedOperationResultTr.manageDataResult = ManageDataResult.decode(stream);
+          decodedOperationResultTr.manageDataResult = ManageDataResult.decode(stream, maxDepth);
           break;
         case BUMP_SEQUENCE:
-          decodedOperationResultTr.bumpSeqResult = BumpSequenceResult.decode(stream);
+          decodedOperationResultTr.bumpSeqResult = BumpSequenceResult.decode(stream, maxDepth);
           break;
         case MANAGE_BUY_OFFER:
-          decodedOperationResultTr.manageBuyOfferResult = ManageBuyOfferResult.decode(stream);
+          decodedOperationResultTr.manageBuyOfferResult =
+              ManageBuyOfferResult.decode(stream, maxDepth);
           break;
         case PATH_PAYMENT_STRICT_SEND:
           decodedOperationResultTr.pathPaymentStrictSendResult =
-              PathPaymentStrictSendResult.decode(stream);
+              PathPaymentStrictSendResult.decode(stream, maxDepth);
           break;
         case CREATE_CLAIMABLE_BALANCE:
           decodedOperationResultTr.createClaimableBalanceResult =
-              CreateClaimableBalanceResult.decode(stream);
+              CreateClaimableBalanceResult.decode(stream, maxDepth);
           break;
         case CLAIM_CLAIMABLE_BALANCE:
           decodedOperationResultTr.claimClaimableBalanceResult =
-              ClaimClaimableBalanceResult.decode(stream);
+              ClaimClaimableBalanceResult.decode(stream, maxDepth);
           break;
         case BEGIN_SPONSORING_FUTURE_RESERVES:
           decodedOperationResultTr.beginSponsoringFutureReservesResult =
-              BeginSponsoringFutureReservesResult.decode(stream);
+              BeginSponsoringFutureReservesResult.decode(stream, maxDepth);
           break;
         case END_SPONSORING_FUTURE_RESERVES:
           decodedOperationResultTr.endSponsoringFutureReservesResult =
-              EndSponsoringFutureReservesResult.decode(stream);
+              EndSponsoringFutureReservesResult.decode(stream, maxDepth);
           break;
         case REVOKE_SPONSORSHIP:
-          decodedOperationResultTr.revokeSponsorshipResult = RevokeSponsorshipResult.decode(stream);
+          decodedOperationResultTr.revokeSponsorshipResult =
+              RevokeSponsorshipResult.decode(stream, maxDepth);
           break;
         case CLAWBACK:
-          decodedOperationResultTr.clawbackResult = ClawbackResult.decode(stream);
+          decodedOperationResultTr.clawbackResult = ClawbackResult.decode(stream, maxDepth);
           break;
         case CLAWBACK_CLAIMABLE_BALANCE:
           decodedOperationResultTr.clawbackClaimableBalanceResult =
-              ClawbackClaimableBalanceResult.decode(stream);
+              ClawbackClaimableBalanceResult.decode(stream, maxDepth);
           break;
         case SET_TRUST_LINE_FLAGS:
-          decodedOperationResultTr.setTrustLineFlagsResult = SetTrustLineFlagsResult.decode(stream);
+          decodedOperationResultTr.setTrustLineFlagsResult =
+              SetTrustLineFlagsResult.decode(stream, maxDepth);
           break;
         case LIQUIDITY_POOL_DEPOSIT:
           decodedOperationResultTr.liquidityPoolDepositResult =
-              LiquidityPoolDepositResult.decode(stream);
+              LiquidityPoolDepositResult.decode(stream, maxDepth);
           break;
         case LIQUIDITY_POOL_WITHDRAW:
           decodedOperationResultTr.liquidityPoolWithdrawResult =
-              LiquidityPoolWithdrawResult.decode(stream);
+              LiquidityPoolWithdrawResult.decode(stream, maxDepth);
           break;
         case INVOKE_HOST_FUNCTION:
           decodedOperationResultTr.invokeHostFunctionResult =
-              InvokeHostFunctionResult.decode(stream);
+              InvokeHostFunctionResult.decode(stream, maxDepth);
           break;
         case EXTEND_FOOTPRINT_TTL:
           decodedOperationResultTr.extendFootprintTTLResult =
-              ExtendFootprintTTLResult.decode(stream);
+              ExtendFootprintTTLResult.decode(stream, maxDepth);
           break;
         case RESTORE_FOOTPRINT:
-          decodedOperationResultTr.restoreFootprintResult = RestoreFootprintResult.decode(stream);
+          decodedOperationResultTr.restoreFootprintResult =
+              RestoreFootprintResult.decode(stream, maxDepth);
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedOperationResultTr;
+    }
+
+    public static OperationResultTr decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static OperationResultTr fromXdrBase64(String xdr) throws IOException {
@@ -434,6 +462,7 @@ public class OperationResult implements XdrElement {
     public static OperationResultTr fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

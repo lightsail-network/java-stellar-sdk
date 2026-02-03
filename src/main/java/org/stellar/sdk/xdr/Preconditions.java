@@ -49,21 +49,31 @@ public class Preconditions implements XdrElement {
     }
   }
 
-  public static Preconditions decode(XdrDataInputStream stream) throws IOException {
+  public static Preconditions decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Preconditions decodedPreconditions = new Preconditions();
-    PreconditionType discriminant = PreconditionType.decode(stream);
+    PreconditionType discriminant = PreconditionType.decode(stream, maxDepth);
     decodedPreconditions.setDiscriminant(discriminant);
     switch (decodedPreconditions.getDiscriminant()) {
       case PRECOND_NONE:
         break;
       case PRECOND_TIME:
-        decodedPreconditions.timeBounds = TimeBounds.decode(stream);
+        decodedPreconditions.timeBounds = TimeBounds.decode(stream, maxDepth);
         break;
       case PRECOND_V2:
-        decodedPreconditions.v2 = PreconditionsV2.decode(stream);
+        decodedPreconditions.v2 = PreconditionsV2.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedPreconditions;
+  }
+
+  public static Preconditions decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Preconditions fromXdrBase64(String xdr) throws IOException {
@@ -74,6 +84,7 @@ public class Preconditions implements XdrElement {
   public static Preconditions fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

@@ -65,25 +65,36 @@ public class SignerKey implements XdrElement {
     }
   }
 
-  public static SignerKey decode(XdrDataInputStream stream) throws IOException {
+  public static SignerKey decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SignerKey decodedSignerKey = new SignerKey();
-    SignerKeyType discriminant = SignerKeyType.decode(stream);
+    SignerKeyType discriminant = SignerKeyType.decode(stream, maxDepth);
     decodedSignerKey.setDiscriminant(discriminant);
     switch (decodedSignerKey.getDiscriminant()) {
       case SIGNER_KEY_TYPE_ED25519:
-        decodedSignerKey.ed25519 = Uint256.decode(stream);
+        decodedSignerKey.ed25519 = Uint256.decode(stream, maxDepth);
         break;
       case SIGNER_KEY_TYPE_PRE_AUTH_TX:
-        decodedSignerKey.preAuthTx = Uint256.decode(stream);
+        decodedSignerKey.preAuthTx = Uint256.decode(stream, maxDepth);
         break;
       case SIGNER_KEY_TYPE_HASH_X:
-        decodedSignerKey.hashX = Uint256.decode(stream);
+        decodedSignerKey.hashX = Uint256.decode(stream, maxDepth);
         break;
       case SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD:
-        decodedSignerKey.ed25519SignedPayload = SignerKeyEd25519SignedPayload.decode(stream);
+        decodedSignerKey.ed25519SignedPayload =
+            SignerKeyEd25519SignedPayload.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedSignerKey;
+  }
+
+  public static SignerKey decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SignerKey fromXdrBase64(String xdr) throws IOException {
@@ -94,6 +105,7 @@ public class SignerKey implements XdrElement {
   public static SignerKey fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -121,19 +133,45 @@ public class SignerKey implements XdrElement {
     public void encode(XdrDataOutputStream stream) throws IOException {
       ed25519.encode(stream);
       int payloadSize = payload.length;
+      if (payloadSize > 64) {
+        throw new IOException("payload size " + payloadSize + " exceeds max size 64");
+      }
       stream.writeInt(payloadSize);
       stream.write(getPayload(), 0, payloadSize);
     }
 
-    public static SignerKeyEd25519SignedPayload decode(XdrDataInputStream stream)
+    public static SignerKeyEd25519SignedPayload decode(XdrDataInputStream stream, int maxDepth)
         throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       SignerKeyEd25519SignedPayload decodedSignerKeyEd25519SignedPayload =
           new SignerKeyEd25519SignedPayload();
-      decodedSignerKeyEd25519SignedPayload.ed25519 = Uint256.decode(stream);
+      decodedSignerKeyEd25519SignedPayload.ed25519 = Uint256.decode(stream, maxDepth);
       int payloadSize = stream.readInt();
+      if (payloadSize < 0) {
+        throw new IOException("payload size " + payloadSize + " is negative");
+      }
+      if (payloadSize > 64) {
+        throw new IOException("payload size " + payloadSize + " exceeds max size 64");
+      }
+      int payloadRemainingInputLen = stream.getRemainingInputLen();
+      if (payloadRemainingInputLen >= 0 && payloadRemainingInputLen < payloadSize) {
+        throw new IOException(
+            "payload size "
+                + payloadSize
+                + " exceeds remaining input length "
+                + payloadRemainingInputLen);
+      }
       decodedSignerKeyEd25519SignedPayload.payload = new byte[payloadSize];
-      stream.read(decodedSignerKeyEd25519SignedPayload.payload, 0, payloadSize);
+      stream.readPaddedData(decodedSignerKeyEd25519SignedPayload.payload, 0, payloadSize);
       return decodedSignerKeyEd25519SignedPayload;
+    }
+
+    public static SignerKeyEd25519SignedPayload decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static SignerKeyEd25519SignedPayload fromXdrBase64(String xdr) throws IOException {
@@ -144,6 +182,7 @@ public class SignerKey implements XdrElement {
     public static SignerKeyEd25519SignedPayload fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

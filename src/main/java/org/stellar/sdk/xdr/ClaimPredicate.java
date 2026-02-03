@@ -52,6 +52,9 @@ public class ClaimPredicate implements XdrElement {
         break;
       case CLAIM_PREDICATE_AND:
         int andPredicatesSize = getAndPredicates().length;
+        if (andPredicatesSize > 2) {
+          throw new IOException("andPredicates size " + andPredicatesSize + " exceeds max size 2");
+        }
         stream.writeInt(andPredicatesSize);
         for (int i = 0; i < andPredicatesSize; i++) {
           andPredicates[i].encode(stream);
@@ -59,6 +62,9 @@ public class ClaimPredicate implements XdrElement {
         break;
       case CLAIM_PREDICATE_OR:
         int orPredicatesSize = getOrPredicates().length;
+        if (orPredicatesSize > 2) {
+          throw new IOException("orPredicates size " + orPredicatesSize + " exceeds max size 2");
+        }
         stream.writeInt(orPredicatesSize);
         for (int i = 0; i < orPredicatesSize; i++) {
           orPredicates[i].encode(stream);
@@ -81,41 +87,81 @@ public class ClaimPredicate implements XdrElement {
     }
   }
 
-  public static ClaimPredicate decode(XdrDataInputStream stream) throws IOException {
+  public static ClaimPredicate decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     ClaimPredicate decodedClaimPredicate = new ClaimPredicate();
-    ClaimPredicateType discriminant = ClaimPredicateType.decode(stream);
+    ClaimPredicateType discriminant = ClaimPredicateType.decode(stream, maxDepth);
     decodedClaimPredicate.setDiscriminant(discriminant);
     switch (decodedClaimPredicate.getDiscriminant()) {
       case CLAIM_PREDICATE_UNCONDITIONAL:
         break;
       case CLAIM_PREDICATE_AND:
         int andPredicatesSize = stream.readInt();
+        if (andPredicatesSize < 0) {
+          throw new IOException("andPredicates size " + andPredicatesSize + " is negative");
+        }
+        if (andPredicatesSize > 2) {
+          throw new IOException("andPredicates size " + andPredicatesSize + " exceeds max size 2");
+        }
+        int andPredicatesRemainingInputLen = stream.getRemainingInputLen();
+        if (andPredicatesRemainingInputLen >= 0
+            && andPredicatesRemainingInputLen < andPredicatesSize) {
+          throw new IOException(
+              "andPredicates size "
+                  + andPredicatesSize
+                  + " exceeds remaining input length "
+                  + andPredicatesRemainingInputLen);
+        }
         decodedClaimPredicate.andPredicates = new ClaimPredicate[andPredicatesSize];
         for (int i = 0; i < andPredicatesSize; i++) {
-          decodedClaimPredicate.andPredicates[i] = ClaimPredicate.decode(stream);
+          decodedClaimPredicate.andPredicates[i] = ClaimPredicate.decode(stream, maxDepth);
         }
         break;
       case CLAIM_PREDICATE_OR:
         int orPredicatesSize = stream.readInt();
+        if (orPredicatesSize < 0) {
+          throw new IOException("orPredicates size " + orPredicatesSize + " is negative");
+        }
+        if (orPredicatesSize > 2) {
+          throw new IOException("orPredicates size " + orPredicatesSize + " exceeds max size 2");
+        }
+        int orPredicatesRemainingInputLen = stream.getRemainingInputLen();
+        if (orPredicatesRemainingInputLen >= 0
+            && orPredicatesRemainingInputLen < orPredicatesSize) {
+          throw new IOException(
+              "orPredicates size "
+                  + orPredicatesSize
+                  + " exceeds remaining input length "
+                  + orPredicatesRemainingInputLen);
+        }
         decodedClaimPredicate.orPredicates = new ClaimPredicate[orPredicatesSize];
         for (int i = 0; i < orPredicatesSize; i++) {
-          decodedClaimPredicate.orPredicates[i] = ClaimPredicate.decode(stream);
+          decodedClaimPredicate.orPredicates[i] = ClaimPredicate.decode(stream, maxDepth);
         }
         break;
       case CLAIM_PREDICATE_NOT:
-        int notPredicatePresent = stream.readInt();
-        if (notPredicatePresent != 0) {
-          decodedClaimPredicate.notPredicate = ClaimPredicate.decode(stream);
+        boolean notPredicatePresent = stream.readXdrBoolean();
+        if (notPredicatePresent) {
+          decodedClaimPredicate.notPredicate = ClaimPredicate.decode(stream, maxDepth);
         }
         break;
       case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
-        decodedClaimPredicate.absBefore = Int64.decode(stream);
+        decodedClaimPredicate.absBefore = Int64.decode(stream, maxDepth);
         break;
       case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
-        decodedClaimPredicate.relBefore = Int64.decode(stream);
+        decodedClaimPredicate.relBefore = Int64.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedClaimPredicate;
+  }
+
+  public static ClaimPredicate decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static ClaimPredicate fromXdrBase64(String xdr) throws IOException {
@@ -126,6 +172,7 @@ public class ClaimPredicate implements XdrElement {
   public static ClaimPredicate fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

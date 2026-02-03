@@ -44,16 +44,36 @@ public class TransactionMetaV2 implements XdrElement {
     txChangesAfter.encode(stream);
   }
 
-  public static TransactionMetaV2 decode(XdrDataInputStream stream) throws IOException {
+  public static TransactionMetaV2 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     TransactionMetaV2 decodedTransactionMetaV2 = new TransactionMetaV2();
-    decodedTransactionMetaV2.txChangesBefore = LedgerEntryChanges.decode(stream);
+    decodedTransactionMetaV2.txChangesBefore = LedgerEntryChanges.decode(stream, maxDepth);
     int operationsSize = stream.readInt();
+    if (operationsSize < 0) {
+      throw new IOException("operations size " + operationsSize + " is negative");
+    }
+    int operationsRemainingInputLen = stream.getRemainingInputLen();
+    if (operationsRemainingInputLen >= 0 && operationsRemainingInputLen < operationsSize) {
+      throw new IOException(
+          "operations size "
+              + operationsSize
+              + " exceeds remaining input length "
+              + operationsRemainingInputLen);
+    }
     decodedTransactionMetaV2.operations = new OperationMeta[operationsSize];
     for (int i = 0; i < operationsSize; i++) {
-      decodedTransactionMetaV2.operations[i] = OperationMeta.decode(stream);
+      decodedTransactionMetaV2.operations[i] = OperationMeta.decode(stream, maxDepth);
     }
-    decodedTransactionMetaV2.txChangesAfter = LedgerEntryChanges.decode(stream);
+    decodedTransactionMetaV2.txChangesAfter = LedgerEntryChanges.decode(stream, maxDepth);
     return decodedTransactionMetaV2;
+  }
+
+  public static TransactionMetaV2 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static TransactionMetaV2 fromXdrBase64(String xdr) throws IOException {
@@ -64,6 +84,7 @@ public class TransactionMetaV2 implements XdrElement {
   public static TransactionMetaV2 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

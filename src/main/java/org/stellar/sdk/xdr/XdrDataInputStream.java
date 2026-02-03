@@ -1,13 +1,25 @@
 package org.stellar.sdk.xdr;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import lombok.Setter;
 
 public class XdrDataInputStream extends DataInputStream {
 
+  /** Default maximum decoding depth to prevent stack overflow from deeply nested structures. */
+  public static final int DEFAULT_MAX_DEPTH = 200;
+
   // The underlying input stream
   private final XdrInputStream mIn;
+
+  /**
+   * Maximum input length, -1 if unknown. This is used to validate that the declared size of
+   * variable-length arrays/opaques doesn't exceed the remaining input length, preventing DoS
+   * attacks.
+   */
+  @Setter private int maxInputLen = -1;
 
   /**
    * Creates a XdrDataInputStream that uses the specified underlying InputStream.
@@ -19,6 +31,43 @@ public class XdrDataInputStream extends DataInputStream {
     mIn = (XdrInputStream) super.in;
   }
 
+  /**
+   * Returns the remaining input length if known, -1 otherwise. This can be used to validate sizes
+   * before allocating memory.
+   *
+   * @return remaining input length, or -1 if unknown
+   */
+  public int getRemainingInputLen() {
+    if (maxInputLen < 0) {
+      return -1;
+    }
+    return maxInputLen - mIn.getCount();
+  }
+
+  /**
+   * Reads an XDR boolean value from the stream. Per RFC 4506, a boolean is encoded as an integer
+   * that must be 0 (FALSE) or 1 (TRUE).
+   *
+   * @return the boolean value
+   * @throws IOException if the value is not 0 or 1, or if an I/O error occurs
+   */
+  public boolean readXdrBoolean() throws IOException {
+    int value = readInt();
+    if (value == 0) {
+      return false;
+    } else if (value == 1) {
+      return true;
+    } else {
+      throw new IOException("Invalid boolean value: " + value + ", must be 0 or 1 per RFC 4506");
+    }
+  }
+
+  /**
+   * @deprecated This method does not validate the array length and may cause OutOfMemoryError or
+   *     NegativeArraySizeException with untrusted input. Use generated XDR type decoders instead
+   *     which include proper validation.
+   */
+  @Deprecated
   public int[] readIntArray() throws IOException {
     int l = readInt();
     return readIntArray(l);
@@ -32,6 +81,12 @@ public class XdrDataInputStream extends DataInputStream {
     return arr;
   }
 
+  /**
+   * @deprecated This method does not validate the array length and may cause OutOfMemoryError or
+   *     NegativeArraySizeException with untrusted input. Use generated XDR type decoders instead
+   *     which include proper validation.
+   */
+  @Deprecated
   public float[] readFloatArray() throws IOException {
     int l = readInt();
     return readFloatArray(l);
@@ -45,6 +100,12 @@ public class XdrDataInputStream extends DataInputStream {
     return arr;
   }
 
+  /**
+   * @deprecated This method does not validate the array length and may cause OutOfMemoryError or
+   *     NegativeArraySizeException with untrusted input. Use generated XDR type decoders instead
+   *     which include proper validation.
+   */
+  @Deprecated
   public double[] readDoubleArray() throws IOException {
     int l = readInt();
     return readDoubleArray(l);
@@ -64,6 +125,22 @@ public class XdrDataInputStream extends DataInputStream {
   }
 
   /**
+   * Reads exactly len bytes of XDR opaque/string data, handling short reads, then reads and
+   * validates padding bytes to maintain 4-byte alignment. This method must be used instead of
+   * read(byte[], int, int) for opaque data to correctly handle short reads from the underlying
+   * stream.
+   *
+   * @param b the buffer into which the data is read
+   * @param off the start offset in array b at which the data is written
+   * @param len the number of bytes to read
+   * @throws IOException if an I/O error occurs or EOF is reached before reading len bytes
+   */
+  public void readPaddedData(byte[] b, int off, int len) throws IOException {
+    mIn.readFullyNoPad(b, off, len);
+    mIn.pad();
+  }
+
+  /**
    * Need to provide a custom impl of InputStream as DataInputStream's read methods are final and we
    * need to keep track of the count for padding purposes.
    */
@@ -78,6 +155,10 @@ public class XdrDataInputStream extends DataInputStream {
     public XdrInputStream(InputStream in) {
       mIn = in;
       mCount = 0;
+    }
+
+    public int getCount() {
+      return mCount;
     }
 
     @Override
@@ -99,7 +180,11 @@ public class XdrDataInputStream extends DataInputStream {
       int read = mIn.read(b, off, len);
       if (read > 0) {
         mCount += read;
-        pad();
+        // Note: padding is NOT automatically applied here.
+        // For opaque/string data, use XdrDataInputStream.readPaddedData() which
+        // handles short reads correctly and applies padding after all data is read.
+        // Primitive types (int, long, float, double) are naturally 4/8-byte aligned
+        // and don't need padding between reads.
       }
       return read;
     }
@@ -116,6 +201,22 @@ public class XdrDataInputStream extends DataInputStream {
         if (b != 0) {
           throw new IOException("non-zero padding");
         }
+      }
+    }
+
+    /**
+     * Reads exactly len bytes into the buffer, handling short reads. Does not apply padding -
+     * caller must call pad() after this.
+     */
+    void readFullyNoPad(byte[] b, int off, int len) throws IOException {
+      int totalRead = 0;
+      while (totalRead < len) {
+        int read = mIn.read(b, off + totalRead, len - totalRead);
+        if (read < 0) {
+          throw new EOFException("Unexpected end of stream while reading XDR data");
+        }
+        mCount += read;
+        totalRead += read;
       }
     }
   }

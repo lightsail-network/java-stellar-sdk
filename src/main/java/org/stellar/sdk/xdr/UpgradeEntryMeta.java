@@ -35,11 +35,20 @@ public class UpgradeEntryMeta implements XdrElement {
     changes.encode(stream);
   }
 
-  public static UpgradeEntryMeta decode(XdrDataInputStream stream) throws IOException {
+  public static UpgradeEntryMeta decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     UpgradeEntryMeta decodedUpgradeEntryMeta = new UpgradeEntryMeta();
-    decodedUpgradeEntryMeta.upgrade = LedgerUpgrade.decode(stream);
-    decodedUpgradeEntryMeta.changes = LedgerEntryChanges.decode(stream);
+    decodedUpgradeEntryMeta.upgrade = LedgerUpgrade.decode(stream, maxDepth);
+    decodedUpgradeEntryMeta.changes = LedgerEntryChanges.decode(stream, maxDepth);
     return decodedUpgradeEntryMeta;
+  }
+
+  public static UpgradeEntryMeta decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static UpgradeEntryMeta fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +59,7 @@ public class UpgradeEntryMeta implements XdrElement {
   public static UpgradeEntryMeta fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

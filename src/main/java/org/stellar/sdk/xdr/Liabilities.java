@@ -35,11 +35,19 @@ public class Liabilities implements XdrElement {
     selling.encode(stream);
   }
 
-  public static Liabilities decode(XdrDataInputStream stream) throws IOException {
+  public static Liabilities decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     Liabilities decodedLiabilities = new Liabilities();
-    decodedLiabilities.buying = Int64.decode(stream);
-    decodedLiabilities.selling = Int64.decode(stream);
+    decodedLiabilities.buying = Int64.decode(stream, maxDepth);
+    decodedLiabilities.selling = Int64.decode(stream, maxDepth);
     return decodedLiabilities;
+  }
+
+  public static Liabilities decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static Liabilities fromXdrBase64(String xdr) throws IOException {
@@ -50,6 +58,7 @@ public class Liabilities implements XdrElement {
   public static Liabilities fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

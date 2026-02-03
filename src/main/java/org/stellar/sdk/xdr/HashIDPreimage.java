@@ -79,26 +79,36 @@ public class HashIDPreimage implements XdrElement {
     }
   }
 
-  public static HashIDPreimage decode(XdrDataInputStream stream) throws IOException {
+  public static HashIDPreimage decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     HashIDPreimage decodedHashIDPreimage = new HashIDPreimage();
-    EnvelopeType discriminant = EnvelopeType.decode(stream);
+    EnvelopeType discriminant = EnvelopeType.decode(stream, maxDepth);
     decodedHashIDPreimage.setDiscriminant(discriminant);
     switch (decodedHashIDPreimage.getDiscriminant()) {
       case ENVELOPE_TYPE_OP_ID:
-        decodedHashIDPreimage.operationID = HashIDPreimageOperationID.decode(stream);
+        decodedHashIDPreimage.operationID = HashIDPreimageOperationID.decode(stream, maxDepth);
         break;
       case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
-        decodedHashIDPreimage.revokeID = HashIDPreimageRevokeID.decode(stream);
+        decodedHashIDPreimage.revokeID = HashIDPreimageRevokeID.decode(stream, maxDepth);
         break;
       case ENVELOPE_TYPE_CONTRACT_ID:
-        decodedHashIDPreimage.contractID = HashIDPreimageContractID.decode(stream);
+        decodedHashIDPreimage.contractID = HashIDPreimageContractID.decode(stream, maxDepth);
         break;
       case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
         decodedHashIDPreimage.sorobanAuthorization =
-            HashIDPreimageSorobanAuthorization.decode(stream);
+            HashIDPreimageSorobanAuthorization.decode(stream, maxDepth);
         break;
+      default:
+        throw new IOException("Unknown discriminant value: " + discriminant);
     }
     return decodedHashIDPreimage;
+  }
+
+  public static HashIDPreimage decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static HashIDPreimage fromXdrBase64(String xdr) throws IOException {
@@ -109,6 +119,7 @@ public class HashIDPreimage implements XdrElement {
   public static HashIDPreimage fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -139,12 +150,21 @@ public class HashIDPreimage implements XdrElement {
       opNum.encode(stream);
     }
 
-    public static HashIDPreimageOperationID decode(XdrDataInputStream stream) throws IOException {
+    public static HashIDPreimageOperationID decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       HashIDPreimageOperationID decodedHashIDPreimageOperationID = new HashIDPreimageOperationID();
-      decodedHashIDPreimageOperationID.sourceAccount = AccountID.decode(stream);
-      decodedHashIDPreimageOperationID.seqNum = SequenceNumber.decode(stream);
-      decodedHashIDPreimageOperationID.opNum = Uint32.decode(stream);
+      decodedHashIDPreimageOperationID.sourceAccount = AccountID.decode(stream, maxDepth);
+      decodedHashIDPreimageOperationID.seqNum = SequenceNumber.decode(stream, maxDepth);
+      decodedHashIDPreimageOperationID.opNum = Uint32.decode(stream, maxDepth);
       return decodedHashIDPreimageOperationID;
+    }
+
+    public static HashIDPreimageOperationID decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static HashIDPreimageOperationID fromXdrBase64(String xdr) throws IOException {
@@ -155,6 +175,7 @@ public class HashIDPreimage implements XdrElement {
     public static HashIDPreimageOperationID fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -192,14 +213,23 @@ public class HashIDPreimage implements XdrElement {
       asset.encode(stream);
     }
 
-    public static HashIDPreimageRevokeID decode(XdrDataInputStream stream) throws IOException {
+    public static HashIDPreimageRevokeID decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       HashIDPreimageRevokeID decodedHashIDPreimageRevokeID = new HashIDPreimageRevokeID();
-      decodedHashIDPreimageRevokeID.sourceAccount = AccountID.decode(stream);
-      decodedHashIDPreimageRevokeID.seqNum = SequenceNumber.decode(stream);
-      decodedHashIDPreimageRevokeID.opNum = Uint32.decode(stream);
-      decodedHashIDPreimageRevokeID.liquidityPoolID = PoolID.decode(stream);
-      decodedHashIDPreimageRevokeID.asset = Asset.decode(stream);
+      decodedHashIDPreimageRevokeID.sourceAccount = AccountID.decode(stream, maxDepth);
+      decodedHashIDPreimageRevokeID.seqNum = SequenceNumber.decode(stream, maxDepth);
+      decodedHashIDPreimageRevokeID.opNum = Uint32.decode(stream, maxDepth);
+      decodedHashIDPreimageRevokeID.liquidityPoolID = PoolID.decode(stream, maxDepth);
+      decodedHashIDPreimageRevokeID.asset = Asset.decode(stream, maxDepth);
       return decodedHashIDPreimageRevokeID;
+    }
+
+    public static HashIDPreimageRevokeID decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static HashIDPreimageRevokeID fromXdrBase64(String xdr) throws IOException {
@@ -210,6 +240,7 @@ public class HashIDPreimage implements XdrElement {
     public static HashIDPreimageRevokeID fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -238,11 +269,21 @@ public class HashIDPreimage implements XdrElement {
       contractIDPreimage.encode(stream);
     }
 
-    public static HashIDPreimageContractID decode(XdrDataInputStream stream) throws IOException {
+    public static HashIDPreimageContractID decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       HashIDPreimageContractID decodedHashIDPreimageContractID = new HashIDPreimageContractID();
-      decodedHashIDPreimageContractID.networkID = Hash.decode(stream);
-      decodedHashIDPreimageContractID.contractIDPreimage = ContractIDPreimage.decode(stream);
+      decodedHashIDPreimageContractID.networkID = Hash.decode(stream, maxDepth);
+      decodedHashIDPreimageContractID.contractIDPreimage =
+          ContractIDPreimage.decode(stream, maxDepth);
       return decodedHashIDPreimageContractID;
+    }
+
+    public static HashIDPreimageContractID decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static HashIDPreimageContractID fromXdrBase64(String xdr) throws IOException {
@@ -253,6 +294,7 @@ public class HashIDPreimage implements XdrElement {
     public static HashIDPreimageContractID fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }
@@ -287,16 +329,26 @@ public class HashIDPreimage implements XdrElement {
       invocation.encode(stream);
     }
 
-    public static HashIDPreimageSorobanAuthorization decode(XdrDataInputStream stream)
+    public static HashIDPreimageSorobanAuthorization decode(XdrDataInputStream stream, int maxDepth)
         throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       HashIDPreimageSorobanAuthorization decodedHashIDPreimageSorobanAuthorization =
           new HashIDPreimageSorobanAuthorization();
-      decodedHashIDPreimageSorobanAuthorization.networkID = Hash.decode(stream);
-      decodedHashIDPreimageSorobanAuthorization.nonce = Int64.decode(stream);
-      decodedHashIDPreimageSorobanAuthorization.signatureExpirationLedger = Uint32.decode(stream);
+      decodedHashIDPreimageSorobanAuthorization.networkID = Hash.decode(stream, maxDepth);
+      decodedHashIDPreimageSorobanAuthorization.nonce = Int64.decode(stream, maxDepth);
+      decodedHashIDPreimageSorobanAuthorization.signatureExpirationLedger =
+          Uint32.decode(stream, maxDepth);
       decodedHashIDPreimageSorobanAuthorization.invocation =
-          SorobanAuthorizedInvocation.decode(stream);
+          SorobanAuthorizedInvocation.decode(stream, maxDepth);
       return decodedHashIDPreimageSorobanAuthorization;
+    }
+
+    public static HashIDPreimageSorobanAuthorization decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static HashIDPreimageSorobanAuthorization fromXdrBase64(String xdr) throws IOException {
@@ -308,6 +360,7 @@ public class HashIDPreimage implements XdrElement {
         throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

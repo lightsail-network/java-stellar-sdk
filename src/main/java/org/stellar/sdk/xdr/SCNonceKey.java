@@ -31,10 +31,18 @@ public class SCNonceKey implements XdrElement {
     nonce.encode(stream);
   }
 
-  public static SCNonceKey decode(XdrDataInputStream stream) throws IOException {
+  public static SCNonceKey decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SCNonceKey decodedSCNonceKey = new SCNonceKey();
-    decodedSCNonceKey.nonce = Int64.decode(stream);
+    decodedSCNonceKey.nonce = Int64.decode(stream, maxDepth);
     return decodedSCNonceKey;
+  }
+
+  public static SCNonceKey decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SCNonceKey fromXdrBase64(String xdr) throws IOException {
@@ -45,6 +53,7 @@ public class SCNonceKey implements XdrElement {
   public static SCNonceKey fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }

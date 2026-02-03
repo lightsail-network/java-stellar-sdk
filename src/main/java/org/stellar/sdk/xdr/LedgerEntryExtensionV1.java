@@ -41,11 +41,20 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     ext.encode(stream);
   }
 
-  public static LedgerEntryExtensionV1 decode(XdrDataInputStream stream) throws IOException {
+  public static LedgerEntryExtensionV1 decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     LedgerEntryExtensionV1 decodedLedgerEntryExtensionV1 = new LedgerEntryExtensionV1();
-    decodedLedgerEntryExtensionV1.sponsoringID = SponsorshipDescriptor.decode(stream);
-    decodedLedgerEntryExtensionV1.ext = LedgerEntryExtensionV1Ext.decode(stream);
+    decodedLedgerEntryExtensionV1.sponsoringID = SponsorshipDescriptor.decode(stream, maxDepth);
+    decodedLedgerEntryExtensionV1.ext = LedgerEntryExtensionV1Ext.decode(stream, maxDepth);
     return decodedLedgerEntryExtensionV1;
+  }
+
+  public static LedgerEntryExtensionV1 decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static LedgerEntryExtensionV1 fromXdrBase64(String xdr) throws IOException {
@@ -56,6 +65,7 @@ public class LedgerEntryExtensionV1 implements XdrElement {
   public static LedgerEntryExtensionV1 fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 
@@ -85,15 +95,26 @@ public class LedgerEntryExtensionV1 implements XdrElement {
       }
     }
 
-    public static LedgerEntryExtensionV1Ext decode(XdrDataInputStream stream) throws IOException {
+    public static LedgerEntryExtensionV1Ext decode(XdrDataInputStream stream, int maxDepth)
+        throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
       LedgerEntryExtensionV1Ext decodedLedgerEntryExtensionV1Ext = new LedgerEntryExtensionV1Ext();
       Integer discriminant = stream.readInt();
       decodedLedgerEntryExtensionV1Ext.setDiscriminant(discriminant);
       switch (decodedLedgerEntryExtensionV1Ext.getDiscriminant()) {
         case 0:
           break;
+        default:
+          throw new IOException("Unknown discriminant value: " + discriminant);
       }
       return decodedLedgerEntryExtensionV1Ext;
+    }
+
+    public static LedgerEntryExtensionV1Ext decode(XdrDataInputStream stream) throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
     }
 
     public static LedgerEntryExtensionV1Ext fromXdrBase64(String xdr) throws IOException {
@@ -104,6 +125,7 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     public static LedgerEntryExtensionV1Ext fromXdrByteArray(byte[] xdr) throws IOException {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
   }

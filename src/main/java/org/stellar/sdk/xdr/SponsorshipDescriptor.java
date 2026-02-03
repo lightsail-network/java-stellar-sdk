@@ -32,13 +32,22 @@ public class SponsorshipDescriptor implements XdrElement {
     }
   }
 
-  public static SponsorshipDescriptor decode(XdrDataInputStream stream) throws IOException {
+  public static SponsorshipDescriptor decode(XdrDataInputStream stream, int maxDepth)
+      throws IOException {
+    if (maxDepth <= 0) {
+      throw new IOException("Maximum decoding depth reached");
+    }
+    maxDepth -= 1;
     SponsorshipDescriptor decodedSponsorshipDescriptor = new SponsorshipDescriptor();
-    int SponsorshipDescriptorPresent = stream.readInt();
-    if (SponsorshipDescriptorPresent != 0) {
-      decodedSponsorshipDescriptor.SponsorshipDescriptor = AccountID.decode(stream);
+    boolean SponsorshipDescriptorPresent = stream.readXdrBoolean();
+    if (SponsorshipDescriptorPresent) {
+      decodedSponsorshipDescriptor.SponsorshipDescriptor = AccountID.decode(stream, maxDepth);
     }
     return decodedSponsorshipDescriptor;
+  }
+
+  public static SponsorshipDescriptor decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
 
   public static SponsorshipDescriptor fromXdrBase64(String xdr) throws IOException {
@@ -49,6 +58,7 @@ public class SponsorshipDescriptor implements XdrElement {
   public static SponsorshipDescriptor fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
 }
