@@ -48,6 +48,27 @@ public class ResponseHandler<T> {
   }
 
   /**
+   * Handles the HTTP response with pre-read body content and converts it to the appropriate object
+   * or throws exceptions based on the response status.
+   *
+   * <p>This method is useful when the caller needs to limit the response body size before
+   * processing, for example to prevent denial-of-service attacks.
+   *
+   * <p><b>Note:</b> This method does NOT close the response. The caller is responsible for closing
+   * the response, typically using try-with-resources on the response object.
+   *
+   * @param response The HTTP response to handle (used for status code and headers)
+   * @param content The pre-read response body content
+   * @return The parsed object of type T
+   * @throws TooManyRequestsException If the response code is 429 (Too Many Requests)
+   * @throws BadRequestException If the response code is in the 4xx range
+   * @throws BadResponseException If the response code is in the 5xx range
+   */
+  public T handleResponse(final Response response, String content) {
+    return handleResponseContent(response, content, false);
+  }
+
+  /**
    * Handles the HTTP response and converts it to the appropriate object or throws exceptions based
    * on the response status.
    *
@@ -63,9 +84,7 @@ public class ResponseHandler<T> {
    */
   public T handleResponse(final Response response, boolean submitTransactionAsync) {
     try {
-      // Too Many Requests
       if (response.code() == 429) {
-
         Integer retryAfter = null;
         String header = response.header("Retry-After");
         if (header != null) {
@@ -77,60 +96,78 @@ public class ResponseHandler<T> {
         throw new TooManyRequestsException(retryAfter);
       }
 
-      String content = null;
       if (response.body() == null) {
         throw new UnexpectedException("Unexpected empty response body");
       }
 
+      String content;
       try {
         content = response.body().string();
       } catch (IOException e) {
         throw new UnexpectedException("Unexpected error reading response", e);
       }
 
-      if (response.code() >= 200 && response.code() < 300) {
-        T object = GsonSingleton.getInstance().fromJson(content, type.getType());
-        if (object instanceof TypedResponse) {
-          ((TypedResponse<T>) object).setType(type);
-        }
-        return object;
-      }
-
-      // Other errors
-      if (response.code() >= 400 && response.code() < 600) {
-        Problem problem = null;
-        SubmitTransactionAsyncResponse submitTransactionAsyncProblem = null;
-        try {
-          problem = GsonSingleton.getInstance().fromJson(content, Problem.class);
-        } catch (Exception e) {
-          // if we can't parse the response, we just ignore it
-        }
-
-        if (submitTransactionAsync) {
-          try {
-            submitTransactionAsyncProblem =
-                GsonSingleton.getInstance().fromJson(content, SubmitTransactionAsyncResponse.class);
-          } catch (Exception e) {
-            // if we can't parse the response, we just ignore it
-          }
-        }
-
-        if (response.code() == 504) {
-          throw new RequestTimeoutException(response.code(), content, problem);
-        } else if (response.code() < 500) {
-          // Codes in the 4xx range indicate an error that failed given the information provided
-          throw new BadRequestException(
-              response.code(), content, problem, submitTransactionAsyncProblem);
-        } else {
-          // Codes in the 5xx range indicate an error with the Horizon server.
-          throw new BadResponseException(
-              response.code(), content, problem, submitTransactionAsyncProblem);
-        }
-      }
-
-      throw new UnknownResponseException(response.code(), content);
+      return handleResponseContent(response, content, submitTransactionAsync);
     } finally {
       response.close();
     }
+  }
+
+  private T handleResponseContent(
+      final Response response, String content, boolean submitTransactionAsync) {
+    // Too Many Requests
+    if (response.code() == 429) {
+      Integer retryAfter = null;
+      String header = response.header("Retry-After");
+      if (header != null) {
+        try {
+          retryAfter = Integer.parseInt(header);
+        } catch (NumberFormatException ignored) {
+        }
+      }
+      throw new TooManyRequestsException(retryAfter);
+    }
+
+    if (response.code() >= 200 && response.code() < 300) {
+      T object = GsonSingleton.getInstance().fromJson(content, type.getType());
+      if (object instanceof TypedResponse) {
+        ((TypedResponse<T>) object).setType(type);
+      }
+      return object;
+    }
+
+    // Other errors
+    if (response.code() >= 400 && response.code() < 600) {
+      Problem problem = null;
+      SubmitTransactionAsyncResponse submitTransactionAsyncProblem = null;
+      try {
+        problem = GsonSingleton.getInstance().fromJson(content, Problem.class);
+      } catch (Exception e) {
+        // if we can't parse the response, we just ignore it
+      }
+
+      if (submitTransactionAsync) {
+        try {
+          submitTransactionAsyncProblem =
+              GsonSingleton.getInstance().fromJson(content, SubmitTransactionAsyncResponse.class);
+        } catch (Exception e) {
+          // if we can't parse the response, we just ignore it
+        }
+      }
+
+      if (response.code() == 504) {
+        throw new RequestTimeoutException(response.code(), content, problem);
+      } else if (response.code() < 500) {
+        // Codes in the 4xx range indicate an error that failed given the information provided
+        throw new BadRequestException(
+            response.code(), content, problem, submitTransactionAsyncProblem);
+      } else {
+        // Codes in the 5xx range indicate an error with the Horizon server.
+        throw new BadResponseException(
+            response.code(), content, problem, submitTransactionAsyncProblem);
+      }
+    }
+
+    throw new UnknownResponseException(response.code(), content);
   }
 }
