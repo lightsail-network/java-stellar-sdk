@@ -2,16 +2,17 @@
 
 ## Pending
 
+## 2.2.2
+
 ### Update
-- fix: prevent DoS attacks in `Federation` by limiting stellar.toml and federation response sizes to 100KB, adding proper timeouts, and handling UTF-8 BOM.
-- fix: add stricter validation for Ed25519 Signed Payload.
-- fix: replace assert statements with explicit null checks in `Federation` class to ensure validation is not bypassed when assertions are disabled.
-- fix: add overflow check in `TimeBounds.expiresAfter()` to prevent integer overflow when timeout is too large.
-- fix: add validation for `ManageDataOperation` value length to ensure it does not exceed 64 bytes.
-- fix: use `StandardCharsets.UTF_8` explicitly when converting byte arrays to strings to ensure consistent behavior across different platforms.
-- refactor: use static initialization for `GsonSingleton` to ensure thread safety.
-- fix: use `commons-codec` for hex encoding/decoding in `Util` class to properly validate input and throw clear exceptions for invalid hex strings.
-- fix: improve XDR decoding security and correctness.
+- fix: add stricter validation for Ed25519 Signed Payload. ([#751](https://github.com/lightsail-network/java-stellar-sdk/pull/751))
+- fix: replace assert statements with explicit null checks in `Federation` class to ensure validation is not bypassed when assertions are disabled. ([#752](https://github.com/lightsail-network/java-stellar-sdk/pull/752))
+- fix: add overflow check in `TimeBounds.expiresAfter()` to prevent integer overflow when timeout is too large. ([#753](https://github.com/lightsail-network/java-stellar-sdk/pull/753))
+- fix: add validation for `ManageDataOperation` value length to ensure it does not exceed 64 bytes. ([#754](https://github.com/lightsail-network/java-stellar-sdk/pull/754))
+- fix: use `StandardCharsets.UTF_8` explicitly when converting byte arrays to strings to ensure consistent behavior across different platforms. ([#756](https://github.com/lightsail-network/java-stellar-sdk/pull/756))
+- refactor: use static initialization for `GsonSingleton` to ensure thread safety. ([#757](https://github.com/lightsail-network/java-stellar-sdk/pull/757))
+- fix: use `commons-codec` for hex encoding/decoding in `Util` class to properly validate input and throw clear exceptions for invalid hex strings. ([#758](https://github.com/lightsail-network/java-stellar-sdk/pull/758))
+- fix: improve XDR decoding security and correctness. ([#759](https://github.com/lightsail-network/java-stellar-sdk/pull/759))
   - Add decoding depth limit to prevent stack overflow (default: 200)
   - Add input length tracking to prevent DoS via oversized allocations
   - Validate variable-length array/opaque/string sizes before allocation
@@ -23,6 +24,7 @@
   - Validate boolean/optional flags are strictly 0 or 1 per RFC 4506
   - Fix EOF handling in single-byte read
   - Deprecate unsafe readIntArray/readFloatArray/readDoubleArray methods
+- fix: prevent DoS attacks in `Federation` by limiting stellar.toml and federation response sizes to 100KB, adding proper timeouts, and handling UTF-8 BOM. ([#760](https://github.com/lightsail-network/java-stellar-sdk/pull/760))
 
 ## 2.2.1
 
