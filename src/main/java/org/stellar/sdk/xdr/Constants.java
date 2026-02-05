@@ -6,21 +6,21 @@ package org.stellar.sdk.xdr;
 public final class Constants {
   private Constants() {}
 
+  public static final int AUTH_MSG_FLAG_FLOW_CONTROL_BYTES_REQUESTED = 200;
+  public static final int CONTRACT_COST_COUNT_LIMIT = 1024;
+  public static final int LIQUIDITY_POOL_FEE_V18 = 30;
   public static final int MASK_ACCOUNT_FLAGS = 0x7;
   public static final int MASK_ACCOUNT_FLAGS_V17 = 0xF;
-  public static final int MAX_SIGNERS = 20;
+  public static final int MASK_CLAIMABLE_BALANCE_FLAGS = 0x1;
+  public static final int MASK_LEDGER_HEADER_FLAGS = 0x7;
+  public static final int MASK_OFFERENTRY_FLAGS = 1;
   public static final int MASK_TRUSTLINE_FLAGS = 1;
   public static final int MASK_TRUSTLINE_FLAGS_V13 = 3;
   public static final int MASK_TRUSTLINE_FLAGS_V17 = 7;
-  public static final int MASK_OFFERENTRY_FLAGS = 1;
-  public static final int MASK_CLAIMABLE_BALANCE_FLAGS = 0x1;
-  public static final int MASK_LEDGER_HEADER_FLAGS = 0x7;
-  public static final int AUTH_MSG_FLAG_FLOW_CONTROL_BYTES_REQUESTED = 200;
+  public static final int MAX_OPS_PER_TX = 100;
+  public static final int MAX_SIGNERS = 20;
+  public static final int SCSYMBOL_LIMIT = 32;
+  public static final int SC_SPEC_DOC_LIMIT = 1024;
   public static final int TX_ADVERT_VECTOR_MAX_SIZE = 1000;
   public static final int TX_DEMAND_VECTOR_MAX_SIZE = 1000;
-  public static final int MAX_OPS_PER_TX = 100;
-  public static final int LIQUIDITY_POOL_FEE_V18 = 30;
-  public static final int SC_SPEC_DOC_LIMIT = 1024;
-  public static final int SCSYMBOL_LIMIT = 32;
-  public static final int CONTRACT_COST_COUNT_LIMIT = 1024;
 }
