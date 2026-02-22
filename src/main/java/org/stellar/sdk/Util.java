@@ -6,8 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 import org.stellar.sdk.exception.UnexpectedException;
 
 /**
@@ -23,7 +21,13 @@ public class Util {
    * @return hex representation of the byte array (uppercase)
    */
   public static String bytesToHex(byte[] bytes) {
-    return Hex.encodeHexString(bytes, false);
+    char[] hexChars = new char[bytes.length * 2];
+    for (int i = 0; i < bytes.length; i++) {
+      int v = bytes[i] & 0xFF;
+      hexChars[i * 2] = HEX_DIGITS[v >>> 4];
+      hexChars[i * 2 + 1] = HEX_DIGITS[v & 0x0F];
+    }
+    return new String(hexChars);
   }
 
   /**
@@ -34,12 +38,23 @@ public class Util {
    * @throws IllegalArgumentException if the string contains non-hex characters or has odd length
    */
   public static byte[] hexToBytes(String s) {
-    try {
-      return Hex.decodeHex(s);
-    } catch (DecoderException e) {
-      throw new IllegalArgumentException("Invalid hex string: " + s, e);
+    int len = s.length();
+    if (len % 2 != 0) {
+      throw new IllegalArgumentException("Invalid hex string: " + s);
     }
+    byte[] bytes = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+      int high = Character.digit(s.charAt(i), 16);
+      int low = Character.digit(s.charAt(i + 1), 16);
+      if (high == -1 || low == -1) {
+        throw new IllegalArgumentException("Invalid hex string: " + s);
+      }
+      bytes[i / 2] = (byte) ((high << 4) | low);
+    }
+    return bytes;
   }
+
+  private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
 
   /**
    * Returns SHA-256 hash of <code>data</code>.
