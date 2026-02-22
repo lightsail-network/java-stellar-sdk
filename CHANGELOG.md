@@ -1,6 +1,7 @@
 # Changelog
 
 ## Pending
+- fix: replace `commons-codec` Hex with pure-Java implementation in `Util` to fix `NoSuchMethodError` crash on Android API 24-27.
 
 ## 2.2.2
 
