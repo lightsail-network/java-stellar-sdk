@@ -1,8 +1,12 @@
 # Changelog
 
 ## Pending
-- fix: replace `commons-codec` Hex with pure-Java implementation in `Util` to fix `NoSuchMethodError` crash on Android API 24-27.
-- refactor!: remove `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(Address, byte[])`, use `InvokeHostFunctionOperation.createContractOperationBuilder` instead.
+
+## 2.2.3
+
+### Update
+- fix: replace `commons-codec` Hex with pure-Java implementation in `Util` to fix `NoSuchMethodError` crash on Android API 24-27. ([#763](https://github.com/lightsail-network/java-stellar-sdk/pull/763))
+- refactor!: remove `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(Address, byte[])`, use `InvokeHostFunctionOperation.createContractOperationBuilder` instead. ([#764](https://github.com/lightsail-network/java-stellar-sdk/pull/764))
 
 ## 2.2.2
 
