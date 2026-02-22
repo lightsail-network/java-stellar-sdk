@@ -194,49 +194,6 @@ public class InvokeHostFunctionOperation extends Operation {
   /**
    * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
    * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
-   * create a token contract wrapping a classic asset.
-   *
-   * @param address The address to use to derive the contract ID.
-   * @param salt The 32-byte salt to use to derive the contract ID, if null, a random salt will be
-   *     generated.
-   * @return {@link InvokeHostFunctionOperationBuilder}
-   */
-  public static InvokeHostFunctionOperationBuilder<?, ?> createStellarAssetContractOperationBuilder(
-      Address address, @Nullable byte[] salt) {
-    if (salt == null) {
-      salt = new byte[32];
-      new SecureRandom().nextBytes(salt);
-    } else if (salt.length != 32) {
-      throw new IllegalArgumentException("\"salt\" must be 32 bytes long");
-    }
-
-    CreateContractArgs createContractArgs =
-        CreateContractArgs.builder()
-            .contractIDPreimage(
-                ContractIDPreimage.builder()
-                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
-                    .fromAddress(
-                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
-                            .address(address.toSCAddress())
-                            .salt(new Uint256(salt))
-                            .build())
-                    .build())
-            .executable(
-                ContractExecutable.builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
-                    .build())
-            .build();
-    HostFunction hostFunction =
-        HostFunction.builder()
-            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
-            .createContract(createContractArgs)
-            .build();
-    return builder().hostFunction(hostFunction);
-  }
-
-  /**
-   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
-   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
    * invoke a contract function.
    *
    * @param contractId The ID of the contract to invoke.
