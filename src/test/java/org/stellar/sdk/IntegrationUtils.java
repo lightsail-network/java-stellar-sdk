@@ -1,6 +1,8 @@
 package org.stellar.sdk;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
@@ -17,7 +19,7 @@ import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.SCVal;
 
 public class IntegrationUtils {
-  public static final String RPC_URL = "http://127.0.0.1:8000/soroban/rpc";
+  public static final String RPC_URL = "http://127.0.0.1:8000/rpc";
   public static final String HORIZON_URL = "http://127.0.0.1:8000";
   public static final String FRIEND_BOT_URL = "http://127.0.0.1:8000/friendbot";
   public static final Network NETWORK = Network.STANDALONE;
@@ -57,12 +59,47 @@ public class IntegrationUtils {
     }
   }
 
-  public static String getRandomContractId(KeyPair source) {
+  public static byte[] uploadWasm(byte[] contractWasm, KeyPair source) {
     try (SorobanServer server = new SorobanServer(RPC_URL)) {
       TransactionBuilderAccount account = server.getAccount(source.getAccountId());
       InvokeHostFunctionOperation op =
-          InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(
-                  new Address(source.getAccountId()), null)
+          InvokeHostFunctionOperation.uploadContractWasmOperationBuilder(contractWasm).build();
+      TransactionBuilder transactionBuilder =
+          new TransactionBuilder(account, NETWORK).setBaseFee(100).addOperation(op).setTimeout(300);
+      AssembledTransaction<byte[]> assembledTransaction =
+          new AssembledTransaction<>(transactionBuilder, server, source, Scv::fromBytes, 300);
+      return assembledTransaction.simulate(true).signAndSubmit(source, false);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static String getRandomContractId(KeyPair source) {
+    byte[] wasm;
+    try (InputStream is =
+        IntegrationUtils.class.getResourceAsStream(
+            "/wasm_files/soroban_hello_world_contract.wasm")) {
+      if (is == null) {
+        throw new RuntimeException("soroban_hello_world_contract.wasm not found");
+      }
+      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+      byte[] data = new byte[1024];
+      int bytesRead;
+      while ((bytesRead = is.read(data, 0, data.length)) != -1) {
+        buffer.write(data, 0, bytesRead);
+      }
+      wasm = buffer.toByteArray();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    byte[] wasmId = uploadWasm(wasm, source);
+
+    try (SorobanServer server = new SorobanServer(RPC_URL)) {
+      TransactionBuilderAccount account = server.getAccount(source.getAccountId());
+      InvokeHostFunctionOperation op =
+          InvokeHostFunctionOperation.createContractOperationBuilder(
+                  wasmId, new Address(source.getAccountId()), null, null)
               .build();
       TransactionBuilder transactionBuilder =
           new TransactionBuilder(account, NETWORK).setBaseFee(100).addOperation(op).setTimeout(300);

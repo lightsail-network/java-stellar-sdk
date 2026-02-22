@@ -1,6 +1,7 @@
 # Changelog
 
 ## Pending
+- refactor!: remove `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(Address, byte[])`, use `InvokeHostFunctionOperation.createContractOperationBuilder` instead.
 
 ## 2.2.2
 

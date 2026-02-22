@@ -470,48 +470,6 @@ public class InvokeHostFunctionOperationTest {
   }
 
   @Test
-  public void createStellarAssetContractOperationBuilderWithAddress() {
-    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
-    byte[] salt =
-        new byte[] {
-          0x11, 0x33, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e,
-          0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d,
-          0x1e, 0x1f
-        };
-    InvokeHostFunctionOperation operation =
-        InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(address, salt)
-            .build();
-    CreateContractArgs createContractArgs =
-        CreateContractArgs.builder()
-            .contractIDPreimage(
-                ContractIDPreimage.builder()
-                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
-                    .fromAddress(
-                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
-                            .address(address.toSCAddress())
-                            .salt(new Uint256(salt))
-                            .build())
-                    .build())
-            .executable(
-                ContractExecutable.builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
-                    .build())
-            .build();
-    HostFunction expectedFunction =
-        HostFunction.builder()
-            .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT)
-            .createContract(createContractArgs)
-            .build();
-
-    assertEquals(operation.getHostFunction(), expectedFunction);
-    assertTrue(operation.getAuth().isEmpty());
-    assertNull(operation.getSourceAccount());
-    String expectedXdr =
-        "AAAAAAAAABgAAAABAAAAAAAAAAAAAAAADpSlTHKwTkavyS2ZqP0tUceDdV/MrSytoGRg185L/zgRMwIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAAAAEAAAAA";
-    assertEquals(expectedXdr, operation.toXdrBase64());
-  }
-
-  @Test
   public void createStellarAssetContractOperationBuilderWithAsset() {
     Asset asset =
         new AssetTypeCreditAlphaNum4(
