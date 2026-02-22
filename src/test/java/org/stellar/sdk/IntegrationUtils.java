@@ -68,7 +68,12 @@ public class IntegrationUtils {
           new TransactionBuilder(account, NETWORK).setBaseFee(100).addOperation(op).setTimeout(300);
       AssembledTransaction<byte[]> assembledTransaction =
           new AssembledTransaction<>(transactionBuilder, server, source, Scv::fromBytes, 300);
-      return assembledTransaction.simulate(true).signAndSubmit(source, false);
+      AssembledTransaction<byte[]> simulated = assembledTransaction.simulate(false);
+      if (simulated.isReadCall()) {
+        return simulated.result();
+      } else {
+        return simulated.signAndSubmit(source, false);
+      }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
