@@ -180,18 +180,7 @@ class ScvComparator implements Comparator<SCVal> {
           return Integer.compare(av.length, bv.length);
         }
       case SCV_MAP:
-        {
-          SCMapEntry[] am = a.getMap().getSCMap();
-          SCMapEntry[] bm = b.getMap().getSCMap();
-          int len = Math.min(am.length, bm.length);
-          for (int i = 0; i < len; i++) {
-            int cmp = compareScVal(am[i].getKey(), bm[i].getKey());
-            if (cmp != 0) return cmp;
-            cmp = compareScVal(am[i].getVal(), bm[i].getVal());
-            if (cmp != 0) return cmp;
-          }
-          return Integer.compare(am.length, bm.length);
-        }
+        return compareMapEntries(a.getMap().getSCMap(), b.getMap().getSCMap());
       case SCV_ADDRESS:
         return compareScAddress(a.getAddress(), b.getAddress());
       case SCV_ERROR:
@@ -291,9 +280,10 @@ class ScvComparator implements Comparator<SCVal> {
     if (a == null && b == null) return 0;
     if (a == null) return -1;
     if (b == null) return 1;
+    return compareMapEntries(a.getSCMap(), b.getSCMap());
+  }
 
-    SCMapEntry[] am = a.getSCMap();
-    SCMapEntry[] bm = b.getSCMap();
+  private static int compareMapEntries(SCMapEntry[] am, SCMapEntry[] bm) {
     int len = Math.min(am.length, bm.length);
     for (int i = 0; i < len; i++) {
       int cmp = compareScVal(am[i].getKey(), bm[i].getKey());
