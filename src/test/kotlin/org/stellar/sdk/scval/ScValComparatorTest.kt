@@ -112,7 +112,7 @@ class ScValComparatorTest :
     }
 
     context("SCV_U128") {
-      test("tuple (hi, lo) ordering") {
+      test("tuple (hi, lo) ordering - hi differs") {
         val twoTo64 = BigInteger.ONE.shiftLeft(64)
         ScValComparator.compareScVal(
           Scv.toUint128(twoTo64.subtract(BigInteger.ONE)),
@@ -122,6 +122,15 @@ class ScValComparatorTest :
           Scv.toUint128(BigInteger.ZERO),
           Scv.toUint128(BigInteger.ZERO),
         ) shouldBe 0
+      }
+
+      test("tuple (hi, lo) ordering - same hi, lo differs") {
+        val twoTo64 = BigInteger.ONE.shiftLeft(64)
+        // both have hi=1, but lo differs: 1*2^64+0 vs 1*2^64+1
+        ScValComparator.compareScVal(
+          Scv.toUint128(twoTo64),
+          Scv.toUint128(twoTo64.add(BigInteger.ONE)),
+        ) shouldBeLessThan 0
       }
     }
 
@@ -137,6 +146,14 @@ class ScValComparatorTest :
           Scv.toInt128(BigInteger.ZERO),
         ) shouldBeLessThan 0
       }
+
+      test("same hi, lo differs") {
+        // 1 and 2 both have hi=0, lo differs
+        ScValComparator.compareScVal(
+          Scv.toInt128(BigInteger.ONE),
+          Scv.toInt128(BigInteger.valueOf(2)),
+        ) shouldBeLessThan 0
+      }
     }
 
     context("SCV_U256") {
@@ -144,6 +161,32 @@ class ScValComparatorTest :
         ScValComparator.compareScVal(
           Scv.toUint256(BigInteger.ZERO),
           Scv.toUint256(BigInteger.ONE),
+        ) shouldBeLessThan 0
+      }
+
+      test("each component level determines ordering") {
+        val shift64 = BigInteger.ONE.shiftLeft(64)
+        val shift128 = BigInteger.ONE.shiftLeft(128)
+        val shift192 = BigInteger.ONE.shiftLeft(192)
+        // hi_hi differs
+        ScValComparator.compareScVal(
+          Scv.toUint256(shift192),
+          Scv.toUint256(shift192.add(shift192)),
+        ) shouldBeLessThan 0
+        // same hi_hi, hi_lo differs
+        ScValComparator.compareScVal(
+          Scv.toUint256(shift128),
+          Scv.toUint256(shift128.add(shift128)),
+        ) shouldBeLessThan 0
+        // same hi_hi+hi_lo, lo_hi differs
+        ScValComparator.compareScVal(
+          Scv.toUint256(shift64),
+          Scv.toUint256(shift64.add(shift64)),
+        ) shouldBeLessThan 0
+        // same hi_hi+hi_lo+lo_hi, lo_lo differs
+        ScValComparator.compareScVal(
+          Scv.toUint256(BigInteger.ONE),
+          Scv.toUint256(BigInteger.valueOf(2)),
         ) shouldBeLessThan 0
       }
     }
@@ -160,6 +203,26 @@ class ScValComparatorTest :
           Scv.toInt256(BigInteger.ZERO),
         ) shouldBeLessThan 0
       }
+
+      test("each component level determines ordering") {
+        val shift64 = BigInteger.ONE.shiftLeft(64)
+        val shift128 = BigInteger.ONE.shiftLeft(128)
+        // same hi_hi(0), hi_lo differs
+        ScValComparator.compareScVal(
+          Scv.toInt256(shift128),
+          Scv.toInt256(shift128.add(shift128)),
+        ) shouldBeLessThan 0
+        // same hi_hi+hi_lo(0), lo_hi differs
+        ScValComparator.compareScVal(
+          Scv.toInt256(shift64),
+          Scv.toInt256(shift64.add(shift64)),
+        ) shouldBeLessThan 0
+        // same hi_hi+hi_lo+lo_hi(0), lo_lo differs
+        ScValComparator.compareScVal(
+          Scv.toInt256(BigInteger.ONE),
+          Scv.toInt256(BigInteger.valueOf(2)),
+        ) shouldBeLessThan 0
+      }
     }
 
     context("SCV_BYTES") {
@@ -172,6 +235,13 @@ class ScValComparatorTest :
           Scv.toBytes(byteArrayOf(0x61)),
           Scv.toBytes(byteArrayOf(0x61)),
         ) shouldBe 0
+      }
+
+      test("unsigned byte comparison: 0x80 > 0x7F") {
+        ScValComparator.compareScVal(
+          Scv.toBytes(byteArrayOf(0x7F)),
+          Scv.toBytes(byteArrayOf(0x80.toByte())),
+        ) shouldBeLessThan 0
       }
     }
 
@@ -203,6 +273,11 @@ class ScValComparatorTest :
           Scv.toVec(listOf(Scv.toUint32(1), Scv.toUint32(2))),
         ) shouldBeLessThan 0
       }
+
+      test("equal vecs") {
+        val v = listOf(Scv.toUint32(1), Scv.toUint32(2))
+        ScValComparator.compareScVal(Scv.toVec(v), Scv.toVec(v)) shouldBe 0
+      }
     }
 
     context("SCV_MAP") {
@@ -226,6 +301,12 @@ class ScValComparatorTest :
           )
         ScValComparator.compareScVal(a, e) shouldBeLessThan 0
       }
+
+      test("equal maps") {
+        val a = makeMap(arrayOf(entry(Scv.toUint32(1), Scv.toInt32(10))))
+        val b = makeMap(arrayOf(entry(Scv.toUint32(1), Scv.toInt32(10))))
+        ScValComparator.compareScVal(a, b) shouldBe 0
+      }
     }
 
     context("SCV_ERROR") {
@@ -238,6 +319,13 @@ class ScValComparatorTest :
       test("same type, different code") {
         ScValComparator.compareScVal(makeErrorContract(1), makeErrorContract(2)) shouldBeLessThan 0
         ScValComparator.compareScVal(makeErrorContract(5), makeErrorContract(5)) shouldBe 0
+      }
+
+      test("non-contract error: compare by error code") {
+        val wasmErr1 = makeErrorWasm(SCErrorCode.SCEC_ARITH_DOMAIN)
+        val wasmErr2 = makeErrorWasm(SCErrorCode.SCEC_UNEXPECTED_SIZE)
+        ScValComparator.compareScVal(wasmErr1, wasmErr2) shouldBeLessThan 0
+        ScValComparator.compareScVal(wasmErr1, wasmErr1) shouldBe 0
       }
     }
 
@@ -306,6 +394,28 @@ class ScValComparatorTest :
         ) shouldBeLessThan 0
       }
 
+      test("claimable balance: compare by hash") {
+        ScValComparator.compareScAddress(
+          claimableBalanceAddress(bytes32(0x00)),
+          claimableBalanceAddress(bytes32Last(0x01)),
+        ) shouldBeLessThan 0
+        ScValComparator.compareScAddress(
+          claimableBalanceAddress(bytes32(0xAA)),
+          claimableBalanceAddress(bytes32(0xAA)),
+        ) shouldBe 0
+      }
+
+      test("liquidity pool: compare by hash") {
+        ScValComparator.compareScAddress(
+          liquidityPoolAddress(bytes32(0x00)),
+          liquidityPoolAddress(bytes32Last(0x01)),
+        ) shouldBeLessThan 0
+        ScValComparator.compareScAddress(
+          liquidityPoolAddress(bytes32(0xBB)),
+          liquidityPoolAddress(bytes32(0xBB)),
+        ) shouldBe 0
+      }
+
       test("muxed: id first, then ed25519") {
         ScValComparator.compareScAddress(
           muxedAddress(1, bytes32(0xFF)),
@@ -348,6 +458,14 @@ class ScValComparatorTest :
         ScValComparator.compareOptionalScMap(m1, null) shouldBeGreaterThan 0
         ScValComparator.compareOptionalScMap(m1, m2) shouldBeLessThan 0
         ScValComparator.compareOptionalScMap(m1, m1) shouldBe 0
+      }
+    }
+
+    context("Comparator interface") {
+      test("INSTANCE.compare delegates to compareScVal") {
+        ScValComparator.INSTANCE.compare(Scv.toUint32(1), Scv.toUint32(2)) shouldBeLessThan 0
+        ScValComparator.INSTANCE.compare(Scv.toUint32(2), Scv.toUint32(1)) shouldBeGreaterThan 0
+        ScValComparator.INSTANCE.compare(Scv.toUint32(1), Scv.toUint32(1)) shouldBe 0
       }
     }
 
