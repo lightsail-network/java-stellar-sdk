@@ -269,9 +269,27 @@ public class Scv {
   /**
    * Build a {@link SCVal} with the type of {@link SCValType#SCV_MAP}.
    *
+   * <p>The entries are sorted by key following Soroban runtime ordering rules, as the network
+   * requires ScMap keys to be in ascending order.
+   *
    * @param map map to convert
    * @return {@link SCVal} with the type of {@link SCValType#SCV_MAP}
    */
+  public static SCVal toMap(Map<SCVal, SCVal> map) {
+    return ScvMap.toSCVal(map);
+  }
+
+  /**
+   * Build a {@link SCVal} with the type of {@link SCValType#SCV_MAP}.
+   *
+   * <p>The entries are sorted by key following Soroban runtime ordering rules, as the network
+   * requires ScMap keys to be in ascending order.
+   *
+   * @param map map to convert
+   * @return {@link SCVal} with the type of {@link SCValType#SCV_MAP}
+   * @deprecated Use {@link #toMap(Map)} instead.
+   */
+  @Deprecated
   public static SCVal toMap(LinkedHashMap<SCVal, SCVal> map) {
     return ScvMap.toSCVal(map);
   }

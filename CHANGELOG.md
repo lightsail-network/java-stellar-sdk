@@ -1,6 +1,7 @@
 # Changelog
 
 ## Pending
+- feat: sort `ScMap` entries by key in `Scv.toMap` following Soroban runtime ordering rules, as the network requires ScMap keys to be in ascending order.
 
 ## 2.2.3
 
