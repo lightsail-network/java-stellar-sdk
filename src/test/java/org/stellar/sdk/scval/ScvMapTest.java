@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import org.junit.Test;
 import org.stellar.sdk.xdr.SCMap;
 import org.stellar.sdk.xdr.SCMapEntry;
@@ -38,7 +40,7 @@ public class ScvMapTest {
 
   @Test
   public void testToMapSortsKeys() {
-    LinkedHashMap<SCVal, SCVal> value = new LinkedHashMap<>();
+    Map<SCVal, SCVal> value = new HashMap<>();
     value.put(Scv.toUint32(3), Scv.toVoid());
     value.put(Scv.toUint32(1), Scv.toVoid());
     value.put(Scv.toUint32(2), Scv.toVoid());
@@ -53,7 +55,7 @@ public class ScvMapTest {
 
   @Test
   public void testToMapStrictlyIncreasing() {
-    LinkedHashMap<SCVal, SCVal> value = new LinkedHashMap<>();
+    Map<SCVal, SCVal> value = new HashMap<>();
     value.put(Scv.toSymbol("z"), Scv.toVoid());
     value.put(Scv.toSymbol("a"), Scv.toVoid());
     value.put(Scv.toUint32(100), Scv.toVoid());
@@ -72,7 +74,7 @@ public class ScvMapTest {
 
   @Test
   public void testToMapMixedTypes() {
-    LinkedHashMap<SCVal, SCVal> value = new LinkedHashMap<>();
+    Map<SCVal, SCVal> value = new HashMap<>();
     value.put(Scv.toSymbol("x"), Scv.toInt32(1));
     value.put(Scv.toUint32(42), Scv.toInt32(2));
     value.put(Scv.toBoolean(true), Scv.toInt32(3));
@@ -88,7 +90,7 @@ public class ScvMapTest {
 
   @Test
   public void testToMapSignedNegativeBoundaries() {
-    LinkedHashMap<SCVal, SCVal> value = new LinkedHashMap<>();
+    Map<SCVal, SCVal> value = new HashMap<>();
     value.put(Scv.toInt32(0), Scv.toVoid());
     value.put(Scv.toInt32(Integer.MIN_VALUE), Scv.toVoid());
     value.put(Scv.toInt32(Integer.MAX_VALUE), Scv.toVoid());
@@ -105,7 +107,7 @@ public class ScvMapTest {
 
   @Test
   public void testToMapAlreadySortedIdempotent() {
-    LinkedHashMap<SCVal, SCVal> value = new LinkedHashMap<>();
+    Map<SCVal, SCVal> value = new HashMap<>();
     value.put(Scv.toUint32(1), Scv.toInt32(10));
     value.put(Scv.toUint32(2), Scv.toInt32(20));
     value.put(Scv.toUint32(3), Scv.toInt32(30));

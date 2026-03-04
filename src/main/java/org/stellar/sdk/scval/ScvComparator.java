@@ -83,13 +83,13 @@ class ScvComparator implements Comparator<SCVal> {
             .compareTo(b.getDuration().getDuration().getUint64().getNumber());
       case SCV_U128:
         {
-          int c =
+          int cmp =
               a.getU128()
                   .getHi()
                   .getUint64()
                   .getNumber()
                   .compareTo(b.getU128().getHi().getUint64().getNumber());
-          if (c != 0) return c;
+          if (cmp != 0) return cmp;
           return a.getU128()
               .getLo()
               .getUint64()
@@ -98,8 +98,8 @@ class ScvComparator implements Comparator<SCVal> {
         }
       case SCV_I128:
         {
-          int c = Long.compare(a.getI128().getHi().getInt64(), b.getI128().getHi().getInt64());
-          if (c != 0) return c;
+          int cmp = Long.compare(a.getI128().getHi().getInt64(), b.getI128().getHi().getInt64());
+          if (cmp != 0) return cmp;
           return a.getI128()
               .getLo()
               .getUint64()
@@ -108,27 +108,27 @@ class ScvComparator implements Comparator<SCVal> {
         }
       case SCV_U256:
         {
-          int c =
+          int cmp =
               a.getU256()
                   .getHi_hi()
                   .getUint64()
                   .getNumber()
                   .compareTo(b.getU256().getHi_hi().getUint64().getNumber());
-          if (c != 0) return c;
-          c =
+          if (cmp != 0) return cmp;
+          cmp =
               a.getU256()
                   .getHi_lo()
                   .getUint64()
                   .getNumber()
                   .compareTo(b.getU256().getHi_lo().getUint64().getNumber());
-          if (c != 0) return c;
-          c =
+          if (cmp != 0) return cmp;
+          cmp =
               a.getU256()
                   .getLo_hi()
                   .getUint64()
                   .getNumber()
                   .compareTo(b.getU256().getLo_hi().getUint64().getNumber());
-          if (c != 0) return c;
+          if (cmp != 0) return cmp;
           return a.getU256()
               .getLo_lo()
               .getUint64()
@@ -137,23 +137,23 @@ class ScvComparator implements Comparator<SCVal> {
         }
       case SCV_I256:
         {
-          int c =
+          int cmp =
               Long.compare(a.getI256().getHi_hi().getInt64(), b.getI256().getHi_hi().getInt64());
-          if (c != 0) return c;
-          c =
+          if (cmp != 0) return cmp;
+          cmp =
               a.getI256()
                   .getHi_lo()
                   .getUint64()
                   .getNumber()
                   .compareTo(b.getI256().getHi_lo().getUint64().getNumber());
-          if (c != 0) return c;
-          c =
+          if (cmp != 0) return cmp;
+          cmp =
               a.getI256()
                   .getLo_hi()
                   .getUint64()
                   .getNumber()
                   .compareTo(b.getI256().getLo_hi().getUint64().getNumber());
-          if (c != 0) return c;
+          if (cmp != 0) return cmp;
           return a.getI256()
               .getLo_lo()
               .getUint64()
@@ -174,8 +174,8 @@ class ScvComparator implements Comparator<SCVal> {
           SCVal[] bv = b.getVec().getSCVec();
           int len = Math.min(av.length, bv.length);
           for (int i = 0; i < len; i++) {
-            int c = compareScVal(av[i], bv[i]);
-            if (c != 0) return c;
+            int cmp = compareScVal(av[i], bv[i]);
+            if (cmp != 0) return cmp;
           }
           return Integer.compare(av.length, bv.length);
         }
@@ -185,10 +185,10 @@ class ScvComparator implements Comparator<SCVal> {
           SCMapEntry[] bm = b.getMap().getSCMap();
           int len = Math.min(am.length, bm.length);
           for (int i = 0; i < len; i++) {
-            int c = compareScVal(am[i].getKey(), bm[i].getKey());
-            if (c != 0) return c;
-            c = compareScVal(am[i].getVal(), bm[i].getVal());
-            if (c != 0) return c;
+            int cmp = compareScVal(am[i].getKey(), bm[i].getKey());
+            if (cmp != 0) return cmp;
+            cmp = compareScVal(am[i].getVal(), bm[i].getVal());
+            if (cmp != 0) return cmp;
           }
           return Integer.compare(am.length, bm.length);
         }
@@ -196,11 +196,11 @@ class ScvComparator implements Comparator<SCVal> {
         return compareScAddress(a.getAddress(), b.getAddress());
       case SCV_ERROR:
         {
-          int c =
+          int cmp =
               Integer.compare(
                   a.getError().getDiscriminant().getValue(),
                   b.getError().getDiscriminant().getValue());
-          if (c != 0) return c;
+          if (cmp != 0) return cmp;
           switch (a.getError().getDiscriminant()) {
             case SCE_CONTRACT:
               return Long.compare(
@@ -213,10 +213,10 @@ class ScvComparator implements Comparator<SCVal> {
         }
       case SCV_CONTRACT_INSTANCE:
         {
-          int c =
+          int cmp =
               compareContractExecutable(
                   a.getInstance().getExecutable(), b.getInstance().getExecutable());
-          if (c != 0) return c;
+          if (cmp != 0) return cmp;
           return compareOptionalScMap(a.getInstance().getStorage(), b.getInstance().getStorage());
         }
       case SCV_LEDGER_KEY_NONCE:
@@ -228,8 +228,8 @@ class ScvComparator implements Comparator<SCVal> {
   }
 
   static int compareScAddress(SCAddress a, SCAddress b) {
-    int c = Integer.compare(a.getDiscriminant().getValue(), b.getDiscriminant().getValue());
-    if (c != 0) return c;
+    int cmp = Integer.compare(a.getDiscriminant().getValue(), b.getDiscriminant().getValue());
+    if (cmp != 0) return cmp;
 
     switch (a.getDiscriminant()) {
       case SC_ADDRESS_TYPE_ACCOUNT:
@@ -242,13 +242,13 @@ class ScvComparator implements Comparator<SCVal> {
             b.getContractId().getContractID().getHash());
       case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
         {
-          int r =
+          cmp =
               a.getMuxedAccount()
                   .getId()
                   .getUint64()
                   .getNumber()
                   .compareTo(b.getMuxedAccount().getId().getUint64().getNumber());
-          if (r != 0) return r;
+          if (cmp != 0) return cmp;
           return compareByteArrays(
               a.getMuxedAccount().getEd25519().getUint256(),
               b.getMuxedAccount().getEd25519().getUint256());
@@ -273,8 +273,8 @@ class ScvComparator implements Comparator<SCVal> {
   }
 
   static int compareContractExecutable(ContractExecutable a, ContractExecutable b) {
-    int c = Integer.compare(a.getDiscriminant().getValue(), b.getDiscriminant().getValue());
-    if (c != 0) return c;
+    int cmp = Integer.compare(a.getDiscriminant().getValue(), b.getDiscriminant().getValue());
+    if (cmp != 0) return cmp;
 
     switch (a.getDiscriminant()) {
       case CONTRACT_EXECUTABLE_WASM:
@@ -296,10 +296,10 @@ class ScvComparator implements Comparator<SCVal> {
     SCMapEntry[] bm = b.getSCMap();
     int len = Math.min(am.length, bm.length);
     for (int i = 0; i < len; i++) {
-      int c = compareScVal(am[i].getKey(), bm[i].getKey());
-      if (c != 0) return c;
-      c = compareScVal(am[i].getVal(), bm[i].getVal());
-      if (c != 0) return c;
+      int cmp = compareScVal(am[i].getKey(), bm[i].getKey());
+      if (cmp != 0) return cmp;
+      cmp = compareScVal(am[i].getVal(), bm[i].getVal());
+      if (cmp != 0) return cmp;
     }
     return Integer.compare(am.length, bm.length);
   }
