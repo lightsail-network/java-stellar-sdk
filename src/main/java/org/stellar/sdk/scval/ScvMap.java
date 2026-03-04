@@ -1,5 +1,6 @@
 package org.stellar.sdk.scval;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.stellar.sdk.xdr.SCMap;
@@ -11,14 +12,15 @@ import org.stellar.sdk.xdr.SCValType;
 class ScvMap {
   private static final SCValType TYPE = SCValType.SCV_MAP;
 
-  // we want to keep the order of the map entries
-  // this ensures that the generated XDR is deterministic.
-  static SCVal toSCVal(LinkedHashMap<SCVal, SCVal> value) {
+  // Entries are sorted by key following Soroban runtime ordering rules,
+  // as the network requires ScMap keys to be in ascending order.
+  static SCVal toSCVal(Map<SCVal, SCVal> value) {
     SCMapEntry[] scMapEntries = new SCMapEntry[value.size()];
     int i = 0;
     for (Map.Entry<SCVal, SCVal> entry : value.entrySet()) {
       scMapEntries[i++] = SCMapEntry.builder().key(entry.getKey()).val(entry.getValue()).build();
     }
+    Arrays.sort(scMapEntries, (a, b) -> ScvComparator.compareScVal(a.getKey(), b.getKey()));
     return SCVal.builder().discriminant(TYPE).map(new SCMap(scMapEntries)).build();
   }
 
