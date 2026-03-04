@@ -20,7 +20,7 @@ class ScvMap {
     for (Map.Entry<SCVal, SCVal> entry : value.entrySet()) {
       scMapEntries[i++] = SCMapEntry.builder().key(entry.getKey()).val(entry.getValue()).build();
     }
-    Arrays.sort(scMapEntries, (a, b) -> ScValComparator.compareScVal(a.getKey(), b.getKey()));
+    Arrays.sort(scMapEntries, (a, b) -> ScvComparator.compareScVal(a.getKey(), b.getKey()));
     return SCVal.builder().discriminant(TYPE).map(new SCMap(scMapEntries)).build();
   }
 

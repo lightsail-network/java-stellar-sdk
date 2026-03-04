@@ -66,7 +66,7 @@ public class ScvMapTest {
     for (int i = 0; i < entries.length - 1; i++) {
       assertTrue(
           "keys[" + i + "] not strictly less than keys[" + (i + 1) + "]",
-          ScValComparator.compareScVal(entries[i].getKey(), entries[i + 1].getKey()) < 0);
+          ScvComparator.compareScVal(entries[i].getKey(), entries[i + 1].getKey()) < 0);
     }
   }
 

@@ -41,8 +41,8 @@ import org.stellar.sdk.xdr.SCValType;
  *       </ul>
  * </ol>
  */
-class ScValComparator implements Comparator<SCVal> {
-  static final ScValComparator INSTANCE = new ScValComparator();
+class ScvComparator implements Comparator<SCVal> {
+  static final ScvComparator INSTANCE = new ScvComparator();
 
   @Override
   public int compare(SCVal a, SCVal b) {
