@@ -29,7 +29,7 @@ public class GetLatestLedgerResponse {
   String metadataXdr;
 
   /**
-   * Parses the {@code envelopeXdr} field from a string to an {@link LedgerHeader} object.
+   * Parses the {@code headerXdr} field from a string to an {@link LedgerHeader} object.
    *
    * @return the parsed {@link LedgerHeader} object
    */
