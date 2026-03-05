@@ -19,7 +19,7 @@ import org.stellar.sdk.Base64Factory;
  * {
  *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
  *     SCSymbol name;
- *     SCSpecFunctionInputV0 inputs&lt;10&gt;;
+ *     SCSpecFunctionInputV0 inputs&lt;&gt;;
  *     SCSpecTypeDef outputs&lt;1&gt;;
  * };
  * </pre>
@@ -42,9 +42,6 @@ public class SCSpecFunctionV0 implements XdrElement {
     doc.encode(stream);
     name.encode(stream);
     int inputsSize = getInputs().length;
-    if (inputsSize > 10) {
-      throw new IOException("inputs size " + inputsSize + " exceeds max size 10");
-    }
     stream.writeInt(inputsSize);
     for (int i = 0; i < inputsSize; i++) {
       inputs[i].encode(stream);
@@ -71,9 +68,6 @@ public class SCSpecFunctionV0 implements XdrElement {
     int inputsSize = stream.readInt();
     if (inputsSize < 0) {
       throw new IOException("inputs size " + inputsSize + " is negative");
-    }
-    if (inputsSize > 10) {
-      throw new IOException("inputs size " + inputsSize + " exceeds max size 10");
     }
     int inputsRemainingInputLen = stream.getRemainingInputLen();
     if (inputsRemainingInputLen >= 0 && inputsRemainingInputLen < inputsSize) {

@@ -19,7 +19,7 @@ import org.stellar.sdk.Base64Factory;
  * {
  *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
  *     string name&lt;60&gt;;
- *     SCSpecTypeDef type&lt;12&gt;;
+ *     SCSpecTypeDef type&lt;&gt;;
  * };
  * </pre>
  */
@@ -44,9 +44,6 @@ public class SCSpecUDTUnionCaseTupleV0 implements XdrElement {
     }
     name.encode(stream);
     int typeSize = getType().length;
-    if (typeSize > 12) {
-      throw new IOException("type size " + typeSize + " exceeds max size 12");
-    }
     stream.writeInt(typeSize);
     for (int i = 0; i < typeSize; i++) {
       type[i].encode(stream);
@@ -66,9 +63,6 @@ public class SCSpecUDTUnionCaseTupleV0 implements XdrElement {
     int typeSize = stream.readInt();
     if (typeSize < 0) {
       throw new IOException("type size " + typeSize + " is negative");
-    }
-    if (typeSize > 12) {
-      throw new IOException("type size " + typeSize + " exceeds max size 12");
     }
     int typeRemainingInputLen = stream.getRemainingInputLen();
     if (typeRemainingInputLen >= 0 && typeRemainingInputLen < typeSize) {

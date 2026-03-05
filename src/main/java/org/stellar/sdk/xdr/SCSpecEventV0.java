@@ -21,7 +21,7 @@ import org.stellar.sdk.Base64Factory;
  *     string lib&lt;80&gt;;
  *     SCSymbol name;
  *     SCSymbol prefixTopics&lt;2&gt;;
- *     SCSpecEventParamV0 params&lt;50&gt;;
+ *     SCSpecEventParamV0 params&lt;&gt;;
  *     SCSpecEventDataFormat dataFormat;
  * };
  * </pre>
@@ -59,9 +59,6 @@ public class SCSpecEventV0 implements XdrElement {
       prefixTopics[i].encode(stream);
     }
     int paramsSize = getParams().length;
-    if (paramsSize > 50) {
-      throw new IOException("params size " + paramsSize + " exceeds max size 50");
-    }
     stream.writeInt(paramsSize);
     for (int i = 0; i < paramsSize; i++) {
       params[i].encode(stream);
@@ -100,9 +97,6 @@ public class SCSpecEventV0 implements XdrElement {
     int paramsSize = stream.readInt();
     if (paramsSize < 0) {
       throw new IOException("params size " + paramsSize + " is negative");
-    }
-    if (paramsSize > 50) {
-      throw new IOException("params size " + paramsSize + " exceeds max size 50");
     }
     int paramsRemainingInputLen = stream.getRemainingInputLen();
     if (paramsRemainingInputLen >= 0 && paramsRemainingInputLen < paramsSize) {
