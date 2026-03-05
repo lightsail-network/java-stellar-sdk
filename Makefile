@@ -16,7 +16,7 @@ xdr/Stellar-exporter.x
 # stellar-xdr commit to use, see https://github.com/stellar/stellar-xdr
 XDR_COMMIT=4b7a2ef7931ab2ca2499be68d849f38190b443ca
 
-.PHONY: xdr xdr-clean xdr-update
+.PHONY: xdr xdr-clean xdr-update xdr-generator-test xdr-generator-update-snapshots
 
 xdr-generate: $(XDRS)
 	docker run --rm -v $$PWD:/wd -w /wd ruby:3.4 /bin/bash -c '\
@@ -33,3 +33,15 @@ xdr-clean:
 	find src/main/java/org/stellar/sdk/xdr -type f -name "*.java" ! -name "package-info.java" -delete
 
 xdr-update: xdr-clean xdr-generate
+
+xdr-generator-test:
+	docker run --rm -v $$PWD:/wd -w /wd ruby:3.4 /bin/bash -c '\
+		cd xdr-generator && \
+		bundle install --quiet && \
+		bundle exec ruby test/generator_snapshot_test.rb'
+
+xdr-generator-update-snapshots:
+	docker run --rm -v $$PWD:/wd -w /wd ruby:3.4 /bin/bash -c '\
+		cd xdr-generator && \
+		bundle install --quiet && \
+		UPDATE_SNAPSHOTS=1 bundle exec ruby test/generator_snapshot_test.rb'
