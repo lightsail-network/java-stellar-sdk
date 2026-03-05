@@ -48,6 +48,7 @@ DEPENDENCIES
   benchmark
   bigdecimal
   logger
+  minitest
   mutex_m
   xdrgen!
 
