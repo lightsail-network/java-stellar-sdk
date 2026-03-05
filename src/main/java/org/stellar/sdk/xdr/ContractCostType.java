@@ -161,7 +161,38 @@ import org.stellar.sdk.Base64Factory;
  *     // Cost of performing BLS12-381 scalar element exponentiation
  *     Bls12381FrPow = 68,
  *     // Cost of performing BLS12-381 scalar element inversion
- *     Bls12381FrInv = 69
+ *     Bls12381FrInv = 69,
+ *
+ *     // Cost of encoding a BN254 Fp (base field element)
+ *     Bn254EncodeFp = 70,
+ *     // Cost of decoding a BN254 Fp (base field element)
+ *     Bn254DecodeFp = 71,
+ *     // Cost of checking a G1 point lies on the curve
+ *     Bn254G1CheckPointOnCurve = 72,
+ *     // Cost of checking a G2 point lies on the curve
+ *     Bn254G2CheckPointOnCurve = 73,
+ *     // Cost of checking a G2 point belongs to the correct subgroup
+ *     Bn254G2CheckPointInSubgroup = 74,
+ *     // Cost of converting a BN254 G1 point from projective to affine coordinates
+ *     Bn254G1ProjectiveToAffine = 75,
+ *     // Cost of performing BN254 G1 point addition
+ *     Bn254G1Add = 76,
+ *     // Cost of performing BN254 G1 scalar multiplication
+ *     Bn254G1Mul = 77,
+ *     // Cost of performing BN254 pairing operation
+ *     Bn254Pairing = 78,
+ *     // Cost of converting a BN254 scalar element from U256
+ *     Bn254FrFromU256 = 79,
+ *     // Cost of converting a BN254 scalar element to U256
+ *     Bn254FrToU256 = 80,
+ *     // // Cost of performing BN254 scalar element addition/subtraction
+ *     Bn254FrAddSub = 81,
+ *     // Cost of performing BN254 scalar element multiplication
+ *     Bn254FrMul = 82,
+ *     // Cost of performing BN254 scalar element exponentiation
+ *     Bn254FrPow = 83,
+ *      // Cost of performing BN254 scalar element inversion
+ *     Bn254FrInv = 84
  * };
  * </pre>
  */
@@ -235,7 +266,22 @@ public enum ContractCostType implements XdrElement {
   Bls12381FrAddSub(66),
   Bls12381FrMul(67),
   Bls12381FrPow(68),
-  Bls12381FrInv(69);
+  Bls12381FrInv(69),
+  Bn254EncodeFp(70),
+  Bn254DecodeFp(71),
+  Bn254G1CheckPointOnCurve(72),
+  Bn254G2CheckPointOnCurve(73),
+  Bn254G2CheckPointInSubgroup(74),
+  Bn254G1ProjectiveToAffine(75),
+  Bn254G1Add(76),
+  Bn254G1Mul(77),
+  Bn254Pairing(78),
+  Bn254FrFromU256(79),
+  Bn254FrToU256(80),
+  Bn254FrAddSub(81),
+  Bn254FrMul(82),
+  Bn254FrPow(83),
+  Bn254FrInv(84);
 
   private final int value;
 
@@ -392,6 +438,36 @@ public enum ContractCostType implements XdrElement {
         return Bls12381FrPow;
       case 69:
         return Bls12381FrInv;
+      case 70:
+        return Bn254EncodeFp;
+      case 71:
+        return Bn254DecodeFp;
+      case 72:
+        return Bn254G1CheckPointOnCurve;
+      case 73:
+        return Bn254G2CheckPointOnCurve;
+      case 74:
+        return Bn254G2CheckPointInSubgroup;
+      case 75:
+        return Bn254G1ProjectiveToAffine;
+      case 76:
+        return Bn254G1Add;
+      case 77:
+        return Bn254G1Mul;
+      case 78:
+        return Bn254Pairing;
+      case 79:
+        return Bn254FrFromU256;
+      case 80:
+        return Bn254FrToU256;
+      case 81:
+        return Bn254FrAddSub;
+      case 82:
+        return Bn254FrMul;
+      case 83:
+        return Bn254FrPow;
+      case 84:
+        return Bn254FrInv;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }

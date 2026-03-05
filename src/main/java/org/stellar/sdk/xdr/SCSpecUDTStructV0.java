@@ -20,7 +20,7 @@ import org.stellar.sdk.Base64Factory;
  *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
  *     string lib&lt;80&gt;;
  *     string name&lt;60&gt;;
- *     SCSpecUDTStructFieldV0 fields&lt;40&gt;;
+ *     SCSpecUDTStructFieldV0 fields&lt;&gt;;
  * };
  * </pre>
  */
@@ -51,9 +51,6 @@ public class SCSpecUDTStructV0 implements XdrElement {
     }
     name.encode(stream);
     int fieldsSize = getFields().length;
-    if (fieldsSize > 40) {
-      throw new IOException("fields size " + fieldsSize + " exceeds max size 40");
-    }
     stream.writeInt(fieldsSize);
     for (int i = 0; i < fieldsSize; i++) {
       fields[i].encode(stream);
@@ -73,9 +70,6 @@ public class SCSpecUDTStructV0 implements XdrElement {
     int fieldsSize = stream.readInt();
     if (fieldsSize < 0) {
       throw new IOException("fields size " + fieldsSize + " is negative");
-    }
-    if (fieldsSize > 40) {
-      throw new IOException("fields size " + fieldsSize + " exceeds max size 40");
     }
     int fieldsRemainingInputLen = stream.getRemainingInputLen();
     if (fieldsRemainingInputLen >= 0 && fieldsRemainingInputLen < fieldsSize) {
