@@ -883,10 +883,12 @@ public class SorobanServerTest {
     HttpUrl baseUrl = mockWebServer.url("");
     SorobanServer server = new SorobanServer(baseUrl.toString());
     GetLatestLedgerResponse resp = server.getLatestLedger();
-    assertEquals(resp.getId(), "e73d7654b72daa637f396669182c6072549736a9e3b6fcb8e685adb61f8c910a");
-    assertEquals(resp.getProtocolVersion().intValue(), 20);
-    assertEquals(resp.getSequence().intValue(), 24170);
-
+    assertEquals(resp.getId(), "98908807544d6658094c94e00c1cff99e341b96ee1c59abbda39d5f4a3b20cdc");
+    assertEquals(resp.getProtocolVersion().intValue(), 25);
+    assertEquals(resp.getSequence().intValue(), 1283415);
+    assertEquals(resp.getCloseTime().longValue(), 1772416629L);
+    assertEquals(resp.parseHeaderXdr().toXdrBase64(), resp.getHeaderXdr());
+    assertEquals(resp.parseMetadataXdr().toXdrBase64(), resp.getMetadataXdr());
     server.close();
     mockWebServer.close();
   }

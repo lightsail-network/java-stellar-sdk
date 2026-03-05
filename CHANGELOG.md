@@ -2,6 +2,7 @@
 
 ## Pending
 - feat: sort `ScMap` entries by key in `Scv.toMap` following Soroban runtime ordering rules, as the network requires ScMap keys to be in ascending order. `Scv.toMap` now accepts `Map<SCVal, SCVal>`; the previous `toMap(LinkedHashMap<SCVal, SCVal>)` overload is deprecated.
+- feat: add `closeTime`, `headerXdr`, and `metadataXdr` to `GetLatestLedgerResponse`.
 
 ## 2.2.3
 
