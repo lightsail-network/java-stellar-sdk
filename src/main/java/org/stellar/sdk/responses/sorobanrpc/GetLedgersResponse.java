@@ -34,7 +34,7 @@ public class GetLedgersResponse {
     String metadataXdr;
 
     /**
-     * Parses the {@code envelopeXdr} field from a string to an {@link LedgerHeaderHistoryEntry}
+     * Parses the {@code headerXdr} field from a string to an {@link LedgerHeaderHistoryEntry}
      * object.
      *
      * @return the parsed {@link LedgerHeaderHistoryEntry} object

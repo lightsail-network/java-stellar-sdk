@@ -21,8 +21,15 @@ public class GetLatestLedgerDeserializerTest {
                 json, new TypeToken<SorobanRpcResponse<GetLatestLedgerResponse>>() {}.getType());
     assertEquals(
         getLatestLedgerResponse.getResult().getId(),
-        "e73d7654b72daa637f396669182c6072549736a9e3b6fcb8e685adb61f8c910a");
-    assertEquals(getLatestLedgerResponse.getResult().getProtocolVersion().intValue(), 20);
-    assertEquals(getLatestLedgerResponse.getResult().getSequence().intValue(), 24170);
+        "98908807544d6658094c94e00c1cff99e341b96ee1c59abbda39d5f4a3b20cdc");
+    assertEquals(getLatestLedgerResponse.getResult().getProtocolVersion().intValue(), 25);
+    assertEquals(getLatestLedgerResponse.getResult().getSequence().intValue(), 1283415);
+    assertEquals(getLatestLedgerResponse.getResult().getCloseTime().longValue(), 1772416629L);
+    assertEquals(
+        getLatestLedgerResponse.getResult().parseHeaderXdr().toXdrBase64(),
+        getLatestLedgerResponse.getResult().getHeaderXdr());
+    assertEquals(
+        getLatestLedgerResponse.getResult().parseMetadataXdr().toXdrBase64(),
+        getLatestLedgerResponse.getResult().getMetadataXdr());
   }
 }
