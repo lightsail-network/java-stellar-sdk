@@ -11,6 +11,7 @@
 
     <groupId>network.lightsail</groupId>
     <artifactId>stellar-sdk</artifactId>
+    <version>2.2.3</version>
     <packaging>jar</packaging>
 
     <name>stellar-sdk</name>
