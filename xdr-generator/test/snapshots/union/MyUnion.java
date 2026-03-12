@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -95,5 +99,52 @@ public class MyUnion implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static MyUnion fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    if (discriminant == UnionKey.ERROR) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("error", error.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == UnionKey.MULTI) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("multi", XdrElement.arrayToJsonArray(things, i -> things[i].toJsonObject()));
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+  @SuppressWarnings("unchecked")
+  static MyUnion fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException("Expected a single-key object for MyUnion, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    UnionKey discriminant = UnionKey.fromJsonObject(key);
+    if (key.equals("error")) {
+      MyUnion instance = new MyUnion();
+      instance.discriminant = discriminant;
+      instance.error = Error.fromJsonObject(jsonMap.get("error"));
+      return instance;
+    }
+    if (key.equals("multi")) {
+      MyUnion instance = new MyUnion();
+      instance.discriminant = discriminant;
+      instance.things = XdrElement.jsonArrayToArray((List<Object>) jsonMap.get("multi"), Multi.class, item -> Multi.fromJsonObject(item));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for MyUnion");
   }
 }

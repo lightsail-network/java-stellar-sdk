@@ -1,11 +1,28 @@
 package <%= @namespace %>;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.ToNumberPolicy;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 import org.stellar.sdk.Base64Factory;
 
 /** Common parent interface for all generated classes. */
 public interface XdrElement {
+  Gson gson =
+      new GsonBuilder()
+          .disableHtmlEscaping()
+          .serializeNulls()
+          .setObjectToNumberStrategy(ToNumberPolicy.BIG_DECIMAL)
+          .create();
+
   void encode(XdrDataOutputStream stream) throws IOException;
 
   default String toXdrBase64() throws IOException {
@@ -17,5 +34,168 @@ public interface XdrElement {
     XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
     encode(xdrDataOutputStream);
     return byteArrayOutputStream.toByteArray();
+  }
+
+  String toJson();
+
+  static String bytesToHex(byte[] bytes) {
+    StringBuilder sb = new StringBuilder(bytes.length * 2);
+    for (byte b : bytes) {
+      sb.append(String.format("%02x", b & 0xFF));
+    }
+    return sb.toString();
+  }
+
+  static byte[] hexToBytes(String hex) {
+    if (hex.length() % 2 != 0) {
+      throw new IllegalArgumentException("Hex string must have an even length");
+    }
+    int len = hex.length();
+    byte[] data = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+      int hi = Character.digit(hex.charAt(i), 16);
+      int lo = Character.digit(hex.charAt(i + 1), 16);
+      if (hi < 0 || lo < 0) {
+        throw new IllegalArgumentException("Hex string contains non-hex characters");
+      }
+      data[i / 2] = (byte) ((hi << 4) + lo);
+    }
+    return data;
+  }
+
+  static String bytesToEscapedAscii(byte[] data) {
+    StringBuilder sb = new StringBuilder();
+    for (byte b : data) {
+      int unsigned = b & 0xFF;
+      switch (unsigned) {
+        case 0:
+          sb.append("\\0");
+          break;
+        case 9:
+          sb.append("\\t");
+          break;
+        case 10:
+          sb.append("\\n");
+          break;
+        case 13:
+          sb.append("\\r");
+          break;
+        case 92:
+          sb.append("\\\\");
+          break;
+        default:
+          if (unsigned >= 32 && unsigned <= 126) {
+            sb.append((char) unsigned);
+          } else {
+            sb.append(String.format("\\x%02x", unsigned));
+          }
+          break;
+      }
+    }
+    return sb.toString();
+  }
+
+  static byte[] escapedAsciiToBytes(String s) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    int i = 0;
+    while (i < s.length()) {
+      char c = s.charAt(i);
+      if (c != '\\') {
+        if (c < 0x20 || c > 0x7E) {
+          throw new IllegalArgumentException(
+              "Unescaped characters must be printable ASCII: " + Integer.toHexString(c));
+        }
+        out.write(c);
+        i++;
+        continue;
+      }
+
+      if (i + 1 >= s.length()) {
+        throw new IllegalArgumentException("Incomplete escape sequence at end of string");
+      }
+
+      char next = s.charAt(i + 1);
+      switch (next) {
+        case '0':
+          out.write(0);
+          i += 2;
+          break;
+        case 't':
+          out.write(9);
+          i += 2;
+          break;
+        case 'n':
+          out.write(10);
+          i += 2;
+          break;
+        case 'r':
+          out.write(13);
+          i += 2;
+          break;
+        case '\\':
+          out.write(92);
+          i += 2;
+          break;
+        case 'x':
+          if (i + 3 >= s.length()) {
+            throw new IllegalArgumentException("Incomplete hex escape sequence");
+          }
+          int hi = Character.digit(s.charAt(i + 2), 16);
+          int lo = Character.digit(s.charAt(i + 3), 16);
+          if (hi < 0 || lo < 0) {
+            throw new IllegalArgumentException("Invalid hex escape sequence");
+          }
+          out.write((hi << 4) + lo);
+          i += 4;
+          break;
+        default:
+          throw new IllegalArgumentException("Unknown escape sequence: \\" + next);
+      }
+    }
+    return out.toByteArray();
+  }
+
+  static long jsonToLong(Object json) {
+    if (json instanceof String) {
+      return Long.parseLong((String) json);
+    }
+    if (json instanceof BigDecimal) {
+      return ((BigDecimal) json).longValueExact();
+    }
+    if (json instanceof Number) {
+      return ((Number) json).longValue();
+    }
+    throw new IllegalArgumentException("Expected JSON string or number, got: " + json);
+  }
+
+  static BigInteger jsonToBigInteger(Object json) {
+    if (json instanceof String) {
+      return new BigInteger((String) json);
+    }
+    if (json instanceof BigDecimal) {
+      return ((BigDecimal) json).toBigIntegerExact();
+    }
+    if (json instanceof Number) {
+      return BigInteger.valueOf(((Number) json).longValue());
+    }
+    throw new IllegalArgumentException("Expected JSON string or number, got: " + json);
+  }
+
+  @SuppressWarnings("unchecked")
+  static <T> List<Object> arrayToJsonArray(T[] array, IntFunction<Object> mapper) {
+    List<Object> list = new ArrayList<>(array.length);
+    for (int i = 0; i < array.length; i++) {
+      list.add(mapper.apply(i));
+    }
+    return list;
+  }
+
+  @SuppressWarnings("unchecked")
+  static <T> T[] jsonArrayToArray(List<Object> list, Class<T> clazz, Function<Object, T> mapper) {
+    T[] array = (T[]) Array.newInstance(clazz, list.size());
+    for (int i = 0; i < list.size(); i++) {
+      array[i] = mapper.apply(list.get(i));
+    }
+    return array;
   }
 }

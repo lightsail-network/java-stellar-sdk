@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Color2's original definition in the XDR file is:
@@ -63,5 +67,30 @@ public enum Color2 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Color2 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    switch (this) {
+    case RED2: return "red2";
+    case GREEN2: return "green2";
+    case BLUE2: return "blue2";
+    default: throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+  static Color2 fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+    case "red2": return RED2;
+    case "green2": return GREEN2;
+    case "blue2": return BLUE2;
+    default: throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
   }
 }

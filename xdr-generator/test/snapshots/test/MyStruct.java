@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -77,5 +81,37 @@ public class MyStruct implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static MyStruct fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("field1", field1.toJsonObject());
+    jsonMap.put("field2", field2.toJsonObject());
+    jsonMap.put("field3", field3.toJsonObject());
+    jsonMap.put("field4", field4.toJsonObject());
+    jsonMap.put("field5", (Float) field5);
+    jsonMap.put("field6", (Double) field6);
+    jsonMap.put("field7", (Boolean) field7);
+    return jsonMap;
+  }
+  @SuppressWarnings("unchecked")
+  static MyStruct fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    MyStruct instance = new MyStruct();
+    instance.field1 = Uint512.fromJsonObject(jsonMap.get("field1"));
+    instance.field2 = OptHash1.fromJsonObject(jsonMap.get("field2"));
+    instance.field3 = Int1.fromJsonObject(jsonMap.get("field3"));
+    instance.field4 = XdrUnsignedInteger.fromJsonObject(jsonMap.get("field4"));
+    instance.field5 = ((Number) jsonMap.get("field5")).floatValue();
+    instance.field6 = ((Number) jsonMap.get("field6")).doubleValue();
+    instance.field7 = (Boolean) jsonMap.get("field7");
+    return instance;
   }
 }
