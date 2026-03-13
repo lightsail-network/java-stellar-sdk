@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -92,6 +96,65 @@ public class MyUnion implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static MyUnion fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    if (discriminant == UnionKey.ONE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("one", one.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == UnionKey.TWO) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("two", two.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == UnionKey.OFFER) {
+      return "offer";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+  @SuppressWarnings("unchecked")
+  static MyUnion fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("offer"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for MyUnion");
+      }
+      MyUnion instance = new MyUnion();
+      instance.discriminant = UnionKey.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException("Expected a single-key object for MyUnion, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    UnionKey discriminant = UnionKey.fromJsonObject(key);
+    if (key.equals("one")) {
+      MyUnion instance = new MyUnion();
+      instance.discriminant = discriminant;
+      instance.one = MyUnionOne.fromJsonObject(jsonMap.get("one"));
+      return instance;
+    }
+    if (key.equals("two")) {
+      MyUnion instance = new MyUnion();
+      instance.discriminant = discriminant;
+      instance.two = MyUnionTwo.fromJsonObject(jsonMap.get("two"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for MyUnion");
+  }
 
   /**
    * MyUnionOne's original definition in the XDR file is:
@@ -132,6 +195,26 @@ public class MyUnion implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static MyUnionOne fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("some_int", (Integer) someInt);
+      return jsonMap;
+    }
+    @SuppressWarnings("unchecked")
+    static MyUnionOne fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      MyUnionOne instance = new MyUnionOne();
+      instance.someInt = ((Number) jsonMap.get("some_int")).intValue();
+      return instance;
     }
 
   }
@@ -178,6 +261,28 @@ public class MyUnion implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static MyUnionTwo fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("some_int", (Integer) someInt);
+      jsonMap.put("foo", foo.toJsonObject());
+      return jsonMap;
+    }
+    @SuppressWarnings("unchecked")
+    static MyUnionTwo fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      MyUnionTwo instance = new MyUnionTwo();
+      instance.someInt = ((Number) jsonMap.get("some_int")).intValue();
+      instance.foo = Foo.fromJsonObject(jsonMap.get("foo"));
+      return instance;
     }
 
   }

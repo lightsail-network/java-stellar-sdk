@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -67,5 +71,21 @@ public class Uint513 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Uint513 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(uint513);
+  }
+  static Uint513 fromJsonObject(Object json) {
+    Uint513 instance = new Uint513();
+    instance.uint513 = XdrElement.hexToBytes((String) json);
+    return instance;
   }
 }

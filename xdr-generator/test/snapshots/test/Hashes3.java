@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -65,5 +69,21 @@ public class Hashes3 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Hashes3 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    return XdrElement.arrayToJsonArray(Hashes3, i -> Hashes3[i].toJsonObject());
+  }
+  static Hashes3 fromJsonObject(Object json) {
+    Hashes3 instance = new Hashes3();
+    instance.Hashes3 = XdrElement.jsonArrayToArray((List<Object>) json, Hash.class, item -> Hash.fromJsonObject(item));
+    return instance;
   }
 }

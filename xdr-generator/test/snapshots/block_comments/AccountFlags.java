@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * AccountFlags's original definition in the XDR file is:
@@ -58,5 +62,26 @@ public enum AccountFlags implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AccountFlags fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    switch (this) {
+    case AUTH_REQUIRED_FLAG: return "auth_required_flag";
+    default: throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+  static AccountFlags fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+    case "auth_required_flag": return AUTH_REQUIRED_FLAG;
+    default: throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
   }
 }

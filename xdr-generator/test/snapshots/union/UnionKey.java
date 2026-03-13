@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * UnionKey's original definition in the XDR file is:
@@ -60,5 +64,28 @@ public enum UnionKey implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static UnionKey fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    switch (this) {
+    case ERROR: return "error";
+    case MULTI: return "multi";
+    default: throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+  static UnionKey fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+    case "error": return ERROR;
+    case "multi": return MULTI;
+    default: throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
   }
 }

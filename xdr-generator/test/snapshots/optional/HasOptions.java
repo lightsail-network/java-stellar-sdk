@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -85,5 +89,29 @@ public class HasOptions implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static HasOptions fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("first_option", firstOption != null ? (Integer) firstOption : null);
+    jsonMap.put("second_option", secondOption != null ? (Integer) secondOption : null);
+    jsonMap.put("third_option", thirdOption != null ? thirdOption.toJsonObject() : null);
+    return jsonMap;
+  }
+  @SuppressWarnings("unchecked")
+  static HasOptions fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    HasOptions instance = new HasOptions();
+    instance.firstOption = jsonMap.get("first_option") != null ? ((Number) jsonMap.get("first_option")).intValue() : null;
+    instance.secondOption = jsonMap.get("second_option") != null ? ((Number) jsonMap.get("second_option")).intValue() : null;
+    instance.thirdOption = jsonMap.get("third_option") != null ? Arr.fromJsonObject(jsonMap.get("third_option")) : null;
+    return instance;
   }
 }

@@ -49,6 +49,26 @@ public class XdrUnsignedInteger implements XdrElement {
     stream.writeInt(number.intValue());
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  Object toJsonObject() {
+    return this.number;
+  }
+
+  public static XdrUnsignedInteger fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  static XdrUnsignedInteger fromJsonObject(Object json) {
+    if (json == null) {
+      return null;
+    }
+    return new XdrUnsignedInteger(XdrElement.jsonToLong(json));
+  }
+
   public static XdrUnsignedInteger fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);

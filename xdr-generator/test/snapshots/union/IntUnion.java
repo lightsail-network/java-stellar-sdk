@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -94,5 +98,52 @@ public class IntUnion implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static IntUnion fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    if (discriminant == 0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v0", error.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == 1) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v1", XdrElement.arrayToJsonArray(things, i -> things[i].toJsonObject()));
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+  @SuppressWarnings("unchecked")
+  static IntUnion fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException("Expected a single-key object for IntUnion, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    Integer discriminant = Integer.parseInt(key.substring(1));
+    if (key.equals("v0")) {
+      IntUnion instance = new IntUnion();
+      instance.discriminant = discriminant;
+      instance.error = Error.fromJsonObject(jsonMap.get("v0"));
+      return instance;
+    }
+    if (key.equals("v1")) {
+      IntUnion instance = new IntUnion();
+      instance.discriminant = discriminant;
+      instance.things = XdrElement.jsonArrayToArray((List<Object>) jsonMap.get("v1"), Multi.class, item -> Multi.fromJsonObject(item));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for IntUnion");
   }
 }

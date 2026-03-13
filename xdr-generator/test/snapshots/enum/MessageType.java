@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * MessageType's original definition in the XDR file is:
@@ -103,5 +107,52 @@ public enum MessageType implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static MessageType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    switch (this) {
+    case ERROR_MSG: return "error_msg";
+    case HELLO: return "hello";
+    case DONT_HAVE: return "dont_have";
+    case GET_PEERS: return "get_peers";
+    case PEERS: return "peers";
+    case GET_TX_SET: return "get_tx_set";
+    case TX_SET: return "tx_set";
+    case GET_VALIDATIONS: return "get_validations";
+    case VALIDATIONS: return "validations";
+    case TRANSACTION: return "transaction";
+    case JSON_TRANSACTION: return "json_transaction";
+    case GET_FBA_QUORUMSET: return "get_fba_quorumset";
+    case FBA_QUORUMSET: return "fba_quorumset";
+    case FBA_MESSAGE: return "fba_message";
+    default: throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+  static MessageType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+    case "error_msg": return ERROR_MSG;
+    case "hello": return HELLO;
+    case "dont_have": return DONT_HAVE;
+    case "get_peers": return GET_PEERS;
+    case "peers": return PEERS;
+    case "get_tx_set": return GET_TX_SET;
+    case "tx_set": return TX_SET;
+    case "get_validations": return GET_VALIDATIONS;
+    case "validations": return VALIDATIONS;
+    case "transaction": return TRANSACTION;
+    case "json_transaction": return JSON_TRANSACTION;
+    case "get_fba_quorumset": return GET_FBA_QUORUMSET;
+    case "fba_quorumset": return FBA_QUORUMSET;
+    case "fba_message": return FBA_MESSAGE;
+    default: throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
   }
 }

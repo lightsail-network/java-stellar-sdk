@@ -8,6 +8,10 @@ import java.io.IOException;
 import org.stellar.sdk.Base64Factory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -76,6 +80,30 @@ public class Nester implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Nester fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("nested_enum", nestedEnum.toJsonObject());
+    jsonMap.put("nested_struct", nestedStruct.toJsonObject());
+    jsonMap.put("nested_union", nestedUnion.toJsonObject());
+    return jsonMap;
+  }
+  @SuppressWarnings("unchecked")
+  static Nester fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    Nester instance = new Nester();
+    instance.nestedEnum = NesterNestedEnum.fromJsonObject(jsonMap.get("nested_enum"));
+    instance.nestedStruct = NesterNestedStruct.fromJsonObject(jsonMap.get("nested_struct"));
+    instance.nestedUnion = NesterNestedUnion.fromJsonObject(jsonMap.get("nested_union"));
+    return instance;
+  }
 
   /**
    * NesterNestedEnum's original definition in the XDR file is:
@@ -129,6 +157,29 @@ public class Nester implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static NestedEnum fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+    Object toJsonObject() {
+      switch (this) {
+      case BLAH_1: return "1";
+      case BLAH_2: return "2";
+      default: throw new IllegalArgumentException("Unknown enum value: " + this.value);
+      }
+    }
+    static NestedEnum fromJsonObject(Object json) {
+      String value = (String) json;
+      switch (value) {
+      case "1": return BLAH_1;
+      case "2": return BLAH_2;
+      default: throw new IllegalArgumentException("Unknown JSON value: " + value);
+      }
+    }
 
   }
   /**
@@ -170,6 +221,26 @@ public class Nester implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static NesterNestedStruct fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("blah", (Integer) blah);
+      return jsonMap;
+    }
+    @SuppressWarnings("unchecked")
+    static NesterNestedStruct fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      NesterNestedStruct instance = new NesterNestedStruct();
+      instance.blah = ((Number) jsonMap.get("blah")).intValue();
+      return instance;
     }
 
   }
@@ -232,6 +303,48 @@ public class Nester implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static NesterNestedUnion fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+    Object toJsonObject() {
+      if (discriminant == Color.RED) {
+        return "red";
+      }
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put((String) discriminant.toJsonObject(), (Integer) blah2);
+      return jsonMap;
+    }
+    @SuppressWarnings("unchecked")
+    static NesterNestedUnion fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("red"))) {
+          throw new IllegalArgumentException("Unexpected string '" + strVal + "' for NesterNestedUnion");
+        }
+        NesterNestedUnion instance = new NesterNestedUnion();
+        instance.discriminant = Color.fromJsonObject(strVal);
+        return instance;
+      }
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException("Expected a single-key object for NesterNestedUnion, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      Color discriminant = Color.fromJsonObject(key);
+      NesterNestedUnion instance = new NesterNestedUnion();
+      instance.discriminant = discriminant;
+      instance.blah2 = ((Number) jsonMap.get(key)).intValue();
+      return instance;
     }
 
   }
