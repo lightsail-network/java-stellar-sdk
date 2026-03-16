@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -67,5 +68,32 @@ public class SignedTimeSlicedSurveyStopCollectingMessage implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SignedTimeSlicedSurveyStopCollectingMessage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("signature", signature.toJsonObject());
+    jsonMap.put("stop_collecting", stopCollecting.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SignedTimeSlicedSurveyStopCollectingMessage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SignedTimeSlicedSurveyStopCollectingMessage instance =
+        new SignedTimeSlicedSurveyStopCollectingMessage();
+    instance.signature = Signature.fromJsonObject(jsonMap.get("signature"));
+    instance.stopCollecting =
+        TimeSlicedSurveyStopCollectingMessage.fromJsonObject(jsonMap.get("stop_collecting"));
+    return instance;
   }
 }

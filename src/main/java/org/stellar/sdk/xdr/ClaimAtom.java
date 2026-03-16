@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -89,5 +90,67 @@ public class ClaimAtom implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimAtom fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ClaimAtomType.CLAIM_ATOM_TYPE_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v0", v0.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ClaimAtomType.CLAIM_ATOM_TYPE_ORDER_BOOK) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("order_book", orderBook.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ClaimAtomType.CLAIM_ATOM_TYPE_LIQUIDITY_POOL) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("liquidity_pool", liquidityPool.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ClaimAtom fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for ClaimAtom, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    ClaimAtomType discriminant = ClaimAtomType.fromJsonObject(key);
+    if (key.equals("v0")) {
+      ClaimAtom instance = new ClaimAtom();
+      instance.discriminant = discriminant;
+      instance.v0 = ClaimOfferAtomV0.fromJsonObject(jsonMap.get("v0"));
+      return instance;
+    }
+    if (key.equals("order_book")) {
+      ClaimAtom instance = new ClaimAtom();
+      instance.discriminant = discriminant;
+      instance.orderBook = ClaimOfferAtom.fromJsonObject(jsonMap.get("order_book"));
+      return instance;
+    }
+    if (key.equals("liquidity_pool")) {
+      ClaimAtom instance = new ClaimAtom();
+      instance.discriminant = discriminant;
+      instance.liquidityPool = ClaimLiquidityAtom.fromJsonObject(jsonMap.get("liquidity_pool"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for ClaimAtom");
   }
 }

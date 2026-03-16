@@ -80,4 +80,41 @@ public class EndSponsoringFutureReservesResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static EndSponsoringFutureReservesResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant
+        == EndSponsoringFutureReservesResultCode.END_SPONSORING_FUTURE_RESERVES_SUCCESS) {
+      return "success";
+    }
+    if (discriminant
+        == EndSponsoringFutureReservesResultCode.END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED) {
+      return "not_sponsored";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static EndSponsoringFutureReservesResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success") || strVal.equals("not_sponsored"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for EndSponsoringFutureReservesResult");
+      }
+      EndSponsoringFutureReservesResult instance = new EndSponsoringFutureReservesResult();
+      instance.discriminant = EndSponsoringFutureReservesResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for EndSponsoringFutureReservesResult, got: " + json);
+  }
 }

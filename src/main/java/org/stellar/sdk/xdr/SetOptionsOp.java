@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -167,5 +168,67 @@ public class SetOptionsOp implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SetOptionsOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("inflation_dest", inflationDest != null ? inflationDest.toJsonObject() : null);
+    jsonMap.put("clear_flags", clearFlags != null ? clearFlags.toJsonObject() : null);
+    jsonMap.put("set_flags", setFlags != null ? setFlags.toJsonObject() : null);
+    jsonMap.put("master_weight", masterWeight != null ? masterWeight.toJsonObject() : null);
+    jsonMap.put("low_threshold", lowThreshold != null ? lowThreshold.toJsonObject() : null);
+    jsonMap.put("med_threshold", medThreshold != null ? medThreshold.toJsonObject() : null);
+    jsonMap.put("high_threshold", highThreshold != null ? highThreshold.toJsonObject() : null);
+    jsonMap.put("home_domain", homeDomain != null ? homeDomain.toJsonObject() : null);
+    jsonMap.put("signer", signer != null ? signer.toJsonObject() : null);
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SetOptionsOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SetOptionsOp instance = new SetOptionsOp();
+    instance.inflationDest =
+        jsonMap.get("inflation_dest") != null
+            ? AccountID.fromJsonObject(jsonMap.get("inflation_dest"))
+            : null;
+    instance.clearFlags =
+        jsonMap.get("clear_flags") != null
+            ? Uint32.fromJsonObject(jsonMap.get("clear_flags"))
+            : null;
+    instance.setFlags =
+        jsonMap.get("set_flags") != null ? Uint32.fromJsonObject(jsonMap.get("set_flags")) : null;
+    instance.masterWeight =
+        jsonMap.get("master_weight") != null
+            ? Uint32.fromJsonObject(jsonMap.get("master_weight"))
+            : null;
+    instance.lowThreshold =
+        jsonMap.get("low_threshold") != null
+            ? Uint32.fromJsonObject(jsonMap.get("low_threshold"))
+            : null;
+    instance.medThreshold =
+        jsonMap.get("med_threshold") != null
+            ? Uint32.fromJsonObject(jsonMap.get("med_threshold"))
+            : null;
+    instance.highThreshold =
+        jsonMap.get("high_threshold") != null
+            ? Uint32.fromJsonObject(jsonMap.get("high_threshold"))
+            : null;
+    instance.homeDomain =
+        jsonMap.get("home_domain") != null
+            ? String32.fromJsonObject(jsonMap.get("home_domain"))
+            : null;
+    instance.signer =
+        jsonMap.get("signer") != null ? Signer.fromJsonObject(jsonMap.get("signer")) : null;
+    return instance;
   }
 }

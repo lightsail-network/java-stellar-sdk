@@ -76,4 +76,48 @@ public enum ErrorCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ErrorCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case ERR_MISC:
+        return "misc";
+      case ERR_DATA:
+        return "data";
+      case ERR_CONF:
+        return "conf";
+      case ERR_AUTH:
+        return "auth";
+      case ERR_LOAD:
+        return "load";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ErrorCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "misc":
+        return ERR_MISC;
+      case "data":
+        return ERR_DATA;
+      case "conf":
+        return ERR_CONF;
+      case "auth":
+        return ERR_AUTH;
+      case "load":
+        return ERR_LOAD;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

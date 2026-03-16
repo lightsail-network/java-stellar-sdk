@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -73,5 +74,36 @@ public class SurveyResponseMessage implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SurveyResponseMessage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("surveyor_peer_id", surveyorPeerID.toJsonObject());
+    jsonMap.put("surveyed_peer_id", surveyedPeerID.toJsonObject());
+    jsonMap.put("ledger_num", ledgerNum.toJsonObject());
+    jsonMap.put("command_type", commandType.toJsonObject());
+    jsonMap.put("encrypted_body", encryptedBody.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SurveyResponseMessage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SurveyResponseMessage instance = new SurveyResponseMessage();
+    instance.surveyorPeerID = NodeID.fromJsonObject(jsonMap.get("surveyor_peer_id"));
+    instance.surveyedPeerID = NodeID.fromJsonObject(jsonMap.get("surveyed_peer_id"));
+    instance.ledgerNum = Uint32.fromJsonObject(jsonMap.get("ledger_num"));
+    instance.commandType = SurveyMessageCommandType.fromJsonObject(jsonMap.get("command_type"));
+    instance.encryptedBody = EncryptedBody.fromJsonObject(jsonMap.get("encrypted_body"));
+    return instance;
   }
 }

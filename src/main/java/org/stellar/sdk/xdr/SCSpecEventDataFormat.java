@@ -69,4 +69,40 @@ public enum SCSpecEventDataFormat implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecEventDataFormat fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SC_SPEC_EVENT_DATA_FORMAT_SINGLE_VALUE:
+        return "single_value";
+      case SC_SPEC_EVENT_DATA_FORMAT_VEC:
+        return "vec";
+      case SC_SPEC_EVENT_DATA_FORMAT_MAP:
+        return "map";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCSpecEventDataFormat fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "single_value":
+        return SC_SPEC_EVENT_DATA_FORMAT_SINGLE_VALUE;
+      case "vec":
+        return SC_SPEC_EVENT_DATA_FORMAT_VEC;
+      case "map":
+        return SC_SPEC_EVENT_DATA_FORMAT_MAP;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

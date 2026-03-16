@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -64,5 +65,32 @@ public class EvictionIterator implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static EvictionIterator fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("bucket_list_level", bucketListLevel.toJsonObject());
+    jsonMap.put("is_curr_bucket", (Boolean) isCurrBucket);
+    jsonMap.put("bucket_file_offset", bucketFileOffset.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static EvictionIterator fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    EvictionIterator instance = new EvictionIterator();
+    instance.bucketListLevel = Uint32.fromJsonObject(jsonMap.get("bucket_list_level"));
+    instance.isCurrBucket = (Boolean) jsonMap.get("is_curr_bucket");
+    instance.bucketFileOffset = Uint64.fromJsonObject(jsonMap.get("bucket_file_offset"));
+    return instance;
   }
 }

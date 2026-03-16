@@ -88,4 +88,52 @@ public enum LiquidityPoolWithdrawResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LiquidityPoolWithdrawResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case LIQUIDITY_POOL_WITHDRAW_SUCCESS:
+        return "success";
+      case LIQUIDITY_POOL_WITHDRAW_MALFORMED:
+        return "malformed";
+      case LIQUIDITY_POOL_WITHDRAW_NO_TRUST:
+        return "no_trust";
+      case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
+        return "underfunded";
+      case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
+        return "line_full";
+      case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
+        return "under_minimum";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static LiquidityPoolWithdrawResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return LIQUIDITY_POOL_WITHDRAW_SUCCESS;
+      case "malformed":
+        return LIQUIDITY_POOL_WITHDRAW_MALFORMED;
+      case "no_trust":
+        return LIQUIDITY_POOL_WITHDRAW_NO_TRUST;
+      case "underfunded":
+        return LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED;
+      case "line_full":
+        return LIQUIDITY_POOL_WITHDRAW_LINE_FULL;
+      case "under_minimum":
+        return LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

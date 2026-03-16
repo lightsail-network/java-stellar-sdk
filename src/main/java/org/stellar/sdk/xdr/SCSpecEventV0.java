@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -128,5 +130,48 @@ public class SCSpecEventV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecEventV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("doc", doc.toJsonObject());
+    jsonMap.put("lib", lib.toJsonObject());
+    jsonMap.put("name", name.toJsonObject());
+    jsonMap.put(
+        "prefix_topics",
+        XdrElement.arrayToJsonArray(prefixTopics, i -> prefixTopics[i].toJsonObject()));
+    jsonMap.put("params", XdrElement.arrayToJsonArray(params, i -> params[i].toJsonObject()));
+    jsonMap.put("data_format", dataFormat.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCSpecEventV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SCSpecEventV0 instance = new SCSpecEventV0();
+    instance.doc = XdrString.fromJsonObject(jsonMap.get("doc"));
+    instance.lib = XdrString.fromJsonObject(jsonMap.get("lib"));
+    instance.name = SCSymbol.fromJsonObject(jsonMap.get("name"));
+    instance.prefixTopics =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("prefix_topics"),
+            SCSymbol.class,
+            item -> SCSymbol.fromJsonObject(item));
+    instance.params =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("params"),
+            SCSpecEventParamV0.class,
+            item -> SCSpecEventParamV0.fromJsonObject(item));
+    instance.dataFormat = SCSpecEventDataFormat.fromJsonObject(jsonMap.get("data_format"));
+    return instance;
   }
 }

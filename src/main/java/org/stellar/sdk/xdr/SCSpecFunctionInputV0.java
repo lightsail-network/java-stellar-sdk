@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -74,5 +75,32 @@ public class SCSpecFunctionInputV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecFunctionInputV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("doc", doc.toJsonObject());
+    jsonMap.put("name", name.toJsonObject());
+    jsonMap.put("type", type.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCSpecFunctionInputV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SCSpecFunctionInputV0 instance = new SCSpecFunctionInputV0();
+    instance.doc = XdrString.fromJsonObject(jsonMap.get("doc"));
+    instance.name = XdrString.fromJsonObject(jsonMap.get("name"));
+    instance.type = SCSpecTypeDef.fromJsonObject(jsonMap.get("type"));
+    return instance;
   }
 }

@@ -73,4 +73,23 @@ public class Signature implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Signature fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(Signature);
+  }
+
+  static Signature fromJsonObject(Object json) {
+    Signature instance = new Signature();
+    instance.Signature = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

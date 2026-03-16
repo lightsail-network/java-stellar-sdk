@@ -71,4 +71,40 @@ public enum HotArchiveBucketEntryType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static HotArchiveBucketEntryType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case HOT_ARCHIVE_METAENTRY:
+        return "metaentry";
+      case HOT_ARCHIVE_ARCHIVED:
+        return "archived";
+      case HOT_ARCHIVE_LIVE:
+        return "live";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static HotArchiveBucketEntryType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "metaentry":
+        return HOT_ARCHIVE_METAENTRY;
+      case "archived":
+        return HOT_ARCHIVE_ARCHIVED;
+      case "live":
+        return HOT_ARCHIVE_LIVE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

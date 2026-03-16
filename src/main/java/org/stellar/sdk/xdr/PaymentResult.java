@@ -99,4 +99,70 @@ public class PaymentResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PaymentResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == PaymentResultCode.PAYMENT_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_UNDERFUNDED) {
+      return "underfunded";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_SRC_NO_TRUST) {
+      return "src_no_trust";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_SRC_NOT_AUTHORIZED) {
+      return "src_not_authorized";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_NO_DESTINATION) {
+      return "no_destination";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_NO_TRUST) {
+      return "no_trust";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_NOT_AUTHORIZED) {
+      return "not_authorized";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_LINE_FULL) {
+      return "line_full";
+    }
+    if (discriminant == PaymentResultCode.PAYMENT_NO_ISSUER) {
+      return "no_issuer";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static PaymentResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("underfunded")
+          || strVal.equals("src_no_trust")
+          || strVal.equals("src_not_authorized")
+          || strVal.equals("no_destination")
+          || strVal.equals("no_trust")
+          || strVal.equals("not_authorized")
+          || strVal.equals("line_full")
+          || strVal.equals("no_issuer"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for PaymentResult");
+      }
+      PaymentResult instance = new PaymentResult();
+      instance.discriminant = PaymentResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for PaymentResult, got: " + json);
+  }
 }

@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -148,5 +150,53 @@ public class PreconditionsV2 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PreconditionsV2 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("time_bounds", timeBounds != null ? timeBounds.toJsonObject() : null);
+    jsonMap.put("ledger_bounds", ledgerBounds != null ? ledgerBounds.toJsonObject() : null);
+    jsonMap.put("min_seq_num", minSeqNum != null ? minSeqNum.toJsonObject() : null);
+    jsonMap.put("min_seq_age", minSeqAge.toJsonObject());
+    jsonMap.put("min_seq_ledger_gap", minSeqLedgerGap.toJsonObject());
+    jsonMap.put(
+        "extra_signers",
+        XdrElement.arrayToJsonArray(extraSigners, i -> extraSigners[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static PreconditionsV2 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    PreconditionsV2 instance = new PreconditionsV2();
+    instance.timeBounds =
+        jsonMap.get("time_bounds") != null
+            ? TimeBounds.fromJsonObject(jsonMap.get("time_bounds"))
+            : null;
+    instance.ledgerBounds =
+        jsonMap.get("ledger_bounds") != null
+            ? LedgerBounds.fromJsonObject(jsonMap.get("ledger_bounds"))
+            : null;
+    instance.minSeqNum =
+        jsonMap.get("min_seq_num") != null
+            ? SequenceNumber.fromJsonObject(jsonMap.get("min_seq_num"))
+            : null;
+    instance.minSeqAge = Duration.fromJsonObject(jsonMap.get("min_seq_age"));
+    instance.minSeqLedgerGap = Uint32.fromJsonObject(jsonMap.get("min_seq_ledger_gap"));
+    instance.extraSigners =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("extra_signers"),
+            SignerKey.class,
+            item -> SignerKey.fromJsonObject(item));
+    return instance;
   }
 }

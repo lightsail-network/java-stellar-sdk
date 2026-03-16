@@ -72,4 +72,44 @@ public enum SignerKeyType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SignerKeyType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SIGNER_KEY_TYPE_ED25519:
+        return "ed25519";
+      case SIGNER_KEY_TYPE_PRE_AUTH_TX:
+        return "pre_auth_tx";
+      case SIGNER_KEY_TYPE_HASH_X:
+        return "hash_x";
+      case SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD:
+        return "ed25519_signed_payload";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SignerKeyType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "ed25519":
+        return SIGNER_KEY_TYPE_ED25519;
+      case "pre_auth_tx":
+        return SIGNER_KEY_TYPE_PRE_AUTH_TX;
+      case "hash_x":
+        return SIGNER_KEY_TYPE_HASH_X;
+      case "ed25519_signed_payload":
+        return SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

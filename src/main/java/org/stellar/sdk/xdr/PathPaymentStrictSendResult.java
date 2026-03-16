@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -129,6 +131,112 @@ public class PathPaymentStrictSendResult implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PathPaymentStrictSendResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_SUCCESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("success", success.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_UNDERFUNDED) {
+      return "underfunded";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_SRC_NO_TRUST) {
+      return "src_no_trust";
+    }
+    if (discriminant
+        == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_SRC_NOT_AUTHORIZED) {
+      return "src_not_authorized";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_NO_DESTINATION) {
+      return "no_destination";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_NO_TRUST) {
+      return "no_trust";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_NOT_AUTHORIZED) {
+      return "not_authorized";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_LINE_FULL) {
+      return "line_full";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_NO_ISSUER) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("no_issuer", noIssuer.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_TOO_FEW_OFFERS) {
+      return "too_few_offers";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_OFFER_CROSS_SELF) {
+      return "offer_cross_self";
+    }
+    if (discriminant == PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN) {
+      return "under_destmin";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static PathPaymentStrictSendResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("malformed")
+          || strVal.equals("underfunded")
+          || strVal.equals("src_no_trust")
+          || strVal.equals("src_not_authorized")
+          || strVal.equals("no_destination")
+          || strVal.equals("no_trust")
+          || strVal.equals("not_authorized")
+          || strVal.equals("line_full")
+          || strVal.equals("too_few_offers")
+          || strVal.equals("offer_cross_self")
+          || strVal.equals("under_destmin"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for PathPaymentStrictSendResult");
+      }
+      PathPaymentStrictSendResult instance = new PathPaymentStrictSendResult();
+      instance.discriminant = PathPaymentStrictSendResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for PathPaymentStrictSendResult, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    PathPaymentStrictSendResultCode discriminant =
+        PathPaymentStrictSendResultCode.fromJsonObject(key);
+    if (key.equals("success")) {
+      PathPaymentStrictSendResult instance = new PathPaymentStrictSendResult();
+      instance.discriminant = discriminant;
+      instance.success = PathPaymentStrictSendResultSuccess.fromJsonObject(jsonMap.get("success"));
+      return instance;
+    }
+    if (key.equals("no_issuer")) {
+      PathPaymentStrictSendResult instance = new PathPaymentStrictSendResult();
+      instance.discriminant = discriminant;
+      instance.noIssuer = Asset.fromJsonObject(jsonMap.get("no_issuer"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for PathPaymentStrictSendResult");
+  }
+
   /**
    * PathPaymentStrictSendResultSuccess's original definition in the XDR file is:
    *
@@ -201,6 +309,35 @@ public class PathPaymentStrictSendResult implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static PathPaymentStrictSendResultSuccess fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("offers", XdrElement.arrayToJsonArray(offers, i -> offers[i].toJsonObject()));
+      jsonMap.put("last", last.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static PathPaymentStrictSendResultSuccess fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      PathPaymentStrictSendResultSuccess instance = new PathPaymentStrictSendResultSuccess();
+      instance.offers =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("offers"),
+              ClaimAtom.class,
+              item -> ClaimAtom.fromJsonObject(item));
+      instance.last = SimplePaymentResult.fromJsonObject(jsonMap.get("last"));
+      return instance;
     }
   }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -78,5 +79,58 @@ public class LedgerCloseMetaExt implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerCloseMetaExt fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == 0) {
+      return "v0";
+    }
+    if (discriminant == 1) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v1", v1.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerCloseMetaExt fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("v0"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for LedgerCloseMetaExt");
+      }
+      LedgerCloseMetaExt instance = new LedgerCloseMetaExt();
+      instance.discriminant = Integer.parseInt(strVal.substring(1));
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for LedgerCloseMetaExt, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    Integer discriminant = Integer.parseInt(key.substring(1));
+    if (key.equals("v1")) {
+      LedgerCloseMetaExt instance = new LedgerCloseMetaExt();
+      instance.discriminant = discriminant;
+      instance.v1 = LedgerCloseMetaExtV1.fromJsonObject(jsonMap.get("v1"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for LedgerCloseMetaExt");
   }
 }

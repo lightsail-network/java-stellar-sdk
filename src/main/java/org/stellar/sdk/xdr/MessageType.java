@@ -154,4 +154,112 @@ public enum MessageType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static MessageType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case ERROR_MSG:
+        return "error_msg";
+      case AUTH:
+        return "auth";
+      case DONT_HAVE:
+        return "dont_have";
+      case PEERS:
+        return "peers";
+      case GET_TX_SET:
+        return "get_tx_set";
+      case TX_SET:
+        return "tx_set";
+      case GENERALIZED_TX_SET:
+        return "generalized_tx_set";
+      case TRANSACTION:
+        return "transaction";
+      case GET_SCP_QUORUMSET:
+        return "get_scp_quorumset";
+      case SCP_QUORUMSET:
+        return "scp_quorumset";
+      case SCP_MESSAGE:
+        return "scp_message";
+      case GET_SCP_STATE:
+        return "get_scp_state";
+      case HELLO:
+        return "hello";
+      case SEND_MORE:
+        return "send_more";
+      case SEND_MORE_EXTENDED:
+        return "send_more_extended";
+      case FLOOD_ADVERT:
+        return "flood_advert";
+      case FLOOD_DEMAND:
+        return "flood_demand";
+      case TIME_SLICED_SURVEY_REQUEST:
+        return "time_sliced_survey_request";
+      case TIME_SLICED_SURVEY_RESPONSE:
+        return "time_sliced_survey_response";
+      case TIME_SLICED_SURVEY_START_COLLECTING:
+        return "time_sliced_survey_start_collecting";
+      case TIME_SLICED_SURVEY_STOP_COLLECTING:
+        return "time_sliced_survey_stop_collecting";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static MessageType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "error_msg":
+        return ERROR_MSG;
+      case "auth":
+        return AUTH;
+      case "dont_have":
+        return DONT_HAVE;
+      case "peers":
+        return PEERS;
+      case "get_tx_set":
+        return GET_TX_SET;
+      case "tx_set":
+        return TX_SET;
+      case "generalized_tx_set":
+        return GENERALIZED_TX_SET;
+      case "transaction":
+        return TRANSACTION;
+      case "get_scp_quorumset":
+        return GET_SCP_QUORUMSET;
+      case "scp_quorumset":
+        return SCP_QUORUMSET;
+      case "scp_message":
+        return SCP_MESSAGE;
+      case "get_scp_state":
+        return GET_SCP_STATE;
+      case "hello":
+        return HELLO;
+      case "send_more":
+        return SEND_MORE;
+      case "send_more_extended":
+        return SEND_MORE_EXTENDED;
+      case "flood_advert":
+        return FLOOD_ADVERT;
+      case "flood_demand":
+        return FLOOD_DEMAND;
+      case "time_sliced_survey_request":
+        return TIME_SLICED_SURVEY_REQUEST;
+      case "time_sliced_survey_response":
+        return TIME_SLICED_SURVEY_RESPONSE;
+      case "time_sliced_survey_start_collecting":
+        return TIME_SLICED_SURVEY_START_COLLECTING;
+      case "time_sliced_survey_stop_collecting":
+        return TIME_SLICED_SURVEY_STOP_COLLECTING;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

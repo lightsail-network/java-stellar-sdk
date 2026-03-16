@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -92,5 +93,44 @@ public class Hello implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Hello fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ledger_version", ledgerVersion.toJsonObject());
+    jsonMap.put("overlay_version", overlayVersion.toJsonObject());
+    jsonMap.put("overlay_min_version", overlayMinVersion.toJsonObject());
+    jsonMap.put("network_id", networkID.toJsonObject());
+    jsonMap.put("version_str", versionStr.toJsonObject());
+    jsonMap.put("listening_port", (Integer) listeningPort);
+    jsonMap.put("peer_id", peerID.toJsonObject());
+    jsonMap.put("cert", cert.toJsonObject());
+    jsonMap.put("nonce", nonce.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static Hello fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    Hello instance = new Hello();
+    instance.ledgerVersion = Uint32.fromJsonObject(jsonMap.get("ledger_version"));
+    instance.overlayVersion = Uint32.fromJsonObject(jsonMap.get("overlay_version"));
+    instance.overlayMinVersion = Uint32.fromJsonObject(jsonMap.get("overlay_min_version"));
+    instance.networkID = Hash.fromJsonObject(jsonMap.get("network_id"));
+    instance.versionStr = XdrString.fromJsonObject(jsonMap.get("version_str"));
+    instance.listeningPort = ((Number) jsonMap.get("listening_port")).intValue();
+    instance.peerID = NodeID.fromJsonObject(jsonMap.get("peer_id"));
+    instance.cert = AuthCert.fromJsonObject(jsonMap.get("cert"));
+    instance.nonce = Uint256.fromJsonObject(jsonMap.get("nonce"));
+    return instance;
   }
 }

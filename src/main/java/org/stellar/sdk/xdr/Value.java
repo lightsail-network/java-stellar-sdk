@@ -64,4 +64,23 @@ public class Value implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Value fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(Value);
+  }
+
+  static Value fromJsonObject(Object json) {
+    Value instance = new Value();
+    instance.Value = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

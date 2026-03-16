@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -123,6 +124,80 @@ public class HashIDPreimage implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static HashIDPreimage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == EnvelopeType.ENVELOPE_TYPE_OP_ID) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("op_id", operationID.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == EnvelopeType.ENVELOPE_TYPE_POOL_REVOKE_OP_ID) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("pool_revoke_op_id", revokeID.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == EnvelopeType.ENVELOPE_TYPE_CONTRACT_ID) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_id", contractID.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("soroban_authorization", sorobanAuthorization.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static HashIDPreimage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for HashIDPreimage, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    EnvelopeType discriminant = EnvelopeType.fromJsonObject(key);
+    if (key.equals("op_id")) {
+      HashIDPreimage instance = new HashIDPreimage();
+      instance.discriminant = discriminant;
+      instance.operationID = HashIDPreimageOperationID.fromJsonObject(jsonMap.get("op_id"));
+      return instance;
+    }
+    if (key.equals("pool_revoke_op_id")) {
+      HashIDPreimage instance = new HashIDPreimage();
+      instance.discriminant = discriminant;
+      instance.revokeID = HashIDPreimageRevokeID.fromJsonObject(jsonMap.get("pool_revoke_op_id"));
+      return instance;
+    }
+    if (key.equals("contract_id")) {
+      HashIDPreimage instance = new HashIDPreimage();
+      instance.discriminant = discriminant;
+      instance.contractID = HashIDPreimageContractID.fromJsonObject(jsonMap.get("contract_id"));
+      return instance;
+    }
+    if (key.equals("soroban_authorization")) {
+      HashIDPreimage instance = new HashIDPreimage();
+      instance.discriminant = discriminant;
+      instance.sorobanAuthorization =
+          HashIDPreimageSorobanAuthorization.fromJsonObject(jsonMap.get("soroban_authorization"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for HashIDPreimage");
+  }
+
   /**
    * HashIDPreimageOperationID's original definition in the XDR file is:
    *
@@ -177,6 +252,33 @@ public class HashIDPreimage implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static HashIDPreimageOperationID fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("source_account", sourceAccount.toJsonObject());
+      jsonMap.put("seq_num", seqNum.toJsonObject());
+      jsonMap.put("op_num", opNum.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static HashIDPreimageOperationID fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      HashIDPreimageOperationID instance = new HashIDPreimageOperationID();
+      instance.sourceAccount = AccountID.fromJsonObject(jsonMap.get("source_account"));
+      instance.seqNum = SequenceNumber.fromJsonObject(jsonMap.get("seq_num"));
+      instance.opNum = Uint32.fromJsonObject(jsonMap.get("op_num"));
+      return instance;
     }
   }
 
@@ -243,6 +345,37 @@ public class HashIDPreimage implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static HashIDPreimageRevokeID fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("source_account", sourceAccount.toJsonObject());
+      jsonMap.put("seq_num", seqNum.toJsonObject());
+      jsonMap.put("op_num", opNum.toJsonObject());
+      jsonMap.put("liquidity_pool_id", liquidityPoolID.toJsonObject());
+      jsonMap.put("asset", asset.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static HashIDPreimageRevokeID fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      HashIDPreimageRevokeID instance = new HashIDPreimageRevokeID();
+      instance.sourceAccount = AccountID.fromJsonObject(jsonMap.get("source_account"));
+      instance.seqNum = SequenceNumber.fromJsonObject(jsonMap.get("seq_num"));
+      instance.opNum = Uint32.fromJsonObject(jsonMap.get("op_num"));
+      instance.liquidityPoolID = PoolID.fromJsonObject(jsonMap.get("liquidity_pool_id"));
+      instance.asset = Asset.fromJsonObject(jsonMap.get("asset"));
+      return instance;
+    }
   }
 
   /**
@@ -296,6 +429,32 @@ public class HashIDPreimage implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static HashIDPreimageContractID fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("network_id", networkID.toJsonObject());
+      jsonMap.put("contract_id_preimage", contractIDPreimage.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static HashIDPreimageContractID fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      HashIDPreimageContractID instance = new HashIDPreimageContractID();
+      instance.networkID = Hash.fromJsonObject(jsonMap.get("network_id"));
+      instance.contractIDPreimage =
+          ContractIDPreimage.fromJsonObject(jsonMap.get("contract_id_preimage"));
+      return instance;
     }
   }
 
@@ -362,6 +521,36 @@ public class HashIDPreimage implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static HashIDPreimageSorobanAuthorization fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("network_id", networkID.toJsonObject());
+      jsonMap.put("nonce", nonce.toJsonObject());
+      jsonMap.put("signature_expiration_ledger", signatureExpirationLedger.toJsonObject());
+      jsonMap.put("invocation", invocation.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static HashIDPreimageSorobanAuthorization fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      HashIDPreimageSorobanAuthorization instance = new HashIDPreimageSorobanAuthorization();
+      instance.networkID = Hash.fromJsonObject(jsonMap.get("network_id"));
+      instance.nonce = Int64.fromJsonObject(jsonMap.get("nonce"));
+      instance.signatureExpirationLedger =
+          Uint32.fromJsonObject(jsonMap.get("signature_expiration_ledger"));
+      instance.invocation = SorobanAuthorizedInvocation.fromJsonObject(jsonMap.get("invocation"));
+      return instance;
     }
   }
 }

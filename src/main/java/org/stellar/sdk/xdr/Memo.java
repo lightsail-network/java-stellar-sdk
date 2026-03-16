@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -108,5 +109,89 @@ public class Memo implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Memo fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == MemoType.MEMO_NONE) {
+      return "none";
+    }
+    if (discriminant == MemoType.MEMO_TEXT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("text", text.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MemoType.MEMO_ID) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("id", id.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MemoType.MEMO_HASH) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("hash", hash.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MemoType.MEMO_RETURN) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("return", retHash.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static Memo fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("none"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for Memo");
+      }
+      Memo instance = new Memo();
+      instance.discriminant = MemoType.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException("Expected a single-key object for Memo, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    MemoType discriminant = MemoType.fromJsonObject(key);
+    if (key.equals("text")) {
+      Memo instance = new Memo();
+      instance.discriminant = discriminant;
+      instance.text = XdrString.fromJsonObject(jsonMap.get("text"));
+      return instance;
+    }
+    if (key.equals("id")) {
+      Memo instance = new Memo();
+      instance.discriminant = discriminant;
+      instance.id = Uint64.fromJsonObject(jsonMap.get("id"));
+      return instance;
+    }
+    if (key.equals("hash")) {
+      Memo instance = new Memo();
+      instance.discriminant = discriminant;
+      instance.hash = Hash.fromJsonObject(jsonMap.get("hash"));
+      return instance;
+    }
+    if (key.equals("return")) {
+      Memo instance = new Memo();
+      instance.discriminant = discriminant;
+      instance.retHash = Hash.fromJsonObject(jsonMap.get("return"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for Memo");
   }
 }

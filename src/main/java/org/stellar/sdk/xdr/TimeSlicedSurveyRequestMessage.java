@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -71,5 +72,34 @@ public class TimeSlicedSurveyRequestMessage implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TimeSlicedSurveyRequestMessage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("request", request.toJsonObject());
+    jsonMap.put("nonce", nonce.toJsonObject());
+    jsonMap.put("inbound_peers_index", inboundPeersIndex.toJsonObject());
+    jsonMap.put("outbound_peers_index", outboundPeersIndex.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TimeSlicedSurveyRequestMessage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TimeSlicedSurveyRequestMessage instance = new TimeSlicedSurveyRequestMessage();
+    instance.request = SurveyRequestMessage.fromJsonObject(jsonMap.get("request"));
+    instance.nonce = Uint32.fromJsonObject(jsonMap.get("nonce"));
+    instance.inboundPeersIndex = Uint32.fromJsonObject(jsonMap.get("inbound_peers_index"));
+    instance.outboundPeersIndex = Uint32.fromJsonObject(jsonMap.get("outbound_peers_index"));
+    return instance;
   }
 }

@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -140,5 +142,52 @@ public class LedgerCloseMetaV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerCloseMetaV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ledger_header", ledgerHeader.toJsonObject());
+    jsonMap.put("tx_set", txSet.toJsonObject());
+    jsonMap.put(
+        "tx_processing",
+        XdrElement.arrayToJsonArray(txProcessing, i -> txProcessing[i].toJsonObject()));
+    jsonMap.put(
+        "upgrades_processing",
+        XdrElement.arrayToJsonArray(upgradesProcessing, i -> upgradesProcessing[i].toJsonObject()));
+    jsonMap.put("scp_info", XdrElement.arrayToJsonArray(scpInfo, i -> scpInfo[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerCloseMetaV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    LedgerCloseMetaV0 instance = new LedgerCloseMetaV0();
+    instance.ledgerHeader = LedgerHeaderHistoryEntry.fromJsonObject(jsonMap.get("ledger_header"));
+    instance.txSet = TransactionSet.fromJsonObject(jsonMap.get("tx_set"));
+    instance.txProcessing =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("tx_processing"),
+            TransactionResultMeta.class,
+            item -> TransactionResultMeta.fromJsonObject(item));
+    instance.upgradesProcessing =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("upgrades_processing"),
+            UpgradeEntryMeta.class,
+            item -> UpgradeEntryMeta.fromJsonObject(item));
+    instance.scpInfo =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("scp_info"),
+            SCPHistoryEntry.class,
+            item -> SCPHistoryEntry.fromJsonObject(item));
+    return instance;
   }
 }

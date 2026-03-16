@@ -84,4 +84,52 @@ public enum RevokeSponsorshipResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static RevokeSponsorshipResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case REVOKE_SPONSORSHIP_SUCCESS:
+        return "success";
+      case REVOKE_SPONSORSHIP_DOES_NOT_EXIST:
+        return "does_not_exist";
+      case REVOKE_SPONSORSHIP_NOT_SPONSOR:
+        return "not_sponsor";
+      case REVOKE_SPONSORSHIP_LOW_RESERVE:
+        return "low_reserve";
+      case REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE:
+        return "only_transferable";
+      case REVOKE_SPONSORSHIP_MALFORMED:
+        return "malformed";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static RevokeSponsorshipResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return REVOKE_SPONSORSHIP_SUCCESS;
+      case "does_not_exist":
+        return REVOKE_SPONSORSHIP_DOES_NOT_EXIST;
+      case "not_sponsor":
+        return REVOKE_SPONSORSHIP_NOT_SPONSOR;
+      case "low_reserve":
+        return REVOKE_SPONSORSHIP_LOW_RESERVE;
+      case "only_transferable":
+        return REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE;
+      case "malformed":
+        return REVOKE_SPONSORSHIP_MALFORMED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

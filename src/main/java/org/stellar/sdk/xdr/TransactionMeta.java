@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -126,5 +128,93 @@ public class TransactionMeta implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionMeta fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == 0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v0", XdrElement.arrayToJsonArray(operations, i -> operations[i].toJsonObject()));
+      return jsonMap;
+    }
+    if (discriminant == 1) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v1", v1.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == 2) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v2", v2.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == 3) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v3", v3.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == 4) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v4", v4.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionMeta fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for TransactionMeta, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    Integer discriminant = Integer.parseInt(key.substring(1));
+    if (key.equals("v0")) {
+      TransactionMeta instance = new TransactionMeta();
+      instance.discriminant = discriminant;
+      instance.operations =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("v0"),
+              OperationMeta.class,
+              item -> OperationMeta.fromJsonObject(item));
+      return instance;
+    }
+    if (key.equals("v1")) {
+      TransactionMeta instance = new TransactionMeta();
+      instance.discriminant = discriminant;
+      instance.v1 = TransactionMetaV1.fromJsonObject(jsonMap.get("v1"));
+      return instance;
+    }
+    if (key.equals("v2")) {
+      TransactionMeta instance = new TransactionMeta();
+      instance.discriminant = discriminant;
+      instance.v2 = TransactionMetaV2.fromJsonObject(jsonMap.get("v2"));
+      return instance;
+    }
+    if (key.equals("v3")) {
+      TransactionMeta instance = new TransactionMeta();
+      instance.discriminant = discriminant;
+      instance.v3 = TransactionMetaV3.fromJsonObject(jsonMap.get("v3"));
+      return instance;
+    }
+    if (key.equals("v4")) {
+      TransactionMeta instance = new TransactionMeta();
+      instance.discriminant = discriminant;
+      instance.v4 = TransactionMetaV4.fromJsonObject(jsonMap.get("v4"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for TransactionMeta");
   }
 }

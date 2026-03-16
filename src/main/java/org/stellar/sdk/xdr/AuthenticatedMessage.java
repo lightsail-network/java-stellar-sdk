@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -79,6 +80,46 @@ public class AuthenticatedMessage implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AuthenticatedMessage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant.getUint32().getNumber().intValue() == 0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v0", v0.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static AuthenticatedMessage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for AuthenticatedMessage, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    Uint32 discriminant = Uint32.fromJsonObject(Integer.parseInt(key.substring(1)));
+    if (key.equals("v0")) {
+      AuthenticatedMessage instance = new AuthenticatedMessage();
+      instance.discriminant = discriminant;
+      instance.v0 = AuthenticatedMessageV0.fromJsonObject(jsonMap.get("v0"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for AuthenticatedMessage");
+  }
+
   /**
    * AuthenticatedMessageV0's original definition in the XDR file is:
    *
@@ -133,6 +174,33 @@ public class AuthenticatedMessage implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static AuthenticatedMessageV0 fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("sequence", sequence.toJsonObject());
+      jsonMap.put("message", message.toJsonObject());
+      jsonMap.put("mac", mac.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static AuthenticatedMessageV0 fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      AuthenticatedMessageV0 instance = new AuthenticatedMessageV0();
+      instance.sequence = Uint64.fromJsonObject(jsonMap.get("sequence"));
+      instance.message = StellarMessage.fromJsonObject(jsonMap.get("message"));
+      instance.mac = HmacSha256Mac.fromJsonObject(jsonMap.get("mac"));
+      return instance;
     }
   }
 }

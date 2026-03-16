@@ -64,4 +64,36 @@ public enum ContractDataDurability implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractDataDurability fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case TEMPORARY:
+        return "temporary";
+      case PERSISTENT:
+        return "persistent";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ContractDataDurability fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "temporary":
+        return TEMPORARY;
+      case "persistent":
+        return PERSISTENT;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

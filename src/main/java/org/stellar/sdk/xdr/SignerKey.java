@@ -4,12 +4,14 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * SignerKey's original definition in the XDR file is:
@@ -109,6 +111,78 @@ public class SignerKey implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SignerKey fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (this.discriminant == SignerKeyType.SIGNER_KEY_TYPE_ED25519) {
+      return StrKey.encodeEd25519PublicKey(this.ed25519.getUint256());
+    }
+    if (this.discriminant == SignerKeyType.SIGNER_KEY_TYPE_PRE_AUTH_TX) {
+      return StrKey.encodePreAuthTx(this.preAuthTx.getUint256());
+    }
+    if (this.discriminant == SignerKeyType.SIGNER_KEY_TYPE_HASH_X) {
+      return StrKey.encodeSha256Hash(this.hashX.getUint256());
+    }
+    if (this.discriminant == SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD) {
+      try {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
+        this.ed25519SignedPayload.encode(xdrOut);
+        return StrKey.encodeSignedPayload(baos.toByteArray());
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to encode SignerKey", e);
+      }
+    }
+    throw new IllegalArgumentException("Unknown SignerKey type: " + this.discriminant);
+  }
+
+  static SignerKey fromJsonObject(Object json) {
+    String strKey = (String) json;
+    SignerKey instance = new SignerKey();
+    if (strKey.startsWith("G")) {
+      byte[] raw = StrKey.decodeEd25519PublicKey(strKey);
+      instance.discriminant = SignerKeyType.SIGNER_KEY_TYPE_ED25519;
+      instance.ed25519 = new Uint256();
+      instance.ed25519.setUint256(raw);
+      return instance;
+    }
+    if (strKey.startsWith("T")) {
+      byte[] raw = StrKey.decodePreAuthTx(strKey);
+      instance.discriminant = SignerKeyType.SIGNER_KEY_TYPE_PRE_AUTH_TX;
+      instance.preAuthTx = new Uint256();
+      instance.preAuthTx.setUint256(raw);
+      return instance;
+    }
+    if (strKey.startsWith("X")) {
+      byte[] raw = StrKey.decodeSha256Hash(strKey);
+      instance.discriminant = SignerKeyType.SIGNER_KEY_TYPE_HASH_X;
+      instance.hashX = new Uint256();
+      instance.hashX.setUint256(raw);
+      return instance;
+    }
+    if (strKey.startsWith("P")) {
+      try {
+        byte[] raw = StrKey.decodeSignedPayload(strKey);
+        ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+        XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
+        SignerKeyEd25519SignedPayload payload = SignerKeyEd25519SignedPayload.decode(xdrIn);
+        instance.discriminant = SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
+        instance.ed25519SignedPayload = payload;
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to decode SignerKey", e);
+      }
+      return instance;
+    }
+    throw new IllegalArgumentException("Invalid SignerKey strkey: " + strKey);
+  }
+
   /**
    * SignerKeyEd25519SignedPayload's original definition in the XDR file is:
    *
@@ -184,6 +258,32 @@ public class SignerKey implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static SignerKeyEd25519SignedPayload fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      try {
+        return StrKey.encodeSignedPayload(this.toXdrByteArray());
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to encode SignerKeyEd25519SignedPayload", e);
+      }
+    }
+
+    static SignerKeyEd25519SignedPayload fromJsonObject(Object json) {
+      String strKey = (String) json;
+      try {
+        return SignerKeyEd25519SignedPayload.fromXdrByteArray(StrKey.decodeSignedPayload(strKey));
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to decode SignerKeyEd25519SignedPayload", e);
+      }
     }
   }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -96,5 +97,48 @@ public class ContractCodeCostInputs implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractCodeCostInputs fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ext", ext.toJsonObject());
+    jsonMap.put("n_instructions", nInstructions.toJsonObject());
+    jsonMap.put("n_functions", nFunctions.toJsonObject());
+    jsonMap.put("n_globals", nGlobals.toJsonObject());
+    jsonMap.put("n_table_entries", nTableEntries.toJsonObject());
+    jsonMap.put("n_types", nTypes.toJsonObject());
+    jsonMap.put("n_data_segments", nDataSegments.toJsonObject());
+    jsonMap.put("n_elem_segments", nElemSegments.toJsonObject());
+    jsonMap.put("n_imports", nImports.toJsonObject());
+    jsonMap.put("n_exports", nExports.toJsonObject());
+    jsonMap.put("n_data_segment_bytes", nDataSegmentBytes.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ContractCodeCostInputs fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ContractCodeCostInputs instance = new ContractCodeCostInputs();
+    instance.ext = ExtensionPoint.fromJsonObject(jsonMap.get("ext"));
+    instance.nInstructions = Uint32.fromJsonObject(jsonMap.get("n_instructions"));
+    instance.nFunctions = Uint32.fromJsonObject(jsonMap.get("n_functions"));
+    instance.nGlobals = Uint32.fromJsonObject(jsonMap.get("n_globals"));
+    instance.nTableEntries = Uint32.fromJsonObject(jsonMap.get("n_table_entries"));
+    instance.nTypes = Uint32.fromJsonObject(jsonMap.get("n_types"));
+    instance.nDataSegments = Uint32.fromJsonObject(jsonMap.get("n_data_segments"));
+    instance.nElemSegments = Uint32.fromJsonObject(jsonMap.get("n_elem_segments"));
+    instance.nImports = Uint32.fromJsonObject(jsonMap.get("n_imports"));
+    instance.nExports = Uint32.fromJsonObject(jsonMap.get("n_exports"));
+    instance.nDataSegmentBytes = Uint32.fromJsonObject(jsonMap.get("n_data_segment_bytes"));
+    return instance;
   }
 }

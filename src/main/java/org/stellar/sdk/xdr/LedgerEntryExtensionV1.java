@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,6 +70,31 @@ public class LedgerEntryExtensionV1 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerEntryExtensionV1 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("sponsoring_id", sponsoringID.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerEntryExtensionV1 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    LedgerEntryExtensionV1 instance = new LedgerEntryExtensionV1();
+    instance.sponsoringID = SponsorshipDescriptor.fromJsonObject(jsonMap.get("sponsoring_id"));
+    instance.ext = LedgerEntryExtensionV1Ext.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * LedgerEntryExtensionV1Ext's original definition in the XDR file is:
    *
@@ -127,6 +153,38 @@ public class LedgerEntryExtensionV1 implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerEntryExtensionV1Ext fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerEntryExtensionV1Ext fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for LedgerEntryExtensionV1Ext");
+        }
+        LedgerEntryExtensionV1Ext instance = new LedgerEntryExtensionV1Ext();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Expected a string for LedgerEntryExtensionV1Ext, got: " + json);
     }
   }
 }

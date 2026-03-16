@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -96,6 +97,33 @@ public class SCPStatement implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCPStatement fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("node_id", nodeID.toJsonObject());
+    jsonMap.put("slot_index", slotIndex.toJsonObject());
+    jsonMap.put("pledges", pledges.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCPStatement fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SCPStatement instance = new SCPStatement();
+    instance.nodeID = NodeID.fromJsonObject(jsonMap.get("node_id"));
+    instance.slotIndex = Uint64.fromJsonObject(jsonMap.get("slot_index"));
+    instance.pledges = SCPStatementPledges.fromJsonObject(jsonMap.get("pledges"));
+    return instance;
   }
 
   /**
@@ -208,6 +236,79 @@ public class SCPStatement implements XdrElement {
       return decode(xdrDataInputStream);
     }
 
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static SCPStatementPledges fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == SCPStatementType.SCP_ST_PREPARE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("prepare", prepare.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == SCPStatementType.SCP_ST_CONFIRM) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("confirm", confirm.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == SCPStatementType.SCP_ST_EXTERNALIZE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("externalize", externalize.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == SCPStatementType.SCP_ST_NOMINATE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("nominate", nominate.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static SCPStatementPledges fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for SCPStatementPledges, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      SCPStatementType discriminant = SCPStatementType.fromJsonObject(key);
+      if (key.equals("prepare")) {
+        SCPStatementPledges instance = new SCPStatementPledges();
+        instance.discriminant = discriminant;
+        instance.prepare = SCPStatementPrepare.fromJsonObject(jsonMap.get("prepare"));
+        return instance;
+      }
+      if (key.equals("confirm")) {
+        SCPStatementPledges instance = new SCPStatementPledges();
+        instance.discriminant = discriminant;
+        instance.confirm = SCPStatementConfirm.fromJsonObject(jsonMap.get("confirm"));
+        return instance;
+      }
+      if (key.equals("externalize")) {
+        SCPStatementPledges instance = new SCPStatementPledges();
+        instance.discriminant = discriminant;
+        instance.externalize = SCPStatementExternalize.fromJsonObject(jsonMap.get("externalize"));
+        return instance;
+      }
+      if (key.equals("nominate")) {
+        SCPStatementPledges instance = new SCPStatementPledges();
+        instance.discriminant = discriminant;
+        instance.nominate = SCPNomination.fromJsonObject(jsonMap.get("nominate"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for SCPStatementPledges");
+    }
+
     /**
      * SCPStatementPrepare's original definition in the XDR file is:
      *
@@ -291,6 +392,45 @@ public class SCPStatement implements XdrElement {
         xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
       }
+
+      @Override
+      public String toJson() {
+        return XdrElement.gson.toJson(toJsonObject());
+      }
+
+      public static SCPStatementPrepare fromJson(String json) {
+        return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+      }
+
+      Object toJsonObject() {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("quorum_set_hash", quorumSetHash.toJsonObject());
+        jsonMap.put("ballot", ballot.toJsonObject());
+        jsonMap.put("prepared", prepared != null ? prepared.toJsonObject() : null);
+        jsonMap.put("prepared_prime", preparedPrime != null ? preparedPrime.toJsonObject() : null);
+        jsonMap.put("n_c", nC.toJsonObject());
+        jsonMap.put("n_h", nH.toJsonObject());
+        return jsonMap;
+      }
+
+      @SuppressWarnings("unchecked")
+      static SCPStatementPrepare fromJsonObject(Object json) {
+        java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+        SCPStatementPrepare instance = new SCPStatementPrepare();
+        instance.quorumSetHash = Hash.fromJsonObject(jsonMap.get("quorum_set_hash"));
+        instance.ballot = SCPBallot.fromJsonObject(jsonMap.get("ballot"));
+        instance.prepared =
+            jsonMap.get("prepared") != null
+                ? SCPBallot.fromJsonObject(jsonMap.get("prepared"))
+                : null;
+        instance.preparedPrime =
+            jsonMap.get("prepared_prime") != null
+                ? SCPBallot.fromJsonObject(jsonMap.get("prepared_prime"))
+                : null;
+        instance.nC = Uint32.fromJsonObject(jsonMap.get("n_c"));
+        instance.nH = Uint32.fromJsonObject(jsonMap.get("n_h"));
+        return instance;
+      }
     }
 
     /**
@@ -356,6 +496,37 @@ public class SCPStatement implements XdrElement {
         xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
       }
+
+      @Override
+      public String toJson() {
+        return XdrElement.gson.toJson(toJsonObject());
+      }
+
+      public static SCPStatementConfirm fromJson(String json) {
+        return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+      }
+
+      Object toJsonObject() {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("ballot", ballot.toJsonObject());
+        jsonMap.put("n_prepared", nPrepared.toJsonObject());
+        jsonMap.put("n_commit", nCommit.toJsonObject());
+        jsonMap.put("n_h", nH.toJsonObject());
+        jsonMap.put("quorum_set_hash", quorumSetHash.toJsonObject());
+        return jsonMap;
+      }
+
+      @SuppressWarnings("unchecked")
+      static SCPStatementConfirm fromJsonObject(Object json) {
+        java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+        SCPStatementConfirm instance = new SCPStatementConfirm();
+        instance.ballot = SCPBallot.fromJsonObject(jsonMap.get("ballot"));
+        instance.nPrepared = Uint32.fromJsonObject(jsonMap.get("n_prepared"));
+        instance.nCommit = Uint32.fromJsonObject(jsonMap.get("n_commit"));
+        instance.nH = Uint32.fromJsonObject(jsonMap.get("n_h"));
+        instance.quorumSetHash = Hash.fromJsonObject(jsonMap.get("quorum_set_hash"));
+        return instance;
+      }
     }
 
     /**
@@ -412,6 +583,33 @@ public class SCPStatement implements XdrElement {
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
+      }
+
+      @Override
+      public String toJson() {
+        return XdrElement.gson.toJson(toJsonObject());
+      }
+
+      public static SCPStatementExternalize fromJson(String json) {
+        return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+      }
+
+      Object toJsonObject() {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("commit", commit.toJsonObject());
+        jsonMap.put("n_h", nH.toJsonObject());
+        jsonMap.put("commit_quorum_set_hash", commitQuorumSetHash.toJsonObject());
+        return jsonMap;
+      }
+
+      @SuppressWarnings("unchecked")
+      static SCPStatementExternalize fromJsonObject(Object json) {
+        java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+        SCPStatementExternalize instance = new SCPStatementExternalize();
+        instance.commit = SCPBallot.fromJsonObject(jsonMap.get("commit"));
+        instance.nH = Uint32.fromJsonObject(jsonMap.get("n_h"));
+        instance.commitQuorumSetHash = Hash.fromJsonObject(jsonMap.get("commit_quorum_set_hash"));
+        return instance;
       }
     }
   }

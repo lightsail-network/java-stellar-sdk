@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * PublicKey's original definition in the XDR file is:
@@ -71,5 +72,28 @@ public class PublicKey implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PublicKey fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return StrKey.encodeEd25519PublicKey(this.ed25519.getUint256());
+  }
+
+  static PublicKey fromJsonObject(Object json) {
+    String strKey = (String) json;
+    byte[] raw = StrKey.decodeEd25519PublicKey(strKey);
+    PublicKey instance = new PublicKey();
+    instance.discriminant = PublicKeyType.PUBLIC_KEY_TYPE_ED25519;
+    instance.ed25519 = new Uint256();
+    instance.ed25519.setUint256(raw);
+    return instance;
   }
 }

@@ -116,4 +116,80 @@ public enum ManageBuyOfferResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ManageBuyOfferResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case MANAGE_BUY_OFFER_SUCCESS:
+        return "success";
+      case MANAGE_BUY_OFFER_MALFORMED:
+        return "malformed";
+      case MANAGE_BUY_OFFER_SELL_NO_TRUST:
+        return "sell_no_trust";
+      case MANAGE_BUY_OFFER_BUY_NO_TRUST:
+        return "buy_no_trust";
+      case MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED:
+        return "sell_not_authorized";
+      case MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED:
+        return "buy_not_authorized";
+      case MANAGE_BUY_OFFER_LINE_FULL:
+        return "line_full";
+      case MANAGE_BUY_OFFER_UNDERFUNDED:
+        return "underfunded";
+      case MANAGE_BUY_OFFER_CROSS_SELF:
+        return "cross_self";
+      case MANAGE_BUY_OFFER_SELL_NO_ISSUER:
+        return "sell_no_issuer";
+      case MANAGE_BUY_OFFER_BUY_NO_ISSUER:
+        return "buy_no_issuer";
+      case MANAGE_BUY_OFFER_NOT_FOUND:
+        return "not_found";
+      case MANAGE_BUY_OFFER_LOW_RESERVE:
+        return "low_reserve";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ManageBuyOfferResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return MANAGE_BUY_OFFER_SUCCESS;
+      case "malformed":
+        return MANAGE_BUY_OFFER_MALFORMED;
+      case "sell_no_trust":
+        return MANAGE_BUY_OFFER_SELL_NO_TRUST;
+      case "buy_no_trust":
+        return MANAGE_BUY_OFFER_BUY_NO_TRUST;
+      case "sell_not_authorized":
+        return MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED;
+      case "buy_not_authorized":
+        return MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED;
+      case "line_full":
+        return MANAGE_BUY_OFFER_LINE_FULL;
+      case "underfunded":
+        return MANAGE_BUY_OFFER_UNDERFUNDED;
+      case "cross_self":
+        return MANAGE_BUY_OFFER_CROSS_SELF;
+      case "sell_no_issuer":
+        return MANAGE_BUY_OFFER_SELL_NO_ISSUER;
+      case "buy_no_issuer":
+        return MANAGE_BUY_OFFER_BUY_NO_ISSUER;
+      case "not_found":
+        return MANAGE_BUY_OFFER_NOT_FOUND;
+      case "low_reserve":
+        return MANAGE_BUY_OFFER_LOW_RESERVE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

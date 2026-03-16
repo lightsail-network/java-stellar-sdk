@@ -63,4 +63,32 @@ public enum ClaimableBalanceFlags implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimableBalanceFlags fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG:
+        return "claimable_balance_clawback_enabled_flag";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ClaimableBalanceFlags fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "claimable_balance_clawback_enabled_flag":
+        return CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

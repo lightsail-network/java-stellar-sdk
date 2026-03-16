@@ -67,4 +67,36 @@ public enum BumpSequenceResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static BumpSequenceResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case BUMP_SEQUENCE_SUCCESS:
+        return "success";
+      case BUMP_SEQUENCE_BAD_SEQ:
+        return "bad_seq";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static BumpSequenceResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return BUMP_SEQUENCE_SUCCESS;
+      case "bad_seq":
+        return BUMP_SEQUENCE_BAD_SEQ;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

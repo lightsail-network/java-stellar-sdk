@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -71,6 +72,33 @@ public class PeerAddress implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PeerAddress fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ip", ip.toJsonObject());
+    jsonMap.put("port", port.toJsonObject());
+    jsonMap.put("num_failures", numFailures.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static PeerAddress fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    PeerAddress instance = new PeerAddress();
+    instance.ip = PeerAddressIp.fromJsonObject(jsonMap.get("ip"));
+    instance.port = Uint32.fromJsonObject(jsonMap.get("port"));
+    instance.numFailures = Uint32.fromJsonObject(jsonMap.get("num_failures"));
+    return instance;
   }
 
   /**
@@ -154,6 +182,57 @@ public class PeerAddress implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static PeerAddressIp fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == IPAddrType.IPv4) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("ipv4", XdrElement.bytesToHex(ipv4));
+        return jsonMap;
+      }
+      if (discriminant == IPAddrType.IPv6) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("ipv6", XdrElement.bytesToHex(ipv6));
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static PeerAddressIp fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for PeerAddressIp, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      IPAddrType discriminant = IPAddrType.fromJsonObject(key);
+      if (key.equals("ipv4")) {
+        PeerAddressIp instance = new PeerAddressIp();
+        instance.discriminant = discriminant;
+        instance.ipv4 = XdrElement.hexToBytes((String) jsonMap.get("ipv4"));
+        return instance;
+      }
+      if (key.equals("ipv6")) {
+        PeerAddressIp instance = new PeerAddressIp();
+        instance.discriminant = discriminant;
+        instance.ipv6 = XdrElement.hexToBytes((String) jsonMap.get("ipv6"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for PeerAddressIp");
     }
   }
 }

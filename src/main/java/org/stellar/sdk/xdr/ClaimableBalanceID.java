@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * ClaimableBalanceID's original definition in the XDR file is:
@@ -72,5 +73,42 @@ public class ClaimableBalanceID implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimableBalanceID fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    try {
+      byte[] xdrBytes = this.toXdrByteArray();
+      // The B... strkey payload is the 32-byte balance body without the leading
+      // 3 zero bytes from the 4-byte XDR discriminant for v0 (00 00 00 00).
+      byte[] raw = new byte[xdrBytes.length - 3];
+      System.arraycopy(xdrBytes, 3, raw, 0, raw.length);
+      return StrKey.encodeClaimableBalance(raw);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Failed to encode ClaimableBalanceID", e);
+    }
+  }
+
+  static ClaimableBalanceID fromJsonObject(Object json) {
+    String strKey = (String) json;
+    try {
+      byte[] raw = StrKey.decodeClaimableBalance(strKey);
+      // Rebuild the XDR form by restoring the omitted 3 leading zero bytes from the
+      // v0 discriminant before decoding the full union value.
+      byte[] xdrBytes = new byte[raw.length + 3];
+      xdrBytes[2] = 0;
+      System.arraycopy(raw, 0, xdrBytes, 3, raw.length);
+      return ClaimableBalanceID.fromXdrByteArray(xdrBytes);
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Failed to decode ClaimableBalanceID", e);
+    }
   }
 }

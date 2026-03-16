@@ -65,4 +65,36 @@ public enum RevokeSponsorshipType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static RevokeSponsorshipType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case REVOKE_SPONSORSHIP_LEDGER_ENTRY:
+        return "ledger_entry";
+      case REVOKE_SPONSORSHIP_SIGNER:
+        return "signer";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static RevokeSponsorshipType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "ledger_entry":
+        return REVOKE_SPONSORSHIP_LEDGER_ENTRY;
+      case "signer":
+        return REVOKE_SPONSORSHIP_SIGNER;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

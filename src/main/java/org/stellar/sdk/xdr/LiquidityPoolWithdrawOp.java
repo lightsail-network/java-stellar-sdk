@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,5 +70,34 @@ public class LiquidityPoolWithdrawOp implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LiquidityPoolWithdrawOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("liquidity_pool_id", liquidityPoolID.toJsonObject());
+    jsonMap.put("amount", amount.toJsonObject());
+    jsonMap.put("min_amount_a", minAmountA.toJsonObject());
+    jsonMap.put("min_amount_b", minAmountB.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static LiquidityPoolWithdrawOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    LiquidityPoolWithdrawOp instance = new LiquidityPoolWithdrawOp();
+    instance.liquidityPoolID = PoolID.fromJsonObject(jsonMap.get("liquidity_pool_id"));
+    instance.amount = Int64.fromJsonObject(jsonMap.get("amount"));
+    instance.minAmountA = Int64.fromJsonObject(jsonMap.get("min_amount_a"));
+    instance.minAmountB = Int64.fromJsonObject(jsonMap.get("min_amount_b"));
+    return instance;
   }
 }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * ContractID's original definition in the XDR file is:
@@ -51,5 +52,28 @@ public class ContractID implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractID fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return StrKey.encodeContract(this.ContractID.getHash());
+  }
+
+  static ContractID fromJsonObject(Object json) {
+    String strKey = (String) json;
+    byte[] raw = StrKey.decodeContract(strKey);
+    Hash hash = new Hash();
+    hash.setHash(raw);
+    ContractID instance = new ContractID();
+    instance.ContractID = hash;
+    return instance;
   }
 }

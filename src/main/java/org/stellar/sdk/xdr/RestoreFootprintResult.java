@@ -82,4 +82,48 @@ public class RestoreFootprintResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static RestoreFootprintResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == RestoreFootprintResultCode.RESTORE_FOOTPRINT_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == RestoreFootprintResultCode.RESTORE_FOOTPRINT_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == RestoreFootprintResultCode.RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED) {
+      return "resource_limit_exceeded";
+    }
+    if (discriminant == RestoreFootprintResultCode.RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE) {
+      return "insufficient_refundable_fee";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static RestoreFootprintResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("resource_limit_exceeded")
+          || strVal.equals("insufficient_refundable_fee"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for RestoreFootprintResult");
+      }
+      RestoreFootprintResult instance = new RestoreFootprintResult();
+      instance.discriminant = RestoreFootprintResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for RestoreFootprintResult, got: " + json);
+  }
 }

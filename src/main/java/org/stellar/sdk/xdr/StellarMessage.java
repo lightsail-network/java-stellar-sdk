@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -291,5 +293,285 @@ public class StellarMessage implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static StellarMessage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == MessageType.ERROR_MSG) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("error_msg", error.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.HELLO) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("hello", hello.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.AUTH) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("auth", auth.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.DONT_HAVE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("dont_have", dontHave.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.PEERS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("peers", XdrElement.arrayToJsonArray(peers, i -> peers[i].toJsonObject()));
+      return jsonMap;
+    }
+    if (discriminant == MessageType.GET_TX_SET) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("get_tx_set", txSetHash.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.TX_SET) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("tx_set", txSet.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.GENERALIZED_TX_SET) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("generalized_tx_set", generalizedTxSet.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.TRANSACTION) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("transaction", transaction.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.TIME_SLICED_SURVEY_REQUEST) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "time_sliced_survey_request", signedTimeSlicedSurveyRequestMessage.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.TIME_SLICED_SURVEY_RESPONSE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "time_sliced_survey_response", signedTimeSlicedSurveyResponseMessage.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.TIME_SLICED_SURVEY_START_COLLECTING) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "time_sliced_survey_start_collecting",
+          signedTimeSlicedSurveyStartCollectingMessage.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.TIME_SLICED_SURVEY_STOP_COLLECTING) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "time_sliced_survey_stop_collecting",
+          signedTimeSlicedSurveyStopCollectingMessage.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.GET_SCP_QUORUMSET) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("get_scp_quorumset", qSetHash.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.SCP_QUORUMSET) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("scp_quorumset", qSet.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.SCP_MESSAGE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("scp_message", envelope.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.GET_SCP_STATE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("get_scp_state", getSCPLedgerSeq.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.SEND_MORE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("send_more", sendMoreMessage.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.SEND_MORE_EXTENDED) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("send_more_extended", sendMoreExtendedMessage.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.FLOOD_ADVERT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("flood_advert", floodAdvert.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == MessageType.FLOOD_DEMAND) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("flood_demand", floodDemand.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static StellarMessage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for StellarMessage, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    MessageType discriminant = MessageType.fromJsonObject(key);
+    if (key.equals("error_msg")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.error = Error.fromJsonObject(jsonMap.get("error_msg"));
+      return instance;
+    }
+    if (key.equals("hello")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.hello = Hello.fromJsonObject(jsonMap.get("hello"));
+      return instance;
+    }
+    if (key.equals("auth")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.auth = Auth.fromJsonObject(jsonMap.get("auth"));
+      return instance;
+    }
+    if (key.equals("dont_have")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.dontHave = DontHave.fromJsonObject(jsonMap.get("dont_have"));
+      return instance;
+    }
+    if (key.equals("peers")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.peers =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("peers"),
+              PeerAddress.class,
+              item -> PeerAddress.fromJsonObject(item));
+      return instance;
+    }
+    if (key.equals("get_tx_set")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.txSetHash = Uint256.fromJsonObject(jsonMap.get("get_tx_set"));
+      return instance;
+    }
+    if (key.equals("tx_set")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.txSet = TransactionSet.fromJsonObject(jsonMap.get("tx_set"));
+      return instance;
+    }
+    if (key.equals("generalized_tx_set")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.generalizedTxSet =
+          GeneralizedTransactionSet.fromJsonObject(jsonMap.get("generalized_tx_set"));
+      return instance;
+    }
+    if (key.equals("transaction")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.transaction = TransactionEnvelope.fromJsonObject(jsonMap.get("transaction"));
+      return instance;
+    }
+    if (key.equals("time_sliced_survey_request")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.signedTimeSlicedSurveyRequestMessage =
+          SignedTimeSlicedSurveyRequestMessage.fromJsonObject(
+              jsonMap.get("time_sliced_survey_request"));
+      return instance;
+    }
+    if (key.equals("time_sliced_survey_response")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.signedTimeSlicedSurveyResponseMessage =
+          SignedTimeSlicedSurveyResponseMessage.fromJsonObject(
+              jsonMap.get("time_sliced_survey_response"));
+      return instance;
+    }
+    if (key.equals("time_sliced_survey_start_collecting")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.signedTimeSlicedSurveyStartCollectingMessage =
+          SignedTimeSlicedSurveyStartCollectingMessage.fromJsonObject(
+              jsonMap.get("time_sliced_survey_start_collecting"));
+      return instance;
+    }
+    if (key.equals("time_sliced_survey_stop_collecting")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.signedTimeSlicedSurveyStopCollectingMessage =
+          SignedTimeSlicedSurveyStopCollectingMessage.fromJsonObject(
+              jsonMap.get("time_sliced_survey_stop_collecting"));
+      return instance;
+    }
+    if (key.equals("get_scp_quorumset")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.qSetHash = Uint256.fromJsonObject(jsonMap.get("get_scp_quorumset"));
+      return instance;
+    }
+    if (key.equals("scp_quorumset")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.qSet = SCPQuorumSet.fromJsonObject(jsonMap.get("scp_quorumset"));
+      return instance;
+    }
+    if (key.equals("scp_message")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.envelope = SCPEnvelope.fromJsonObject(jsonMap.get("scp_message"));
+      return instance;
+    }
+    if (key.equals("get_scp_state")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.getSCPLedgerSeq = Uint32.fromJsonObject(jsonMap.get("get_scp_state"));
+      return instance;
+    }
+    if (key.equals("send_more")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.sendMoreMessage = SendMore.fromJsonObject(jsonMap.get("send_more"));
+      return instance;
+    }
+    if (key.equals("send_more_extended")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.sendMoreExtendedMessage =
+          SendMoreExtended.fromJsonObject(jsonMap.get("send_more_extended"));
+      return instance;
+    }
+    if (key.equals("flood_advert")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.floodAdvert = FloodAdvert.fromJsonObject(jsonMap.get("flood_advert"));
+      return instance;
+    }
+    if (key.equals("flood_demand")) {
+      StellarMessage instance = new StellarMessage();
+      instance.discriminant = discriminant;
+      instance.floodDemand = FloodDemand.fromJsonObject(jsonMap.get("flood_demand"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for StellarMessage");
   }
 }

@@ -72,6 +72,29 @@ public class XdrString implements XdrElement {
   }
 
   @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToEscapedAscii(this.bytes);
+  }
+
+  public static XdrString fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  static XdrString fromJsonObject(Object json) {
+    if (json == null) {
+      return null;
+    }
+    if (!(json instanceof String)) {
+      throw new IllegalArgumentException("Expected JSON string for XdrString, got: " + json);
+    }
+    return new XdrString(XdrElement.escapedAsciiToBytes((String) json));
+  }
+
+  @Override
   public String toString() {
     return new String(bytes, StandardCharsets.UTF_8);
   }

@@ -74,4 +74,40 @@ public enum TransactionEventStage implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionEventStage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case TRANSACTION_EVENT_STAGE_BEFORE_ALL_TXS:
+        return "before_all_txs";
+      case TRANSACTION_EVENT_STAGE_AFTER_TX:
+        return "after_tx";
+      case TRANSACTION_EVENT_STAGE_AFTER_ALL_TXS:
+        return "after_all_txs";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static TransactionEventStage fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "before_all_txs":
+        return TRANSACTION_EVENT_STAGE_BEFORE_ALL_TXS;
+      case "after_tx":
+        return TRANSACTION_EVENT_STAGE_AFTER_TX;
+      case "after_all_txs":
+        return TRANSACTION_EVENT_STAGE_AFTER_ALL_TXS;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

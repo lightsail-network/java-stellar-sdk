@@ -89,4 +89,56 @@ public enum AllowTrustResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AllowTrustResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case ALLOW_TRUST_SUCCESS:
+        return "success";
+      case ALLOW_TRUST_MALFORMED:
+        return "malformed";
+      case ALLOW_TRUST_NO_TRUST_LINE:
+        return "no_trust_line";
+      case ALLOW_TRUST_TRUST_NOT_REQUIRED:
+        return "trust_not_required";
+      case ALLOW_TRUST_CANT_REVOKE:
+        return "cant_revoke";
+      case ALLOW_TRUST_SELF_NOT_ALLOWED:
+        return "self_not_allowed";
+      case ALLOW_TRUST_LOW_RESERVE:
+        return "low_reserve";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static AllowTrustResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return ALLOW_TRUST_SUCCESS;
+      case "malformed":
+        return ALLOW_TRUST_MALFORMED;
+      case "no_trust_line":
+        return ALLOW_TRUST_NO_TRUST_LINE;
+      case "trust_not_required":
+        return ALLOW_TRUST_TRUST_NOT_REQUIRED;
+      case "cant_revoke":
+        return ALLOW_TRUST_CANT_REVOKE;
+      case "self_not_allowed":
+        return ALLOW_TRUST_SELF_NOT_ALLOWED;
+      case "low_reserve":
+        return ALLOW_TRUST_LOW_RESERVE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

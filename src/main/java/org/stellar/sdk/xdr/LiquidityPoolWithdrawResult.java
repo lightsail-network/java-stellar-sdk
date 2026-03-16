@@ -90,4 +90,56 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LiquidityPoolWithdrawResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_NO_TRUST) {
+      return "no_trust";
+    }
+    if (discriminant == LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED) {
+      return "underfunded";
+    }
+    if (discriminant == LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_LINE_FULL) {
+      return "line_full";
+    }
+    if (discriminant == LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM) {
+      return "under_minimum";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static LiquidityPoolWithdrawResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("no_trust")
+          || strVal.equals("underfunded")
+          || strVal.equals("line_full")
+          || strVal.equals("under_minimum"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for LiquidityPoolWithdrawResult");
+      }
+      LiquidityPoolWithdrawResult instance = new LiquidityPoolWithdrawResult();
+      instance.discriminant = LiquidityPoolWithdrawResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for LiquidityPoolWithdrawResult, got: " + json);
+  }
 }

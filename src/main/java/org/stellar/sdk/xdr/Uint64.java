@@ -52,4 +52,23 @@ public class Uint64 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Uint64 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return uint64.toJsonObject();
+  }
+
+  static Uint64 fromJsonObject(Object json) {
+    Uint64 instance = new Uint64();
+    instance.uint64 = XdrUnsignedHyperInteger.fromJsonObject(json);
+    return instance;
+  }
 }

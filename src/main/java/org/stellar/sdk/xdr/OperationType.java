@@ -164,4 +164,136 @@ public enum OperationType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static OperationType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CREATE_ACCOUNT:
+        return "create_account";
+      case PAYMENT:
+        return "payment";
+      case PATH_PAYMENT_STRICT_RECEIVE:
+        return "path_payment_strict_receive";
+      case MANAGE_SELL_OFFER:
+        return "manage_sell_offer";
+      case CREATE_PASSIVE_SELL_OFFER:
+        return "create_passive_sell_offer";
+      case SET_OPTIONS:
+        return "set_options";
+      case CHANGE_TRUST:
+        return "change_trust";
+      case ALLOW_TRUST:
+        return "allow_trust";
+      case ACCOUNT_MERGE:
+        return "account_merge";
+      case INFLATION:
+        return "inflation";
+      case MANAGE_DATA:
+        return "manage_data";
+      case BUMP_SEQUENCE:
+        return "bump_sequence";
+      case MANAGE_BUY_OFFER:
+        return "manage_buy_offer";
+      case PATH_PAYMENT_STRICT_SEND:
+        return "path_payment_strict_send";
+      case CREATE_CLAIMABLE_BALANCE:
+        return "create_claimable_balance";
+      case CLAIM_CLAIMABLE_BALANCE:
+        return "claim_claimable_balance";
+      case BEGIN_SPONSORING_FUTURE_RESERVES:
+        return "begin_sponsoring_future_reserves";
+      case END_SPONSORING_FUTURE_RESERVES:
+        return "end_sponsoring_future_reserves";
+      case REVOKE_SPONSORSHIP:
+        return "revoke_sponsorship";
+      case CLAWBACK:
+        return "clawback";
+      case CLAWBACK_CLAIMABLE_BALANCE:
+        return "clawback_claimable_balance";
+      case SET_TRUST_LINE_FLAGS:
+        return "set_trust_line_flags";
+      case LIQUIDITY_POOL_DEPOSIT:
+        return "liquidity_pool_deposit";
+      case LIQUIDITY_POOL_WITHDRAW:
+        return "liquidity_pool_withdraw";
+      case INVOKE_HOST_FUNCTION:
+        return "invoke_host_function";
+      case EXTEND_FOOTPRINT_TTL:
+        return "extend_footprint_ttl";
+      case RESTORE_FOOTPRINT:
+        return "restore_footprint";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static OperationType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "create_account":
+        return CREATE_ACCOUNT;
+      case "payment":
+        return PAYMENT;
+      case "path_payment_strict_receive":
+        return PATH_PAYMENT_STRICT_RECEIVE;
+      case "manage_sell_offer":
+        return MANAGE_SELL_OFFER;
+      case "create_passive_sell_offer":
+        return CREATE_PASSIVE_SELL_OFFER;
+      case "set_options":
+        return SET_OPTIONS;
+      case "change_trust":
+        return CHANGE_TRUST;
+      case "allow_trust":
+        return ALLOW_TRUST;
+      case "account_merge":
+        return ACCOUNT_MERGE;
+      case "inflation":
+        return INFLATION;
+      case "manage_data":
+        return MANAGE_DATA;
+      case "bump_sequence":
+        return BUMP_SEQUENCE;
+      case "manage_buy_offer":
+        return MANAGE_BUY_OFFER;
+      case "path_payment_strict_send":
+        return PATH_PAYMENT_STRICT_SEND;
+      case "create_claimable_balance":
+        return CREATE_CLAIMABLE_BALANCE;
+      case "claim_claimable_balance":
+        return CLAIM_CLAIMABLE_BALANCE;
+      case "begin_sponsoring_future_reserves":
+        return BEGIN_SPONSORING_FUTURE_RESERVES;
+      case "end_sponsoring_future_reserves":
+        return END_SPONSORING_FUTURE_RESERVES;
+      case "revoke_sponsorship":
+        return REVOKE_SPONSORSHIP;
+      case "clawback":
+        return CLAWBACK;
+      case "clawback_claimable_balance":
+        return CLAWBACK_CLAIMABLE_BALANCE;
+      case "set_trust_line_flags":
+        return SET_TRUST_LINE_FLAGS;
+      case "liquidity_pool_deposit":
+        return LIQUIDITY_POOL_DEPOSIT;
+      case "liquidity_pool_withdraw":
+        return LIQUIDITY_POOL_WITHDRAW;
+      case "invoke_host_function":
+        return INVOKE_HOST_FUNCTION;
+      case "extend_footprint_ttl":
+        return EXTEND_FOOTPRINT_TTL;
+      case "restore_footprint":
+        return RESTORE_FOOTPRINT;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

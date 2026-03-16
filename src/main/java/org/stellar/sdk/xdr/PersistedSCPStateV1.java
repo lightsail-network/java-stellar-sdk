@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -100,5 +102,41 @@ public class PersistedSCPStateV1 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PersistedSCPStateV1 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put(
+        "scp_envelopes",
+        XdrElement.arrayToJsonArray(scpEnvelopes, i -> scpEnvelopes[i].toJsonObject()));
+    jsonMap.put(
+        "quorum_sets", XdrElement.arrayToJsonArray(quorumSets, i -> quorumSets[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static PersistedSCPStateV1 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    PersistedSCPStateV1 instance = new PersistedSCPStateV1();
+    instance.scpEnvelopes =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("scp_envelopes"),
+            SCPEnvelope.class,
+            item -> SCPEnvelope.fromJsonObject(item));
+    instance.quorumSets =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("quorum_sets"),
+            SCPQuorumSet.class,
+            item -> SCPQuorumSet.fromJsonObject(item));
+    return instance;
   }
 }

@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -91,6 +93,38 @@ public class ContractEvent implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractEvent fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ext", ext.toJsonObject());
+    jsonMap.put("contract_id", contractID != null ? contractID.toJsonObject() : null);
+    jsonMap.put("type", type.toJsonObject());
+    jsonMap.put("body", body.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ContractEvent fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ContractEvent instance = new ContractEvent();
+    instance.ext = ExtensionPoint.fromJsonObject(jsonMap.get("ext"));
+    instance.contractID =
+        jsonMap.get("contract_id") != null
+            ? ContractID.fromJsonObject(jsonMap.get("contract_id"))
+            : null;
+    instance.type = ContractEventType.fromJsonObject(jsonMap.get("type"));
+    instance.body = ContractEventBody.fromJsonObject(jsonMap.get("body"));
+    return instance;
+  }
+
   /**
    * ContractEventBody's original definition in the XDR file is:
    *
@@ -156,6 +190,46 @@ public class ContractEvent implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static ContractEventBody fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("v0", v0.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static ContractEventBody fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for ContractEventBody, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      Integer discriminant = Integer.parseInt(key.substring(1));
+      if (key.equals("v0")) {
+        ContractEventBody instance = new ContractEventBody();
+        instance.discriminant = discriminant;
+        instance.v0 = ContractEventV0.fromJsonObject(jsonMap.get("v0"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for ContractEventBody");
     }
 
     /**
@@ -227,6 +301,35 @@ public class ContractEvent implements XdrElement {
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
+      }
+
+      @Override
+      public String toJson() {
+        return XdrElement.gson.toJson(toJsonObject());
+      }
+
+      public static ContractEventV0 fromJson(String json) {
+        return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+      }
+
+      Object toJsonObject() {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("topics", XdrElement.arrayToJsonArray(topics, i -> topics[i].toJsonObject()));
+        jsonMap.put("data", data.toJsonObject());
+        return jsonMap;
+      }
+
+      @SuppressWarnings("unchecked")
+      static ContractEventV0 fromJsonObject(Object json) {
+        java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+        ContractEventV0 instance = new ContractEventV0();
+        instance.topics =
+            XdrElement.jsonArrayToArray(
+                (List<Object>) jsonMap.get("topics"),
+                SCVal.class,
+                item -> SCVal.fromJsonObject(item));
+        instance.data = SCVal.fromJsonObject(jsonMap.get("data"));
+        return instance;
       }
     }
   }

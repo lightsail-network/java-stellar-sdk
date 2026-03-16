@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -73,5 +74,46 @@ public class SurveyResponseBody implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SurveyResponseBody fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SurveyMessageResponseType.SURVEY_TOPOLOGY_RESPONSE_V2) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("survey_topology_response_v2", topologyResponseBodyV2.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SurveyResponseBody fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for SurveyResponseBody, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SurveyMessageResponseType discriminant = SurveyMessageResponseType.fromJsonObject(key);
+    if (key.equals("survey_topology_response_v2")) {
+      SurveyResponseBody instance = new SurveyResponseBody();
+      instance.discriminant = discriminant;
+      instance.topologyResponseBodyV2 =
+          TopologyResponseBodyV2.fromJsonObject(jsonMap.get("survey_topology_response_v2"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SurveyResponseBody");
   }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -111,5 +112,102 @@ public class ManageSellOfferResult implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ManageSellOfferResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_SUCCESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("success", success.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NO_TRUST) {
+      return "sell_no_trust";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NO_TRUST) {
+      return "buy_no_trust";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED) {
+      return "sell_not_authorized";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED) {
+      return "buy_not_authorized";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_LINE_FULL) {
+      return "line_full";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_UNDERFUNDED) {
+      return "underfunded";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_CROSS_SELF) {
+      return "cross_self";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NO_ISSUER) {
+      return "sell_no_issuer";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NO_ISSUER) {
+      return "buy_no_issuer";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_NOT_FOUND) {
+      return "not_found";
+    }
+    if (discriminant == ManageSellOfferResultCode.MANAGE_SELL_OFFER_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ManageSellOfferResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("malformed")
+          || strVal.equals("sell_no_trust")
+          || strVal.equals("buy_no_trust")
+          || strVal.equals("sell_not_authorized")
+          || strVal.equals("buy_not_authorized")
+          || strVal.equals("line_full")
+          || strVal.equals("underfunded")
+          || strVal.equals("cross_self")
+          || strVal.equals("sell_no_issuer")
+          || strVal.equals("buy_no_issuer")
+          || strVal.equals("not_found")
+          || strVal.equals("low_reserve"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for ManageSellOfferResult");
+      }
+      ManageSellOfferResult instance = new ManageSellOfferResult();
+      instance.discriminant = ManageSellOfferResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for ManageSellOfferResult, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    ManageSellOfferResultCode discriminant = ManageSellOfferResultCode.fromJsonObject(key);
+    if (key.equals("success")) {
+      ManageSellOfferResult instance = new ManageSellOfferResult();
+      instance.discriminant = discriminant;
+      instance.success = ManageOfferSuccessResult.fromJsonObject(jsonMap.get("success"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for ManageSellOfferResult");
   }
 }

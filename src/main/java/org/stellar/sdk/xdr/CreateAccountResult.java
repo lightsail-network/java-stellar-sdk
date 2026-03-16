@@ -85,4 +85,51 @@ public class CreateAccountResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static CreateAccountResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == CreateAccountResultCode.CREATE_ACCOUNT_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == CreateAccountResultCode.CREATE_ACCOUNT_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == CreateAccountResultCode.CREATE_ACCOUNT_UNDERFUNDED) {
+      return "underfunded";
+    }
+    if (discriminant == CreateAccountResultCode.CREATE_ACCOUNT_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    if (discriminant == CreateAccountResultCode.CREATE_ACCOUNT_ALREADY_EXIST) {
+      return "already_exist";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static CreateAccountResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("underfunded")
+          || strVal.equals("low_reserve")
+          || strVal.equals("already_exist"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for CreateAccountResult");
+      }
+      CreateAccountResult instance = new CreateAccountResult();
+      instance.discriminant = CreateAccountResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for CreateAccountResult, got: " + json);
+  }
 }

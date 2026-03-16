@@ -73,4 +73,44 @@ public enum HostFunctionType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static HostFunctionType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case HOST_FUNCTION_TYPE_INVOKE_CONTRACT:
+        return "invoke_contract";
+      case HOST_FUNCTION_TYPE_CREATE_CONTRACT:
+        return "create_contract";
+      case HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM:
+        return "upload_contract_wasm";
+      case HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2:
+        return "create_contract_v2";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static HostFunctionType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "invoke_contract":
+        return HOST_FUNCTION_TYPE_INVOKE_CONTRACT;
+      case "create_contract":
+        return HOST_FUNCTION_TYPE_CREATE_CONTRACT;
+      case "upload_contract_wasm":
+        return HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM;
+      case "create_contract_v2":
+        return HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

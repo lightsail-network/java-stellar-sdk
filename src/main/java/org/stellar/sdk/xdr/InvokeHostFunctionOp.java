@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -79,5 +81,34 @@ public class InvokeHostFunctionOp implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static InvokeHostFunctionOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("host_function", hostFunction.toJsonObject());
+    jsonMap.put("auth", XdrElement.arrayToJsonArray(auth, i -> auth[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static InvokeHostFunctionOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    InvokeHostFunctionOp instance = new InvokeHostFunctionOp();
+    instance.hostFunction = HostFunction.fromJsonObject(jsonMap.get("host_function"));
+    instance.auth =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("auth"),
+            SorobanAuthorizationEntry.class,
+            item -> SorobanAuthorizationEntry.fromJsonObject(item));
+    return instance;
   }
 }

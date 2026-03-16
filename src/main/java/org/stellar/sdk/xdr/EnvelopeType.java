@@ -96,4 +96,68 @@ public enum EnvelopeType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static EnvelopeType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case ENVELOPE_TYPE_TX_V0:
+        return "tx_v0";
+      case ENVELOPE_TYPE_SCP:
+        return "scp";
+      case ENVELOPE_TYPE_TX:
+        return "tx";
+      case ENVELOPE_TYPE_AUTH:
+        return "auth";
+      case ENVELOPE_TYPE_SCPVALUE:
+        return "scpvalue";
+      case ENVELOPE_TYPE_TX_FEE_BUMP:
+        return "tx_fee_bump";
+      case ENVELOPE_TYPE_OP_ID:
+        return "op_id";
+      case ENVELOPE_TYPE_POOL_REVOKE_OP_ID:
+        return "pool_revoke_op_id";
+      case ENVELOPE_TYPE_CONTRACT_ID:
+        return "contract_id";
+      case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
+        return "soroban_authorization";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static EnvelopeType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "tx_v0":
+        return ENVELOPE_TYPE_TX_V0;
+      case "scp":
+        return ENVELOPE_TYPE_SCP;
+      case "tx":
+        return ENVELOPE_TYPE_TX;
+      case "auth":
+        return ENVELOPE_TYPE_AUTH;
+      case "scpvalue":
+        return ENVELOPE_TYPE_SCPVALUE;
+      case "tx_fee_bump":
+        return ENVELOPE_TYPE_TX_FEE_BUMP;
+      case "op_id":
+        return ENVELOPE_TYPE_OP_ID;
+      case "pool_revoke_op_id":
+        return ENVELOPE_TYPE_POOL_REVOKE_OP_ID;
+      case "contract_id":
+        return ENVELOPE_TYPE_CONTRACT_ID;
+      case "soroban_authorization":
+        return ENVELOPE_TYPE_SOROBAN_AUTHORIZATION;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

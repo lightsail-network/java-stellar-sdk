@@ -86,4 +86,56 @@ public enum OperationResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static OperationResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case opINNER:
+        return "opinner";
+      case opBAD_AUTH:
+        return "opbad_auth";
+      case opNO_ACCOUNT:
+        return "opno_account";
+      case opNOT_SUPPORTED:
+        return "opnot_supported";
+      case opTOO_MANY_SUBENTRIES:
+        return "optoo_many_subentries";
+      case opEXCEEDED_WORK_LIMIT:
+        return "opexceeded_work_limit";
+      case opTOO_MANY_SPONSORING:
+        return "optoo_many_sponsoring";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static OperationResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "opinner":
+        return opINNER;
+      case "opbad_auth":
+        return opBAD_AUTH;
+      case "opno_account":
+        return opNO_ACCOUNT;
+      case "opnot_supported":
+        return opNOT_SUPPORTED;
+      case "optoo_many_subentries":
+        return opTOO_MANY_SUBENTRIES;
+      case "opexceeded_work_limit":
+        return opEXCEEDED_WORK_LIMIT;
+      case "optoo_many_sponsoring":
+        return opTOO_MANY_SPONSORING;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

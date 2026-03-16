@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -108,5 +109,89 @@ public class LedgerEntryChange implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerEntryChange fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == LedgerEntryChangeType.LEDGER_ENTRY_CREATED) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("created", created.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryChangeType.LEDGER_ENTRY_UPDATED) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("updated", updated.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryChangeType.LEDGER_ENTRY_REMOVED) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("removed", removed.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryChangeType.LEDGER_ENTRY_STATE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("state", state.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryChangeType.LEDGER_ENTRY_RESTORED) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("restored", restored.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerEntryChange fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for LedgerEntryChange, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    LedgerEntryChangeType discriminant = LedgerEntryChangeType.fromJsonObject(key);
+    if (key.equals("created")) {
+      LedgerEntryChange instance = new LedgerEntryChange();
+      instance.discriminant = discriminant;
+      instance.created = LedgerEntry.fromJsonObject(jsonMap.get("created"));
+      return instance;
+    }
+    if (key.equals("updated")) {
+      LedgerEntryChange instance = new LedgerEntryChange();
+      instance.discriminant = discriminant;
+      instance.updated = LedgerEntry.fromJsonObject(jsonMap.get("updated"));
+      return instance;
+    }
+    if (key.equals("removed")) {
+      LedgerEntryChange instance = new LedgerEntryChange();
+      instance.discriminant = discriminant;
+      instance.removed = LedgerKey.fromJsonObject(jsonMap.get("removed"));
+      return instance;
+    }
+    if (key.equals("state")) {
+      LedgerEntryChange instance = new LedgerEntryChange();
+      instance.discriminant = discriminant;
+      instance.state = LedgerEntry.fromJsonObject(jsonMap.get("state"));
+      return instance;
+    }
+    if (key.equals("restored")) {
+      LedgerEntryChange instance = new LedgerEntryChange();
+      instance.discriminant = discriminant;
+      instance.restored = LedgerEntry.fromJsonObject(jsonMap.get("restored"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for LedgerEntryChange");
   }
 }

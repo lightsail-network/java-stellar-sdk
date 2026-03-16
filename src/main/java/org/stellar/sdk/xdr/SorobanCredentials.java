@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -78,5 +79,58 @@ public class SorobanCredentials implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SorobanCredentials fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT) {
+      return "source_account";
+    }
+    if (discriminant == SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("address", address.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SorobanCredentials fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("source_account"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for SorobanCredentials");
+      }
+      SorobanCredentials instance = new SorobanCredentials();
+      instance.discriminant = SorobanCredentialsType.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for SorobanCredentials, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SorobanCredentialsType discriminant = SorobanCredentialsType.fromJsonObject(key);
+    if (key.equals("address")) {
+      SorobanCredentials instance = new SorobanCredentials();
+      instance.discriminant = discriminant;
+      instance.address = SorobanAddressCredentials.fromJsonObject(jsonMap.get("address"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SorobanCredentials");
   }
 }

@@ -96,4 +96,68 @@ public enum SCErrorCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCErrorCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SCEC_ARITH_DOMAIN:
+        return "arith_domain";
+      case SCEC_INDEX_BOUNDS:
+        return "index_bounds";
+      case SCEC_INVALID_INPUT:
+        return "invalid_input";
+      case SCEC_MISSING_VALUE:
+        return "missing_value";
+      case SCEC_EXISTING_VALUE:
+        return "existing_value";
+      case SCEC_EXCEEDED_LIMIT:
+        return "exceeded_limit";
+      case SCEC_INVALID_ACTION:
+        return "invalid_action";
+      case SCEC_INTERNAL_ERROR:
+        return "internal_error";
+      case SCEC_UNEXPECTED_TYPE:
+        return "unexpected_type";
+      case SCEC_UNEXPECTED_SIZE:
+        return "unexpected_size";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCErrorCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "arith_domain":
+        return SCEC_ARITH_DOMAIN;
+      case "index_bounds":
+        return SCEC_INDEX_BOUNDS;
+      case "invalid_input":
+        return SCEC_INVALID_INPUT;
+      case "missing_value":
+        return SCEC_MISSING_VALUE;
+      case "existing_value":
+        return SCEC_EXISTING_VALUE;
+      case "exceeded_limit":
+        return SCEC_EXCEEDED_LIMIT;
+      case "invalid_action":
+        return SCEC_INVALID_ACTION;
+      case "internal_error":
+        return SCEC_INTERNAL_ERROR;
+      case "unexpected_type":
+        return SCEC_UNEXPECTED_TYPE;
+      case "unexpected_size":
+        return SCEC_UNEXPECTED_SIZE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

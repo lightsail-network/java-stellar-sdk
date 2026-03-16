@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -93,5 +95,37 @@ public class ParallelTxsComponent implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ParallelTxsComponent fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("base_fee", baseFee != null ? baseFee.toJsonObject() : null);
+    jsonMap.put(
+        "execution_stages",
+        XdrElement.arrayToJsonArray(executionStages, i -> executionStages[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ParallelTxsComponent fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ParallelTxsComponent instance = new ParallelTxsComponent();
+    instance.baseFee =
+        jsonMap.get("base_fee") != null ? Int64.fromJsonObject(jsonMap.get("base_fee")) : null;
+    instance.executionStages =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("execution_stages"),
+            ParallelTxExecutionStage.class,
+            item -> ParallelTxExecutionStage.fromJsonObject(item));
+    return instance;
   }
 }

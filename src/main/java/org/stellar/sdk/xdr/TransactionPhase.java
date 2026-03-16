@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -102,5 +104,61 @@ public class TransactionPhase implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionPhase fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == 0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "v0", XdrElement.arrayToJsonArray(v0Components, i -> v0Components[i].toJsonObject()));
+      return jsonMap;
+    }
+    if (discriminant == 1) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v1", parallelTxsComponent.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionPhase fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for TransactionPhase, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    Integer discriminant = Integer.parseInt(key.substring(1));
+    if (key.equals("v0")) {
+      TransactionPhase instance = new TransactionPhase();
+      instance.discriminant = discriminant;
+      instance.v0Components =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("v0"),
+              TxSetComponent.class,
+              item -> TxSetComponent.fromJsonObject(item));
+      return instance;
+    }
+    if (key.equals("v1")) {
+      TransactionPhase instance = new TransactionPhase();
+      instance.discriminant = discriminant;
+      instance.parallelTxsComponent = ParallelTxsComponent.fromJsonObject(jsonMap.get("v1"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for TransactionPhase");
   }
 }

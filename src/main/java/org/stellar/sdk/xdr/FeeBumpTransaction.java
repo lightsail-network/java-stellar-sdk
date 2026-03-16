@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -81,6 +82,35 @@ public class FeeBumpTransaction implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static FeeBumpTransaction fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("fee_source", feeSource.toJsonObject());
+    jsonMap.put("fee", fee.toJsonObject());
+    jsonMap.put("inner_tx", innerTx.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static FeeBumpTransaction fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    FeeBumpTransaction instance = new FeeBumpTransaction();
+    instance.feeSource = MuxedAccount.fromJsonObject(jsonMap.get("fee_source"));
+    instance.fee = Int64.fromJsonObject(jsonMap.get("fee"));
+    instance.innerTx = FeeBumpTransactionInnerTx.fromJsonObject(jsonMap.get("inner_tx"));
+    instance.ext = FeeBumpTransactionExt.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * FeeBumpTransactionInnerTx's original definition in the XDR file is:
    *
@@ -143,6 +173,46 @@ public class FeeBumpTransaction implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static FeeBumpTransactionInnerTx fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == EnvelopeType.ENVELOPE_TYPE_TX) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("tx", v1.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static FeeBumpTransactionInnerTx fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for FeeBumpTransactionInnerTx, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      EnvelopeType discriminant = EnvelopeType.fromJsonObject(key);
+      if (key.equals("tx")) {
+        FeeBumpTransactionInnerTx instance = new FeeBumpTransactionInnerTx();
+        instance.discriminant = discriminant;
+        instance.v1 = TransactionV1Envelope.fromJsonObject(jsonMap.get("tx"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for FeeBumpTransactionInnerTx");
+    }
   }
 
   /**
@@ -203,6 +273,38 @@ public class FeeBumpTransaction implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static FeeBumpTransactionExt fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static FeeBumpTransactionExt fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for FeeBumpTransactionExt");
+        }
+        FeeBumpTransactionExt instance = new FeeBumpTransactionExt();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Expected a string for FeeBumpTransactionExt, got: " + json);
     }
   }
 }

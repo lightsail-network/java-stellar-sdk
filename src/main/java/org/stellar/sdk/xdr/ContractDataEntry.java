@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -73,5 +74,36 @@ public class ContractDataEntry implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractDataEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ext", ext.toJsonObject());
+    jsonMap.put("contract", contract.toJsonObject());
+    jsonMap.put("key", key.toJsonObject());
+    jsonMap.put("durability", durability.toJsonObject());
+    jsonMap.put("val", val.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ContractDataEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ContractDataEntry instance = new ContractDataEntry();
+    instance.ext = ExtensionPoint.fromJsonObject(jsonMap.get("ext"));
+    instance.contract = SCAddress.fromJsonObject(jsonMap.get("contract"));
+    instance.key = SCVal.fromJsonObject(jsonMap.get("key"));
+    instance.durability = ContractDataDurability.fromJsonObject(jsonMap.get("durability"));
+    instance.val = SCVal.fromJsonObject(jsonMap.get("val"));
+    return instance;
   }
 }

@@ -76,4 +76,48 @@ public enum SCAddressType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCAddressType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SC_ADDRESS_TYPE_ACCOUNT:
+        return "account";
+      case SC_ADDRESS_TYPE_CONTRACT:
+        return "contract";
+      case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
+        return "muxed_account";
+      case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
+        return "claimable_balance";
+      case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
+        return "liquidity_pool";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCAddressType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "account":
+        return SC_ADDRESS_TYPE_ACCOUNT;
+      case "contract":
+        return SC_ADDRESS_TYPE_CONTRACT;
+      case "muxed_account":
+        return SC_ADDRESS_TYPE_MUXED_ACCOUNT;
+      case "claimable_balance":
+        return SC_ADDRESS_TYPE_CLAIMABLE_BALANCE;
+      case "liquidity_pool":
+        return SC_ADDRESS_TYPE_LIQUIDITY_POOL;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

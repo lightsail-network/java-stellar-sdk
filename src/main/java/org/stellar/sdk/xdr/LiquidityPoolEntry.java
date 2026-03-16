@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -76,6 +77,31 @@ public class LiquidityPoolEntry implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LiquidityPoolEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("liquidity_pool_id", liquidityPoolID.toJsonObject());
+    jsonMap.put("body", body.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static LiquidityPoolEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    LiquidityPoolEntry instance = new LiquidityPoolEntry();
+    instance.liquidityPoolID = PoolID.fromJsonObject(jsonMap.get("liquidity_pool_id"));
+    instance.body = LiquidityPoolEntryBody.fromJsonObject(jsonMap.get("body"));
+    return instance;
   }
 
   /**
@@ -151,6 +177,48 @@ public class LiquidityPoolEntry implements XdrElement {
       return decode(xdrDataInputStream);
     }
 
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LiquidityPoolEntryBody fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("liquidity_pool_constant_product", constantProduct.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static LiquidityPoolEntryBody fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for LiquidityPoolEntryBody, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      LiquidityPoolType discriminant = LiquidityPoolType.fromJsonObject(key);
+      if (key.equals("liquidity_pool_constant_product")) {
+        LiquidityPoolEntryBody instance = new LiquidityPoolEntryBody();
+        instance.discriminant = discriminant;
+        instance.constantProduct =
+            LiquidityPoolEntryConstantProduct.fromJsonObject(
+                jsonMap.get("liquidity_pool_constant_product"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for LiquidityPoolEntryBody");
+    }
+
     /**
      * LiquidityPoolEntryConstantProduct's original definition in the XDR file is:
      *
@@ -220,6 +288,39 @@ public class LiquidityPoolEntry implements XdrElement {
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
+      }
+
+      @Override
+      public String toJson() {
+        return XdrElement.gson.toJson(toJsonObject());
+      }
+
+      public static LiquidityPoolEntryConstantProduct fromJson(String json) {
+        return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+      }
+
+      Object toJsonObject() {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("params", params.toJsonObject());
+        jsonMap.put("reserve_a", reserveA.toJsonObject());
+        jsonMap.put("reserve_b", reserveB.toJsonObject());
+        jsonMap.put("total_pool_shares", totalPoolShares.toJsonObject());
+        jsonMap.put("pool_shares_trust_line_count", poolSharesTrustLineCount.toJsonObject());
+        return jsonMap;
+      }
+
+      @SuppressWarnings("unchecked")
+      static LiquidityPoolEntryConstantProduct fromJsonObject(Object json) {
+        java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+        LiquidityPoolEntryConstantProduct instance = new LiquidityPoolEntryConstantProduct();
+        instance.params =
+            LiquidityPoolConstantProductParameters.fromJsonObject(jsonMap.get("params"));
+        instance.reserveA = Int64.fromJsonObject(jsonMap.get("reserve_a"));
+        instance.reserveB = Int64.fromJsonObject(jsonMap.get("reserve_b"));
+        instance.totalPoolShares = Int64.fromJsonObject(jsonMap.get("total_pool_shares"));
+        instance.poolSharesTrustLineCount =
+            Int64.fromJsonObject(jsonMap.get("pool_shares_trust_line_count"));
+        return instance;
       }
     }
   }

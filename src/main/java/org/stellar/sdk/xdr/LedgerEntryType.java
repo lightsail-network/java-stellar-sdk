@@ -96,4 +96,68 @@ public enum LedgerEntryType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerEntryType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case ACCOUNT:
+        return "account";
+      case TRUSTLINE:
+        return "trustline";
+      case OFFER:
+        return "offer";
+      case DATA:
+        return "data";
+      case CLAIMABLE_BALANCE:
+        return "claimable_balance";
+      case LIQUIDITY_POOL:
+        return "liquidity_pool";
+      case CONTRACT_DATA:
+        return "contract_data";
+      case CONTRACT_CODE:
+        return "contract_code";
+      case CONFIG_SETTING:
+        return "config_setting";
+      case TTL:
+        return "ttl";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static LedgerEntryType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "account":
+        return ACCOUNT;
+      case "trustline":
+        return TRUSTLINE;
+      case "offer":
+        return OFFER;
+      case "data":
+        return DATA;
+      case "claimable_balance":
+        return CLAIMABLE_BALANCE;
+      case "liquidity_pool":
+        return LIQUIDITY_POOL;
+      case "contract_data":
+        return CONTRACT_DATA;
+      case "contract_code":
+        return CONTRACT_CODE;
+      case "config_setting":
+        return CONFIG_SETTING;
+      case "ttl":
+        return TTL;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

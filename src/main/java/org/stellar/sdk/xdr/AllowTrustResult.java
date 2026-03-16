@@ -91,4 +91,59 @@ public class AllowTrustResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AllowTrustResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == AllowTrustResultCode.ALLOW_TRUST_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == AllowTrustResultCode.ALLOW_TRUST_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == AllowTrustResultCode.ALLOW_TRUST_NO_TRUST_LINE) {
+      return "no_trust_line";
+    }
+    if (discriminant == AllowTrustResultCode.ALLOW_TRUST_TRUST_NOT_REQUIRED) {
+      return "trust_not_required";
+    }
+    if (discriminant == AllowTrustResultCode.ALLOW_TRUST_CANT_REVOKE) {
+      return "cant_revoke";
+    }
+    if (discriminant == AllowTrustResultCode.ALLOW_TRUST_SELF_NOT_ALLOWED) {
+      return "self_not_allowed";
+    }
+    if (discriminant == AllowTrustResultCode.ALLOW_TRUST_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static AllowTrustResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("no_trust_line")
+          || strVal.equals("trust_not_required")
+          || strVal.equals("cant_revoke")
+          || strVal.equals("self_not_allowed")
+          || strVal.equals("low_reserve"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for AllowTrustResult");
+      }
+      AllowTrustResult instance = new AllowTrustResult();
+      instance.discriminant = AllowTrustResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for AllowTrustResult, got: " + json);
+  }
 }

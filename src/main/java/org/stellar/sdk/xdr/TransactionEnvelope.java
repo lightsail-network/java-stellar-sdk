@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -90,5 +91,67 @@ public class TransactionEnvelope implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionEnvelope fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("tx_v0", v0.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == EnvelopeType.ENVELOPE_TYPE_TX) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("tx", v1.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == EnvelopeType.ENVELOPE_TYPE_TX_FEE_BUMP) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("tx_fee_bump", feeBump.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionEnvelope fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for TransactionEnvelope, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    EnvelopeType discriminant = EnvelopeType.fromJsonObject(key);
+    if (key.equals("tx_v0")) {
+      TransactionEnvelope instance = new TransactionEnvelope();
+      instance.discriminant = discriminant;
+      instance.v0 = TransactionV0Envelope.fromJsonObject(jsonMap.get("tx_v0"));
+      return instance;
+    }
+    if (key.equals("tx")) {
+      TransactionEnvelope instance = new TransactionEnvelope();
+      instance.discriminant = discriminant;
+      instance.v1 = TransactionV1Envelope.fromJsonObject(jsonMap.get("tx"));
+      return instance;
+    }
+    if (key.equals("tx_fee_bump")) {
+      TransactionEnvelope instance = new TransactionEnvelope();
+      instance.discriminant = discriminant;
+      instance.feeBump = FeeBumpTransactionEnvelope.fromJsonObject(jsonMap.get("tx_fee_bump"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for TransactionEnvelope");
   }
 }

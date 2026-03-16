@@ -73,4 +73,23 @@ public class EncryptedBody implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static EncryptedBody fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(EncryptedBody);
+  }
+
+  static EncryptedBody fromJsonObject(Object json) {
+    EncryptedBody instance = new EncryptedBody();
+    instance.EncryptedBody = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

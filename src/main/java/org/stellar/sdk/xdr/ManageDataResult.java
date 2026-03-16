@@ -85,4 +85,51 @@ public class ManageDataResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ManageDataResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ManageDataResultCode.MANAGE_DATA_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == ManageDataResultCode.MANAGE_DATA_NOT_SUPPORTED_YET) {
+      return "not_supported_yet";
+    }
+    if (discriminant == ManageDataResultCode.MANAGE_DATA_NAME_NOT_FOUND) {
+      return "name_not_found";
+    }
+    if (discriminant == ManageDataResultCode.MANAGE_DATA_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    if (discriminant == ManageDataResultCode.MANAGE_DATA_INVALID_NAME) {
+      return "invalid_name";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ManageDataResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("not_supported_yet")
+          || strVal.equals("name_not_found")
+          || strVal.equals("low_reserve")
+          || strVal.equals("invalid_name"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for ManageDataResult");
+      }
+      ManageDataResult instance = new ManageDataResult();
+      instance.discriminant = ManageDataResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for ManageDataResult, got: " + json);
+  }
 }

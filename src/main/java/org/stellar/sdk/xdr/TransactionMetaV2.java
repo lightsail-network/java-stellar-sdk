@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -86,5 +88,37 @@ public class TransactionMetaV2 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionMetaV2 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("tx_changes_before", txChangesBefore.toJsonObject());
+    jsonMap.put(
+        "operations", XdrElement.arrayToJsonArray(operations, i -> operations[i].toJsonObject()));
+    jsonMap.put("tx_changes_after", txChangesAfter.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionMetaV2 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TransactionMetaV2 instance = new TransactionMetaV2();
+    instance.txChangesBefore = LedgerEntryChanges.fromJsonObject(jsonMap.get("tx_changes_before"));
+    instance.operations =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("operations"),
+            OperationMeta.class,
+            item -> OperationMeta.fromJsonObject(item));
+    instance.txChangesAfter = LedgerEntryChanges.fromJsonObject(jsonMap.get("tx_changes_after"));
+    return instance;
   }
 }

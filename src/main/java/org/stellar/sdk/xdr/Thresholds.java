@@ -58,4 +58,23 @@ public class Thresholds implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Thresholds fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(Thresholds);
+  }
+
+  static Thresholds fromJsonObject(Object json) {
+    Thresholds instance = new Thresholds();
+    instance.Thresholds = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

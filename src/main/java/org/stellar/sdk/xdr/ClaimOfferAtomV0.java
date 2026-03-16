@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -82,5 +83,38 @@ public class ClaimOfferAtomV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimOfferAtomV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("seller_ed25519", sellerEd25519.toJsonObject());
+    jsonMap.put("offer_id", offerID.toJsonObject());
+    jsonMap.put("asset_sold", assetSold.toJsonObject());
+    jsonMap.put("amount_sold", amountSold.toJsonObject());
+    jsonMap.put("asset_bought", assetBought.toJsonObject());
+    jsonMap.put("amount_bought", amountBought.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ClaimOfferAtomV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ClaimOfferAtomV0 instance = new ClaimOfferAtomV0();
+    instance.sellerEd25519 = Uint256.fromJsonObject(jsonMap.get("seller_ed25519"));
+    instance.offerID = Int64.fromJsonObject(jsonMap.get("offer_id"));
+    instance.assetSold = Asset.fromJsonObject(jsonMap.get("asset_sold"));
+    instance.amountSold = Int64.fromJsonObject(jsonMap.get("amount_sold"));
+    instance.assetBought = Asset.fromJsonObject(jsonMap.get("asset_bought"));
+    instance.amountBought = Int64.fromJsonObject(jsonMap.get("amount_bought"));
+    return instance;
   }
 }

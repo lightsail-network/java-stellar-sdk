@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -99,6 +100,43 @@ public class OfferEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static OfferEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("seller_id", sellerID.toJsonObject());
+    jsonMap.put("offer_id", offerID.toJsonObject());
+    jsonMap.put("selling", selling.toJsonObject());
+    jsonMap.put("buying", buying.toJsonObject());
+    jsonMap.put("amount", amount.toJsonObject());
+    jsonMap.put("price", price.toJsonObject());
+    jsonMap.put("flags", flags.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static OfferEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    OfferEntry instance = new OfferEntry();
+    instance.sellerID = AccountID.fromJsonObject(jsonMap.get("seller_id"));
+    instance.offerID = Int64.fromJsonObject(jsonMap.get("offer_id"));
+    instance.selling = Asset.fromJsonObject(jsonMap.get("selling"));
+    instance.buying = Asset.fromJsonObject(jsonMap.get("buying"));
+    instance.amount = Int64.fromJsonObject(jsonMap.get("amount"));
+    instance.price = Price.fromJsonObject(jsonMap.get("price"));
+    instance.flags = Uint32.fromJsonObject(jsonMap.get("flags"));
+    instance.ext = OfferEntryExt.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * OfferEntryExt's original definition in the XDR file is:
    *
@@ -156,6 +194,37 @@ public class OfferEntry implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static OfferEntryExt fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static OfferEntryExt fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for OfferEntryExt");
+        }
+        OfferEntryExt instance = new OfferEntryExt();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException("Expected a string for OfferEntryExt, got: " + json);
     }
   }
 }

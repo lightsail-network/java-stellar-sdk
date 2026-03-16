@@ -69,4 +69,34 @@ public class ExtensionPoint implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ExtensionPoint fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == 0) {
+      return "v0";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ExtensionPoint fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("v0"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for ExtensionPoint");
+      }
+      ExtensionPoint instance = new ExtensionPoint();
+      instance.discriminant = Integer.parseInt(strVal.substring(1));
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for ExtensionPoint, got: " + json);
+  }
 }

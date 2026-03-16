@@ -80,4 +80,48 @@ public enum ClawbackResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClawbackResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CLAWBACK_SUCCESS:
+        return "success";
+      case CLAWBACK_MALFORMED:
+        return "malformed";
+      case CLAWBACK_NOT_CLAWBACK_ENABLED:
+        return "not_clawback_enabled";
+      case CLAWBACK_NO_TRUST:
+        return "no_trust";
+      case CLAWBACK_UNDERFUNDED:
+        return "underfunded";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ClawbackResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return CLAWBACK_SUCCESS;
+      case "malformed":
+        return CLAWBACK_MALFORMED;
+      case "not_clawback_enabled":
+        return CLAWBACK_NOT_CLAWBACK_ENABLED;
+      case "no_trust":
+        return CLAWBACK_NO_TRUST;
+      case "underfunded":
+        return CLAWBACK_UNDERFUNDED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

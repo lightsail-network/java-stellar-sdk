@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -77,6 +78,48 @@ public class SCEnvMetaEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCEnvMetaEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SCEnvMetaKind.SC_ENV_META_KIND_INTERFACE_VERSION) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("sc_env_meta_kind_interface_version", interfaceVersion.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCEnvMetaEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for SCEnvMetaEntry, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SCEnvMetaKind discriminant = SCEnvMetaKind.fromJsonObject(key);
+    if (key.equals("sc_env_meta_kind_interface_version")) {
+      SCEnvMetaEntry instance = new SCEnvMetaEntry();
+      instance.discriminant = discriminant;
+      instance.interfaceVersion =
+          SCEnvMetaEntryInterfaceVersion.fromJsonObject(
+              jsonMap.get("sc_env_meta_kind_interface_version"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SCEnvMetaEntry");
+  }
+
   /**
    * SCEnvMetaEntryInterfaceVersion's original definition in the XDR file is:
    *
@@ -128,6 +171,31 @@ public class SCEnvMetaEntry implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static SCEnvMetaEntryInterfaceVersion fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("protocol", protocol.toJsonObject());
+      jsonMap.put("pre_release", preRelease.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static SCEnvMetaEntryInterfaceVersion fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      SCEnvMetaEntryInterfaceVersion instance = new SCEnvMetaEntryInterfaceVersion();
+      instance.protocol = Uint32.fromJsonObject(jsonMap.get("protocol"));
+      instance.preRelease = Uint32.fromJsonObject(jsonMap.get("pre_release"));
+      return instance;
     }
   }
 }

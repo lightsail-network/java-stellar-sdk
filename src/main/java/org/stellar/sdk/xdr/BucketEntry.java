@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -93,5 +94,78 @@ public class BucketEntry implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static BucketEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == BucketEntryType.LIVEENTRY) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("liveentry", liveEntry.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == BucketEntryType.INITENTRY) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("initentry", liveEntry.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == BucketEntryType.DEADENTRY) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("deadentry", deadEntry.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == BucketEntryType.METAENTRY) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("metaentry", metaEntry.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static BucketEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for BucketEntry, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    BucketEntryType discriminant = BucketEntryType.fromJsonObject(key);
+    if (key.equals("liveentry")) {
+      BucketEntry instance = new BucketEntry();
+      instance.discriminant = discriminant;
+      instance.liveEntry = LedgerEntry.fromJsonObject(jsonMap.get("liveentry"));
+      return instance;
+    }
+    if (key.equals("initentry")) {
+      BucketEntry instance = new BucketEntry();
+      instance.discriminant = discriminant;
+      instance.liveEntry = LedgerEntry.fromJsonObject(jsonMap.get("initentry"));
+      return instance;
+    }
+    if (key.equals("deadentry")) {
+      BucketEntry instance = new BucketEntry();
+      instance.discriminant = discriminant;
+      instance.deadEntry = LedgerKey.fromJsonObject(jsonMap.get("deadentry"));
+      return instance;
+    }
+    if (key.equals("metaentry")) {
+      BucketEntry instance = new BucketEntry();
+      instance.discriminant = discriminant;
+      instance.metaEntry = BucketMetadata.fromJsonObject(jsonMap.get("metaentry"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for BucketEntry");
   }
 }

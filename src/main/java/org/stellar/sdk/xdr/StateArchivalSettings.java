@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -106,5 +107,55 @@ public class StateArchivalSettings implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static StateArchivalSettings fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("max_entry_ttl", maxEntryTTL.toJsonObject());
+    jsonMap.put("min_temporary_ttl", minTemporaryTTL.toJsonObject());
+    jsonMap.put("min_persistent_ttl", minPersistentTTL.toJsonObject());
+    jsonMap.put("persistent_rent_rate_denominator", persistentRentRateDenominator.toJsonObject());
+    jsonMap.put("temp_rent_rate_denominator", tempRentRateDenominator.toJsonObject());
+    jsonMap.put("max_entries_to_archive", maxEntriesToArchive.toJsonObject());
+    jsonMap.put(
+        "live_soroban_state_size_window_sample_size",
+        liveSorobanStateSizeWindowSampleSize.toJsonObject());
+    jsonMap.put(
+        "live_soroban_state_size_window_sample_period",
+        liveSorobanStateSizeWindowSamplePeriod.toJsonObject());
+    jsonMap.put("eviction_scan_size", evictionScanSize.toJsonObject());
+    jsonMap.put("starting_eviction_scan_level", startingEvictionScanLevel.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static StateArchivalSettings fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    StateArchivalSettings instance = new StateArchivalSettings();
+    instance.maxEntryTTL = Uint32.fromJsonObject(jsonMap.get("max_entry_ttl"));
+    instance.minTemporaryTTL = Uint32.fromJsonObject(jsonMap.get("min_temporary_ttl"));
+    instance.minPersistentTTL = Uint32.fromJsonObject(jsonMap.get("min_persistent_ttl"));
+    instance.persistentRentRateDenominator =
+        Int64.fromJsonObject(jsonMap.get("persistent_rent_rate_denominator"));
+    instance.tempRentRateDenominator =
+        Int64.fromJsonObject(jsonMap.get("temp_rent_rate_denominator"));
+    instance.maxEntriesToArchive = Uint32.fromJsonObject(jsonMap.get("max_entries_to_archive"));
+    instance.liveSorobanStateSizeWindowSampleSize =
+        Uint32.fromJsonObject(jsonMap.get("live_soroban_state_size_window_sample_size"));
+    instance.liveSorobanStateSizeWindowSamplePeriod =
+        Uint32.fromJsonObject(jsonMap.get("live_soroban_state_size_window_sample_period"));
+    instance.evictionScanSize = Uint32.fromJsonObject(jsonMap.get("eviction_scan_size"));
+    instance.startingEvictionScanLevel =
+        Uint32.fromJsonObject(jsonMap.get("starting_eviction_scan_level"));
+    return instance;
   }
 }

@@ -59,4 +59,23 @@ public class SignatureHint implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SignatureHint fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(SignatureHint);
+  }
+
+  static SignatureHint fromJsonObject(Object json) {
+    SignatureHint instance = new SignatureHint();
+    instance.SignatureHint = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

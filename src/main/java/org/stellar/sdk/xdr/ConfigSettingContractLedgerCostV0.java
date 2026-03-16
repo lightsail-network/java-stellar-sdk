@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -141,5 +142,68 @@ public class ConfigSettingContractLedgerCostV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ConfigSettingContractLedgerCostV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ledger_max_disk_read_entries", ledgerMaxDiskReadEntries.toJsonObject());
+    jsonMap.put("ledger_max_disk_read_bytes", ledgerMaxDiskReadBytes.toJsonObject());
+    jsonMap.put("ledger_max_write_ledger_entries", ledgerMaxWriteLedgerEntries.toJsonObject());
+    jsonMap.put("ledger_max_write_bytes", ledgerMaxWriteBytes.toJsonObject());
+    jsonMap.put("tx_max_disk_read_entries", txMaxDiskReadEntries.toJsonObject());
+    jsonMap.put("tx_max_disk_read_bytes", txMaxDiskReadBytes.toJsonObject());
+    jsonMap.put("tx_max_write_ledger_entries", txMaxWriteLedgerEntries.toJsonObject());
+    jsonMap.put("tx_max_write_bytes", txMaxWriteBytes.toJsonObject());
+    jsonMap.put("fee_disk_read_ledger_entry", feeDiskReadLedgerEntry.toJsonObject());
+    jsonMap.put("fee_write_ledger_entry", feeWriteLedgerEntry.toJsonObject());
+    jsonMap.put("fee_disk_read1_kb", feeDiskRead1KB.toJsonObject());
+    jsonMap.put("soroban_state_target_size_bytes", sorobanStateTargetSizeBytes.toJsonObject());
+    jsonMap.put(
+        "rent_fee1_kb_soroban_state_size_low", rentFee1KBSorobanStateSizeLow.toJsonObject());
+    jsonMap.put(
+        "rent_fee1_kb_soroban_state_size_high", rentFee1KBSorobanStateSizeHigh.toJsonObject());
+    jsonMap.put(
+        "soroban_state_rent_fee_growth_factor", sorobanStateRentFeeGrowthFactor.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ConfigSettingContractLedgerCostV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ConfigSettingContractLedgerCostV0 instance = new ConfigSettingContractLedgerCostV0();
+    instance.ledgerMaxDiskReadEntries =
+        Uint32.fromJsonObject(jsonMap.get("ledger_max_disk_read_entries"));
+    instance.ledgerMaxDiskReadBytes =
+        Uint32.fromJsonObject(jsonMap.get("ledger_max_disk_read_bytes"));
+    instance.ledgerMaxWriteLedgerEntries =
+        Uint32.fromJsonObject(jsonMap.get("ledger_max_write_ledger_entries"));
+    instance.ledgerMaxWriteBytes = Uint32.fromJsonObject(jsonMap.get("ledger_max_write_bytes"));
+    instance.txMaxDiskReadEntries = Uint32.fromJsonObject(jsonMap.get("tx_max_disk_read_entries"));
+    instance.txMaxDiskReadBytes = Uint32.fromJsonObject(jsonMap.get("tx_max_disk_read_bytes"));
+    instance.txMaxWriteLedgerEntries =
+        Uint32.fromJsonObject(jsonMap.get("tx_max_write_ledger_entries"));
+    instance.txMaxWriteBytes = Uint32.fromJsonObject(jsonMap.get("tx_max_write_bytes"));
+    instance.feeDiskReadLedgerEntry =
+        Int64.fromJsonObject(jsonMap.get("fee_disk_read_ledger_entry"));
+    instance.feeWriteLedgerEntry = Int64.fromJsonObject(jsonMap.get("fee_write_ledger_entry"));
+    instance.feeDiskRead1KB = Int64.fromJsonObject(jsonMap.get("fee_disk_read1_kb"));
+    instance.sorobanStateTargetSizeBytes =
+        Int64.fromJsonObject(jsonMap.get("soroban_state_target_size_bytes"));
+    instance.rentFee1KBSorobanStateSizeLow =
+        Int64.fromJsonObject(jsonMap.get("rent_fee1_kb_soroban_state_size_low"));
+    instance.rentFee1KBSorobanStateSizeHigh =
+        Int64.fromJsonObject(jsonMap.get("rent_fee1_kb_soroban_state_size_high"));
+    instance.sorobanStateRentFeeGrowthFactor =
+        Uint32.fromJsonObject(jsonMap.get("soroban_state_rent_fee_growth_factor"));
+    return instance;
   }
 }

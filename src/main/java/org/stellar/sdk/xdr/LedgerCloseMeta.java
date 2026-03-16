@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -89,5 +90,67 @@ public class LedgerCloseMeta implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerCloseMeta fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == 0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v0", v0.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == 1) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v1", v1.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == 2) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("v2", v2.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerCloseMeta fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for LedgerCloseMeta, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    Integer discriminant = Integer.parseInt(key.substring(1));
+    if (key.equals("v0")) {
+      LedgerCloseMeta instance = new LedgerCloseMeta();
+      instance.discriminant = discriminant;
+      instance.v0 = LedgerCloseMetaV0.fromJsonObject(jsonMap.get("v0"));
+      return instance;
+    }
+    if (key.equals("v1")) {
+      LedgerCloseMeta instance = new LedgerCloseMeta();
+      instance.discriminant = discriminant;
+      instance.v1 = LedgerCloseMetaV1.fromJsonObject(jsonMap.get("v1"));
+      return instance;
+    }
+    if (key.equals("v2")) {
+      LedgerCloseMeta instance = new LedgerCloseMeta();
+      instance.discriminant = discriminant;
+      instance.v2 = LedgerCloseMetaV2.fromJsonObject(jsonMap.get("v2"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for LedgerCloseMeta");
   }
 }

@@ -62,4 +62,32 @@ public enum OfferEntryFlags implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static OfferEntryFlags fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case PASSIVE_FLAG:
+        return "passive_flag";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static OfferEntryFlags fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "passive_flag":
+        return PASSIVE_FLAG;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -96,4 +96,68 @@ public enum SCErrorType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCErrorType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SCE_CONTRACT:
+        return "contract";
+      case SCE_WASM_VM:
+        return "wasm_vm";
+      case SCE_CONTEXT:
+        return "context";
+      case SCE_STORAGE:
+        return "storage";
+      case SCE_OBJECT:
+        return "object";
+      case SCE_CRYPTO:
+        return "crypto";
+      case SCE_EVENTS:
+        return "events";
+      case SCE_BUDGET:
+        return "budget";
+      case SCE_VALUE:
+        return "value";
+      case SCE_AUTH:
+        return "auth";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCErrorType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "contract":
+        return SCE_CONTRACT;
+      case "wasm_vm":
+        return SCE_WASM_VM;
+      case "context":
+        return SCE_CONTEXT;
+      case "storage":
+        return SCE_STORAGE;
+      case "object":
+        return SCE_OBJECT;
+      case "crypto":
+        return SCE_CRYPTO;
+      case "events":
+        return SCE_EVENTS;
+      case "budget":
+        return SCE_BUDGET;
+      case "value":
+        return SCE_VALUE;
+      case "auth":
+        return SCE_AUTH;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

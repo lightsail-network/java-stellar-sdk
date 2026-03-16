@@ -100,4 +100,68 @@ public enum PaymentResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PaymentResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case PAYMENT_SUCCESS:
+        return "success";
+      case PAYMENT_MALFORMED:
+        return "malformed";
+      case PAYMENT_UNDERFUNDED:
+        return "underfunded";
+      case PAYMENT_SRC_NO_TRUST:
+        return "src_no_trust";
+      case PAYMENT_SRC_NOT_AUTHORIZED:
+        return "src_not_authorized";
+      case PAYMENT_NO_DESTINATION:
+        return "no_destination";
+      case PAYMENT_NO_TRUST:
+        return "no_trust";
+      case PAYMENT_NOT_AUTHORIZED:
+        return "not_authorized";
+      case PAYMENT_LINE_FULL:
+        return "line_full";
+      case PAYMENT_NO_ISSUER:
+        return "no_issuer";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static PaymentResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return PAYMENT_SUCCESS;
+      case "malformed":
+        return PAYMENT_MALFORMED;
+      case "underfunded":
+        return PAYMENT_UNDERFUNDED;
+      case "src_no_trust":
+        return PAYMENT_SRC_NO_TRUST;
+      case "src_not_authorized":
+        return PAYMENT_SRC_NOT_AUTHORIZED;
+      case "no_destination":
+        return PAYMENT_NO_DESTINATION;
+      case "no_trust":
+        return PAYMENT_NO_TRUST;
+      case "not_authorized":
+        return PAYMENT_NOT_AUTHORIZED;
+      case "line_full":
+        return PAYMENT_LINE_FULL;
+      case "no_issuer":
+        return PAYMENT_NO_ISSUER;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

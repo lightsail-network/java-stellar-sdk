@@ -77,4 +77,44 @@ public enum ClawbackClaimableBalanceResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClawbackClaimableBalanceResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CLAWBACK_CLAIMABLE_BALANCE_SUCCESS:
+        return "success";
+      case CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+        return "does_not_exist";
+      case CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER:
+        return "not_issuer";
+      case CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED:
+        return "not_clawback_enabled";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ClawbackClaimableBalanceResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return CLAWBACK_CLAIMABLE_BALANCE_SUCCESS;
+      case "does_not_exist":
+        return CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST;
+      case "not_issuer":
+        return CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER;
+      case "not_clawback_enabled":
+        return CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -82,4 +82,52 @@ public enum CreateClaimableBalanceResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static CreateClaimableBalanceResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CREATE_CLAIMABLE_BALANCE_SUCCESS:
+        return "success";
+      case CREATE_CLAIMABLE_BALANCE_MALFORMED:
+        return "malformed";
+      case CREATE_CLAIMABLE_BALANCE_LOW_RESERVE:
+        return "low_reserve";
+      case CREATE_CLAIMABLE_BALANCE_NO_TRUST:
+        return "no_trust";
+      case CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+        return "not_authorized";
+      case CREATE_CLAIMABLE_BALANCE_UNDERFUNDED:
+        return "underfunded";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static CreateClaimableBalanceResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return CREATE_CLAIMABLE_BALANCE_SUCCESS;
+      case "malformed":
+        return CREATE_CLAIMABLE_BALANCE_MALFORMED;
+      case "low_reserve":
+        return CREATE_CLAIMABLE_BALANCE_LOW_RESERVE;
+      case "no_trust":
+        return CREATE_CLAIMABLE_BALANCE_NO_TRUST;
+      case "not_authorized":
+        return CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED;
+      case "underfunded":
+        return CREATE_CLAIMABLE_BALANCE_UNDERFUNDED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

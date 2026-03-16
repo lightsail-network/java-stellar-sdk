@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -283,5 +284,268 @@ public class SCVal implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCVal fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SCValType.SCV_BOOL) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("bool", (Boolean) b);
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_VOID) {
+      return "void";
+    }
+    if (discriminant == SCValType.SCV_ERROR) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("error", error.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_U32) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("u32", u32.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_I32) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("i32", i32.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_U64) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("u64", u64.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_I64) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("i64", i64.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_TIMEPOINT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("timepoint", timepoint.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_DURATION) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("duration", duration.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_U128) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("u128", u128.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_I128) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("i128", i128.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_U256) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("u256", u256.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_I256) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("i256", i256.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_BYTES) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("bytes", bytes.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_STRING) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("string", str.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_SYMBOL) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("symbol", sym.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_VEC) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("vec", vec.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_MAP) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("map", map.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_ADDRESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("address", address.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_CONTRACT_INSTANCE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_instance", instance.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE) {
+      return "ledger_key_contract_instance";
+    }
+    if (discriminant == SCValType.SCV_LEDGER_KEY_NONCE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("ledger_key_nonce", nonce_key.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCVal fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("void") || strVal.equals("ledger_key_contract_instance"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for SCVal");
+      }
+      SCVal instance = new SCVal();
+      instance.discriminant = SCValType.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException("Expected a single-key object for SCVal, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SCValType discriminant = SCValType.fromJsonObject(key);
+    if (key.equals("bool")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.b = (Boolean) jsonMap.get("bool");
+      return instance;
+    }
+    if (key.equals("error")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.error = SCError.fromJsonObject(jsonMap.get("error"));
+      return instance;
+    }
+    if (key.equals("u32")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.u32 = Uint32.fromJsonObject(jsonMap.get("u32"));
+      return instance;
+    }
+    if (key.equals("i32")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.i32 = Int32.fromJsonObject(jsonMap.get("i32"));
+      return instance;
+    }
+    if (key.equals("u64")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.u64 = Uint64.fromJsonObject(jsonMap.get("u64"));
+      return instance;
+    }
+    if (key.equals("i64")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.i64 = Int64.fromJsonObject(jsonMap.get("i64"));
+      return instance;
+    }
+    if (key.equals("timepoint")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.timepoint = TimePoint.fromJsonObject(jsonMap.get("timepoint"));
+      return instance;
+    }
+    if (key.equals("duration")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.duration = Duration.fromJsonObject(jsonMap.get("duration"));
+      return instance;
+    }
+    if (key.equals("u128")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.u128 = UInt128Parts.fromJsonObject(jsonMap.get("u128"));
+      return instance;
+    }
+    if (key.equals("i128")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.i128 = Int128Parts.fromJsonObject(jsonMap.get("i128"));
+      return instance;
+    }
+    if (key.equals("u256")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.u256 = UInt256Parts.fromJsonObject(jsonMap.get("u256"));
+      return instance;
+    }
+    if (key.equals("i256")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.i256 = Int256Parts.fromJsonObject(jsonMap.get("i256"));
+      return instance;
+    }
+    if (key.equals("bytes")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.bytes = SCBytes.fromJsonObject(jsonMap.get("bytes"));
+      return instance;
+    }
+    if (key.equals("string")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.str = SCString.fromJsonObject(jsonMap.get("string"));
+      return instance;
+    }
+    if (key.equals("symbol")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.sym = SCSymbol.fromJsonObject(jsonMap.get("symbol"));
+      return instance;
+    }
+    if (key.equals("vec")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.vec = SCVec.fromJsonObject(jsonMap.get("vec"));
+      return instance;
+    }
+    if (key.equals("map")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.map = SCMap.fromJsonObject(jsonMap.get("map"));
+      return instance;
+    }
+    if (key.equals("address")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.address = SCAddress.fromJsonObject(jsonMap.get("address"));
+      return instance;
+    }
+    if (key.equals("contract_instance")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.instance = SCContractInstance.fromJsonObject(jsonMap.get("contract_instance"));
+      return instance;
+    }
+    if (key.equals("ledger_key_nonce")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.nonce_key = SCNonceKey.fromJsonObject(jsonMap.get("ledger_key_nonce"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SCVal");
   }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -110,5 +111,79 @@ public class HostFunction implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static HostFunction fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("invoke_contract", invokeContract.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("create_contract", createContract.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == HostFunctionType.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("upload_contract_wasm", XdrElement.bytesToHex(wasm));
+      return jsonMap;
+    }
+    if (discriminant == HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("create_contract_v2", createContractV2.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static HostFunction fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for HostFunction, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    HostFunctionType discriminant = HostFunctionType.fromJsonObject(key);
+    if (key.equals("invoke_contract")) {
+      HostFunction instance = new HostFunction();
+      instance.discriminant = discriminant;
+      instance.invokeContract = InvokeContractArgs.fromJsonObject(jsonMap.get("invoke_contract"));
+      return instance;
+    }
+    if (key.equals("create_contract")) {
+      HostFunction instance = new HostFunction();
+      instance.discriminant = discriminant;
+      instance.createContract = CreateContractArgs.fromJsonObject(jsonMap.get("create_contract"));
+      return instance;
+    }
+    if (key.equals("upload_contract_wasm")) {
+      HostFunction instance = new HostFunction();
+      instance.discriminant = discriminant;
+      instance.wasm = XdrElement.hexToBytes((String) jsonMap.get("upload_contract_wasm"));
+      return instance;
+    }
+    if (key.equals("create_contract_v2")) {
+      HostFunction instance = new HostFunction();
+      instance.discriminant = discriminant;
+      instance.createContractV2 =
+          CreateContractArgsV2.fromJsonObject(jsonMap.get("create_contract_v2"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for HostFunction");
   }
 }

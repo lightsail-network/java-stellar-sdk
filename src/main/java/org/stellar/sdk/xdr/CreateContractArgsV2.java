@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -86,5 +88,39 @@ public class CreateContractArgsV2 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static CreateContractArgsV2 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("contract_id_preimage", contractIDPreimage.toJsonObject());
+    jsonMap.put("executable", executable.toJsonObject());
+    jsonMap.put(
+        "constructor_args",
+        XdrElement.arrayToJsonArray(constructorArgs, i -> constructorArgs[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static CreateContractArgsV2 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    CreateContractArgsV2 instance = new CreateContractArgsV2();
+    instance.contractIDPreimage =
+        ContractIDPreimage.fromJsonObject(jsonMap.get("contract_id_preimage"));
+    instance.executable = ContractExecutable.fromJsonObject(jsonMap.get("executable"));
+    instance.constructorArgs =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("constructor_args"),
+            SCVal.class,
+            item -> SCVal.fromJsonObject(item));
+    return instance;
   }
 }

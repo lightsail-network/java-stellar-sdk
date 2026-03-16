@@ -62,6 +62,26 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     return paddedBytes;
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  Object toJsonObject() {
+    return this.number.toString();
+  }
+
+  public static XdrUnsignedHyperInteger fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  static XdrUnsignedHyperInteger fromJsonObject(Object json) {
+    if (json == null) {
+      return null;
+    }
+    return new XdrUnsignedHyperInteger(XdrElement.jsonToBigInteger(json));
+  }
+
   public static XdrUnsignedHyperInteger fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);

@@ -52,4 +52,23 @@ public class SCString implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCString fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return SCString.toJsonObject();
+  }
+
+  static SCString fromJsonObject(Object json) {
+    SCString instance = new SCString();
+    instance.SCString = XdrString.fromJsonObject(json);
+    return instance;
+  }
 }

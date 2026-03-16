@@ -69,4 +69,40 @@ public enum SorobanAuthorizedFunctionType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SorobanAuthorizedFunctionType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN:
+        return "contract_fn";
+      case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN:
+        return "create_contract_host_fn";
+      case SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN:
+        return "create_contract_v2_host_fn";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SorobanAuthorizedFunctionType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "contract_fn":
+        return SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN;
+      case "create_contract_host_fn":
+        return SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN;
+      case "create_contract_v2_host_fn":
+        return SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

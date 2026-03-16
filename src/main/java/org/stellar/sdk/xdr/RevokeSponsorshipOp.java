@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -87,6 +88,57 @@ public class RevokeSponsorshipOp implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static RevokeSponsorshipOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("ledger_entry", ledgerKey.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == RevokeSponsorshipType.REVOKE_SPONSORSHIP_SIGNER) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("signer", signer.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static RevokeSponsorshipOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for RevokeSponsorshipOp, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    RevokeSponsorshipType discriminant = RevokeSponsorshipType.fromJsonObject(key);
+    if (key.equals("ledger_entry")) {
+      RevokeSponsorshipOp instance = new RevokeSponsorshipOp();
+      instance.discriminant = discriminant;
+      instance.ledgerKey = LedgerKey.fromJsonObject(jsonMap.get("ledger_entry"));
+      return instance;
+    }
+    if (key.equals("signer")) {
+      RevokeSponsorshipOp instance = new RevokeSponsorshipOp();
+      instance.discriminant = discriminant;
+      instance.signer = RevokeSponsorshipOpSigner.fromJsonObject(jsonMap.get("signer"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for RevokeSponsorshipOp");
+  }
+
   /**
    * RevokeSponsorshipOpSigner's original definition in the XDR file is:
    *
@@ -137,6 +189,31 @@ public class RevokeSponsorshipOp implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static RevokeSponsorshipOpSigner fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("account_id", accountID.toJsonObject());
+      jsonMap.put("signer_key", signerKey.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static RevokeSponsorshipOpSigner fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      RevokeSponsorshipOpSigner instance = new RevokeSponsorshipOpSigner();
+      instance.accountID = AccountID.fromJsonObject(jsonMap.get("account_id"));
+      instance.signerKey = SignerKey.fromJsonObject(jsonMap.get("signer_key"));
+      return instance;
     }
   }
 }

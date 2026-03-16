@@ -97,4 +97,60 @@ public enum LiquidityPoolDepositResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LiquidityPoolDepositResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case LIQUIDITY_POOL_DEPOSIT_SUCCESS:
+        return "success";
+      case LIQUIDITY_POOL_DEPOSIT_MALFORMED:
+        return "malformed";
+      case LIQUIDITY_POOL_DEPOSIT_NO_TRUST:
+        return "no_trust";
+      case LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED:
+        return "not_authorized";
+      case LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED:
+        return "underfunded";
+      case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
+        return "line_full";
+      case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
+        return "bad_price";
+      case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
+        return "pool_full";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static LiquidityPoolDepositResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return LIQUIDITY_POOL_DEPOSIT_SUCCESS;
+      case "malformed":
+        return LIQUIDITY_POOL_DEPOSIT_MALFORMED;
+      case "no_trust":
+        return LIQUIDITY_POOL_DEPOSIT_NO_TRUST;
+      case "not_authorized":
+        return LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED;
+      case "underfunded":
+        return LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED;
+      case "line_full":
+        return LIQUIDITY_POOL_DEPOSIT_LINE_FULL;
+      case "bad_price":
+        return LIQUIDITY_POOL_DEPOSIT_BAD_PRICE;
+      case "pool_full":
+        return LIQUIDITY_POOL_DEPOSIT_POOL_FULL;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

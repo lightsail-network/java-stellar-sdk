@@ -88,4 +88,56 @@ public class RevokeSponsorshipResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static RevokeSponsorshipResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_DOES_NOT_EXIST) {
+      return "does_not_exist";
+    }
+    if (discriminant == RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_NOT_SPONSOR) {
+      return "not_sponsor";
+    }
+    if (discriminant == RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    if (discriminant == RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE) {
+      return "only_transferable";
+    }
+    if (discriminant == RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_MALFORMED) {
+      return "malformed";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static RevokeSponsorshipResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("does_not_exist")
+          || strVal.equals("not_sponsor")
+          || strVal.equals("low_reserve")
+          || strVal.equals("only_transferable")
+          || strVal.equals("malformed"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for RevokeSponsorshipResult");
+      }
+      RevokeSponsorshipResult instance = new RevokeSponsorshipResult();
+      instance.discriminant = RevokeSponsorshipResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for RevokeSponsorshipResult, got: " + json);
+  }
 }

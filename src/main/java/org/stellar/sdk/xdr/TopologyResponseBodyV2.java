@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,5 +66,32 @@ public class TopologyResponseBodyV2 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TopologyResponseBodyV2 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("inbound_peers", inboundPeers.toJsonObject());
+    jsonMap.put("outbound_peers", outboundPeers.toJsonObject());
+    jsonMap.put("node_data", nodeData.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TopologyResponseBodyV2 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TopologyResponseBodyV2 instance = new TopologyResponseBodyV2();
+    instance.inboundPeers = TimeSlicedPeerDataList.fromJsonObject(jsonMap.get("inbound_peers"));
+    instance.outboundPeers = TimeSlicedPeerDataList.fromJsonObject(jsonMap.get("outbound_peers"));
+    instance.nodeData = TimeSlicedNodeData.fromJsonObject(jsonMap.get("node_data"));
+    return instance;
   }
 }

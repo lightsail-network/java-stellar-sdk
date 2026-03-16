@@ -64,4 +64,36 @@ public enum IPAddrType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static IPAddrType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case IPv4:
+        return "ipv4";
+      case IPv6:
+        return "ipv6";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static IPAddrType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "ipv4":
+        return IPv4;
+      case "ipv6":
+        return IPv6;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

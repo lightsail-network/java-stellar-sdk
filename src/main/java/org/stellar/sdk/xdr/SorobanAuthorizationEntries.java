@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -76,5 +77,29 @@ public class SorobanAuthorizationEntries implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SorobanAuthorizationEntries fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.arrayToJsonArray(
+        SorobanAuthorizationEntries, i -> SorobanAuthorizationEntries[i].toJsonObject());
+  }
+
+  static SorobanAuthorizationEntries fromJsonObject(Object json) {
+    SorobanAuthorizationEntries instance = new SorobanAuthorizationEntries();
+    instance.SorobanAuthorizationEntries =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) json,
+            SorobanAuthorizationEntry.class,
+            item -> SorobanAuthorizationEntry.fromJsonObject(item));
+    return instance;
   }
 }

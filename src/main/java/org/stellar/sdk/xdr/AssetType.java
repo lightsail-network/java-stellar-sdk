@@ -72,4 +72,44 @@ public enum AssetType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AssetType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case ASSET_TYPE_NATIVE:
+        return "native";
+      case ASSET_TYPE_CREDIT_ALPHANUM4:
+        return "credit_alphanum4";
+      case ASSET_TYPE_CREDIT_ALPHANUM12:
+        return "credit_alphanum12";
+      case ASSET_TYPE_POOL_SHARE:
+        return "pool_share";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static AssetType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "native":
+        return ASSET_TYPE_NATIVE;
+      case "credit_alphanum4":
+        return ASSET_TYPE_CREDIT_ALPHANUM4;
+      case "credit_alphanum12":
+        return ASSET_TYPE_CREDIT_ALPHANUM12;
+      case "pool_share":
+        return ASSET_TYPE_POOL_SHARE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

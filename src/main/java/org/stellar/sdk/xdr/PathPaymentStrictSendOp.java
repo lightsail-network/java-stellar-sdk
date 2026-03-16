@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -103,5 +105,40 @@ public class PathPaymentStrictSendOp implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PathPaymentStrictSendOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("send_asset", sendAsset.toJsonObject());
+    jsonMap.put("send_amount", sendAmount.toJsonObject());
+    jsonMap.put("destination", destination.toJsonObject());
+    jsonMap.put("dest_asset", destAsset.toJsonObject());
+    jsonMap.put("dest_min", destMin.toJsonObject());
+    jsonMap.put("path", XdrElement.arrayToJsonArray(path, i -> path[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static PathPaymentStrictSendOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    PathPaymentStrictSendOp instance = new PathPaymentStrictSendOp();
+    instance.sendAsset = Asset.fromJsonObject(jsonMap.get("send_asset"));
+    instance.sendAmount = Int64.fromJsonObject(jsonMap.get("send_amount"));
+    instance.destination = MuxedAccount.fromJsonObject(jsonMap.get("destination"));
+    instance.destAsset = Asset.fromJsonObject(jsonMap.get("dest_asset"));
+    instance.destMin = Int64.fromJsonObject(jsonMap.get("dest_min"));
+    instance.path =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("path"), Asset.class, item -> Asset.fromJsonObject(item));
+    return instance;
   }
 }

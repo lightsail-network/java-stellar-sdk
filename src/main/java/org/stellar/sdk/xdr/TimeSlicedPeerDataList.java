@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -83,5 +84,29 @@ public class TimeSlicedPeerDataList implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TimeSlicedPeerDataList fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.arrayToJsonArray(
+        TimeSlicedPeerDataList, i -> TimeSlicedPeerDataList[i].toJsonObject());
+  }
+
+  static TimeSlicedPeerDataList fromJsonObject(Object json) {
+    TimeSlicedPeerDataList instance = new TimeSlicedPeerDataList();
+    instance.TimeSlicedPeerDataList =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) json,
+            TimeSlicedPeerData.class,
+            item -> TimeSlicedPeerData.fromJsonObject(item));
+    return instance;
   }
 }

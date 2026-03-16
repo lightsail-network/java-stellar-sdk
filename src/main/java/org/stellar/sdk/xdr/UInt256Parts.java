@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -67,5 +68,65 @@ public class UInt256Parts implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static UInt256Parts fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    byte[] bytes = new byte[32];
+    byte[] hhBytes = hi_hi.getUint64().getNumber().toByteArray();
+    byte[] hlBytes = hi_lo.getUint64().getNumber().toByteArray();
+    byte[] lhBytes = lo_hi.getUint64().getNumber().toByteArray();
+    byte[] llBytes = lo_lo.getUint64().getNumber().toByteArray();
+    System.arraycopy(
+        hhBytes,
+        Math.max(0, hhBytes.length - 8),
+        bytes,
+        8 - Math.min(8, hhBytes.length),
+        Math.min(8, hhBytes.length));
+    System.arraycopy(
+        hlBytes,
+        Math.max(0, hlBytes.length - 8),
+        bytes,
+        16 - Math.min(8, hlBytes.length),
+        Math.min(8, hlBytes.length));
+    System.arraycopy(
+        lhBytes,
+        Math.max(0, lhBytes.length - 8),
+        bytes,
+        24 - Math.min(8, lhBytes.length),
+        Math.min(8, lhBytes.length));
+    System.arraycopy(
+        llBytes,
+        Math.max(0, llBytes.length - 8),
+        bytes,
+        32 - Math.min(8, llBytes.length),
+        Math.min(8, llBytes.length));
+    return new BigInteger(1, bytes).toString();
+  }
+
+  static UInt256Parts fromJsonObject(Object json) {
+    BigInteger value = new BigInteger((String) json);
+    byte[] bytes = new byte[32];
+    byte[] valBytes = value.toByteArray();
+    int copyLen = Math.min(valBytes.length, 32);
+    System.arraycopy(valBytes, Math.max(0, valBytes.length - 32), bytes, 32 - copyLen, copyLen);
+    BigInteger hhVal = new BigInteger(1, java.util.Arrays.copyOfRange(bytes, 0, 8));
+    BigInteger hlVal = new BigInteger(1, java.util.Arrays.copyOfRange(bytes, 8, 16));
+    BigInteger lhVal = new BigInteger(1, java.util.Arrays.copyOfRange(bytes, 16, 24));
+    BigInteger llVal = new BigInteger(1, java.util.Arrays.copyOfRange(bytes, 24, 32));
+    UInt256Parts instance = new UInt256Parts();
+    instance.hi_hi = new Uint64(new XdrUnsignedHyperInteger(hhVal));
+    instance.hi_lo = new Uint64(new XdrUnsignedHyperInteger(hlVal));
+    instance.lo_hi = new Uint64(new XdrUnsignedHyperInteger(lhVal));
+    instance.lo_lo = new Uint64(new XdrUnsignedHyperInteger(llVal));
+    return instance;
   }
 }

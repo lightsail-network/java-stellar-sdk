@@ -52,4 +52,23 @@ public class TimePoint implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TimePoint fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return TimePoint.toJsonObject();
+  }
+
+  static TimePoint fromJsonObject(Object json) {
+    TimePoint instance = new TimePoint();
+    instance.TimePoint = Uint64.fromJsonObject(json);
+    return instance;
+  }
 }

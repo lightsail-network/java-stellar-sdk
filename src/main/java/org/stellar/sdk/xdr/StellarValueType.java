@@ -65,4 +65,36 @@ public enum StellarValueType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static StellarValueType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case STELLAR_VALUE_BASIC:
+        return "basic";
+      case STELLAR_VALUE_SIGNED:
+        return "signed";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static StellarValueType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "basic":
+        return STELLAR_VALUE_BASIC;
+      case "signed":
+        return STELLAR_VALUE_SIGNED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

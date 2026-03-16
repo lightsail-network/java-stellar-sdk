@@ -99,4 +99,64 @@ public enum ChangeTrustResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ChangeTrustResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CHANGE_TRUST_SUCCESS:
+        return "success";
+      case CHANGE_TRUST_MALFORMED:
+        return "malformed";
+      case CHANGE_TRUST_NO_ISSUER:
+        return "no_issuer";
+      case CHANGE_TRUST_INVALID_LIMIT:
+        return "invalid_limit";
+      case CHANGE_TRUST_LOW_RESERVE:
+        return "low_reserve";
+      case CHANGE_TRUST_SELF_NOT_ALLOWED:
+        return "self_not_allowed";
+      case CHANGE_TRUST_TRUST_LINE_MISSING:
+        return "trust_line_missing";
+      case CHANGE_TRUST_CANNOT_DELETE:
+        return "cannot_delete";
+      case CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES:
+        return "not_auth_maintain_liabilities";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ChangeTrustResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return CHANGE_TRUST_SUCCESS;
+      case "malformed":
+        return CHANGE_TRUST_MALFORMED;
+      case "no_issuer":
+        return CHANGE_TRUST_NO_ISSUER;
+      case "invalid_limit":
+        return CHANGE_TRUST_INVALID_LIMIT;
+      case "low_reserve":
+        return CHANGE_TRUST_LOW_RESERVE;
+      case "self_not_allowed":
+        return CHANGE_TRUST_SELF_NOT_ALLOWED;
+      case "trust_line_missing":
+        return CHANGE_TRUST_TRUST_LINE_MISSING;
+      case "cannot_delete":
+        return CHANGE_TRUST_CANNOT_DELETE;
+      case "not_auth_maintain_liabilities":
+        return CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -91,5 +92,67 @@ public class HotArchiveBucketEntry implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static HotArchiveBucketEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == HotArchiveBucketEntryType.HOT_ARCHIVE_ARCHIVED) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("archived", archivedEntry.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == HotArchiveBucketEntryType.HOT_ARCHIVE_LIVE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("live", key.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == HotArchiveBucketEntryType.HOT_ARCHIVE_METAENTRY) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("metaentry", metaEntry.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static HotArchiveBucketEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for HotArchiveBucketEntry, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    HotArchiveBucketEntryType discriminant = HotArchiveBucketEntryType.fromJsonObject(key);
+    if (key.equals("archived")) {
+      HotArchiveBucketEntry instance = new HotArchiveBucketEntry();
+      instance.discriminant = discriminant;
+      instance.archivedEntry = LedgerEntry.fromJsonObject(jsonMap.get("archived"));
+      return instance;
+    }
+    if (key.equals("live")) {
+      HotArchiveBucketEntry instance = new HotArchiveBucketEntry();
+      instance.discriminant = discriminant;
+      instance.key = LedgerKey.fromJsonObject(jsonMap.get("live"));
+      return instance;
+    }
+    if (key.equals("metaentry")) {
+      HotArchiveBucketEntry instance = new HotArchiveBucketEntry();
+      instance.discriminant = discriminant;
+      instance.metaEntry = BucketMetadata.fromJsonObject(jsonMap.get("metaentry"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for HotArchiveBucketEntry");
   }
 }

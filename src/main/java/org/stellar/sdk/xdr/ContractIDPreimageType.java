@@ -65,4 +65,36 @@ public enum ContractIDPreimageType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractIDPreimageType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CONTRACT_ID_PREIMAGE_FROM_ADDRESS:
+        return "address";
+      case CONTRACT_ID_PREIMAGE_FROM_ASSET:
+        return "asset";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ContractIDPreimageType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "address":
+        return CONTRACT_ID_PREIMAGE_FROM_ADDRESS;
+      case "asset":
+        return CONTRACT_ID_PREIMAGE_FROM_ASSET;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

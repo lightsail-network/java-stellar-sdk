@@ -88,4 +88,56 @@ public class SetTrustLineFlagsResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SetTrustLineFlagsResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_NO_TRUST_LINE) {
+      return "no_trust_line";
+    }
+    if (discriminant == SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_CANT_REVOKE) {
+      return "cant_revoke";
+    }
+    if (discriminant == SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_INVALID_STATE) {
+      return "invalid_state";
+    }
+    if (discriminant == SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SetTrustLineFlagsResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("no_trust_line")
+          || strVal.equals("cant_revoke")
+          || strVal.equals("invalid_state")
+          || strVal.equals("low_reserve"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for SetTrustLineFlagsResult");
+      }
+      SetTrustLineFlagsResult instance = new SetTrustLineFlagsResult();
+      instance.discriminant = SetTrustLineFlagsResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for SetTrustLineFlagsResult, got: " + json);
+  }
 }

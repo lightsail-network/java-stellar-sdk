@@ -81,4 +81,52 @@ public enum ClaimPredicateType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimPredicateType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CLAIM_PREDICATE_UNCONDITIONAL:
+        return "unconditional";
+      case CLAIM_PREDICATE_AND:
+        return "and";
+      case CLAIM_PREDICATE_OR:
+        return "or";
+      case CLAIM_PREDICATE_NOT:
+        return "not";
+      case CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME:
+        return "before_absolute_time";
+      case CLAIM_PREDICATE_BEFORE_RELATIVE_TIME:
+        return "before_relative_time";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ClaimPredicateType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "unconditional":
+        return CLAIM_PREDICATE_UNCONDITIONAL;
+      case "and":
+        return CLAIM_PREDICATE_AND;
+      case "or":
+        return CLAIM_PREDICATE_OR;
+      case "not":
+        return CLAIM_PREDICATE_NOT;
+      case "before_absolute_time":
+        return CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME;
+      case "before_relative_time":
+        return CLAIM_PREDICATE_BEFORE_RELATIVE_TIME;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

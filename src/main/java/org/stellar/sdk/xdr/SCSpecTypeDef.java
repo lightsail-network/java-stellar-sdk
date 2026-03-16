@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -185,5 +186,195 @@ public class SCSpecTypeDef implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecTypeDef fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_VAL) {
+      return "val";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_BOOL) {
+      return "bool";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_VOID) {
+      return "void";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_ERROR) {
+      return "error";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_U32) {
+      return "u32";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_I32) {
+      return "i32";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_U64) {
+      return "u64";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_I64) {
+      return "i64";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_TIMEPOINT) {
+      return "timepoint";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_DURATION) {
+      return "duration";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_U128) {
+      return "u128";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_I128) {
+      return "i128";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_U256) {
+      return "u256";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_I256) {
+      return "i256";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_BYTES) {
+      return "bytes";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_STRING) {
+      return "string";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_SYMBOL) {
+      return "symbol";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_ADDRESS) {
+      return "address";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_MUXED_ADDRESS) {
+      return "muxed_address";
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_OPTION) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("option", option.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_RESULT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("result", result.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_VEC) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("vec", vec.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_MAP) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("map", map.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_TUPLE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("tuple", tuple.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_BYTES_N) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("bytes_n", bytesN.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecType.SC_SPEC_TYPE_UDT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("udt", udt.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCSpecTypeDef fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("val")
+          || strVal.equals("bool")
+          || strVal.equals("void")
+          || strVal.equals("error")
+          || strVal.equals("u32")
+          || strVal.equals("i32")
+          || strVal.equals("u64")
+          || strVal.equals("i64")
+          || strVal.equals("timepoint")
+          || strVal.equals("duration")
+          || strVal.equals("u128")
+          || strVal.equals("i128")
+          || strVal.equals("u256")
+          || strVal.equals("i256")
+          || strVal.equals("bytes")
+          || strVal.equals("string")
+          || strVal.equals("symbol")
+          || strVal.equals("address")
+          || strVal.equals("muxed_address"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for SCSpecTypeDef");
+      }
+      SCSpecTypeDef instance = new SCSpecTypeDef();
+      instance.discriminant = SCSpecType.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for SCSpecTypeDef, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SCSpecType discriminant = SCSpecType.fromJsonObject(key);
+    if (key.equals("option")) {
+      SCSpecTypeDef instance = new SCSpecTypeDef();
+      instance.discriminant = discriminant;
+      instance.option = SCSpecTypeOption.fromJsonObject(jsonMap.get("option"));
+      return instance;
+    }
+    if (key.equals("result")) {
+      SCSpecTypeDef instance = new SCSpecTypeDef();
+      instance.discriminant = discriminant;
+      instance.result = SCSpecTypeResult.fromJsonObject(jsonMap.get("result"));
+      return instance;
+    }
+    if (key.equals("vec")) {
+      SCSpecTypeDef instance = new SCSpecTypeDef();
+      instance.discriminant = discriminant;
+      instance.vec = SCSpecTypeVec.fromJsonObject(jsonMap.get("vec"));
+      return instance;
+    }
+    if (key.equals("map")) {
+      SCSpecTypeDef instance = new SCSpecTypeDef();
+      instance.discriminant = discriminant;
+      instance.map = SCSpecTypeMap.fromJsonObject(jsonMap.get("map"));
+      return instance;
+    }
+    if (key.equals("tuple")) {
+      SCSpecTypeDef instance = new SCSpecTypeDef();
+      instance.discriminant = discriminant;
+      instance.tuple = SCSpecTypeTuple.fromJsonObject(jsonMap.get("tuple"));
+      return instance;
+    }
+    if (key.equals("bytes_n")) {
+      SCSpecTypeDef instance = new SCSpecTypeDef();
+      instance.discriminant = discriminant;
+      instance.bytesN = SCSpecTypeBytesN.fromJsonObject(jsonMap.get("bytes_n"));
+      return instance;
+    }
+    if (key.equals("udt")) {
+      SCSpecTypeDef instance = new SCSpecTypeDef();
+      instance.discriminant = discriminant;
+      instance.udt = SCSpecTypeUDT.fromJsonObject(jsonMap.get("udt"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SCSpecTypeDef");
   }
 }

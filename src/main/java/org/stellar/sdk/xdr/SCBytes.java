@@ -67,4 +67,23 @@ public class SCBytes implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCBytes fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(SCBytes);
+  }
+
+  static SCBytes fromJsonObject(Object json) {
+    SCBytes instance = new SCBytes();
+    instance.SCBytes = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

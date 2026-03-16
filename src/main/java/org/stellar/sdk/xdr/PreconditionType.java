@@ -69,4 +69,40 @@ public enum PreconditionType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PreconditionType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case PRECOND_NONE:
+        return "none";
+      case PRECOND_TIME:
+        return "time";
+      case PRECOND_V2:
+        return "v2";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static PreconditionType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "none":
+        return PRECOND_NONE;
+      case "time":
+        return PRECOND_TIME;
+      case "v2":
+        return PRECOND_V2;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -95,4 +95,64 @@ public class LiquidityPoolDepositResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LiquidityPoolDepositResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_NO_TRUST) {
+      return "no_trust";
+    }
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED) {
+      return "not_authorized";
+    }
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED) {
+      return "underfunded";
+    }
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_LINE_FULL) {
+      return "line_full";
+    }
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE) {
+      return "bad_price";
+    }
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_POOL_FULL) {
+      return "pool_full";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static LiquidityPoolDepositResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("no_trust")
+          || strVal.equals("not_authorized")
+          || strVal.equals("underfunded")
+          || strVal.equals("line_full")
+          || strVal.equals("bad_price")
+          || strVal.equals("pool_full"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for LiquidityPoolDepositResult");
+      }
+      LiquidityPoolDepositResult instance = new LiquidityPoolDepositResult();
+      instance.discriminant = LiquidityPoolDepositResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for LiquidityPoolDepositResult, got: " + json);
+  }
 }

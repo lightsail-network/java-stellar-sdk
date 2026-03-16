@@ -52,4 +52,23 @@ public class Uint32 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Uint32 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return uint32.toJsonObject();
+  }
+
+  static Uint32 fromJsonObject(Object json) {
+    Uint32 instance = new Uint32();
+    instance.uint32 = XdrUnsignedInteger.fromJsonObject(json);
+    return instance;
+  }
 }

@@ -58,4 +58,23 @@ public class Uint256 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Uint256 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(uint256);
+  }
+
+  static Uint256 fromJsonObject(Object json) {
+    Uint256 instance = new Uint256();
+    instance.uint256 = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

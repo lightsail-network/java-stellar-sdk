@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -59,5 +60,56 @@ public class Int128Parts implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Int128Parts fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    byte[] bytes = new byte[16];
+    long hiVal = hi.getInt64();
+    BigInteger loVal = lo.getUint64().getNumber();
+    byte[] hiBytes = BigInteger.valueOf(hiVal).toByteArray();
+    byte[] loBytes = loVal.toByteArray();
+    // hi is signed 64-bit
+    if (hiVal < 0) {
+      java.util.Arrays.fill(bytes, 0, 8, (byte) 0xFF);
+    }
+    System.arraycopy(
+        hiBytes,
+        Math.max(0, hiBytes.length - 8),
+        bytes,
+        8 - Math.min(8, hiBytes.length),
+        Math.min(8, hiBytes.length));
+    System.arraycopy(
+        loBytes,
+        Math.max(0, loBytes.length - 8),
+        bytes,
+        16 - Math.min(8, loBytes.length),
+        Math.min(8, loBytes.length));
+    return new BigInteger(bytes).toString();
+  }
+
+  static Int128Parts fromJsonObject(Object json) {
+    BigInteger value = new BigInteger((String) json);
+    byte[] bytes = new byte[16];
+    byte[] valBytes = value.toByteArray();
+    if (value.signum() < 0) {
+      java.util.Arrays.fill(bytes, (byte) 0xFF);
+    }
+    int copyLen = Math.min(valBytes.length, 16);
+    System.arraycopy(valBytes, Math.max(0, valBytes.length - 16), bytes, 16 - copyLen, copyLen);
+    long hiVal = new BigInteger(java.util.Arrays.copyOfRange(bytes, 0, 8)).longValue();
+    BigInteger loVal = new BigInteger(1, java.util.Arrays.copyOfRange(bytes, 8, 16));
+    Int128Parts instance = new Int128Parts();
+    instance.hi = new Int64(hiVal);
+    instance.lo = new Uint64(new XdrUnsignedHyperInteger(loVal));
+    return instance;
   }
 }

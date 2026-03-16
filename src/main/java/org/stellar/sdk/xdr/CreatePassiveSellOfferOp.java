@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,5 +70,34 @@ public class CreatePassiveSellOfferOp implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static CreatePassiveSellOfferOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("selling", selling.toJsonObject());
+    jsonMap.put("buying", buying.toJsonObject());
+    jsonMap.put("amount", amount.toJsonObject());
+    jsonMap.put("price", price.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static CreatePassiveSellOfferOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    CreatePassiveSellOfferOp instance = new CreatePassiveSellOfferOp();
+    instance.selling = Asset.fromJsonObject(jsonMap.get("selling"));
+    instance.buying = Asset.fromJsonObject(jsonMap.get("buying"));
+    instance.amount = Int64.fromJsonObject(jsonMap.get("amount"));
+    instance.price = Price.fromJsonObject(jsonMap.get("price"));
+    return instance;
   }
 }

@@ -84,4 +84,50 @@ public class ClawbackResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClawbackResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ClawbackResultCode.CLAWBACK_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == ClawbackResultCode.CLAWBACK_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == ClawbackResultCode.CLAWBACK_NOT_CLAWBACK_ENABLED) {
+      return "not_clawback_enabled";
+    }
+    if (discriminant == ClawbackResultCode.CLAWBACK_NO_TRUST) {
+      return "no_trust";
+    }
+    if (discriminant == ClawbackResultCode.CLAWBACK_UNDERFUNDED) {
+      return "underfunded";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ClawbackResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("not_clawback_enabled")
+          || strVal.equals("no_trust")
+          || strVal.equals("underfunded"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for ClawbackResult");
+      }
+      ClawbackResult instance = new ClawbackResult();
+      instance.discriminant = ClawbackResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for ClawbackResult, got: " + json);
+  }
 }
