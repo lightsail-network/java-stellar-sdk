@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -77,6 +78,45 @@ public class Claimant implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Claimant fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ClaimantType.CLAIMANT_TYPE_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("claimant_type_v0", v0.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static Claimant fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException("Expected a single-key object for Claimant, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    ClaimantType discriminant = ClaimantType.fromJsonObject(key);
+    if (key.equals("claimant_type_v0")) {
+      Claimant instance = new Claimant();
+      instance.discriminant = discriminant;
+      instance.v0 = ClaimantV0.fromJsonObject(jsonMap.get("claimant_type_v0"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for Claimant");
+  }
+
   /**
    * ClaimantV0's original definition in the XDR file is:
    *
@@ -126,6 +166,31 @@ public class Claimant implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static ClaimantV0 fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("destination", destination.toJsonObject());
+      jsonMap.put("predicate", predicate.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static ClaimantV0 fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      ClaimantV0 instance = new ClaimantV0();
+      instance.destination = AccountID.fromJsonObject(jsonMap.get("destination"));
+      instance.predicate = ClaimPredicate.fromJsonObject(jsonMap.get("predicate"));
+      return instance;
     }
   }
 }

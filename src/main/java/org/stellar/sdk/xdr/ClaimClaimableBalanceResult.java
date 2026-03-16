@@ -90,4 +90,56 @@ public class ClaimClaimableBalanceResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimClaimableBalanceResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST) {
+      return "does_not_exist";
+    }
+    if (discriminant == ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM) {
+      return "cannot_claim";
+    }
+    if (discriminant == ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_LINE_FULL) {
+      return "line_full";
+    }
+    if (discriminant == ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_NO_TRUST) {
+      return "no_trust";
+    }
+    if (discriminant == ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED) {
+      return "not_authorized";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ClaimClaimableBalanceResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("does_not_exist")
+          || strVal.equals("cannot_claim")
+          || strVal.equals("line_full")
+          || strVal.equals("no_trust")
+          || strVal.equals("not_authorized"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for ClaimClaimableBalanceResult");
+      }
+      ClaimClaimableBalanceResult instance = new ClaimClaimableBalanceResult();
+      instance.discriminant = ClaimClaimableBalanceResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for ClaimClaimableBalanceResult, got: " + json);
+  }
 }

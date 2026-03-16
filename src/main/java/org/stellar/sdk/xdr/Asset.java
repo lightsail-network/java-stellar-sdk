@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -90,5 +91,67 @@ public class Asset implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Asset fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == AssetType.ASSET_TYPE_NATIVE) {
+      return "native";
+    }
+    if (discriminant == AssetType.ASSET_TYPE_CREDIT_ALPHANUM4) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("credit_alphanum4", alphaNum4.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == AssetType.ASSET_TYPE_CREDIT_ALPHANUM12) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("credit_alphanum12", alphaNum12.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static Asset fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("native"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for Asset");
+      }
+      Asset instance = new Asset();
+      instance.discriminant = AssetType.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException("Expected a single-key object for Asset, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    AssetType discriminant = AssetType.fromJsonObject(key);
+    if (key.equals("credit_alphanum4")) {
+      Asset instance = new Asset();
+      instance.discriminant = discriminant;
+      instance.alphaNum4 = AlphaNum4.fromJsonObject(jsonMap.get("credit_alphanum4"));
+      return instance;
+    }
+    if (key.equals("credit_alphanum12")) {
+      Asset instance = new Asset();
+      instance.discriminant = discriminant;
+      instance.alphaNum12 = AlphaNum12.fromJsonObject(jsonMap.get("credit_alphanum12"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for Asset");
   }
 }

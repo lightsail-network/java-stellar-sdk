@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -93,5 +94,76 @@ public class CreateClaimableBalanceResult implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static CreateClaimableBalanceResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_SUCCESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("success", balanceID.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    if (discriminant == CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_NO_TRUST) {
+      return "no_trust";
+    }
+    if (discriminant == CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED) {
+      return "not_authorized";
+    }
+    if (discriminant == CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED) {
+      return "underfunded";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static CreateClaimableBalanceResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("malformed")
+          || strVal.equals("low_reserve")
+          || strVal.equals("no_trust")
+          || strVal.equals("not_authorized")
+          || strVal.equals("underfunded"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for CreateClaimableBalanceResult");
+      }
+      CreateClaimableBalanceResult instance = new CreateClaimableBalanceResult();
+      instance.discriminant = CreateClaimableBalanceResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for CreateClaimableBalanceResult, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    CreateClaimableBalanceResultCode discriminant =
+        CreateClaimableBalanceResultCode.fromJsonObject(key);
+    if (key.equals("success")) {
+      CreateClaimableBalanceResult instance = new CreateClaimableBalanceResult();
+      instance.discriminant = discriminant;
+      instance.balanceID = ClaimableBalanceID.fromJsonObject(jsonMap.get("success"));
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Unknown key '" + key + "' for CreateClaimableBalanceResult");
   }
 }

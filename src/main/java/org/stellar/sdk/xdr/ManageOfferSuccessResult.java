@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -92,6 +94,37 @@ public class ManageOfferSuccessResult implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ManageOfferSuccessResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put(
+        "offers_claimed",
+        XdrElement.arrayToJsonArray(offersClaimed, i -> offersClaimed[i].toJsonObject()));
+    jsonMap.put("offer", offer.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ManageOfferSuccessResult fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ManageOfferSuccessResult instance = new ManageOfferSuccessResult();
+    instance.offersClaimed =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("offers_claimed"),
+            ClaimAtom.class,
+            item -> ClaimAtom.fromJsonObject(item));
+    instance.offer = ManageOfferSuccessResultOffer.fromJsonObject(jsonMap.get("offer"));
+    return instance;
+  }
+
   /**
    * ManageOfferSuccessResultOffer's original definition in the XDR file is:
    *
@@ -164,6 +197,71 @@ public class ManageOfferSuccessResult implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static ManageOfferSuccessResultOffer fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == ManageOfferEffect.MANAGE_OFFER_CREATED) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("created", offer.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == ManageOfferEffect.MANAGE_OFFER_UPDATED) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("updated", offer.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == ManageOfferEffect.MANAGE_OFFER_DELETED) {
+        return "deleted";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static ManageOfferSuccessResultOffer fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("deleted"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for ManageOfferSuccessResultOffer");
+        }
+        ManageOfferSuccessResultOffer instance = new ManageOfferSuccessResultOffer();
+        instance.discriminant = ManageOfferEffect.fromJsonObject(strVal);
+        return instance;
+      }
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for ManageOfferSuccessResultOffer, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      ManageOfferEffect discriminant = ManageOfferEffect.fromJsonObject(key);
+      if (key.equals("created")) {
+        ManageOfferSuccessResultOffer instance = new ManageOfferSuccessResultOffer();
+        instance.discriminant = discriminant;
+        instance.offer = OfferEntry.fromJsonObject(jsonMap.get("created"));
+        return instance;
+      }
+      if (key.equals("updated")) {
+        ManageOfferSuccessResultOffer instance = new ManageOfferSuccessResultOffer();
+        instance.discriminant = discriminant;
+        instance.offer = OfferEntry.fromJsonObject(jsonMap.get("updated"));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Unknown key '" + key + "' for ManageOfferSuccessResultOffer");
     }
   }
 }

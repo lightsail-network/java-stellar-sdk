@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -104,5 +105,143 @@ public class SCError implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCError fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SCErrorType.SCE_CONTRACT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract", contractCode.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_WASM_VM) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("wasm_vm", code.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_CONTEXT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("context", code.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_STORAGE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("storage", code.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_OBJECT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("object", code.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_CRYPTO) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("crypto", code.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_EVENTS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("events", code.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_BUDGET) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("budget", code.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_VALUE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("value", code.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCErrorType.SCE_AUTH) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("auth", code.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCError fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException("Expected a single-key object for SCError, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SCErrorType discriminant = SCErrorType.fromJsonObject(key);
+    if (key.equals("contract")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.contractCode = Uint32.fromJsonObject(jsonMap.get("contract"));
+      return instance;
+    }
+    if (key.equals("wasm_vm")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("wasm_vm"));
+      return instance;
+    }
+    if (key.equals("context")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("context"));
+      return instance;
+    }
+    if (key.equals("storage")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("storage"));
+      return instance;
+    }
+    if (key.equals("object")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("object"));
+      return instance;
+    }
+    if (key.equals("crypto")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("crypto"));
+      return instance;
+    }
+    if (key.equals("events")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("events"));
+      return instance;
+    }
+    if (key.equals("budget")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("budget"));
+      return instance;
+    }
+    if (key.equals("value")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("value"));
+      return instance;
+    }
+    if (key.equals("auth")) {
+      SCError instance = new SCError();
+      instance.discriminant = discriminant;
+      instance.code = SCErrorCode.fromJsonObject(jsonMap.get("auth"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SCError");
   }
 }

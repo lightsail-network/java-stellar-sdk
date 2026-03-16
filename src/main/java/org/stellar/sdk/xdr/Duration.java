@@ -52,4 +52,23 @@ public class Duration implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Duration fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return Duration.toJsonObject();
+  }
+
+  static Duration fromJsonObject(Object json) {
+    Duration instance = new Duration();
+    instance.Duration = Uint64.fromJsonObject(json);
+    return instance;
+  }
 }

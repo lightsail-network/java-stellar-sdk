@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -81,5 +82,56 @@ public class SCSpecUDTUnionCaseV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecUDTUnionCaseV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SCSpecUDTUnionCaseV0Kind.SC_SPEC_UDT_UNION_CASE_VOID_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("void_v0", voidCase.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecUDTUnionCaseV0Kind.SC_SPEC_UDT_UNION_CASE_TUPLE_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("tuple_v0", tupleCase.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCSpecUDTUnionCaseV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for SCSpecUDTUnionCaseV0, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SCSpecUDTUnionCaseV0Kind discriminant = SCSpecUDTUnionCaseV0Kind.fromJsonObject(key);
+    if (key.equals("void_v0")) {
+      SCSpecUDTUnionCaseV0 instance = new SCSpecUDTUnionCaseV0();
+      instance.discriminant = discriminant;
+      instance.voidCase = SCSpecUDTUnionCaseVoidV0.fromJsonObject(jsonMap.get("void_v0"));
+      return instance;
+    }
+    if (key.equals("tuple_v0")) {
+      SCSpecUDTUnionCaseV0 instance = new SCSpecUDTUnionCaseV0();
+      instance.discriminant = discriminant;
+      instance.tupleCase = SCSpecUDTUnionCaseTupleV0.fromJsonObject(jsonMap.get("tuple_v0"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SCSpecUDTUnionCaseV0");
   }
 }

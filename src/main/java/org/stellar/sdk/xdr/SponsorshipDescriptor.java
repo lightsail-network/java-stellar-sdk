@@ -61,4 +61,23 @@ public class SponsorshipDescriptor implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SponsorshipDescriptor fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return SponsorshipDescriptor != null ? SponsorshipDescriptor.toJsonObject() : null;
+  }
+
+  static SponsorshipDescriptor fromJsonObject(Object json) {
+    SponsorshipDescriptor instance = new SponsorshipDescriptor();
+    instance.SponsorshipDescriptor = json != null ? AccountID.fromJsonObject(json) : null;
+    return instance;
+  }
 }

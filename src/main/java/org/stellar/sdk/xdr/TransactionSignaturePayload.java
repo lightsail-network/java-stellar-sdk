@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -71,6 +72,33 @@ public class TransactionSignaturePayload implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionSignaturePayload fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("network_id", networkId.toJsonObject());
+    jsonMap.put("tagged_transaction", taggedTransaction.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionSignaturePayload fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TransactionSignaturePayload instance = new TransactionSignaturePayload();
+    instance.networkId = Hash.fromJsonObject(jsonMap.get("network_id"));
+    instance.taggedTransaction =
+        TransactionSignaturePayloadTaggedTransaction.fromJsonObject(
+            jsonMap.get("tagged_transaction"));
+    return instance;
   }
 
   /**
@@ -151,6 +179,61 @@ public class TransactionSignaturePayload implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static TransactionSignaturePayloadTaggedTransaction fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == EnvelopeType.ENVELOPE_TYPE_TX) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("tx", tx.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == EnvelopeType.ENVELOPE_TYPE_TX_FEE_BUMP) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("tx_fee_bump", feeBump.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static TransactionSignaturePayloadTaggedTransaction fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for TransactionSignaturePayloadTaggedTransaction, got: "
+                + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      EnvelopeType discriminant = EnvelopeType.fromJsonObject(key);
+      if (key.equals("tx")) {
+        TransactionSignaturePayloadTaggedTransaction instance =
+            new TransactionSignaturePayloadTaggedTransaction();
+        instance.discriminant = discriminant;
+        instance.tx = Transaction.fromJsonObject(jsonMap.get("tx"));
+        return instance;
+      }
+      if (key.equals("tx_fee_bump")) {
+        TransactionSignaturePayloadTaggedTransaction instance =
+            new TransactionSignaturePayloadTaggedTransaction();
+        instance.discriminant = discriminant;
+        instance.feeBump = FeeBumpTransaction.fromJsonObject(jsonMap.get("tx_fee_bump"));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Unknown key '" + key + "' for TransactionSignaturePayloadTaggedTransaction");
     }
   }
 }

@@ -83,4 +83,49 @@ public class ExtendFootprintTTLResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ExtendFootprintTTLResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED) {
+      return "resource_limit_exceeded";
+    }
+    if (discriminant
+        == ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE) {
+      return "insufficient_refundable_fee";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ExtendFootprintTTLResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("resource_limit_exceeded")
+          || strVal.equals("insufficient_refundable_fee"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for ExtendFootprintTTLResult");
+      }
+      ExtendFootprintTTLResult instance = new ExtendFootprintTTLResult();
+      instance.discriminant = ExtendFootprintTTLResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for ExtendFootprintTTLResult, got: " + json);
+  }
 }

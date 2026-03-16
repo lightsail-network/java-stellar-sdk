@@ -4,12 +4,14 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * MuxedEd25519Account's original definition in the XDR file is:
@@ -61,5 +63,43 @@ public class MuxedEd25519Account implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static MuxedEd25519Account fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    try {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
+      this.ed25519.encode(xdrOut);
+      this.id.encode(xdrOut);
+      return StrKey.encodeMed25519PublicKey(baos.toByteArray());
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Failed to encode MuxedEd25519Account", e);
+    }
+  }
+
+  static MuxedEd25519Account fromJsonObject(Object json) {
+    String strKey = (String) json;
+    try {
+      byte[] raw = StrKey.decodeMed25519PublicKey(strKey);
+      ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+      XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
+      Uint256 ed25519 = Uint256.decode(xdrIn);
+      Uint64 id = Uint64.decode(xdrIn);
+      MuxedEd25519Account instance = new MuxedEd25519Account();
+      instance.id = id;
+      instance.ed25519 = ed25519;
+      return instance;
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Failed to decode MuxedEd25519Account", e);
+    }
   }
 }

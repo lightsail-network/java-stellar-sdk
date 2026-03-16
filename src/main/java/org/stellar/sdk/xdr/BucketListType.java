@@ -64,4 +64,36 @@ public enum BucketListType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static BucketListType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case LIVE:
+        return "live";
+      case HOT_ARCHIVE:
+        return "hot_archive";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static BucketListType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "live":
+        return LIVE;
+      case "hot_archive":
+        return HOT_ARCHIVE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

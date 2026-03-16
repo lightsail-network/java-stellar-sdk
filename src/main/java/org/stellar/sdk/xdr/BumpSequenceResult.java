@@ -76,4 +76,38 @@ public class BumpSequenceResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static BumpSequenceResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == BumpSequenceResultCode.BUMP_SEQUENCE_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == BumpSequenceResultCode.BUMP_SEQUENCE_BAD_SEQ) {
+      return "bad_seq";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static BumpSequenceResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success") || strVal.equals("bad_seq"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for BumpSequenceResult");
+      }
+      BumpSequenceResult instance = new BumpSequenceResult();
+      instance.discriminant = BumpSequenceResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for BumpSequenceResult, got: " + json);
+  }
 }

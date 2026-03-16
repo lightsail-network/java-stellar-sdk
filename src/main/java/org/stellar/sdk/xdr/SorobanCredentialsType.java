@@ -65,4 +65,36 @@ public enum SorobanCredentialsType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SorobanCredentialsType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SOROBAN_CREDENTIALS_SOURCE_ACCOUNT:
+        return "source_account";
+      case SOROBAN_CREDENTIALS_ADDRESS:
+        return "address";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SorobanCredentialsType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "source_account":
+        return SOROBAN_CREDENTIALS_SOURCE_ACCOUNT;
+      case "address":
+        return SOROBAN_CREDENTIALS_ADDRESS;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

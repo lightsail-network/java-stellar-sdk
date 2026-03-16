@@ -124,4 +124,96 @@ public enum ConfigSettingID implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ConfigSettingID fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES:
+        return "contract_max_size_bytes";
+      case CONFIG_SETTING_CONTRACT_COMPUTE_V0:
+        return "contract_compute_v0";
+      case CONFIG_SETTING_CONTRACT_LEDGER_COST_V0:
+        return "contract_ledger_cost_v0";
+      case CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0:
+        return "contract_historical_data_v0";
+      case CONFIG_SETTING_CONTRACT_EVENTS_V0:
+        return "contract_events_v0";
+      case CONFIG_SETTING_CONTRACT_BANDWIDTH_V0:
+        return "contract_bandwidth_v0";
+      case CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS:
+        return "contract_cost_params_cpu_instructions";
+      case CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES:
+        return "contract_cost_params_memory_bytes";
+      case CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES:
+        return "contract_data_key_size_bytes";
+      case CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES:
+        return "contract_data_entry_size_bytes";
+      case CONFIG_SETTING_STATE_ARCHIVAL:
+        return "state_archival";
+      case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
+        return "contract_execution_lanes";
+      case CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
+        return "live_soroban_state_size_window";
+      case CONFIG_SETTING_EVICTION_ITERATOR:
+        return "eviction_iterator";
+      case CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
+        return "contract_parallel_compute_v0";
+      case CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
+        return "contract_ledger_cost_ext_v0";
+      case CONFIG_SETTING_SCP_TIMING:
+        return "scp_timing";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ConfigSettingID fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "contract_max_size_bytes":
+        return CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES;
+      case "contract_compute_v0":
+        return CONFIG_SETTING_CONTRACT_COMPUTE_V0;
+      case "contract_ledger_cost_v0":
+        return CONFIG_SETTING_CONTRACT_LEDGER_COST_V0;
+      case "contract_historical_data_v0":
+        return CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0;
+      case "contract_events_v0":
+        return CONFIG_SETTING_CONTRACT_EVENTS_V0;
+      case "contract_bandwidth_v0":
+        return CONFIG_SETTING_CONTRACT_BANDWIDTH_V0;
+      case "contract_cost_params_cpu_instructions":
+        return CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS;
+      case "contract_cost_params_memory_bytes":
+        return CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES;
+      case "contract_data_key_size_bytes":
+        return CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES;
+      case "contract_data_entry_size_bytes":
+        return CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES;
+      case "state_archival":
+        return CONFIG_SETTING_STATE_ARCHIVAL;
+      case "contract_execution_lanes":
+        return CONFIG_SETTING_CONTRACT_EXECUTION_LANES;
+      case "live_soroban_state_size_window":
+        return CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW;
+      case "eviction_iterator":
+        return CONFIG_SETTING_EVICTION_ITERATOR;
+      case "contract_parallel_compute_v0":
+        return CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0;
+      case "contract_ledger_cost_ext_v0":
+        return CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0;
+      case "scp_timing":
+        return CONFIG_SETTING_SCP_TIMING;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

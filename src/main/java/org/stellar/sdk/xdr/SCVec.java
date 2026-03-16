@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,5 +68,26 @@ public class SCVec implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCVec fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.arrayToJsonArray(SCVec, i -> SCVec[i].toJsonObject());
+  }
+
+  static SCVec fromJsonObject(Object json) {
+    SCVec instance = new SCVec();
+    instance.SCVec =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) json, SCVal.class, item -> SCVal.fromJsonObject(item));
+    return instance;
   }
 }

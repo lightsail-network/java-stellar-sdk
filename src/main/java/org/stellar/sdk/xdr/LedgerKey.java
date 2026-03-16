@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -195,6 +196,146 @@ public class LedgerKey implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerKey fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == LedgerEntryType.ACCOUNT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("account", account.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.TRUSTLINE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("trustline", trustLine.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.OFFER) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("offer", offer.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.DATA) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("data", data.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.CLAIMABLE_BALANCE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("claimable_balance", claimableBalance.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.LIQUIDITY_POOL) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("liquidity_pool", liquidityPool.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.CONTRACT_DATA) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_data", contractData.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.CONTRACT_CODE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_code", contractCode.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.CONFIG_SETTING) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("config_setting", configSetting.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerEntryType.TTL) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("ttl", ttl.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerKey fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for LedgerKey, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    LedgerEntryType discriminant = LedgerEntryType.fromJsonObject(key);
+    if (key.equals("account")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.account = LedgerKeyAccount.fromJsonObject(jsonMap.get("account"));
+      return instance;
+    }
+    if (key.equals("trustline")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.trustLine = LedgerKeyTrustLine.fromJsonObject(jsonMap.get("trustline"));
+      return instance;
+    }
+    if (key.equals("offer")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.offer = LedgerKeyOffer.fromJsonObject(jsonMap.get("offer"));
+      return instance;
+    }
+    if (key.equals("data")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.data = LedgerKeyData.fromJsonObject(jsonMap.get("data"));
+      return instance;
+    }
+    if (key.equals("claimable_balance")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.claimableBalance =
+          LedgerKeyClaimableBalance.fromJsonObject(jsonMap.get("claimable_balance"));
+      return instance;
+    }
+    if (key.equals("liquidity_pool")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.liquidityPool = LedgerKeyLiquidityPool.fromJsonObject(jsonMap.get("liquidity_pool"));
+      return instance;
+    }
+    if (key.equals("contract_data")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.contractData = LedgerKeyContractData.fromJsonObject(jsonMap.get("contract_data"));
+      return instance;
+    }
+    if (key.equals("contract_code")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.contractCode = LedgerKeyContractCode.fromJsonObject(jsonMap.get("contract_code"));
+      return instance;
+    }
+    if (key.equals("config_setting")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.configSetting = LedgerKeyConfigSetting.fromJsonObject(jsonMap.get("config_setting"));
+      return instance;
+    }
+    if (key.equals("ttl")) {
+      LedgerKey instance = new LedgerKey();
+      instance.discriminant = discriminant;
+      instance.ttl = LedgerKeyTtl.fromJsonObject(jsonMap.get("ttl"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for LedgerKey");
+  }
+
   /**
    * LedgerKeyAccount's original definition in the XDR file is:
    *
@@ -241,6 +382,29 @@ public class LedgerKey implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyAccount fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("account_id", accountID.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyAccount fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyAccount instance = new LedgerKeyAccount();
+      instance.accountID = AccountID.fromJsonObject(jsonMap.get("account_id"));
+      return instance;
     }
   }
 
@@ -295,6 +459,31 @@ public class LedgerKey implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyTrustLine fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("account_id", accountID.toJsonObject());
+      jsonMap.put("asset", asset.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyTrustLine fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyTrustLine instance = new LedgerKeyTrustLine();
+      instance.accountID = AccountID.fromJsonObject(jsonMap.get("account_id"));
+      instance.asset = TrustLineAsset.fromJsonObject(jsonMap.get("asset"));
+      return instance;
+    }
   }
 
   /**
@@ -348,6 +537,31 @@ public class LedgerKey implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyOffer fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("seller_id", sellerID.toJsonObject());
+      jsonMap.put("offer_id", offerID.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyOffer fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyOffer instance = new LedgerKeyOffer();
+      instance.sellerID = AccountID.fromJsonObject(jsonMap.get("seller_id"));
+      instance.offerID = Int64.fromJsonObject(jsonMap.get("offer_id"));
+      return instance;
+    }
   }
 
   /**
@@ -400,6 +614,31 @@ public class LedgerKey implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyData fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("account_id", accountID.toJsonObject());
+      jsonMap.put("data_name", dataName.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyData fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyData instance = new LedgerKeyData();
+      instance.accountID = AccountID.fromJsonObject(jsonMap.get("account_id"));
+      instance.dataName = String64.fromJsonObject(jsonMap.get("data_name"));
+      return instance;
+    }
   }
 
   /**
@@ -449,6 +688,29 @@ public class LedgerKey implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyClaimableBalance fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("balance_id", balanceID.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyClaimableBalance fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyClaimableBalance instance = new LedgerKeyClaimableBalance();
+      instance.balanceID = ClaimableBalanceID.fromJsonObject(jsonMap.get("balance_id"));
+      return instance;
+    }
   }
 
   /**
@@ -497,6 +759,29 @@ public class LedgerKey implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyLiquidityPool fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("liquidity_pool_id", liquidityPoolID.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyLiquidityPool fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyLiquidityPool instance = new LedgerKeyLiquidityPool();
+      instance.liquidityPoolID = PoolID.fromJsonObject(jsonMap.get("liquidity_pool_id"));
+      return instance;
     }
   }
 
@@ -555,6 +840,33 @@ public class LedgerKey implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyContractData fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract", contract.toJsonObject());
+      jsonMap.put("key", key.toJsonObject());
+      jsonMap.put("durability", durability.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyContractData fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyContractData instance = new LedgerKeyContractData();
+      instance.contract = SCAddress.fromJsonObject(jsonMap.get("contract"));
+      instance.key = SCVal.fromJsonObject(jsonMap.get("key"));
+      instance.durability = ContractDataDurability.fromJsonObject(jsonMap.get("durability"));
+      return instance;
+    }
   }
 
   /**
@@ -603,6 +915,29 @@ public class LedgerKey implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyContractCode fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("hash", hash.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyContractCode fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyContractCode instance = new LedgerKeyContractCode();
+      instance.hash = Hash.fromJsonObject(jsonMap.get("hash"));
+      return instance;
     }
   }
 
@@ -653,6 +988,29 @@ public class LedgerKey implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyConfigSetting fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("config_setting_id", configSettingID.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyConfigSetting fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyConfigSetting instance = new LedgerKeyConfigSetting();
+      instance.configSettingID = ConfigSettingID.fromJsonObject(jsonMap.get("config_setting_id"));
+      return instance;
+    }
   }
 
   /**
@@ -701,6 +1059,29 @@ public class LedgerKey implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerKeyTtl fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("key_hash", keyHash.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerKeyTtl fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      LedgerKeyTtl instance = new LedgerKeyTtl();
+      instance.keyHash = Hash.fromJsonObject(jsonMap.get("key_hash"));
+      return instance;
     }
   }
 }

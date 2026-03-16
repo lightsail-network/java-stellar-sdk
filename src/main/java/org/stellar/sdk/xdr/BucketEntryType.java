@@ -74,4 +74,44 @@ public enum BucketEntryType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static BucketEntryType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case METAENTRY:
+        return "metaentry";
+      case LIVEENTRY:
+        return "liveentry";
+      case DEADENTRY:
+        return "deadentry";
+      case INITENTRY:
+        return "initentry";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static BucketEntryType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "metaentry":
+        return METAENTRY;
+      case "liveentry":
+        return LIVEENTRY;
+      case "deadentry":
+        return DEADENTRY;
+      case "initentry":
+        return INITENTRY;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

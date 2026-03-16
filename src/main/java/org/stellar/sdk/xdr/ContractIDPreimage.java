@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -88,6 +89,57 @@ public class ContractIDPreimage implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractIDPreimage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("address", fromAddress.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("asset", fromAsset.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ContractIDPreimage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for ContractIDPreimage, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    ContractIDPreimageType discriminant = ContractIDPreimageType.fromJsonObject(key);
+    if (key.equals("address")) {
+      ContractIDPreimage instance = new ContractIDPreimage();
+      instance.discriminant = discriminant;
+      instance.fromAddress = ContractIDPreimageFromAddress.fromJsonObject(jsonMap.get("address"));
+      return instance;
+    }
+    if (key.equals("asset")) {
+      ContractIDPreimage instance = new ContractIDPreimage();
+      instance.discriminant = discriminant;
+      instance.fromAsset = Asset.fromJsonObject(jsonMap.get("asset"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for ContractIDPreimage");
+  }
+
   /**
    * ContractIDPreimageFromAddress's original definition in the XDR file is:
    *
@@ -140,6 +192,31 @@ public class ContractIDPreimage implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static ContractIDPreimageFromAddress fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("address", address.toJsonObject());
+      jsonMap.put("salt", salt.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static ContractIDPreimageFromAddress fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      ContractIDPreimageFromAddress instance = new ContractIDPreimageFromAddress();
+      instance.address = SCAddress.fromJsonObject(jsonMap.get("address"));
+      instance.salt = Uint256.fromJsonObject(jsonMap.get("salt"));
+      return instance;
     }
   }
 }

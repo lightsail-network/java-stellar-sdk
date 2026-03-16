@@ -70,4 +70,36 @@ public enum EndSponsoringFutureReservesResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static EndSponsoringFutureReservesResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case END_SPONSORING_FUTURE_RESERVES_SUCCESS:
+        return "success";
+      case END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED:
+        return "not_sponsored";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static EndSponsoringFutureReservesResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return END_SPONSORING_FUTURE_RESERVES_SUCCESS;
+      case "not_sponsored":
+        return END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -81,4 +81,48 @@ public enum CreateAccountResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static CreateAccountResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CREATE_ACCOUNT_SUCCESS:
+        return "success";
+      case CREATE_ACCOUNT_MALFORMED:
+        return "malformed";
+      case CREATE_ACCOUNT_UNDERFUNDED:
+        return "underfunded";
+      case CREATE_ACCOUNT_LOW_RESERVE:
+        return "low_reserve";
+      case CREATE_ACCOUNT_ALREADY_EXIST:
+        return "already_exist";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static CreateAccountResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return CREATE_ACCOUNT_SUCCESS;
+      case "malformed":
+        return CREATE_ACCOUNT_MALFORMED;
+      case "underfunded":
+        return CREATE_ACCOUNT_UNDERFUNDED;
+      case "low_reserve":
+        return CREATE_ACCOUNT_LOW_RESERVE;
+      case "already_exist":
+        return CREATE_ACCOUNT_ALREADY_EXIST;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

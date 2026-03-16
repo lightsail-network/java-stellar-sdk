@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -99,5 +100,51 @@ public class TimeSlicedNodeData implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TimeSlicedNodeData fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("added_authenticated_peers", addedAuthenticatedPeers.toJsonObject());
+    jsonMap.put("dropped_authenticated_peers", droppedAuthenticatedPeers.toJsonObject());
+    jsonMap.put("total_inbound_peer_count", totalInboundPeerCount.toJsonObject());
+    jsonMap.put("total_outbound_peer_count", totalOutboundPeerCount.toJsonObject());
+    jsonMap.put("p75_scp_first_to_self_latency_ms", p75SCPFirstToSelfLatencyMs.toJsonObject());
+    jsonMap.put("p75_scp_self_to_other_latency_ms", p75SCPSelfToOtherLatencyMs.toJsonObject());
+    jsonMap.put("lost_sync_count", lostSyncCount.toJsonObject());
+    jsonMap.put("is_validator", (Boolean) isValidator);
+    jsonMap.put("max_inbound_peer_count", maxInboundPeerCount.toJsonObject());
+    jsonMap.put("max_outbound_peer_count", maxOutboundPeerCount.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TimeSlicedNodeData fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TimeSlicedNodeData instance = new TimeSlicedNodeData();
+    instance.addedAuthenticatedPeers =
+        Uint32.fromJsonObject(jsonMap.get("added_authenticated_peers"));
+    instance.droppedAuthenticatedPeers =
+        Uint32.fromJsonObject(jsonMap.get("dropped_authenticated_peers"));
+    instance.totalInboundPeerCount = Uint32.fromJsonObject(jsonMap.get("total_inbound_peer_count"));
+    instance.totalOutboundPeerCount =
+        Uint32.fromJsonObject(jsonMap.get("total_outbound_peer_count"));
+    instance.p75SCPFirstToSelfLatencyMs =
+        Uint32.fromJsonObject(jsonMap.get("p75_scp_first_to_self_latency_ms"));
+    instance.p75SCPSelfToOtherLatencyMs =
+        Uint32.fromJsonObject(jsonMap.get("p75_scp_self_to_other_latency_ms"));
+    instance.lostSyncCount = Uint32.fromJsonObject(jsonMap.get("lost_sync_count"));
+    instance.isValidator = (Boolean) jsonMap.get("is_validator");
+    instance.maxInboundPeerCount = Uint32.fromJsonObject(jsonMap.get("max_inbound_peer_count"));
+    instance.maxOutboundPeerCount = Uint32.fromJsonObject(jsonMap.get("max_outbound_peer_count"));
+    return instance;
   }
 }

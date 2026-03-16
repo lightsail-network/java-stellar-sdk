@@ -79,4 +79,44 @@ public enum BeginSponsoringFutureReservesResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static BeginSponsoringFutureReservesResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS:
+        return "success";
+      case BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED:
+        return "malformed";
+      case BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED:
+        return "already_sponsored";
+      case BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE:
+        return "recursive";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static BeginSponsoringFutureReservesResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS;
+      case "malformed":
+        return BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED;
+      case "already_sponsored":
+        return BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED;
+      case "recursive":
+        return BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

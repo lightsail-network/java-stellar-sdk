@@ -52,4 +52,23 @@ public class Int32 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Int32 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return (Integer) int32;
+  }
+
+  static Int32 fromJsonObject(Object json) {
+    Int32 instance = new Int32();
+    instance.int32 = ((Number) json).intValue();
+    return instance;
+  }
 }

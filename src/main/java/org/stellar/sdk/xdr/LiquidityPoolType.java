@@ -61,4 +61,32 @@ public enum LiquidityPoolType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LiquidityPoolType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case LIQUIDITY_POOL_CONSTANT_PRODUCT:
+        return "liquidity_pool_constant_product";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static LiquidityPoolType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "liquidity_pool_constant_product":
+        return LIQUIDITY_POOL_CONSTANT_PRODUCT;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -77,6 +78,33 @@ public class TransactionHistoryResultEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionHistoryResultEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ledger_seq", ledgerSeq.toJsonObject());
+    jsonMap.put("tx_result_set", txResultSet.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionHistoryResultEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TransactionHistoryResultEntry instance = new TransactionHistoryResultEntry();
+    instance.ledgerSeq = Uint32.fromJsonObject(jsonMap.get("ledger_seq"));
+    instance.txResultSet = TransactionResultSet.fromJsonObject(jsonMap.get("tx_result_set"));
+    instance.ext = TransactionHistoryResultEntryExt.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * TransactionHistoryResultEntryExt's original definition in the XDR file is:
    *
@@ -137,6 +165,38 @@ public class TransactionHistoryResultEntry implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static TransactionHistoryResultEntryExt fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static TransactionHistoryResultEntryExt fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for TransactionHistoryResultEntryExt");
+        }
+        TransactionHistoryResultEntryExt instance = new TransactionHistoryResultEntryExt();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Expected a string for TransactionHistoryResultEntryExt, got: " + json);
     }
   }
 }

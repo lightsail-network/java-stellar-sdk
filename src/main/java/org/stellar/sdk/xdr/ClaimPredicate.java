@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -174,5 +176,111 @@ public class ClaimPredicate implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimPredicate fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ClaimPredicateType.CLAIM_PREDICATE_UNCONDITIONAL) {
+      return "unconditional";
+    }
+    if (discriminant == ClaimPredicateType.CLAIM_PREDICATE_AND) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "and", XdrElement.arrayToJsonArray(andPredicates, i -> andPredicates[i].toJsonObject()));
+      return jsonMap;
+    }
+    if (discriminant == ClaimPredicateType.CLAIM_PREDICATE_OR) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "or", XdrElement.arrayToJsonArray(orPredicates, i -> orPredicates[i].toJsonObject()));
+      return jsonMap;
+    }
+    if (discriminant == ClaimPredicateType.CLAIM_PREDICATE_NOT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("not", notPredicate.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ClaimPredicateType.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("before_absolute_time", absBefore.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ClaimPredicateType.CLAIM_PREDICATE_BEFORE_RELATIVE_TIME) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("before_relative_time", relBefore.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ClaimPredicate fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("unconditional"))) {
+        throw new IllegalArgumentException("Unexpected string '" + strVal + "' for ClaimPredicate");
+      }
+      ClaimPredicate instance = new ClaimPredicate();
+      instance.discriminant = ClaimPredicateType.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for ClaimPredicate, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    ClaimPredicateType discriminant = ClaimPredicateType.fromJsonObject(key);
+    if (key.equals("and")) {
+      ClaimPredicate instance = new ClaimPredicate();
+      instance.discriminant = discriminant;
+      instance.andPredicates =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("and"),
+              ClaimPredicate.class,
+              item -> ClaimPredicate.fromJsonObject(item));
+      return instance;
+    }
+    if (key.equals("or")) {
+      ClaimPredicate instance = new ClaimPredicate();
+      instance.discriminant = discriminant;
+      instance.orPredicates =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("or"),
+              ClaimPredicate.class,
+              item -> ClaimPredicate.fromJsonObject(item));
+      return instance;
+    }
+    if (key.equals("not")) {
+      ClaimPredicate instance = new ClaimPredicate();
+      instance.discriminant = discriminant;
+      instance.notPredicate = ClaimPredicate.fromJsonObject(jsonMap.get("not"));
+      return instance;
+    }
+    if (key.equals("before_absolute_time")) {
+      ClaimPredicate instance = new ClaimPredicate();
+      instance.discriminant = discriminant;
+      instance.absBefore = Int64.fromJsonObject(jsonMap.get("before_absolute_time"));
+      return instance;
+    }
+    if (key.equals("before_relative_time")) {
+      ClaimPredicate instance = new ClaimPredicate();
+      instance.discriminant = discriminant;
+      instance.relBefore = Int64.fromJsonObject(jsonMap.get("before_relative_time"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for ClaimPredicate");
   }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,6 +70,31 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerHeaderExtensionV1 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("flags", flags.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerHeaderExtensionV1 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    LedgerHeaderExtensionV1 instance = new LedgerHeaderExtensionV1();
+    instance.flags = Uint32.fromJsonObject(jsonMap.get("flags"));
+    instance.ext = LedgerHeaderExtensionV1Ext.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * LedgerHeaderExtensionV1Ext's original definition in the XDR file is:
    *
@@ -128,6 +154,38 @@ public class LedgerHeaderExtensionV1 implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerHeaderExtensionV1Ext fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerHeaderExtensionV1Ext fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for LedgerHeaderExtensionV1Ext");
+        }
+        LedgerHeaderExtensionV1Ext instance = new LedgerHeaderExtensionV1Ext();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Expected a string for LedgerHeaderExtensionV1Ext, got: " + json);
     }
   }
 }

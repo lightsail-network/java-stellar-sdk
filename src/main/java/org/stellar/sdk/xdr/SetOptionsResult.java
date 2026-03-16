@@ -103,4 +103,75 @@ public class SetOptionsResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SetOptionsResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_TOO_MANY_SIGNERS) {
+      return "too_many_signers";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_BAD_FLAGS) {
+      return "bad_flags";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_INVALID_INFLATION) {
+      return "invalid_inflation";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_CANT_CHANGE) {
+      return "cant_change";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_UNKNOWN_FLAG) {
+      return "unknown_flag";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_THRESHOLD_OUT_OF_RANGE) {
+      return "threshold_out_of_range";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_BAD_SIGNER) {
+      return "bad_signer";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_INVALID_HOME_DOMAIN) {
+      return "invalid_home_domain";
+    }
+    if (discriminant == SetOptionsResultCode.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED) {
+      return "auth_revocable_required";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SetOptionsResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("low_reserve")
+          || strVal.equals("too_many_signers")
+          || strVal.equals("bad_flags")
+          || strVal.equals("invalid_inflation")
+          || strVal.equals("cant_change")
+          || strVal.equals("unknown_flag")
+          || strVal.equals("threshold_out_of_range")
+          || strVal.equals("bad_signer")
+          || strVal.equals("invalid_home_domain")
+          || strVal.equals("auth_revocable_required"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for SetOptionsResult");
+      }
+      SetOptionsResult instance = new SetOptionsResult();
+      instance.discriminant = SetOptionsResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for SetOptionsResult, got: " + json);
+  }
 }

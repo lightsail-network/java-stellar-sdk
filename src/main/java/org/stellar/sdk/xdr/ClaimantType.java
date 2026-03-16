@@ -60,4 +60,32 @@ public enum ClaimantType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimantType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CLAIMANT_TYPE_V0:
+        return "claimant_type_v0";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ClaimantType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "claimant_type_v0":
+        return CLAIMANT_TYPE_V0;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

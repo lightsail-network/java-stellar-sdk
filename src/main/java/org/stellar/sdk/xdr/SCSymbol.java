@@ -56,4 +56,23 @@ public class SCSymbol implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSymbol fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return SCSymbol.toJsonObject();
+  }
+
+  static SCSymbol fromJsonObject(Object json) {
+    SCSymbol instance = new SCSymbol();
+    instance.SCSymbol = XdrString.fromJsonObject(json);
+    return instance;
+  }
 }

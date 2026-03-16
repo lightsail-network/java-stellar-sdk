@@ -4,12 +4,15 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * MuxedAccount's original definition in the XDR file is:
@@ -86,6 +89,57 @@ public class MuxedAccount implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static MuxedAccount fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (this.discriminant == CryptoKeyType.KEY_TYPE_ED25519) {
+      return StrKey.encodeEd25519PublicKey(this.ed25519.getUint256());
+    }
+    try {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
+      this.med25519.getEd25519().encode(xdrOut);
+      this.med25519.getId().encode(xdrOut);
+      return StrKey.encodeMed25519PublicKey(baos.toByteArray());
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Failed to encode MuxedAccount", e);
+    }
+  }
+
+  static MuxedAccount fromJsonObject(Object json) {
+    String strKey = (String) json;
+    MuxedAccount instance = new MuxedAccount();
+    if (strKey.startsWith("G")) {
+      byte[] raw = StrKey.decodeEd25519PublicKey(strKey);
+      instance.discriminant = CryptoKeyType.KEY_TYPE_ED25519;
+      instance.ed25519 = new Uint256();
+      instance.ed25519.setUint256(raw);
+    } else {
+      try {
+        byte[] raw = StrKey.decodeMed25519PublicKey(strKey);
+        ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+        XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
+        Uint256 ed25519 = Uint256.decode(xdrIn);
+        Uint64 id = Uint64.decode(xdrIn);
+        MuxedAccountMed25519 med = new MuxedAccountMed25519();
+        med.setId(id);
+        med.setEd25519(ed25519);
+        instance.discriminant = CryptoKeyType.KEY_TYPE_MUXED_ED25519;
+        instance.med25519 = med;
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to decode MuxedAccount", e);
+      }
+    }
+    return instance;
+  }
+
   /**
    * MuxedAccountMed25519's original definition in the XDR file is:
    *
@@ -136,6 +190,31 @@ public class MuxedAccount implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static MuxedAccountMed25519 fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("id", id.toJsonObject());
+      jsonMap.put("ed25519", ed25519.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static MuxedAccountMed25519 fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      MuxedAccountMed25519 instance = new MuxedAccountMed25519();
+      instance.id = Uint64.fromJsonObject(jsonMap.get("id"));
+      instance.ed25519 = Uint256.fromJsonObject(jsonMap.get("ed25519"));
+      return instance;
     }
   }
 }

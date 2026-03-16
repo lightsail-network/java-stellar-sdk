@@ -63,4 +63,32 @@ public enum TxSetComponentType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TxSetComponentType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE:
+        return "txset_comp_txs_maybe_discounted_fee";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static TxSetComponentType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "txset_comp_txs_maybe_discounted_fee":
+        return TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -166,4 +166,132 @@ public enum SCSpecType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SC_SPEC_TYPE_VAL:
+        return "val";
+      case SC_SPEC_TYPE_BOOL:
+        return "bool";
+      case SC_SPEC_TYPE_VOID:
+        return "void";
+      case SC_SPEC_TYPE_ERROR:
+        return "error";
+      case SC_SPEC_TYPE_U32:
+        return "u32";
+      case SC_SPEC_TYPE_I32:
+        return "i32";
+      case SC_SPEC_TYPE_U64:
+        return "u64";
+      case SC_SPEC_TYPE_I64:
+        return "i64";
+      case SC_SPEC_TYPE_TIMEPOINT:
+        return "timepoint";
+      case SC_SPEC_TYPE_DURATION:
+        return "duration";
+      case SC_SPEC_TYPE_U128:
+        return "u128";
+      case SC_SPEC_TYPE_I128:
+        return "i128";
+      case SC_SPEC_TYPE_U256:
+        return "u256";
+      case SC_SPEC_TYPE_I256:
+        return "i256";
+      case SC_SPEC_TYPE_BYTES:
+        return "bytes";
+      case SC_SPEC_TYPE_STRING:
+        return "string";
+      case SC_SPEC_TYPE_SYMBOL:
+        return "symbol";
+      case SC_SPEC_TYPE_ADDRESS:
+        return "address";
+      case SC_SPEC_TYPE_MUXED_ADDRESS:
+        return "muxed_address";
+      case SC_SPEC_TYPE_OPTION:
+        return "option";
+      case SC_SPEC_TYPE_RESULT:
+        return "result";
+      case SC_SPEC_TYPE_VEC:
+        return "vec";
+      case SC_SPEC_TYPE_MAP:
+        return "map";
+      case SC_SPEC_TYPE_TUPLE:
+        return "tuple";
+      case SC_SPEC_TYPE_BYTES_N:
+        return "bytes_n";
+      case SC_SPEC_TYPE_UDT:
+        return "udt";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCSpecType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "val":
+        return SC_SPEC_TYPE_VAL;
+      case "bool":
+        return SC_SPEC_TYPE_BOOL;
+      case "void":
+        return SC_SPEC_TYPE_VOID;
+      case "error":
+        return SC_SPEC_TYPE_ERROR;
+      case "u32":
+        return SC_SPEC_TYPE_U32;
+      case "i32":
+        return SC_SPEC_TYPE_I32;
+      case "u64":
+        return SC_SPEC_TYPE_U64;
+      case "i64":
+        return SC_SPEC_TYPE_I64;
+      case "timepoint":
+        return SC_SPEC_TYPE_TIMEPOINT;
+      case "duration":
+        return SC_SPEC_TYPE_DURATION;
+      case "u128":
+        return SC_SPEC_TYPE_U128;
+      case "i128":
+        return SC_SPEC_TYPE_I128;
+      case "u256":
+        return SC_SPEC_TYPE_U256;
+      case "i256":
+        return SC_SPEC_TYPE_I256;
+      case "bytes":
+        return SC_SPEC_TYPE_BYTES;
+      case "string":
+        return SC_SPEC_TYPE_STRING;
+      case "symbol":
+        return SC_SPEC_TYPE_SYMBOL;
+      case "address":
+        return SC_SPEC_TYPE_ADDRESS;
+      case "muxed_address":
+        return SC_SPEC_TYPE_MUXED_ADDRESS;
+      case "option":
+        return SC_SPEC_TYPE_OPTION;
+      case "result":
+        return SC_SPEC_TYPE_RESULT;
+      case "vec":
+        return SC_SPEC_TYPE_VEC;
+      case "map":
+        return SC_SPEC_TYPE_MAP;
+      case "tuple":
+        return SC_SPEC_TYPE_TUPLE;
+      case "bytes_n":
+        return SC_SPEC_TYPE_BYTES_N;
+      case "udt":
+        return SC_SPEC_TYPE_UDT;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

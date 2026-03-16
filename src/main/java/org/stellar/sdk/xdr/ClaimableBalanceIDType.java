@@ -61,4 +61,32 @@ public enum ClaimableBalanceIDType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimableBalanceIDType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CLAIMABLE_BALANCE_ID_TYPE_V0:
+        return "claimable_balance_id_type_v0";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ClaimableBalanceIDType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "claimable_balance_id_type_v0":
+        return CLAIMABLE_BALANCE_ID_TYPE_V0;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

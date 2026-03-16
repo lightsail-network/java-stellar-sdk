@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -96,5 +98,62 @@ public class InflationResult implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static InflationResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == InflationResultCode.INFLATION_SUCCESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("success", XdrElement.arrayToJsonArray(payouts, i -> payouts[i].toJsonObject()));
+      return jsonMap;
+    }
+    if (discriminant == InflationResultCode.INFLATION_NOT_TIME) {
+      return "not_time";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static InflationResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("not_time"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for InflationResult");
+      }
+      InflationResult instance = new InflationResult();
+      instance.discriminant = InflationResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for InflationResult, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    InflationResultCode discriminant = InflationResultCode.fromJsonObject(key);
+    if (key.equals("success")) {
+      InflationResult instance = new InflationResult();
+      instance.discriminant = discriminant;
+      instance.payouts =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("success"),
+              InflationPayout.class,
+              item -> InflationPayout.fromJsonObject(item));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for InflationResult");
   }
 }

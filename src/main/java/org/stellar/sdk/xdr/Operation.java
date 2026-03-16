@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -129,6 +130,34 @@ public class Operation implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Operation fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("source_account", sourceAccount != null ? sourceAccount.toJsonObject() : null);
+    jsonMap.put("body", body.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static Operation fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    Operation instance = new Operation();
+    instance.sourceAccount =
+        jsonMap.get("source_account") != null
+            ? MuxedAccount.fromJsonObject(jsonMap.get("source_account"))
+            : null;
+    instance.body = OperationBody.fromJsonObject(jsonMap.get("body"));
+    return instance;
   }
 
   /**
@@ -428,6 +457,344 @@ public class Operation implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static OperationBody fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == OperationType.CREATE_ACCOUNT) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("create_account", createAccountOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.PAYMENT) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("payment", paymentOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.PATH_PAYMENT_STRICT_RECEIVE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("path_payment_strict_receive", pathPaymentStrictReceiveOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.MANAGE_SELL_OFFER) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("manage_sell_offer", manageSellOfferOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.CREATE_PASSIVE_SELL_OFFER) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("create_passive_sell_offer", createPassiveSellOfferOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.SET_OPTIONS) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("set_options", setOptionsOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.CHANGE_TRUST) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("change_trust", changeTrustOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.ALLOW_TRUST) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("allow_trust", allowTrustOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.ACCOUNT_MERGE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("account_merge", destination.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.INFLATION) {
+        return "inflation";
+      }
+      if (discriminant == OperationType.MANAGE_DATA) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("manage_data", manageDataOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.BUMP_SEQUENCE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("bump_sequence", bumpSequenceOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.MANAGE_BUY_OFFER) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("manage_buy_offer", manageBuyOfferOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.PATH_PAYMENT_STRICT_SEND) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("path_payment_strict_send", pathPaymentStrictSendOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.CREATE_CLAIMABLE_BALANCE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("create_claimable_balance", createClaimableBalanceOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.CLAIM_CLAIMABLE_BALANCE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("claim_claimable_balance", claimClaimableBalanceOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.BEGIN_SPONSORING_FUTURE_RESERVES) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put(
+            "begin_sponsoring_future_reserves", beginSponsoringFutureReservesOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.END_SPONSORING_FUTURE_RESERVES) {
+        return "end_sponsoring_future_reserves";
+      }
+      if (discriminant == OperationType.REVOKE_SPONSORSHIP) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("revoke_sponsorship", revokeSponsorshipOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.CLAWBACK) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("clawback", clawbackOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.CLAWBACK_CLAIMABLE_BALANCE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("clawback_claimable_balance", clawbackClaimableBalanceOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.SET_TRUST_LINE_FLAGS) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("set_trust_line_flags", setTrustLineFlagsOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.LIQUIDITY_POOL_DEPOSIT) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("liquidity_pool_deposit", liquidityPoolDepositOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.LIQUIDITY_POOL_WITHDRAW) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("liquidity_pool_withdraw", liquidityPoolWithdrawOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.INVOKE_HOST_FUNCTION) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("invoke_host_function", invokeHostFunctionOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.EXTEND_FOOTPRINT_TTL) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("extend_footprint_ttl", extendFootprintTTLOp.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == OperationType.RESTORE_FOOTPRINT) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("restore_footprint", restoreFootprintOp.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static OperationBody fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("inflation") || strVal.equals("end_sponsoring_future_reserves"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for OperationBody");
+        }
+        OperationBody instance = new OperationBody();
+        instance.discriminant = OperationType.fromJsonObject(strVal);
+        return instance;
+      }
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for OperationBody, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      OperationType discriminant = OperationType.fromJsonObject(key);
+      if (key.equals("create_account")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.createAccountOp = CreateAccountOp.fromJsonObject(jsonMap.get("create_account"));
+        return instance;
+      }
+      if (key.equals("payment")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.paymentOp = PaymentOp.fromJsonObject(jsonMap.get("payment"));
+        return instance;
+      }
+      if (key.equals("path_payment_strict_receive")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.pathPaymentStrictReceiveOp =
+            PathPaymentStrictReceiveOp.fromJsonObject(jsonMap.get("path_payment_strict_receive"));
+        return instance;
+      }
+      if (key.equals("manage_sell_offer")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.manageSellOfferOp =
+            ManageSellOfferOp.fromJsonObject(jsonMap.get("manage_sell_offer"));
+        return instance;
+      }
+      if (key.equals("create_passive_sell_offer")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.createPassiveSellOfferOp =
+            CreatePassiveSellOfferOp.fromJsonObject(jsonMap.get("create_passive_sell_offer"));
+        return instance;
+      }
+      if (key.equals("set_options")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.setOptionsOp = SetOptionsOp.fromJsonObject(jsonMap.get("set_options"));
+        return instance;
+      }
+      if (key.equals("change_trust")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.changeTrustOp = ChangeTrustOp.fromJsonObject(jsonMap.get("change_trust"));
+        return instance;
+      }
+      if (key.equals("allow_trust")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.allowTrustOp = AllowTrustOp.fromJsonObject(jsonMap.get("allow_trust"));
+        return instance;
+      }
+      if (key.equals("account_merge")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.destination = MuxedAccount.fromJsonObject(jsonMap.get("account_merge"));
+        return instance;
+      }
+      if (key.equals("manage_data")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.manageDataOp = ManageDataOp.fromJsonObject(jsonMap.get("manage_data"));
+        return instance;
+      }
+      if (key.equals("bump_sequence")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.bumpSequenceOp = BumpSequenceOp.fromJsonObject(jsonMap.get("bump_sequence"));
+        return instance;
+      }
+      if (key.equals("manage_buy_offer")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.manageBuyOfferOp =
+            ManageBuyOfferOp.fromJsonObject(jsonMap.get("manage_buy_offer"));
+        return instance;
+      }
+      if (key.equals("path_payment_strict_send")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.pathPaymentStrictSendOp =
+            PathPaymentStrictSendOp.fromJsonObject(jsonMap.get("path_payment_strict_send"));
+        return instance;
+      }
+      if (key.equals("create_claimable_balance")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.createClaimableBalanceOp =
+            CreateClaimableBalanceOp.fromJsonObject(jsonMap.get("create_claimable_balance"));
+        return instance;
+      }
+      if (key.equals("claim_claimable_balance")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.claimClaimableBalanceOp =
+            ClaimClaimableBalanceOp.fromJsonObject(jsonMap.get("claim_claimable_balance"));
+        return instance;
+      }
+      if (key.equals("begin_sponsoring_future_reserves")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.beginSponsoringFutureReservesOp =
+            BeginSponsoringFutureReservesOp.fromJsonObject(
+                jsonMap.get("begin_sponsoring_future_reserves"));
+        return instance;
+      }
+      if (key.equals("revoke_sponsorship")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.revokeSponsorshipOp =
+            RevokeSponsorshipOp.fromJsonObject(jsonMap.get("revoke_sponsorship"));
+        return instance;
+      }
+      if (key.equals("clawback")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.clawbackOp = ClawbackOp.fromJsonObject(jsonMap.get("clawback"));
+        return instance;
+      }
+      if (key.equals("clawback_claimable_balance")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.clawbackClaimableBalanceOp =
+            ClawbackClaimableBalanceOp.fromJsonObject(jsonMap.get("clawback_claimable_balance"));
+        return instance;
+      }
+      if (key.equals("set_trust_line_flags")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.setTrustLineFlagsOp =
+            SetTrustLineFlagsOp.fromJsonObject(jsonMap.get("set_trust_line_flags"));
+        return instance;
+      }
+      if (key.equals("liquidity_pool_deposit")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.liquidityPoolDepositOp =
+            LiquidityPoolDepositOp.fromJsonObject(jsonMap.get("liquidity_pool_deposit"));
+        return instance;
+      }
+      if (key.equals("liquidity_pool_withdraw")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.liquidityPoolWithdrawOp =
+            LiquidityPoolWithdrawOp.fromJsonObject(jsonMap.get("liquidity_pool_withdraw"));
+        return instance;
+      }
+      if (key.equals("invoke_host_function")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.invokeHostFunctionOp =
+            InvokeHostFunctionOp.fromJsonObject(jsonMap.get("invoke_host_function"));
+        return instance;
+      }
+      if (key.equals("extend_footprint_ttl")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.extendFootprintTTLOp =
+            ExtendFootprintTTLOp.fromJsonObject(jsonMap.get("extend_footprint_ttl"));
+        return instance;
+      }
+      if (key.equals("restore_footprint")) {
+        OperationBody instance = new OperationBody();
+        instance.discriminant = discriminant;
+        instance.restoreFootprintOp =
+            RestoreFootprintOp.fromJsonObject(jsonMap.get("restore_footprint"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for OperationBody");
     }
   }
 }

@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -99,6 +101,33 @@ public class TransactionResult implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("fee_charged", feeCharged.toJsonObject());
+    jsonMap.put("result", result.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionResult fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TransactionResult instance = new TransactionResult();
+    instance.feeCharged = Int64.fromJsonObject(jsonMap.get("fee_charged"));
+    instance.result = TransactionResultResult.fromJsonObject(jsonMap.get("result"));
+    instance.ext = TransactionResultExt.fromJsonObject(jsonMap.get("ext"));
+    return instance;
   }
 
   /**
@@ -247,6 +276,160 @@ public class TransactionResult implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static TransactionResultResult fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == TransactionResultCode.txFEE_BUMP_INNER_SUCCESS) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("txfee_bump_inner_success", innerResultPair.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == TransactionResultCode.txFEE_BUMP_INNER_FAILED) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("txfee_bump_inner_failed", innerResultPair.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == TransactionResultCode.txSUCCESS) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put(
+            "txsuccess", XdrElement.arrayToJsonArray(results, i -> results[i].toJsonObject()));
+        return jsonMap;
+      }
+      if (discriminant == TransactionResultCode.txFAILED) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put(
+            "txfailed", XdrElement.arrayToJsonArray(results, i -> results[i].toJsonObject()));
+        return jsonMap;
+      }
+      if (discriminant == TransactionResultCode.txTOO_EARLY) {
+        return "txtoo_early";
+      }
+      if (discriminant == TransactionResultCode.txTOO_LATE) {
+        return "txtoo_late";
+      }
+      if (discriminant == TransactionResultCode.txMISSING_OPERATION) {
+        return "txmissing_operation";
+      }
+      if (discriminant == TransactionResultCode.txBAD_SEQ) {
+        return "txbad_seq";
+      }
+      if (discriminant == TransactionResultCode.txBAD_AUTH) {
+        return "txbad_auth";
+      }
+      if (discriminant == TransactionResultCode.txINSUFFICIENT_BALANCE) {
+        return "txinsufficient_balance";
+      }
+      if (discriminant == TransactionResultCode.txNO_ACCOUNT) {
+        return "txno_account";
+      }
+      if (discriminant == TransactionResultCode.txINSUFFICIENT_FEE) {
+        return "txinsufficient_fee";
+      }
+      if (discriminant == TransactionResultCode.txBAD_AUTH_EXTRA) {
+        return "txbad_auth_extra";
+      }
+      if (discriminant == TransactionResultCode.txINTERNAL_ERROR) {
+        return "txinternal_error";
+      }
+      if (discriminant == TransactionResultCode.txNOT_SUPPORTED) {
+        return "txnot_supported";
+      }
+      if (discriminant == TransactionResultCode.txBAD_SPONSORSHIP) {
+        return "txbad_sponsorship";
+      }
+      if (discriminant == TransactionResultCode.txBAD_MIN_SEQ_AGE_OR_GAP) {
+        return "txbad_min_seq_age_or_gap";
+      }
+      if (discriminant == TransactionResultCode.txMALFORMED) {
+        return "txmalformed";
+      }
+      if (discriminant == TransactionResultCode.txSOROBAN_INVALID) {
+        return "txsoroban_invalid";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static TransactionResultResult fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("txtoo_early")
+            || strVal.equals("txtoo_late")
+            || strVal.equals("txmissing_operation")
+            || strVal.equals("txbad_seq")
+            || strVal.equals("txbad_auth")
+            || strVal.equals("txinsufficient_balance")
+            || strVal.equals("txno_account")
+            || strVal.equals("txinsufficient_fee")
+            || strVal.equals("txbad_auth_extra")
+            || strVal.equals("txinternal_error")
+            || strVal.equals("txnot_supported")
+            || strVal.equals("txbad_sponsorship")
+            || strVal.equals("txbad_min_seq_age_or_gap")
+            || strVal.equals("txmalformed")
+            || strVal.equals("txsoroban_invalid"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for TransactionResultResult");
+        }
+        TransactionResultResult instance = new TransactionResultResult();
+        instance.discriminant = TransactionResultCode.fromJsonObject(strVal);
+        return instance;
+      }
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for TransactionResultResult, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      TransactionResultCode discriminant = TransactionResultCode.fromJsonObject(key);
+      if (key.equals("txfee_bump_inner_success")) {
+        TransactionResultResult instance = new TransactionResultResult();
+        instance.discriminant = discriminant;
+        instance.innerResultPair =
+            InnerTransactionResultPair.fromJsonObject(jsonMap.get("txfee_bump_inner_success"));
+        return instance;
+      }
+      if (key.equals("txfee_bump_inner_failed")) {
+        TransactionResultResult instance = new TransactionResultResult();
+        instance.discriminant = discriminant;
+        instance.innerResultPair =
+            InnerTransactionResultPair.fromJsonObject(jsonMap.get("txfee_bump_inner_failed"));
+        return instance;
+      }
+      if (key.equals("txsuccess")) {
+        TransactionResultResult instance = new TransactionResultResult();
+        instance.discriminant = discriminant;
+        instance.results =
+            XdrElement.jsonArrayToArray(
+                (List<Object>) jsonMap.get("txsuccess"),
+                OperationResult.class,
+                item -> OperationResult.fromJsonObject(item));
+        return instance;
+      }
+      if (key.equals("txfailed")) {
+        TransactionResultResult instance = new TransactionResultResult();
+        instance.discriminant = discriminant;
+        instance.results =
+            XdrElement.jsonArrayToArray(
+                (List<Object>) jsonMap.get("txfailed"),
+                OperationResult.class,
+                item -> OperationResult.fromJsonObject(item));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for TransactionResultResult");
+    }
   }
 
   /**
@@ -307,6 +490,38 @@ public class TransactionResult implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static TransactionResultExt fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static TransactionResultExt fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for TransactionResultExt");
+        }
+        TransactionResultExt instance = new TransactionResultExt();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Expected a string for TransactionResultExt, got: " + json);
     }
   }
 }

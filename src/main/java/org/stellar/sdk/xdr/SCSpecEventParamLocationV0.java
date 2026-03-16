@@ -65,4 +65,36 @@ public enum SCSpecEventParamLocationV0 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecEventParamLocationV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SC_SPEC_EVENT_PARAM_LOCATION_DATA:
+        return "data";
+      case SC_SPEC_EVENT_PARAM_LOCATION_TOPIC_LIST:
+        return "topic_list";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCSpecEventParamLocationV0 fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "data":
+        return SC_SPEC_EVENT_PARAM_LOCATION_DATA;
+      case "topic_list":
+        return SC_SPEC_EVENT_PARAM_LOCATION_TOPIC_LIST;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

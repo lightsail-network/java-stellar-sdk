@@ -73,4 +73,44 @@ public enum ThresholdIndexes implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ThresholdIndexes fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case THRESHOLD_MASTER_WEIGHT:
+        return "master_weight";
+      case THRESHOLD_LOW:
+        return "low";
+      case THRESHOLD_MED:
+        return "med";
+      case THRESHOLD_HIGH:
+        return "high";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ThresholdIndexes fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "master_weight":
+        return THRESHOLD_MASTER_WEIGHT;
+      case "low":
+        return THRESHOLD_LOW;
+      case "med":
+        return THRESHOLD_MED;
+      case "high":
+        return THRESHOLD_HIGH;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

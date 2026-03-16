@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -96,5 +97,82 @@ public class AccountMergeResult implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AccountMergeResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == AccountMergeResultCode.ACCOUNT_MERGE_SUCCESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("success", sourceAccountBalance.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == AccountMergeResultCode.ACCOUNT_MERGE_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == AccountMergeResultCode.ACCOUNT_MERGE_NO_ACCOUNT) {
+      return "no_account";
+    }
+    if (discriminant == AccountMergeResultCode.ACCOUNT_MERGE_IMMUTABLE_SET) {
+      return "immutable_set";
+    }
+    if (discriminant == AccountMergeResultCode.ACCOUNT_MERGE_HAS_SUB_ENTRIES) {
+      return "has_sub_entries";
+    }
+    if (discriminant == AccountMergeResultCode.ACCOUNT_MERGE_SEQNUM_TOO_FAR) {
+      return "seqnum_too_far";
+    }
+    if (discriminant == AccountMergeResultCode.ACCOUNT_MERGE_DEST_FULL) {
+      return "dest_full";
+    }
+    if (discriminant == AccountMergeResultCode.ACCOUNT_MERGE_IS_SPONSOR) {
+      return "is_sponsor";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static AccountMergeResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("malformed")
+          || strVal.equals("no_account")
+          || strVal.equals("immutable_set")
+          || strVal.equals("has_sub_entries")
+          || strVal.equals("seqnum_too_far")
+          || strVal.equals("dest_full")
+          || strVal.equals("is_sponsor"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for AccountMergeResult");
+      }
+      AccountMergeResult instance = new AccountMergeResult();
+      instance.discriminant = AccountMergeResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for AccountMergeResult, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    AccountMergeResultCode discriminant = AccountMergeResultCode.fromJsonObject(key);
+    if (key.equals("success")) {
+      AccountMergeResult instance = new AccountMergeResult();
+      instance.discriminant = discriminant;
+      instance.sourceAccountBalance = Int64.fromJsonObject(jsonMap.get("success"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for AccountMergeResult");
   }
 }

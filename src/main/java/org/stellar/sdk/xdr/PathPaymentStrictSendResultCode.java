@@ -121,4 +121,80 @@ public enum PathPaymentStrictSendResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PathPaymentStrictSendResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case PATH_PAYMENT_STRICT_SEND_SUCCESS:
+        return "success";
+      case PATH_PAYMENT_STRICT_SEND_MALFORMED:
+        return "malformed";
+      case PATH_PAYMENT_STRICT_SEND_UNDERFUNDED:
+        return "underfunded";
+      case PATH_PAYMENT_STRICT_SEND_SRC_NO_TRUST:
+        return "src_no_trust";
+      case PATH_PAYMENT_STRICT_SEND_SRC_NOT_AUTHORIZED:
+        return "src_not_authorized";
+      case PATH_PAYMENT_STRICT_SEND_NO_DESTINATION:
+        return "no_destination";
+      case PATH_PAYMENT_STRICT_SEND_NO_TRUST:
+        return "no_trust";
+      case PATH_PAYMENT_STRICT_SEND_NOT_AUTHORIZED:
+        return "not_authorized";
+      case PATH_PAYMENT_STRICT_SEND_LINE_FULL:
+        return "line_full";
+      case PATH_PAYMENT_STRICT_SEND_NO_ISSUER:
+        return "no_issuer";
+      case PATH_PAYMENT_STRICT_SEND_TOO_FEW_OFFERS:
+        return "too_few_offers";
+      case PATH_PAYMENT_STRICT_SEND_OFFER_CROSS_SELF:
+        return "offer_cross_self";
+      case PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN:
+        return "under_destmin";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static PathPaymentStrictSendResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return PATH_PAYMENT_STRICT_SEND_SUCCESS;
+      case "malformed":
+        return PATH_PAYMENT_STRICT_SEND_MALFORMED;
+      case "underfunded":
+        return PATH_PAYMENT_STRICT_SEND_UNDERFUNDED;
+      case "src_no_trust":
+        return PATH_PAYMENT_STRICT_SEND_SRC_NO_TRUST;
+      case "src_not_authorized":
+        return PATH_PAYMENT_STRICT_SEND_SRC_NOT_AUTHORIZED;
+      case "no_destination":
+        return PATH_PAYMENT_STRICT_SEND_NO_DESTINATION;
+      case "no_trust":
+        return PATH_PAYMENT_STRICT_SEND_NO_TRUST;
+      case "not_authorized":
+        return PATH_PAYMENT_STRICT_SEND_NOT_AUTHORIZED;
+      case "line_full":
+        return PATH_PAYMENT_STRICT_SEND_LINE_FULL;
+      case "no_issuer":
+        return PATH_PAYMENT_STRICT_SEND_NO_ISSUER;
+      case "too_few_offers":
+        return PATH_PAYMENT_STRICT_SEND_TOO_FEW_OFFERS;
+      case "offer_cross_self":
+        return PATH_PAYMENT_STRICT_SEND_OFFER_CROSS_SELF;
+      case "under_destmin":
+        return PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

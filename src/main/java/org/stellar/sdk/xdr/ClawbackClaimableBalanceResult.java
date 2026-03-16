@@ -86,4 +86,50 @@ public class ClawbackClaimableBalanceResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClawbackClaimableBalanceResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_SUCCESS) {
+      return "success";
+    }
+    if (discriminant
+        == ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST) {
+      return "does_not_exist";
+    }
+    if (discriminant == ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER) {
+      return "not_issuer";
+    }
+    if (discriminant
+        == ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED) {
+      return "not_clawback_enabled";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ClawbackClaimableBalanceResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("does_not_exist")
+          || strVal.equals("not_issuer")
+          || strVal.equals("not_clawback_enabled"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for ClawbackClaimableBalanceResult");
+      }
+      ClawbackClaimableBalanceResult instance = new ClawbackClaimableBalanceResult();
+      instance.discriminant = ClawbackClaimableBalanceResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for ClawbackClaimableBalanceResult, got: " + json);
+  }
 }

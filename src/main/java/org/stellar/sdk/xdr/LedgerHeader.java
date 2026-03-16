@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -145,6 +147,60 @@ public class LedgerHeader implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerHeader fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ledger_version", ledgerVersion.toJsonObject());
+    jsonMap.put("previous_ledger_hash", previousLedgerHash.toJsonObject());
+    jsonMap.put("scp_value", scpValue.toJsonObject());
+    jsonMap.put("tx_set_result_hash", txSetResultHash.toJsonObject());
+    jsonMap.put("bucket_list_hash", bucketListHash.toJsonObject());
+    jsonMap.put("ledger_seq", ledgerSeq.toJsonObject());
+    jsonMap.put("total_coins", totalCoins.toJsonObject());
+    jsonMap.put("fee_pool", feePool.toJsonObject());
+    jsonMap.put("inflation_seq", inflationSeq.toJsonObject());
+    jsonMap.put("id_pool", idPool.toJsonObject());
+    jsonMap.put("base_fee", baseFee.toJsonObject());
+    jsonMap.put("base_reserve", baseReserve.toJsonObject());
+    jsonMap.put("max_tx_set_size", maxTxSetSize.toJsonObject());
+    jsonMap.put(
+        "skip_list", XdrElement.arrayToJsonArray(skipList, i -> skipList[i].toJsonObject()));
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerHeader fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    LedgerHeader instance = new LedgerHeader();
+    instance.ledgerVersion = Uint32.fromJsonObject(jsonMap.get("ledger_version"));
+    instance.previousLedgerHash = Hash.fromJsonObject(jsonMap.get("previous_ledger_hash"));
+    instance.scpValue = StellarValue.fromJsonObject(jsonMap.get("scp_value"));
+    instance.txSetResultHash = Hash.fromJsonObject(jsonMap.get("tx_set_result_hash"));
+    instance.bucketListHash = Hash.fromJsonObject(jsonMap.get("bucket_list_hash"));
+    instance.ledgerSeq = Uint32.fromJsonObject(jsonMap.get("ledger_seq"));
+    instance.totalCoins = Int64.fromJsonObject(jsonMap.get("total_coins"));
+    instance.feePool = Int64.fromJsonObject(jsonMap.get("fee_pool"));
+    instance.inflationSeq = Uint32.fromJsonObject(jsonMap.get("inflation_seq"));
+    instance.idPool = Uint64.fromJsonObject(jsonMap.get("id_pool"));
+    instance.baseFee = Uint32.fromJsonObject(jsonMap.get("base_fee"));
+    instance.baseReserve = Uint32.fromJsonObject(jsonMap.get("base_reserve"));
+    instance.maxTxSetSize = Uint32.fromJsonObject(jsonMap.get("max_tx_set_size"));
+    instance.skipList =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("skip_list"), Hash.class, item -> Hash.fromJsonObject(item));
+    instance.ext = LedgerHeaderExt.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * LedgerHeaderExt's original definition in the XDR file is:
    *
@@ -212,6 +268,59 @@ public class LedgerHeader implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerHeaderExt fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      if (discriminant == 1) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("v1", v1.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerHeaderExt fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for LedgerHeaderExt");
+        }
+        LedgerHeaderExt instance = new LedgerHeaderExt();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for LedgerHeaderExt, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      Integer discriminant = Integer.parseInt(key.substring(1));
+      if (key.equals("v1")) {
+        LedgerHeaderExt instance = new LedgerHeaderExt();
+        instance.discriminant = discriminant;
+        instance.v1 = LedgerHeaderExtensionV1.fromJsonObject(jsonMap.get("v1"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for LedgerHeaderExt");
     }
   }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -78,5 +79,58 @@ public class ContractExecutable implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractExecutable fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ContractExecutableType.CONTRACT_EXECUTABLE_WASM) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("wasm", wasm_hash.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET) {
+      return "stellar_asset";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ContractExecutable fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("stellar_asset"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for ContractExecutable");
+      }
+      ContractExecutable instance = new ContractExecutable();
+      instance.discriminant = ContractExecutableType.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for ContractExecutable, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    ContractExecutableType discriminant = ContractExecutableType.fromJsonObject(key);
+    if (key.equals("wasm")) {
+      ContractExecutable instance = new ContractExecutable();
+      instance.discriminant = discriminant;
+      instance.wasm_hash = Hash.fromJsonObject(jsonMap.get("wasm"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for ContractExecutable");
   }
 }

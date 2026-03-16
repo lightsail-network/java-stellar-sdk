@@ -52,4 +52,23 @@ public class Int64 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static Int64 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return int64.toString();
+  }
+
+  static Int64 fromJsonObject(Object json) {
+    Int64 instance = new Int64();
+    instance.int64 = XdrElement.jsonToLong(json);
+    return instance;
+  }
 }

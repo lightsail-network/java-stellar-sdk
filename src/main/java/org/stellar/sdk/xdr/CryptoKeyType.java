@@ -78,4 +78,48 @@ public enum CryptoKeyType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static CryptoKeyType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case KEY_TYPE_ED25519:
+        return "ed25519";
+      case KEY_TYPE_PRE_AUTH_TX:
+        return "pre_auth_tx";
+      case KEY_TYPE_HASH_X:
+        return "hash_x";
+      case KEY_TYPE_ED25519_SIGNED_PAYLOAD:
+        return "ed25519_signed_payload";
+      case KEY_TYPE_MUXED_ED25519:
+        return "muxed_ed25519";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static CryptoKeyType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "ed25519":
+        return KEY_TYPE_ED25519;
+      case "pre_auth_tx":
+        return KEY_TYPE_PRE_AUTH_TX;
+      case "hash_x":
+        return KEY_TYPE_HASH_X;
+      case "ed25519_signed_payload":
+        return KEY_TYPE_ED25519_SIGNED_PAYLOAD;
+      case "muxed_ed25519":
+        return KEY_TYPE_MUXED_ED25519;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

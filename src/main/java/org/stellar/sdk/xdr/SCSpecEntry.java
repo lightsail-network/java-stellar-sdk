@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -116,5 +117,101 @@ public class SCSpecEntry implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == SCSpecEntryKind.SC_SPEC_ENTRY_FUNCTION_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("function_v0", functionV0.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecEntryKind.SC_SPEC_ENTRY_UDT_STRUCT_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("udt_struct_v0", udtStructV0.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecEntryKind.SC_SPEC_ENTRY_UDT_UNION_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("udt_union_v0", udtUnionV0.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ENUM_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("udt_enum_v0", udtEnumV0.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("udt_error_enum_v0", udtErrorEnumV0.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCSpecEntryKind.SC_SPEC_ENTRY_EVENT_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("event_v0", eventV0.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCSpecEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for SCSpecEntry, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SCSpecEntryKind discriminant = SCSpecEntryKind.fromJsonObject(key);
+    if (key.equals("function_v0")) {
+      SCSpecEntry instance = new SCSpecEntry();
+      instance.discriminant = discriminant;
+      instance.functionV0 = SCSpecFunctionV0.fromJsonObject(jsonMap.get("function_v0"));
+      return instance;
+    }
+    if (key.equals("udt_struct_v0")) {
+      SCSpecEntry instance = new SCSpecEntry();
+      instance.discriminant = discriminant;
+      instance.udtStructV0 = SCSpecUDTStructV0.fromJsonObject(jsonMap.get("udt_struct_v0"));
+      return instance;
+    }
+    if (key.equals("udt_union_v0")) {
+      SCSpecEntry instance = new SCSpecEntry();
+      instance.discriminant = discriminant;
+      instance.udtUnionV0 = SCSpecUDTUnionV0.fromJsonObject(jsonMap.get("udt_union_v0"));
+      return instance;
+    }
+    if (key.equals("udt_enum_v0")) {
+      SCSpecEntry instance = new SCSpecEntry();
+      instance.discriminant = discriminant;
+      instance.udtEnumV0 = SCSpecUDTEnumV0.fromJsonObject(jsonMap.get("udt_enum_v0"));
+      return instance;
+    }
+    if (key.equals("udt_error_enum_v0")) {
+      SCSpecEntry instance = new SCSpecEntry();
+      instance.discriminant = discriminant;
+      instance.udtErrorEnumV0 =
+          SCSpecUDTErrorEnumV0.fromJsonObject(jsonMap.get("udt_error_enum_v0"));
+      return instance;
+    }
+    if (key.equals("event_v0")) {
+      SCSpecEntry instance = new SCSpecEntry();
+      instance.discriminant = discriminant;
+      instance.eventV0 = SCSpecEventV0.fromJsonObject(jsonMap.get("event_v0"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SCSpecEntry");
   }
 }

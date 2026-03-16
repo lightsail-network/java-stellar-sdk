@@ -92,4 +92,60 @@ public enum AccountMergeResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AccountMergeResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case ACCOUNT_MERGE_SUCCESS:
+        return "success";
+      case ACCOUNT_MERGE_MALFORMED:
+        return "malformed";
+      case ACCOUNT_MERGE_NO_ACCOUNT:
+        return "no_account";
+      case ACCOUNT_MERGE_IMMUTABLE_SET:
+        return "immutable_set";
+      case ACCOUNT_MERGE_HAS_SUB_ENTRIES:
+        return "has_sub_entries";
+      case ACCOUNT_MERGE_SEQNUM_TOO_FAR:
+        return "seqnum_too_far";
+      case ACCOUNT_MERGE_DEST_FULL:
+        return "dest_full";
+      case ACCOUNT_MERGE_IS_SPONSOR:
+        return "is_sponsor";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static AccountMergeResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return ACCOUNT_MERGE_SUCCESS;
+      case "malformed":
+        return ACCOUNT_MERGE_MALFORMED;
+      case "no_account":
+        return ACCOUNT_MERGE_NO_ACCOUNT;
+      case "immutable_set":
+        return ACCOUNT_MERGE_IMMUTABLE_SET;
+      case "has_sub_entries":
+        return ACCOUNT_MERGE_HAS_SUB_ENTRIES;
+      case "seqnum_too_far":
+        return ACCOUNT_MERGE_SEQNUM_TOO_FAR;
+      case "dest_full":
+        return ACCOUNT_MERGE_DEST_FULL;
+      case "is_sponsor":
+        return ACCOUNT_MERGE_IS_SPONSOR;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

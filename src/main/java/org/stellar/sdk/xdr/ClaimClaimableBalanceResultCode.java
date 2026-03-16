@@ -82,4 +82,52 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimClaimableBalanceResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CLAIM_CLAIMABLE_BALANCE_SUCCESS:
+        return "success";
+      case CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST:
+        return "does_not_exist";
+      case CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM:
+        return "cannot_claim";
+      case CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
+        return "line_full";
+      case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
+        return "no_trust";
+      case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+        return "not_authorized";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ClaimClaimableBalanceResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return CLAIM_CLAIMABLE_BALANCE_SUCCESS;
+      case "does_not_exist":
+        return CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST;
+      case "cannot_claim":
+        return CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM;
+      case "line_full":
+        return CLAIM_CLAIMABLE_BALANCE_LINE_FULL;
+      case "no_trust":
+        return CLAIM_CLAIMABLE_BALANCE_NO_TRUST;
+      case "not_authorized":
+        return CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

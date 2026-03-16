@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -59,5 +60,47 @@ public class UInt128Parts implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static UInt128Parts fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    byte[] bytes = new byte[16];
+    byte[] hiBytes = hi.getUint64().getNumber().toByteArray();
+    byte[] loBytes = lo.getUint64().getNumber().toByteArray();
+    System.arraycopy(
+        hiBytes,
+        Math.max(0, hiBytes.length - 8),
+        bytes,
+        8 - Math.min(8, hiBytes.length),
+        Math.min(8, hiBytes.length));
+    System.arraycopy(
+        loBytes,
+        Math.max(0, loBytes.length - 8),
+        bytes,
+        16 - Math.min(8, loBytes.length),
+        Math.min(8, loBytes.length));
+    return new BigInteger(1, bytes).toString();
+  }
+
+  static UInt128Parts fromJsonObject(Object json) {
+    BigInteger value = new BigInteger((String) json);
+    byte[] bytes = new byte[16];
+    byte[] valBytes = value.toByteArray();
+    int copyLen = Math.min(valBytes.length, 16);
+    System.arraycopy(valBytes, Math.max(0, valBytes.length - 16), bytes, 16 - copyLen, copyLen);
+    BigInteger hiVal = new BigInteger(1, java.util.Arrays.copyOfRange(bytes, 0, 8));
+    BigInteger loVal = new BigInteger(1, java.util.Arrays.copyOfRange(bytes, 8, 16));
+    UInt128Parts instance = new UInt128Parts();
+    instance.hi = new Uint64(new XdrUnsignedHyperInteger(hiVal));
+    instance.lo = new Uint64(new XdrUnsignedHyperInteger(loVal));
+    return instance;
   }
 }

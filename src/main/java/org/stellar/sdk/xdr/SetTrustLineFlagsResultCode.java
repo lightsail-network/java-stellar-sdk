@@ -85,4 +85,52 @@ public enum SetTrustLineFlagsResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SetTrustLineFlagsResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SET_TRUST_LINE_FLAGS_SUCCESS:
+        return "success";
+      case SET_TRUST_LINE_FLAGS_MALFORMED:
+        return "malformed";
+      case SET_TRUST_LINE_FLAGS_NO_TRUST_LINE:
+        return "no_trust_line";
+      case SET_TRUST_LINE_FLAGS_CANT_REVOKE:
+        return "cant_revoke";
+      case SET_TRUST_LINE_FLAGS_INVALID_STATE:
+        return "invalid_state";
+      case SET_TRUST_LINE_FLAGS_LOW_RESERVE:
+        return "low_reserve";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SetTrustLineFlagsResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return SET_TRUST_LINE_FLAGS_SUCCESS;
+      case "malformed":
+        return SET_TRUST_LINE_FLAGS_MALFORMED;
+      case "no_trust_line":
+        return SET_TRUST_LINE_FLAGS_NO_TRUST_LINE;
+      case "cant_revoke":
+        return SET_TRUST_LINE_FLAGS_CANT_REVOKE;
+      case "invalid_state":
+        return SET_TRUST_LINE_FLAGS_INVALID_STATE;
+      case "low_reserve":
+        return SET_TRUST_LINE_FLAGS_LOW_RESERVE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

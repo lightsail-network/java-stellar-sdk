@@ -65,4 +65,36 @@ public enum SCSpecUDTUnionCaseV0Kind implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecUDTUnionCaseV0Kind fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SC_SPEC_UDT_UNION_CASE_VOID_V0:
+        return "void_v0";
+      case SC_SPEC_UDT_UNION_CASE_TUPLE_V0:
+        return "tuple_v0";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCSpecUDTUnionCaseV0Kind fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "void_v0":
+        return SC_SPEC_UDT_UNION_CASE_VOID_V0;
+      case "tuple_v0":
+        return SC_SPEC_UDT_UNION_CASE_TUPLE_V0;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

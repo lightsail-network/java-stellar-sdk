@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -120,6 +122,49 @@ public class TransactionV0 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("source_account_ed25519", sourceAccountEd25519.toJsonObject());
+    jsonMap.put("fee", fee.toJsonObject());
+    jsonMap.put("seq_num", seqNum.toJsonObject());
+    jsonMap.put("time_bounds", timeBounds != null ? timeBounds.toJsonObject() : null);
+    jsonMap.put("memo", memo.toJsonObject());
+    jsonMap.put(
+        "operations", XdrElement.arrayToJsonArray(operations, i -> operations[i].toJsonObject()));
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TransactionV0 instance = new TransactionV0();
+    instance.sourceAccountEd25519 = Uint256.fromJsonObject(jsonMap.get("source_account_ed25519"));
+    instance.fee = Uint32.fromJsonObject(jsonMap.get("fee"));
+    instance.seqNum = SequenceNumber.fromJsonObject(jsonMap.get("seq_num"));
+    instance.timeBounds =
+        jsonMap.get("time_bounds") != null
+            ? TimeBounds.fromJsonObject(jsonMap.get("time_bounds"))
+            : null;
+    instance.memo = Memo.fromJsonObject(jsonMap.get("memo"));
+    instance.operations =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("operations"),
+            Operation.class,
+            item -> Operation.fromJsonObject(item));
+    instance.ext = TransactionV0Ext.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * TransactionV0Ext's original definition in the XDR file is:
    *
@@ -178,6 +223,37 @@ public class TransactionV0 implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static TransactionV0Ext fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static TransactionV0Ext fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for TransactionV0Ext");
+        }
+        TransactionV0Ext instance = new TransactionV0Ext();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException("Expected a string for TransactionV0Ext, got: " + json);
     }
   }
 }

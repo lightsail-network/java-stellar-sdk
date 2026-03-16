@@ -137,4 +137,104 @@ public enum TransactionResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case txFEE_BUMP_INNER_SUCCESS:
+        return "txfee_bump_inner_success";
+      case txSUCCESS:
+        return "txsuccess";
+      case txFAILED:
+        return "txfailed";
+      case txTOO_EARLY:
+        return "txtoo_early";
+      case txTOO_LATE:
+        return "txtoo_late";
+      case txMISSING_OPERATION:
+        return "txmissing_operation";
+      case txBAD_SEQ:
+        return "txbad_seq";
+      case txBAD_AUTH:
+        return "txbad_auth";
+      case txINSUFFICIENT_BALANCE:
+        return "txinsufficient_balance";
+      case txNO_ACCOUNT:
+        return "txno_account";
+      case txINSUFFICIENT_FEE:
+        return "txinsufficient_fee";
+      case txBAD_AUTH_EXTRA:
+        return "txbad_auth_extra";
+      case txINTERNAL_ERROR:
+        return "txinternal_error";
+      case txNOT_SUPPORTED:
+        return "txnot_supported";
+      case txFEE_BUMP_INNER_FAILED:
+        return "txfee_bump_inner_failed";
+      case txBAD_SPONSORSHIP:
+        return "txbad_sponsorship";
+      case txBAD_MIN_SEQ_AGE_OR_GAP:
+        return "txbad_min_seq_age_or_gap";
+      case txMALFORMED:
+        return "txmalformed";
+      case txSOROBAN_INVALID:
+        return "txsoroban_invalid";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static TransactionResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "txfee_bump_inner_success":
+        return txFEE_BUMP_INNER_SUCCESS;
+      case "txsuccess":
+        return txSUCCESS;
+      case "txfailed":
+        return txFAILED;
+      case "txtoo_early":
+        return txTOO_EARLY;
+      case "txtoo_late":
+        return txTOO_LATE;
+      case "txmissing_operation":
+        return txMISSING_OPERATION;
+      case "txbad_seq":
+        return txBAD_SEQ;
+      case "txbad_auth":
+        return txBAD_AUTH;
+      case "txinsufficient_balance":
+        return txINSUFFICIENT_BALANCE;
+      case "txno_account":
+        return txNO_ACCOUNT;
+      case "txinsufficient_fee":
+        return txINSUFFICIENT_FEE;
+      case "txbad_auth_extra":
+        return txBAD_AUTH_EXTRA;
+      case "txinternal_error":
+        return txINTERNAL_ERROR;
+      case "txnot_supported":
+        return txNOT_SUPPORTED;
+      case "txfee_bump_inner_failed":
+        return txFEE_BUMP_INNER_FAILED;
+      case "txbad_sponsorship":
+        return txBAD_SPONSORSHIP;
+      case "txbad_min_seq_age_or_gap":
+        return txBAD_MIN_SEQ_AGE_OR_GAP;
+      case "txmalformed":
+        return txMALFORMED;
+      case "txsoroban_invalid":
+        return txSOROBAN_INVALID;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

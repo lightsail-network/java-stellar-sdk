@@ -97,4 +97,67 @@ public class ChangeTrustResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ChangeTrustResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_SUCCESS) {
+      return "success";
+    }
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_NO_ISSUER) {
+      return "no_issuer";
+    }
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_INVALID_LIMIT) {
+      return "invalid_limit";
+    }
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_LOW_RESERVE) {
+      return "low_reserve";
+    }
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_SELF_NOT_ALLOWED) {
+      return "self_not_allowed";
+    }
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_TRUST_LINE_MISSING) {
+      return "trust_line_missing";
+    }
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_CANNOT_DELETE) {
+      return "cannot_delete";
+    }
+    if (discriminant == ChangeTrustResultCode.CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES) {
+      return "not_auth_maintain_liabilities";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ChangeTrustResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("no_issuer")
+          || strVal.equals("invalid_limit")
+          || strVal.equals("low_reserve")
+          || strVal.equals("self_not_allowed")
+          || strVal.equals("trust_line_missing")
+          || strVal.equals("cannot_delete")
+          || strVal.equals("not_auth_maintain_liabilities"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for ChangeTrustResult");
+      }
+      ChangeTrustResult instance = new ChangeTrustResult();
+      instance.discriminant = ChangeTrustResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException("Expected a string for ChangeTrustResult, got: " + json);
+  }
 }

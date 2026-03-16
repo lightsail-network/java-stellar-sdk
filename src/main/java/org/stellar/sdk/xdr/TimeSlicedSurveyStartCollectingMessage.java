@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,5 +70,32 @@ public class TimeSlicedSurveyStartCollectingMessage implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TimeSlicedSurveyStartCollectingMessage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("surveyor_id", surveyorID.toJsonObject());
+    jsonMap.put("nonce", nonce.toJsonObject());
+    jsonMap.put("ledger_num", ledgerNum.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TimeSlicedSurveyStartCollectingMessage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TimeSlicedSurveyStartCollectingMessage instance = new TimeSlicedSurveyStartCollectingMessage();
+    instance.surveyorID = NodeID.fromJsonObject(jsonMap.get("surveyor_id"));
+    instance.nonce = Uint32.fromJsonObject(jsonMap.get("nonce"));
+    instance.ledgerNum = Uint32.fromJsonObject(jsonMap.get("ledger_num"));
+    return instance;
   }
 }

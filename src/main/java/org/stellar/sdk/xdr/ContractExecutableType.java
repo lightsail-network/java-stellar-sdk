@@ -65,4 +65,36 @@ public enum ContractExecutableType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractExecutableType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CONTRACT_EXECUTABLE_WASM:
+        return "wasm";
+      case CONTRACT_EXECUTABLE_STELLAR_ASSET:
+        return "stellar_asset";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ContractExecutableType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "wasm":
+        return CONTRACT_EXECUTABLE_WASM;
+      case "stellar_asset":
+        return CONTRACT_EXECUTABLE_STELLAR_ASSET;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -69,4 +69,40 @@ public enum ContractEventType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractEventType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SYSTEM:
+        return "system";
+      case CONTRACT:
+        return "contract";
+      case DIAGNOSTIC:
+        return "diagnostic";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ContractEventType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "system":
+        return SYSTEM;
+      case "contract":
+        return CONTRACT;
+      case "diagnostic":
+        return DIAGNOSTIC;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

@@ -61,4 +61,32 @@ public enum SurveyMessageResponseType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SurveyMessageResponseType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SURVEY_TOPOLOGY_RESPONSE_V2:
+        return "survey_topology_response_v2";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SurveyMessageResponseType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "survey_topology_response_v2":
+        return SURVEY_TOPOLOGY_RESPONSE_V2;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

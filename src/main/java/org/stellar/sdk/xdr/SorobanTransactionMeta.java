@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -114,5 +116,44 @@ public class SorobanTransactionMeta implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SorobanTransactionMeta fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ext", ext.toJsonObject());
+    jsonMap.put("events", XdrElement.arrayToJsonArray(events, i -> events[i].toJsonObject()));
+    jsonMap.put("return_value", returnValue.toJsonObject());
+    jsonMap.put(
+        "diagnostic_events",
+        XdrElement.arrayToJsonArray(diagnosticEvents, i -> diagnosticEvents[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SorobanTransactionMeta fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SorobanTransactionMeta instance = new SorobanTransactionMeta();
+    instance.ext = SorobanTransactionMetaExt.fromJsonObject(jsonMap.get("ext"));
+    instance.events =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("events"),
+            ContractEvent.class,
+            item -> ContractEvent.fromJsonObject(item));
+    instance.returnValue = SCVal.fromJsonObject(jsonMap.get("return_value"));
+    instance.diagnosticEvents =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("diagnostic_events"),
+            DiagnosticEvent.class,
+            item -> DiagnosticEvent.fromJsonObject(item));
+    return instance;
   }
 }

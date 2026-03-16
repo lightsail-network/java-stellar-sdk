@@ -76,4 +76,44 @@ public enum RestoreFootprintResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static RestoreFootprintResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case RESTORE_FOOTPRINT_SUCCESS:
+        return "success";
+      case RESTORE_FOOTPRINT_MALFORMED:
+        return "malformed";
+      case RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED:
+        return "resource_limit_exceeded";
+      case RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE:
+        return "insufficient_refundable_fee";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static RestoreFootprintResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return RESTORE_FOOTPRINT_SUCCESS;
+      case "malformed":
+        return RESTORE_FOOTPRINT_MALFORMED;
+      case "resource_limit_exceeded":
+        return RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED;
+      case "insufficient_refundable_fee":
+        return RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

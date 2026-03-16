@@ -58,4 +58,34 @@ public class AssetCode4 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AssetCode4 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    int end = this.AssetCode4.length;
+    while (end > 0 && this.AssetCode4[end - 1] == 0) {
+      end--;
+    }
+    return XdrElement.bytesToEscapedAscii(java.util.Arrays.copyOf(this.AssetCode4, end));
+  }
+
+  static AssetCode4 fromJsonObject(Object json) {
+    String value = (String) json;
+    byte[] ascii = XdrElement.escapedAsciiToBytes(value);
+    if (ascii.length > 4) {
+      throw new IllegalArgumentException("AssetCode4 JSON value exceeds 4 bytes");
+    }
+    byte[] padded = new byte[4];
+    System.arraycopy(ascii, 0, padded, 0, Math.min(ascii.length, 4));
+    AssetCode4 instance = new AssetCode4();
+    instance.AssetCode4 = padded;
+    return instance;
+  }
 }

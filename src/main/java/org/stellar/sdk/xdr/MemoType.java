@@ -76,4 +76,48 @@ public enum MemoType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static MemoType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case MEMO_NONE:
+        return "none";
+      case MEMO_TEXT:
+        return "text";
+      case MEMO_ID:
+        return "id";
+      case MEMO_HASH:
+        return "hash";
+      case MEMO_RETURN:
+        return "return";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static MemoType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "none":
+        return MEMO_NONE;
+      case "text":
+        return MEMO_TEXT;
+      case "id":
+        return MEMO_ID;
+      case "hash":
+        return MEMO_HASH;
+      case "return":
+        return MEMO_RETURN;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

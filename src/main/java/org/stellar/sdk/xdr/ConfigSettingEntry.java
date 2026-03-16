@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -250,5 +252,246 @@ public class ConfigSettingEntry implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ConfigSettingEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_max_size_bytes", contractMaxSizeBytes.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_COMPUTE_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_compute_v0", contractCompute.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_ledger_cost_v0", contractLedgerCost.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_historical_data_v0", contractHistoricalData.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_EVENTS_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_events_v0", contractEvents.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_BANDWIDTH_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_bandwidth_v0", contractBandwidth.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_COST_PARAMS_CPU_INSTRUCTIONS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "contract_cost_params_cpu_instructions", contractCostParamsCpuInsns.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_COST_PARAMS_MEMORY_BYTES) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_cost_params_memory_bytes", contractCostParamsMemBytes.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_data_key_size_bytes", contractDataKeySizeBytes.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_data_entry_size_bytes", contractDataEntrySizeBytes.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_STATE_ARCHIVAL) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("state_archival", stateArchivalSettings.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_EXECUTION_LANES) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_execution_lanes", contractExecutionLanes.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "live_soroban_state_size_window",
+          XdrElement.arrayToJsonArray(
+              liveSorobanStateSizeWindow, i -> liveSorobanStateSizeWindow[i].toJsonObject()));
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_EVICTION_ITERATOR) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("eviction_iterator", evictionIterator.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_parallel_compute_v0", contractParallelCompute.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_ledger_cost_ext_v0", contractLedgerCostExt.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_SCP_TIMING) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("scp_timing", contractSCPTiming.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static ConfigSettingEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for ConfigSettingEntry, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    ConfigSettingID discriminant = ConfigSettingID.fromJsonObject(key);
+    if (key.equals("contract_max_size_bytes")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractMaxSizeBytes = Uint32.fromJsonObject(jsonMap.get("contract_max_size_bytes"));
+      return instance;
+    }
+    if (key.equals("contract_compute_v0")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractCompute =
+          ConfigSettingContractComputeV0.fromJsonObject(jsonMap.get("contract_compute_v0"));
+      return instance;
+    }
+    if (key.equals("contract_ledger_cost_v0")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractLedgerCost =
+          ConfigSettingContractLedgerCostV0.fromJsonObject(jsonMap.get("contract_ledger_cost_v0"));
+      return instance;
+    }
+    if (key.equals("contract_historical_data_v0")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractHistoricalData =
+          ConfigSettingContractHistoricalDataV0.fromJsonObject(
+              jsonMap.get("contract_historical_data_v0"));
+      return instance;
+    }
+    if (key.equals("contract_events_v0")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractEvents =
+          ConfigSettingContractEventsV0.fromJsonObject(jsonMap.get("contract_events_v0"));
+      return instance;
+    }
+    if (key.equals("contract_bandwidth_v0")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractBandwidth =
+          ConfigSettingContractBandwidthV0.fromJsonObject(jsonMap.get("contract_bandwidth_v0"));
+      return instance;
+    }
+    if (key.equals("contract_cost_params_cpu_instructions")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractCostParamsCpuInsns =
+          ContractCostParams.fromJsonObject(jsonMap.get("contract_cost_params_cpu_instructions"));
+      return instance;
+    }
+    if (key.equals("contract_cost_params_memory_bytes")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractCostParamsMemBytes =
+          ContractCostParams.fromJsonObject(jsonMap.get("contract_cost_params_memory_bytes"));
+      return instance;
+    }
+    if (key.equals("contract_data_key_size_bytes")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractDataKeySizeBytes =
+          Uint32.fromJsonObject(jsonMap.get("contract_data_key_size_bytes"));
+      return instance;
+    }
+    if (key.equals("contract_data_entry_size_bytes")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractDataEntrySizeBytes =
+          Uint32.fromJsonObject(jsonMap.get("contract_data_entry_size_bytes"));
+      return instance;
+    }
+    if (key.equals("state_archival")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.stateArchivalSettings =
+          StateArchivalSettings.fromJsonObject(jsonMap.get("state_archival"));
+      return instance;
+    }
+    if (key.equals("contract_execution_lanes")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractExecutionLanes =
+          ConfigSettingContractExecutionLanesV0.fromJsonObject(
+              jsonMap.get("contract_execution_lanes"));
+      return instance;
+    }
+    if (key.equals("live_soroban_state_size_window")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.liveSorobanStateSizeWindow =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("live_soroban_state_size_window"),
+              Uint64.class,
+              item -> Uint64.fromJsonObject(item));
+      return instance;
+    }
+    if (key.equals("eviction_iterator")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.evictionIterator = EvictionIterator.fromJsonObject(jsonMap.get("eviction_iterator"));
+      return instance;
+    }
+    if (key.equals("contract_parallel_compute_v0")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractParallelCompute =
+          ConfigSettingContractParallelComputeV0.fromJsonObject(
+              jsonMap.get("contract_parallel_compute_v0"));
+      return instance;
+    }
+    if (key.equals("contract_ledger_cost_ext_v0")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractLedgerCostExt =
+          ConfigSettingContractLedgerCostExtV0.fromJsonObject(
+              jsonMap.get("contract_ledger_cost_ext_v0"));
+      return instance;
+    }
+    if (key.equals("scp_timing")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.contractSCPTiming = ConfigSettingSCPTiming.fromJsonObject(jsonMap.get("scp_timing"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for ConfigSettingEntry");
   }
 }

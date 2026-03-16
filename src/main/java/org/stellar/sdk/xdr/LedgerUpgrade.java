@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -128,5 +129,112 @@ public class LedgerUpgrade implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerUpgrade fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == LedgerUpgradeType.LEDGER_UPGRADE_VERSION) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("version", newLedgerVersion.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerUpgradeType.LEDGER_UPGRADE_BASE_FEE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("base_fee", newBaseFee.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerUpgradeType.LEDGER_UPGRADE_MAX_TX_SET_SIZE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("max_tx_set_size", newMaxTxSetSize.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerUpgradeType.LEDGER_UPGRADE_BASE_RESERVE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("base_reserve", newBaseReserve.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerUpgradeType.LEDGER_UPGRADE_FLAGS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("flags", newFlags.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerUpgradeType.LEDGER_UPGRADE_CONFIG) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("config", newConfig.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == LedgerUpgradeType.LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("max_soroban_tx_set_size", newMaxSorobanTxSetSize.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerUpgrade fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for LedgerUpgrade, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    LedgerUpgradeType discriminant = LedgerUpgradeType.fromJsonObject(key);
+    if (key.equals("version")) {
+      LedgerUpgrade instance = new LedgerUpgrade();
+      instance.discriminant = discriminant;
+      instance.newLedgerVersion = Uint32.fromJsonObject(jsonMap.get("version"));
+      return instance;
+    }
+    if (key.equals("base_fee")) {
+      LedgerUpgrade instance = new LedgerUpgrade();
+      instance.discriminant = discriminant;
+      instance.newBaseFee = Uint32.fromJsonObject(jsonMap.get("base_fee"));
+      return instance;
+    }
+    if (key.equals("max_tx_set_size")) {
+      LedgerUpgrade instance = new LedgerUpgrade();
+      instance.discriminant = discriminant;
+      instance.newMaxTxSetSize = Uint32.fromJsonObject(jsonMap.get("max_tx_set_size"));
+      return instance;
+    }
+    if (key.equals("base_reserve")) {
+      LedgerUpgrade instance = new LedgerUpgrade();
+      instance.discriminant = discriminant;
+      instance.newBaseReserve = Uint32.fromJsonObject(jsonMap.get("base_reserve"));
+      return instance;
+    }
+    if (key.equals("flags")) {
+      LedgerUpgrade instance = new LedgerUpgrade();
+      instance.discriminant = discriminant;
+      instance.newFlags = Uint32.fromJsonObject(jsonMap.get("flags"));
+      return instance;
+    }
+    if (key.equals("config")) {
+      LedgerUpgrade instance = new LedgerUpgrade();
+      instance.discriminant = discriminant;
+      instance.newConfig = ConfigUpgradeSetKey.fromJsonObject(jsonMap.get("config"));
+      return instance;
+    }
+    if (key.equals("max_soroban_tx_set_size")) {
+      LedgerUpgrade instance = new LedgerUpgrade();
+      instance.discriminant = discriminant;
+      instance.newMaxSorobanTxSetSize =
+          Uint32.fromJsonObject(jsonMap.get("max_soroban_tx_set_size"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for LedgerUpgrade");
   }
 }

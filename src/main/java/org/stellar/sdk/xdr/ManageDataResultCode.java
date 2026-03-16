@@ -81,4 +81,48 @@ public enum ManageDataResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ManageDataResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case MANAGE_DATA_SUCCESS:
+        return "success";
+      case MANAGE_DATA_NOT_SUPPORTED_YET:
+        return "not_supported_yet";
+      case MANAGE_DATA_NAME_NOT_FOUND:
+        return "name_not_found";
+      case MANAGE_DATA_LOW_RESERVE:
+        return "low_reserve";
+      case MANAGE_DATA_INVALID_NAME:
+        return "invalid_name";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ManageDataResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return MANAGE_DATA_SUCCESS;
+      case "not_supported_yet":
+        return MANAGE_DATA_NOT_SUPPORTED_YET;
+      case "name_not_found":
+        return MANAGE_DATA_NAME_NOT_FOUND;
+      case "low_reserve":
+        return MANAGE_DATA_LOW_RESERVE;
+      case "invalid_name":
+        return MANAGE_DATA_INVALID_NAME;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

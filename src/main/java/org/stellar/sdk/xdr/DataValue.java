@@ -73,4 +73,23 @@ public class DataValue implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static DataValue fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(DataValue);
+  }
+
+  static DataValue fromJsonObject(Object json) {
+    DataValue instance = new DataValue();
+    instance.DataValue = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

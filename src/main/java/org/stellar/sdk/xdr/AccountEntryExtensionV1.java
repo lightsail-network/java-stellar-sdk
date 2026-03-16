@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,6 +70,31 @@ public class AccountEntryExtensionV1 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AccountEntryExtensionV1 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("liabilities", liabilities.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static AccountEntryExtensionV1 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    AccountEntryExtensionV1 instance = new AccountEntryExtensionV1();
+    instance.liabilities = Liabilities.fromJsonObject(jsonMap.get("liabilities"));
+    instance.ext = AccountEntryExtensionV1Ext.fromJsonObject(jsonMap.get("ext"));
+    return instance;
   }
 
   /**
@@ -139,6 +165,60 @@ public class AccountEntryExtensionV1 implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static AccountEntryExtensionV1Ext fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      if (discriminant == 2) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("v2", v2.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static AccountEntryExtensionV1Ext fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for AccountEntryExtensionV1Ext");
+        }
+        AccountEntryExtensionV1Ext instance = new AccountEntryExtensionV1Ext();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for AccountEntryExtensionV1Ext, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      Integer discriminant = Integer.parseInt(key.substring(1));
+      if (key.equals("v2")) {
+        AccountEntryExtensionV1Ext instance = new AccountEntryExtensionV1Ext();
+        instance.discriminant = discriminant;
+        instance.v2 = AccountEntryExtensionV2.fromJsonObject(jsonMap.get("v2"));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Unknown key '" + key + "' for AccountEntryExtensionV1Ext");
     }
   }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -101,6 +102,39 @@ public class TrustLineEntry implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TrustLineEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("account_id", accountID.toJsonObject());
+    jsonMap.put("asset", asset.toJsonObject());
+    jsonMap.put("balance", balance.toJsonObject());
+    jsonMap.put("limit", limit.toJsonObject());
+    jsonMap.put("flags", flags.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TrustLineEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TrustLineEntry instance = new TrustLineEntry();
+    instance.accountID = AccountID.fromJsonObject(jsonMap.get("account_id"));
+    instance.asset = TrustLineAsset.fromJsonObject(jsonMap.get("asset"));
+    instance.balance = Int64.fromJsonObject(jsonMap.get("balance"));
+    instance.limit = Int64.fromJsonObject(jsonMap.get("limit"));
+    instance.flags = Uint32.fromJsonObject(jsonMap.get("flags"));
+    instance.ext = TrustLineEntryExt.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * TrustLineEntryExt's original definition in the XDR file is:
    *
@@ -182,6 +216,59 @@ public class TrustLineEntry implements XdrElement {
       return decode(xdrDataInputStream);
     }
 
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static TrustLineEntryExt fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      if (discriminant == 1) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("v1", v1.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static TrustLineEntryExt fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for TrustLineEntryExt");
+        }
+        TrustLineEntryExt instance = new TrustLineEntryExt();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for TrustLineEntryExt, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      Integer discriminant = Integer.parseInt(key.substring(1));
+      if (key.equals("v1")) {
+        TrustLineEntryExt instance = new TrustLineEntryExt();
+        instance.discriminant = discriminant;
+        instance.v1 = TrustLineEntryV1.fromJsonObject(jsonMap.get("v1"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for TrustLineEntryExt");
+    }
+
     /**
      * TrustLineEntryV1's original definition in the XDR file is:
      *
@@ -240,6 +327,31 @@ public class TrustLineEntry implements XdrElement {
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
         return decode(xdrDataInputStream);
+      }
+
+      @Override
+      public String toJson() {
+        return XdrElement.gson.toJson(toJsonObject());
+      }
+
+      public static TrustLineEntryV1 fromJson(String json) {
+        return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+      }
+
+      Object toJsonObject() {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("liabilities", liabilities.toJsonObject());
+        jsonMap.put("ext", ext.toJsonObject());
+        return jsonMap;
+      }
+
+      @SuppressWarnings("unchecked")
+      static TrustLineEntryV1 fromJsonObject(Object json) {
+        java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+        TrustLineEntryV1 instance = new TrustLineEntryV1();
+        instance.liabilities = Liabilities.fromJsonObject(jsonMap.get("liabilities"));
+        instance.ext = TrustLineEntryV1Ext.fromJsonObject(jsonMap.get("ext"));
+        return instance;
       }
 
       /**
@@ -309,6 +421,59 @@ public class TrustLineEntry implements XdrElement {
           XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
           xdrDataInputStream.setMaxInputLen(xdr.length);
           return decode(xdrDataInputStream);
+        }
+
+        @Override
+        public String toJson() {
+          return XdrElement.gson.toJson(toJsonObject());
+        }
+
+        public static TrustLineEntryV1Ext fromJson(String json) {
+          return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+        }
+
+        Object toJsonObject() {
+          if (discriminant == 0) {
+            return "v0";
+          }
+          if (discriminant == 2) {
+            LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+            jsonMap.put("v2", v2.toJsonObject());
+            return jsonMap;
+          }
+          throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+        }
+
+        @SuppressWarnings("unchecked")
+        static TrustLineEntryV1Ext fromJsonObject(Object json) {
+          if (json instanceof String) {
+            String strVal = (String) json;
+            if (!(strVal.equals("v0"))) {
+              throw new IllegalArgumentException(
+                  "Unexpected string '" + strVal + "' for TrustLineEntryV1Ext");
+            }
+            TrustLineEntryV1Ext instance = new TrustLineEntryV1Ext();
+            instance.discriminant = Integer.parseInt(strVal.substring(1));
+            return instance;
+          }
+          java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+          if (jsonMap.containsKey("$schema")) {
+            jsonMap = new LinkedHashMap<>(jsonMap);
+            jsonMap.remove("$schema");
+          }
+          if (jsonMap.size() != 1) {
+            throw new IllegalArgumentException(
+                "Expected a single-key object for TrustLineEntryV1Ext, got: " + json);
+          }
+          String key = jsonMap.keySet().iterator().next();
+          Integer discriminant = Integer.parseInt(key.substring(1));
+          if (key.equals("v2")) {
+            TrustLineEntryV1Ext instance = new TrustLineEntryV1Ext();
+            instance.discriminant = discriminant;
+            instance.v2 = TrustLineEntryExtensionV2.fromJsonObject(jsonMap.get("v2"));
+            return instance;
+          }
+          throw new IllegalArgumentException("Unknown key '" + key + "' for TrustLineEntryV1Ext");
         }
       }
     }

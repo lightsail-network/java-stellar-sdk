@@ -52,4 +52,23 @@ public class SequenceNumber implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SequenceNumber fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return SequenceNumber.toJsonObject();
+  }
+
+  static SequenceNumber fromJsonObject(Object json) {
+    SequenceNumber instance = new SequenceNumber();
+    instance.SequenceNumber = Int64.fromJsonObject(json);
+    return instance;
+  }
 }

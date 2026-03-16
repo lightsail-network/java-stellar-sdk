@@ -60,4 +60,32 @@ public enum PublicKeyType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PublicKeyType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case PUBLIC_KEY_TYPE_ED25519:
+        return "public_key_type_ed25519";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static PublicKeyType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "public_key_type_ed25519":
+        return PUBLIC_KEY_TYPE_ED25519;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

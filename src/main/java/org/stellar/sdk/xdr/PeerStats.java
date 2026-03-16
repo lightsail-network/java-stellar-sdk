@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -118,5 +119,62 @@ public class PeerStats implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static PeerStats fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("id", id.toJsonObject());
+    jsonMap.put("version_str", versionStr.toJsonObject());
+    jsonMap.put("messages_read", messagesRead.toJsonObject());
+    jsonMap.put("messages_written", messagesWritten.toJsonObject());
+    jsonMap.put("bytes_read", bytesRead.toJsonObject());
+    jsonMap.put("bytes_written", bytesWritten.toJsonObject());
+    jsonMap.put("seconds_connected", secondsConnected.toJsonObject());
+    jsonMap.put("unique_flood_bytes_recv", uniqueFloodBytesRecv.toJsonObject());
+    jsonMap.put("duplicate_flood_bytes_recv", duplicateFloodBytesRecv.toJsonObject());
+    jsonMap.put("unique_fetch_bytes_recv", uniqueFetchBytesRecv.toJsonObject());
+    jsonMap.put("duplicate_fetch_bytes_recv", duplicateFetchBytesRecv.toJsonObject());
+    jsonMap.put("unique_flood_message_recv", uniqueFloodMessageRecv.toJsonObject());
+    jsonMap.put("duplicate_flood_message_recv", duplicateFloodMessageRecv.toJsonObject());
+    jsonMap.put("unique_fetch_message_recv", uniqueFetchMessageRecv.toJsonObject());
+    jsonMap.put("duplicate_fetch_message_recv", duplicateFetchMessageRecv.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static PeerStats fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    PeerStats instance = new PeerStats();
+    instance.id = NodeID.fromJsonObject(jsonMap.get("id"));
+    instance.versionStr = XdrString.fromJsonObject(jsonMap.get("version_str"));
+    instance.messagesRead = Uint64.fromJsonObject(jsonMap.get("messages_read"));
+    instance.messagesWritten = Uint64.fromJsonObject(jsonMap.get("messages_written"));
+    instance.bytesRead = Uint64.fromJsonObject(jsonMap.get("bytes_read"));
+    instance.bytesWritten = Uint64.fromJsonObject(jsonMap.get("bytes_written"));
+    instance.secondsConnected = Uint64.fromJsonObject(jsonMap.get("seconds_connected"));
+    instance.uniqueFloodBytesRecv = Uint64.fromJsonObject(jsonMap.get("unique_flood_bytes_recv"));
+    instance.duplicateFloodBytesRecv =
+        Uint64.fromJsonObject(jsonMap.get("duplicate_flood_bytes_recv"));
+    instance.uniqueFetchBytesRecv = Uint64.fromJsonObject(jsonMap.get("unique_fetch_bytes_recv"));
+    instance.duplicateFetchBytesRecv =
+        Uint64.fromJsonObject(jsonMap.get("duplicate_fetch_bytes_recv"));
+    instance.uniqueFloodMessageRecv =
+        Uint64.fromJsonObject(jsonMap.get("unique_flood_message_recv"));
+    instance.duplicateFloodMessageRecv =
+        Uint64.fromJsonObject(jsonMap.get("duplicate_flood_message_recv"));
+    instance.uniqueFetchMessageRecv =
+        Uint64.fromJsonObject(jsonMap.get("unique_fetch_message_recv"));
+    instance.duplicateFetchMessageRecv =
+        Uint64.fromJsonObject(jsonMap.get("duplicate_fetch_message_recv"));
+    return instance;
   }
 }

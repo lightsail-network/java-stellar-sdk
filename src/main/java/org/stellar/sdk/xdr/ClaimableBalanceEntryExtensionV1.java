@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -72,6 +73,31 @@ public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimableBalanceEntryExtensionV1 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ext", ext.toJsonObject());
+    jsonMap.put("flags", flags.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ClaimableBalanceEntryExtensionV1 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ClaimableBalanceEntryExtensionV1 instance = new ClaimableBalanceEntryExtensionV1();
+    instance.ext = ClaimableBalanceEntryExtensionV1Ext.fromJsonObject(jsonMap.get("ext"));
+    instance.flags = Uint32.fromJsonObject(jsonMap.get("flags"));
+    return instance;
+  }
+
   /**
    * ClaimableBalanceEntryExtensionV1Ext's original definition in the XDR file is:
    *
@@ -133,6 +159,38 @@ public class ClaimableBalanceEntryExtensionV1 implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static ClaimableBalanceEntryExtensionV1Ext fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static ClaimableBalanceEntryExtensionV1Ext fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for ClaimableBalanceEntryExtensionV1Ext");
+        }
+        ClaimableBalanceEntryExtensionV1Ext instance = new ClaimableBalanceEntryExtensionV1Ext();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Expected a string for ClaimableBalanceEntryExtensionV1Ext, got: " + json);
     }
   }
 }

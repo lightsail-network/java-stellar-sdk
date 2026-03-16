@@ -73,4 +73,40 @@ public enum TrustLineFlags implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TrustLineFlags fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case AUTHORIZED_FLAG:
+        return "authorized_flag";
+      case AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG:
+        return "authorized_to_maintain_liabilities_flag";
+      case TRUSTLINE_CLAWBACK_ENABLED_FLAG:
+        return "trustline_clawback_enabled_flag";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static TrustLineFlags fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "authorized_flag":
+        return AUTHORIZED_FLAG;
+      case "authorized_to_maintain_liabilities_flag":
+        return AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG;
+      case "trustline_clawback_enabled_flag":
+        return TRUSTLINE_CLAWBACK_ENABLED_FLAG;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

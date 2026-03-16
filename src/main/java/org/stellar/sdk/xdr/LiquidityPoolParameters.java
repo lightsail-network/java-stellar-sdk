@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -73,5 +74,47 @@ public class LiquidityPoolParameters implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LiquidityPoolParameters fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("liquidity_pool_constant_product", constantProduct.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static LiquidityPoolParameters fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for LiquidityPoolParameters, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    LiquidityPoolType discriminant = LiquidityPoolType.fromJsonObject(key);
+    if (key.equals("liquidity_pool_constant_product")) {
+      LiquidityPoolParameters instance = new LiquidityPoolParameters();
+      instance.discriminant = discriminant;
+      instance.constantProduct =
+          LiquidityPoolConstantProductParameters.fromJsonObject(
+              jsonMap.get("liquidity_pool_constant_product"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for LiquidityPoolParameters");
   }
 }

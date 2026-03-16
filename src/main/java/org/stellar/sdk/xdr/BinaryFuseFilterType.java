@@ -69,4 +69,40 @@ public enum BinaryFuseFilterType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static BinaryFuseFilterType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case BINARY_FUSE_FILTER_8_BIT:
+        return "8_bit";
+      case BINARY_FUSE_FILTER_16_BIT:
+        return "16_bit";
+      case BINARY_FUSE_FILTER_32_BIT:
+        return "32_bit";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static BinaryFuseFilterType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "8_bit":
+        return BINARY_FUSE_FILTER_8_BIT;
+      case "16_bit":
+        return BINARY_FUSE_FILTER_16_BIT;
+      case "32_bit":
+        return BINARY_FUSE_FILTER_32_BIT;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

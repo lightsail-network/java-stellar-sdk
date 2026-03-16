@@ -69,4 +69,40 @@ public enum ManageOfferEffect implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ManageOfferEffect fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case MANAGE_OFFER_CREATED:
+        return "created";
+      case MANAGE_OFFER_UPDATED:
+        return "updated";
+      case MANAGE_OFFER_DELETED:
+        return "deleted";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ManageOfferEffect fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "created":
+        return MANAGE_OFFER_CREATED;
+      case "updated":
+        return MANAGE_OFFER_UPDATED;
+      case "deleted":
+        return MANAGE_OFFER_DELETED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

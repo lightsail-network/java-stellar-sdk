@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -90,5 +92,38 @@ public class LedgerCloseMetaBatch implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerCloseMetaBatch fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("start_sequence", startSequence.toJsonObject());
+    jsonMap.put("end_sequence", endSequence.toJsonObject());
+    jsonMap.put(
+        "ledger_close_metas",
+        XdrElement.arrayToJsonArray(ledgerCloseMetas, i -> ledgerCloseMetas[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerCloseMetaBatch fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    LedgerCloseMetaBatch instance = new LedgerCloseMetaBatch();
+    instance.startSequence = Uint32.fromJsonObject(jsonMap.get("start_sequence"));
+    instance.endSequence = Uint32.fromJsonObject(jsonMap.get("end_sequence"));
+    instance.ledgerCloseMetas =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("ledger_close_metas"),
+            LedgerCloseMeta.class,
+            item -> LedgerCloseMeta.fromJsonObject(item));
+    return instance;
   }
 }

@@ -69,4 +69,40 @@ public enum LedgerHeaderFlags implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerHeaderFlags fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case DISABLE_LIQUIDITY_POOL_TRADING_FLAG:
+        return "trading_flag";
+      case DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG:
+        return "deposit_flag";
+      case DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG:
+        return "withdrawal_flag";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static LedgerHeaderFlags fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "trading_flag":
+        return DISABLE_LIQUIDITY_POOL_TRADING_FLAG;
+      case "deposit_flag":
+        return DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG;
+      case "withdrawal_flag":
+        return DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

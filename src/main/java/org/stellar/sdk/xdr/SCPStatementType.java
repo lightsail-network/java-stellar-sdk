@@ -73,4 +73,44 @@ public enum SCPStatementType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCPStatementType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SCP_ST_PREPARE:
+        return "prepare";
+      case SCP_ST_CONFIRM:
+        return "confirm";
+      case SCP_ST_EXTERNALIZE:
+        return "externalize";
+      case SCP_ST_NOMINATE:
+        return "nominate";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCPStatementType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "prepare":
+        return SCP_ST_PREPARE;
+      case "confirm":
+        return SCP_ST_CONFIRM;
+      case "externalize":
+        return SCP_ST_EXTERNALIZE;
+      case "nominate":
+        return SCP_ST_NOMINATE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

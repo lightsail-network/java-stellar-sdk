@@ -87,4 +87,53 @@ public class BeginSponsoringFutureReservesResult implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static BeginSponsoringFutureReservesResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant
+        == BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS) {
+      return "success";
+    }
+    if (discriminant
+        == BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant
+        == BeginSponsoringFutureReservesResultCode
+            .BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED) {
+      return "already_sponsored";
+    }
+    if (discriminant
+        == BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE) {
+      return "recursive";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static BeginSponsoringFutureReservesResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("success")
+          || strVal.equals("malformed")
+          || strVal.equals("already_sponsored")
+          || strVal.equals("recursive"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for BeginSponsoringFutureReservesResult");
+      }
+      BeginSponsoringFutureReservesResult instance = new BeginSponsoringFutureReservesResult();
+      instance.discriminant = BeginSponsoringFutureReservesResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    throw new IllegalArgumentException(
+        "Expected a string for BeginSponsoringFutureReservesResult, got: " + json);
+  }
 }

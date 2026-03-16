@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,6 +70,31 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
     return decode(xdrDataInputStream);
   }
 
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TrustLineEntryExtensionV2 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("liquidity_pool_use_count", liquidityPoolUseCount.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TrustLineEntryExtensionV2 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TrustLineEntryExtensionV2 instance = new TrustLineEntryExtensionV2();
+    instance.liquidityPoolUseCount = Int32.fromJsonObject(jsonMap.get("liquidity_pool_use_count"));
+    instance.ext = TrustLineEntryExtensionV2Ext.fromJsonObject(jsonMap.get("ext"));
+    return instance;
+  }
+
   /**
    * TrustLineEntryExtensionV2Ext's original definition in the XDR file is:
    *
@@ -129,6 +155,38 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static TrustLineEntryExtensionV2Ext fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static TrustLineEntryExtensionV2Ext fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for TrustLineEntryExtensionV2Ext");
+        }
+        TrustLineEntryExtensionV2Ext instance = new TrustLineEntryExtensionV2Ext();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      throw new IllegalArgumentException(
+          "Expected a string for TrustLineEntryExtensionV2Ext, got: " + json);
     }
   }
 }

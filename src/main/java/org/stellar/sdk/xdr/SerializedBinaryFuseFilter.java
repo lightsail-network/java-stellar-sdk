@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -110,5 +111,44 @@ public class SerializedBinaryFuseFilter implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SerializedBinaryFuseFilter fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("type", type.toJsonObject());
+    jsonMap.put("input_hash_seed", inputHashSeed.toJsonObject());
+    jsonMap.put("filter_seed", filterSeed.toJsonObject());
+    jsonMap.put("segment_length", segmentLength.toJsonObject());
+    jsonMap.put("segement_length_mask", segementLengthMask.toJsonObject());
+    jsonMap.put("segment_count", segmentCount.toJsonObject());
+    jsonMap.put("segment_count_length", segmentCountLength.toJsonObject());
+    jsonMap.put("fingerprint_length", fingerprintLength.toJsonObject());
+    jsonMap.put("fingerprints", XdrElement.bytesToHex(fingerprints));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SerializedBinaryFuseFilter fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SerializedBinaryFuseFilter instance = new SerializedBinaryFuseFilter();
+    instance.type = BinaryFuseFilterType.fromJsonObject(jsonMap.get("type"));
+    instance.inputHashSeed = ShortHashSeed.fromJsonObject(jsonMap.get("input_hash_seed"));
+    instance.filterSeed = ShortHashSeed.fromJsonObject(jsonMap.get("filter_seed"));
+    instance.segmentLength = Uint32.fromJsonObject(jsonMap.get("segment_length"));
+    instance.segementLengthMask = Uint32.fromJsonObject(jsonMap.get("segement_length_mask"));
+    instance.segmentCount = Uint32.fromJsonObject(jsonMap.get("segment_count"));
+    instance.segmentCountLength = Uint32.fromJsonObject(jsonMap.get("segment_count_length"));
+    instance.fingerprintLength = Uint32.fromJsonObject(jsonMap.get("fingerprint_length"));
+    instance.fingerprints = XdrElement.hexToBytes((String) jsonMap.get("fingerprints"));
+    return instance;
   }
 }

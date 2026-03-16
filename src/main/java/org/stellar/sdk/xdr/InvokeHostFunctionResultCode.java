@@ -84,4 +84,52 @@ public enum InvokeHostFunctionResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static InvokeHostFunctionResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case INVOKE_HOST_FUNCTION_SUCCESS:
+        return "success";
+      case INVOKE_HOST_FUNCTION_MALFORMED:
+        return "malformed";
+      case INVOKE_HOST_FUNCTION_TRAPPED:
+        return "trapped";
+      case INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED:
+        return "resource_limit_exceeded";
+      case INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED:
+        return "entry_archived";
+      case INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE:
+        return "insufficient_refundable_fee";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static InvokeHostFunctionResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return INVOKE_HOST_FUNCTION_SUCCESS;
+      case "malformed":
+        return INVOKE_HOST_FUNCTION_MALFORMED;
+      case "trapped":
+        return INVOKE_HOST_FUNCTION_TRAPPED;
+      case "resource_limit_exceeded":
+        return INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED;
+      case "entry_archived":
+        return INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED;
+      case "insufficient_refundable_fee":
+        return INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

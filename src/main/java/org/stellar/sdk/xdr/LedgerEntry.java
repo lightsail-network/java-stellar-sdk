@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -97,6 +98,33 @@ public class LedgerEntry implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerEntry fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("last_modified_ledger_seq", lastModifiedLedgerSeq.toJsonObject());
+    jsonMap.put("data", data.toJsonObject());
+    jsonMap.put("ext", ext.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static LedgerEntry fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    LedgerEntry instance = new LedgerEntry();
+    instance.lastModifiedLedgerSeq = Uint32.fromJsonObject(jsonMap.get("last_modified_ledger_seq"));
+    instance.data = LedgerEntryData.fromJsonObject(jsonMap.get("data"));
+    instance.ext = LedgerEntryExt.fromJsonObject(jsonMap.get("ext"));
+    return instance;
   }
 
   /**
@@ -242,6 +270,146 @@ public class LedgerEntry implements XdrElement {
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
     }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerEntryData fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == LedgerEntryType.ACCOUNT) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("account", account.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.TRUSTLINE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("trustline", trustLine.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.OFFER) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("offer", offer.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.DATA) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("data", data.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.CLAIMABLE_BALANCE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("claimable_balance", claimableBalance.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.LIQUIDITY_POOL) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("liquidity_pool", liquidityPool.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.CONTRACT_DATA) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("contract_data", contractData.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.CONTRACT_CODE) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("contract_code", contractCode.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.CONFIG_SETTING) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("config_setting", configSetting.toJsonObject());
+        return jsonMap;
+      }
+      if (discriminant == LedgerEntryType.TTL) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("ttl", ttl.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerEntryData fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for LedgerEntryData, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      LedgerEntryType discriminant = LedgerEntryType.fromJsonObject(key);
+      if (key.equals("account")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.account = AccountEntry.fromJsonObject(jsonMap.get("account"));
+        return instance;
+      }
+      if (key.equals("trustline")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.trustLine = TrustLineEntry.fromJsonObject(jsonMap.get("trustline"));
+        return instance;
+      }
+      if (key.equals("offer")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.offer = OfferEntry.fromJsonObject(jsonMap.get("offer"));
+        return instance;
+      }
+      if (key.equals("data")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.data = DataEntry.fromJsonObject(jsonMap.get("data"));
+        return instance;
+      }
+      if (key.equals("claimable_balance")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.claimableBalance =
+            ClaimableBalanceEntry.fromJsonObject(jsonMap.get("claimable_balance"));
+        return instance;
+      }
+      if (key.equals("liquidity_pool")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.liquidityPool = LiquidityPoolEntry.fromJsonObject(jsonMap.get("liquidity_pool"));
+        return instance;
+      }
+      if (key.equals("contract_data")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.contractData = ContractDataEntry.fromJsonObject(jsonMap.get("contract_data"));
+        return instance;
+      }
+      if (key.equals("contract_code")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.contractCode = ContractCodeEntry.fromJsonObject(jsonMap.get("contract_code"));
+        return instance;
+      }
+      if (key.equals("config_setting")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.configSetting = ConfigSettingEntry.fromJsonObject(jsonMap.get("config_setting"));
+        return instance;
+      }
+      if (key.equals("ttl")) {
+        LedgerEntryData instance = new LedgerEntryData();
+        instance.discriminant = discriminant;
+        instance.ttl = TTLEntry.fromJsonObject(jsonMap.get("ttl"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for LedgerEntryData");
+    }
   }
 
   /**
@@ -311,6 +479,59 @@ public class LedgerEntry implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static LedgerEntryExt fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      if (discriminant == 0) {
+        return "v0";
+      }
+      if (discriminant == 1) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("v1", v1.toJsonObject());
+        return jsonMap;
+      }
+      throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    }
+
+    @SuppressWarnings("unchecked")
+    static LedgerEntryExt fromJsonObject(Object json) {
+      if (json instanceof String) {
+        String strVal = (String) json;
+        if (!(strVal.equals("v0"))) {
+          throw new IllegalArgumentException(
+              "Unexpected string '" + strVal + "' for LedgerEntryExt");
+        }
+        LedgerEntryExt instance = new LedgerEntryExt();
+        instance.discriminant = Integer.parseInt(strVal.substring(1));
+        return instance;
+      }
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      if (jsonMap.containsKey("$schema")) {
+        jsonMap = new LinkedHashMap<>(jsonMap);
+        jsonMap.remove("$schema");
+      }
+      if (jsonMap.size() != 1) {
+        throw new IllegalArgumentException(
+            "Expected a single-key object for LedgerEntryExt, got: " + json);
+      }
+      String key = jsonMap.keySet().iterator().next();
+      Integer discriminant = Integer.parseInt(key.substring(1));
+      if (key.equals("v1")) {
+        LedgerEntryExt instance = new LedgerEntryExt();
+        instance.discriminant = discriminant;
+        instance.v1 = LedgerEntryExtensionV1.fromJsonObject(jsonMap.get("v1"));
+        return instance;
+      }
+      throw new IllegalArgumentException("Unknown key '" + key + "' for LedgerEntryExt");
     }
   }
 }

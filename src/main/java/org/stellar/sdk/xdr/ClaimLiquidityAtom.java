@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -77,5 +78,36 @@ public class ClaimLiquidityAtom implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimLiquidityAtom fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("liquidity_pool_id", liquidityPoolID.toJsonObject());
+    jsonMap.put("asset_sold", assetSold.toJsonObject());
+    jsonMap.put("amount_sold", amountSold.toJsonObject());
+    jsonMap.put("asset_bought", assetBought.toJsonObject());
+    jsonMap.put("amount_bought", amountBought.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ClaimLiquidityAtom fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ClaimLiquidityAtom instance = new ClaimLiquidityAtom();
+    instance.liquidityPoolID = PoolID.fromJsonObject(jsonMap.get("liquidity_pool_id"));
+    instance.assetSold = Asset.fromJsonObject(jsonMap.get("asset_sold"));
+    instance.amountSold = Int64.fromJsonObject(jsonMap.get("amount_sold"));
+    instance.assetBought = Asset.fromJsonObject(jsonMap.get("asset_bought"));
+    instance.amountBought = Int64.fromJsonObject(jsonMap.get("amount_bought"));
+    return instance;
   }
 }

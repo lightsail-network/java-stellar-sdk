@@ -68,4 +68,40 @@ public enum ClaimAtomType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ClaimAtomType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case CLAIM_ATOM_TYPE_V0:
+        return "v0";
+      case CLAIM_ATOM_TYPE_ORDER_BOOK:
+        return "order_book";
+      case CLAIM_ATOM_TYPE_LIQUIDITY_POOL:
+        return "liquidity_pool";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ClaimAtomType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "v0":
+        return CLAIM_ATOM_TYPE_V0;
+      case "order_book":
+        return CLAIM_ATOM_TYPE_ORDER_BOOK;
+      case "liquidity_pool":
+        return CLAIM_ATOM_TYPE_LIQUIDITY_POOL;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

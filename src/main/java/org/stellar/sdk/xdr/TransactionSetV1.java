@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -80,5 +82,34 @@ public class TransactionSetV1 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionSetV1 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("previous_ledger_hash", previousLedgerHash.toJsonObject());
+    jsonMap.put("phases", XdrElement.arrayToJsonArray(phases, i -> phases[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionSetV1 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TransactionSetV1 instance = new TransactionSetV1();
+    instance.previousLedgerHash = Hash.fromJsonObject(jsonMap.get("previous_ledger_hash"));
+    instance.phases =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("phases"),
+            TransactionPhase.class,
+            item -> TransactionPhase.fromJsonObject(item));
+    return instance;
   }
 }

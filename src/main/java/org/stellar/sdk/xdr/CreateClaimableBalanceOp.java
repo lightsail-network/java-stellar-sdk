@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -90,5 +92,37 @@ public class CreateClaimableBalanceOp implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static CreateClaimableBalanceOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("asset", asset.toJsonObject());
+    jsonMap.put("amount", amount.toJsonObject());
+    jsonMap.put(
+        "claimants", XdrElement.arrayToJsonArray(claimants, i -> claimants[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static CreateClaimableBalanceOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    CreateClaimableBalanceOp instance = new CreateClaimableBalanceOp();
+    instance.asset = Asset.fromJsonObject(jsonMap.get("asset"));
+    instance.amount = Int64.fromJsonObject(jsonMap.get("amount"));
+    instance.claimants =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("claimants"),
+            Claimant.class,
+            item -> Claimant.fromJsonObject(item));
+    return instance;
   }
 }

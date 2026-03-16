@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -78,5 +79,36 @@ public class ConfigSettingContractComputeV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ConfigSettingContractComputeV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ledger_max_instructions", ledgerMaxInstructions.toJsonObject());
+    jsonMap.put("tx_max_instructions", txMaxInstructions.toJsonObject());
+    jsonMap.put(
+        "fee_rate_per_instructions_increment", feeRatePerInstructionsIncrement.toJsonObject());
+    jsonMap.put("tx_memory_limit", txMemoryLimit.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ConfigSettingContractComputeV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ConfigSettingContractComputeV0 instance = new ConfigSettingContractComputeV0();
+    instance.ledgerMaxInstructions = Int64.fromJsonObject(jsonMap.get("ledger_max_instructions"));
+    instance.txMaxInstructions = Int64.fromJsonObject(jsonMap.get("tx_max_instructions"));
+    instance.feeRatePerInstructionsIncrement =
+        Int64.fromJsonObject(jsonMap.get("fee_rate_per_instructions_increment"));
+    instance.txMemoryLimit = Uint32.fromJsonObject(jsonMap.get("tx_memory_limit"));
+    return instance;
   }
 }

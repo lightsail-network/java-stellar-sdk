@@ -173,4 +173,116 @@ public enum SCValType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCValType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SCV_BOOL:
+        return "bool";
+      case SCV_VOID:
+        return "void";
+      case SCV_ERROR:
+        return "error";
+      case SCV_U32:
+        return "u32";
+      case SCV_I32:
+        return "i32";
+      case SCV_U64:
+        return "u64";
+      case SCV_I64:
+        return "i64";
+      case SCV_TIMEPOINT:
+        return "timepoint";
+      case SCV_DURATION:
+        return "duration";
+      case SCV_U128:
+        return "u128";
+      case SCV_I128:
+        return "i128";
+      case SCV_U256:
+        return "u256";
+      case SCV_I256:
+        return "i256";
+      case SCV_BYTES:
+        return "bytes";
+      case SCV_STRING:
+        return "string";
+      case SCV_SYMBOL:
+        return "symbol";
+      case SCV_VEC:
+        return "vec";
+      case SCV_MAP:
+        return "map";
+      case SCV_ADDRESS:
+        return "address";
+      case SCV_CONTRACT_INSTANCE:
+        return "contract_instance";
+      case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
+        return "ledger_key_contract_instance";
+      case SCV_LEDGER_KEY_NONCE:
+        return "ledger_key_nonce";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCValType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "bool":
+        return SCV_BOOL;
+      case "void":
+        return SCV_VOID;
+      case "error":
+        return SCV_ERROR;
+      case "u32":
+        return SCV_U32;
+      case "i32":
+        return SCV_I32;
+      case "u64":
+        return SCV_U64;
+      case "i64":
+        return SCV_I64;
+      case "timepoint":
+        return SCV_TIMEPOINT;
+      case "duration":
+        return SCV_DURATION;
+      case "u128":
+        return SCV_U128;
+      case "i128":
+        return SCV_I128;
+      case "u256":
+        return SCV_U256;
+      case "i256":
+        return SCV_I256;
+      case "bytes":
+        return SCV_BYTES;
+      case "string":
+        return SCV_STRING;
+      case "symbol":
+        return SCV_SYMBOL;
+      case "vec":
+        return SCV_VEC;
+      case "map":
+        return SCV_MAP;
+      case "address":
+        return SCV_ADDRESS;
+      case "contract_instance":
+        return SCV_CONTRACT_INSTANCE;
+      case "ledger_key_contract_instance":
+        return SCV_LEDGER_KEY_CONTRACT_INSTANCE;
+      case "ledger_key_nonce":
+        return SCV_LEDGER_KEY_NONCE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

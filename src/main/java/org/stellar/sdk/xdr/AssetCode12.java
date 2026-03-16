@@ -59,4 +59,38 @@ public class AssetCode12 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AssetCode12 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    int end = this.AssetCode12.length;
+    while (end > 0 && this.AssetCode12[end - 1] == 0) {
+      end--;
+    }
+    int len = Math.max(end, 5);
+    return XdrElement.bytesToEscapedAscii(java.util.Arrays.copyOf(this.AssetCode12, len));
+  }
+
+  static AssetCode12 fromJsonObject(Object json) {
+    String value = (String) json;
+    byte[] ascii = XdrElement.escapedAsciiToBytes(value);
+    if (ascii.length < 5) {
+      throw new IllegalArgumentException("AssetCode12 JSON value must encode at least 5 bytes");
+    }
+    if (ascii.length > 12) {
+      throw new IllegalArgumentException("AssetCode12 JSON value exceeds 12 bytes");
+    }
+    byte[] padded = new byte[12];
+    System.arraycopy(ascii, 0, padded, 0, Math.min(ascii.length, 12));
+    AssetCode12 instance = new AssetCode12();
+    instance.AssetCode12 = padded;
+    return instance;
+  }
 }

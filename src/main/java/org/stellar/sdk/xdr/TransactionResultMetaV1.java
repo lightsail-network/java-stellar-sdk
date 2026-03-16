@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -76,5 +77,37 @@ public class TransactionResultMetaV1 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TransactionResultMetaV1 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ext", ext.toJsonObject());
+    jsonMap.put("result", result.toJsonObject());
+    jsonMap.put("fee_processing", feeProcessing.toJsonObject());
+    jsonMap.put("tx_apply_processing", txApplyProcessing.toJsonObject());
+    jsonMap.put("post_tx_apply_fee_processing", postTxApplyFeeProcessing.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static TransactionResultMetaV1 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    TransactionResultMetaV1 instance = new TransactionResultMetaV1();
+    instance.ext = ExtensionPoint.fromJsonObject(jsonMap.get("ext"));
+    instance.result = TransactionResultPair.fromJsonObject(jsonMap.get("result"));
+    instance.feeProcessing = LedgerEntryChanges.fromJsonObject(jsonMap.get("fee_processing"));
+    instance.txApplyProcessing = TransactionMeta.fromJsonObject(jsonMap.get("tx_apply_processing"));
+    instance.postTxApplyFeeProcessing =
+        LedgerEntryChanges.fromJsonObject(jsonMap.get("post_tx_apply_fee_processing"));
+    return instance;
   }
 }

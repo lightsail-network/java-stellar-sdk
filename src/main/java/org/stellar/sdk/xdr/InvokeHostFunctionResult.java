@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -91,5 +92,75 @@ public class InvokeHostFunctionResult implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static InvokeHostFunctionResult fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_SUCCESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("success", success.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_MALFORMED) {
+      return "malformed";
+    }
+    if (discriminant == InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_TRAPPED) {
+      return "trapped";
+    }
+    if (discriminant == InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED) {
+      return "resource_limit_exceeded";
+    }
+    if (discriminant == InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED) {
+      return "entry_archived";
+    }
+    if (discriminant
+        == InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE) {
+      return "insufficient_refundable_fee";
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static InvokeHostFunctionResult fromJsonObject(Object json) {
+    if (json instanceof String) {
+      String strVal = (String) json;
+      if (!(strVal.equals("malformed")
+          || strVal.equals("trapped")
+          || strVal.equals("resource_limit_exceeded")
+          || strVal.equals("entry_archived")
+          || strVal.equals("insufficient_refundable_fee"))) {
+        throw new IllegalArgumentException(
+            "Unexpected string '" + strVal + "' for InvokeHostFunctionResult");
+      }
+      InvokeHostFunctionResult instance = new InvokeHostFunctionResult();
+      instance.discriminant = InvokeHostFunctionResultCode.fromJsonObject(strVal);
+      return instance;
+    }
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for InvokeHostFunctionResult, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    InvokeHostFunctionResultCode discriminant = InvokeHostFunctionResultCode.fromJsonObject(key);
+    if (key.equals("success")) {
+      InvokeHostFunctionResult instance = new InvokeHostFunctionResult();
+      instance.discriminant = discriminant;
+      instance.success = Hash.fromJsonObject(jsonMap.get("success"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for InvokeHostFunctionResult");
   }
 }

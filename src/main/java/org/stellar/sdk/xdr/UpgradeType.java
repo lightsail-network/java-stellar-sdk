@@ -73,4 +73,23 @@ public class UpgradeType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static UpgradeType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.bytesToHex(UpgradeType);
+  }
+
+  static UpgradeType fromJsonObject(Object json) {
+    UpgradeType instance = new UpgradeType();
+    instance.UpgradeType = XdrElement.hexToBytes((String) json);
+    return instance;
+  }
 }

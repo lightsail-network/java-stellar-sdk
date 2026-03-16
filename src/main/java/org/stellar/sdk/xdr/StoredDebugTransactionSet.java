@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,5 +66,32 @@ public class StoredDebugTransactionSet implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static StoredDebugTransactionSet fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("tx_set", txSet.toJsonObject());
+    jsonMap.put("ledger_seq", ledgerSeq.toJsonObject());
+    jsonMap.put("scp_value", scpValue.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static StoredDebugTransactionSet fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    StoredDebugTransactionSet instance = new StoredDebugTransactionSet();
+    instance.txSet = StoredTransactionSet.fromJsonObject(jsonMap.get("tx_set"));
+    instance.ledgerSeq = Uint32.fromJsonObject(jsonMap.get("ledger_seq"));
+    instance.scpValue = StellarValue.fromJsonObject(jsonMap.get("scp_value"));
+    return instance;
   }
 }

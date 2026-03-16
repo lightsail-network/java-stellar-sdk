@@ -104,4 +104,72 @@ public enum SetOptionsResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SetOptionsResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SET_OPTIONS_SUCCESS:
+        return "success";
+      case SET_OPTIONS_LOW_RESERVE:
+        return "low_reserve";
+      case SET_OPTIONS_TOO_MANY_SIGNERS:
+        return "too_many_signers";
+      case SET_OPTIONS_BAD_FLAGS:
+        return "bad_flags";
+      case SET_OPTIONS_INVALID_INFLATION:
+        return "invalid_inflation";
+      case SET_OPTIONS_CANT_CHANGE:
+        return "cant_change";
+      case SET_OPTIONS_UNKNOWN_FLAG:
+        return "unknown_flag";
+      case SET_OPTIONS_THRESHOLD_OUT_OF_RANGE:
+        return "threshold_out_of_range";
+      case SET_OPTIONS_BAD_SIGNER:
+        return "bad_signer";
+      case SET_OPTIONS_INVALID_HOME_DOMAIN:
+        return "invalid_home_domain";
+      case SET_OPTIONS_AUTH_REVOCABLE_REQUIRED:
+        return "auth_revocable_required";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SetOptionsResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return SET_OPTIONS_SUCCESS;
+      case "low_reserve":
+        return SET_OPTIONS_LOW_RESERVE;
+      case "too_many_signers":
+        return SET_OPTIONS_TOO_MANY_SIGNERS;
+      case "bad_flags":
+        return SET_OPTIONS_BAD_FLAGS;
+      case "invalid_inflation":
+        return SET_OPTIONS_INVALID_INFLATION;
+      case "cant_change":
+        return SET_OPTIONS_CANT_CHANGE;
+      case "unknown_flag":
+        return SET_OPTIONS_UNKNOWN_FLAG;
+      case "threshold_out_of_range":
+        return SET_OPTIONS_THRESHOLD_OUT_OF_RANGE;
+      case "bad_signer":
+        return SET_OPTIONS_BAD_SIGNER;
+      case "invalid_home_domain":
+        return SET_OPTIONS_INVALID_HOME_DOMAIN;
+      case "auth_revocable_required":
+        return SET_OPTIONS_AUTH_REVOCABLE_REQUIRED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

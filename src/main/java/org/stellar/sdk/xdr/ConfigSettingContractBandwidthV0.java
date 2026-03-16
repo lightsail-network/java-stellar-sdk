@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -71,5 +72,33 @@ public class ConfigSettingContractBandwidthV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ConfigSettingContractBandwidthV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ledger_max_txs_size_bytes", ledgerMaxTxsSizeBytes.toJsonObject());
+    jsonMap.put("tx_max_size_bytes", txMaxSizeBytes.toJsonObject());
+    jsonMap.put("fee_tx_size1_kb", feeTxSize1KB.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ConfigSettingContractBandwidthV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ConfigSettingContractBandwidthV0 instance = new ConfigSettingContractBandwidthV0();
+    instance.ledgerMaxTxsSizeBytes =
+        Uint32.fromJsonObject(jsonMap.get("ledger_max_txs_size_bytes"));
+    instance.txMaxSizeBytes = Uint32.fromJsonObject(jsonMap.get("tx_max_size_bytes"));
+    instance.feeTxSize1KB = Int64.fromJsonObject(jsonMap.get("fee_tx_size1_kb"));
+    return instance;
   }
 }

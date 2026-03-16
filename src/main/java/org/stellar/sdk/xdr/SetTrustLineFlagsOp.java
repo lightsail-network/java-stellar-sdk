@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -70,5 +71,34 @@ public class SetTrustLineFlagsOp implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SetTrustLineFlagsOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("trustor", trustor.toJsonObject());
+    jsonMap.put("asset", asset.toJsonObject());
+    jsonMap.put("clear_flags", clearFlags.toJsonObject());
+    jsonMap.put("set_flags", setFlags.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SetTrustLineFlagsOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SetTrustLineFlagsOp instance = new SetTrustLineFlagsOp();
+    instance.trustor = AccountID.fromJsonObject(jsonMap.get("trustor"));
+    instance.asset = Asset.fromJsonObject(jsonMap.get("asset"));
+    instance.clearFlags = Uint32.fromJsonObject(jsonMap.get("clear_flags"));
+    instance.setFlags = Uint32.fromJsonObject(jsonMap.get("set_flags"));
+    return instance;
   }
 }

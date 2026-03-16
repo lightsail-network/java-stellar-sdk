@@ -4,12 +4,14 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * SCAddress's original definition in the XDR file is:
@@ -107,5 +109,89 @@ public class SCAddress implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCAddress fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_ACCOUNT) {
+      return this.accountId.toJsonObject();
+    }
+    if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_CONTRACT) {
+      return StrKey.encodeContract(this.contractId.getContractID().getHash());
+    }
+    if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_MUXED_ACCOUNT) {
+      try {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
+        this.muxedAccount.getEd25519().encode(xdrOut);
+        this.muxedAccount.getId().encode(xdrOut);
+        return StrKey.encodeMed25519PublicKey(baos.toByteArray());
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to encode SCAddress", e);
+      }
+    }
+    if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE) {
+      return this.claimableBalanceId.toJsonObject();
+    }
+    if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_LIQUIDITY_POOL) {
+      return this.liquidityPoolId.toJsonObject();
+    }
+    throw new IllegalArgumentException("Unknown SCAddress type: " + this.discriminant);
+  }
+
+  static SCAddress fromJsonObject(Object json) {
+    String strKey = (String) json;
+    SCAddress instance = new SCAddress();
+    if (strKey.startsWith("G")) {
+      instance.discriminant = SCAddressType.SC_ADDRESS_TYPE_ACCOUNT;
+      instance.accountId = AccountID.fromJsonObject(strKey);
+      return instance;
+    }
+    if (strKey.startsWith("C")) {
+      byte[] raw = StrKey.decodeContract(strKey);
+      instance.discriminant = SCAddressType.SC_ADDRESS_TYPE_CONTRACT;
+      ContractID contractId = new ContractID();
+      Hash hash = new Hash();
+      hash.setHash(raw);
+      contractId.setContractID(hash);
+      instance.contractId = contractId;
+      return instance;
+    }
+    if (strKey.startsWith("M")) {
+      try {
+        byte[] raw = StrKey.decodeMed25519PublicKey(strKey);
+        ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+        XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
+        Uint256 ed25519 = Uint256.decode(xdrIn);
+        Uint64 id = Uint64.decode(xdrIn);
+        MuxedEd25519Account med = new MuxedEd25519Account();
+        med.setId(id);
+        med.setEd25519(ed25519);
+        instance.discriminant = SCAddressType.SC_ADDRESS_TYPE_MUXED_ACCOUNT;
+        instance.muxedAccount = med;
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to decode SCAddress", e);
+      }
+      return instance;
+    }
+    if (strKey.startsWith("B")) {
+      instance.discriminant = SCAddressType.SC_ADDRESS_TYPE_CLAIMABLE_BALANCE;
+      instance.claimableBalanceId = ClaimableBalanceID.fromJsonObject(strKey);
+      return instance;
+    }
+    if (strKey.startsWith("L")) {
+      instance.discriminant = SCAddressType.SC_ADDRESS_TYPE_LIQUIDITY_POOL;
+      instance.liquidityPoolId = PoolID.fromJsonObject(strKey);
+      return instance;
+    }
+    throw new IllegalArgumentException("Invalid SCAddress strkey: " + strKey);
   }
 }

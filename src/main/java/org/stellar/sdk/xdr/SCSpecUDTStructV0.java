@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -100,5 +102,38 @@ public class SCSpecUDTStructV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecUDTStructV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("doc", doc.toJsonObject());
+    jsonMap.put("lib", lib.toJsonObject());
+    jsonMap.put("name", name.toJsonObject());
+    jsonMap.put("fields", XdrElement.arrayToJsonArray(fields, i -> fields[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SCSpecUDTStructV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SCSpecUDTStructV0 instance = new SCSpecUDTStructV0();
+    instance.doc = XdrString.fromJsonObject(jsonMap.get("doc"));
+    instance.lib = XdrString.fromJsonObject(jsonMap.get("lib"));
+    instance.name = XdrString.fromJsonObject(jsonMap.get("name"));
+    instance.fields =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("fields"),
+            SCSpecUDTStructFieldV0.class,
+            item -> SCSpecUDTStructFieldV0.fromJsonObject(item));
+    return instance;
   }
 }

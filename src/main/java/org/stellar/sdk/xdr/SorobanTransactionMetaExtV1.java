@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -98,5 +99,39 @@ public class SorobanTransactionMetaExtV1 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SorobanTransactionMetaExtV1 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("ext", ext.toJsonObject());
+    jsonMap.put(
+        "total_non_refundable_resource_fee_charged",
+        totalNonRefundableResourceFeeCharged.toJsonObject());
+    jsonMap.put(
+        "total_refundable_resource_fee_charged", totalRefundableResourceFeeCharged.toJsonObject());
+    jsonMap.put("rent_fee_charged", rentFeeCharged.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static SorobanTransactionMetaExtV1 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    SorobanTransactionMetaExtV1 instance = new SorobanTransactionMetaExtV1();
+    instance.ext = ExtensionPoint.fromJsonObject(jsonMap.get("ext"));
+    instance.totalNonRefundableResourceFeeCharged =
+        Int64.fromJsonObject(jsonMap.get("total_non_refundable_resource_fee_charged"));
+    instance.totalRefundableResourceFeeCharged =
+        Int64.fromJsonObject(jsonMap.get("total_refundable_resource_fee_charged"));
+    instance.rentFeeCharged = Int64.fromJsonObject(jsonMap.get("rent_fee_charged"));
+    return instance;
   }
 }

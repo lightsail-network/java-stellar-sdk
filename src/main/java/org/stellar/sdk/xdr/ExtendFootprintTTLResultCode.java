@@ -76,4 +76,44 @@ public enum ExtendFootprintTTLResultCode implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ExtendFootprintTTLResultCode fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case EXTEND_FOOTPRINT_TTL_SUCCESS:
+        return "success";
+      case EXTEND_FOOTPRINT_TTL_MALFORMED:
+        return "malformed";
+      case EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED:
+        return "resource_limit_exceeded";
+      case EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE:
+        return "insufficient_refundable_fee";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static ExtendFootprintTTLResultCode fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "success":
+        return EXTEND_FOOTPRINT_TTL_SUCCESS;
+      case "malformed":
+        return EXTEND_FOOTPRINT_TTL_MALFORMED;
+      case "resource_limit_exceeded":
+        return EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED;
+      case "insufficient_refundable_fee":
+        return EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

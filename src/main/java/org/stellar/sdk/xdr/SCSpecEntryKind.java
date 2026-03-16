@@ -80,4 +80,52 @@ public enum SCSpecEntryKind implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCSpecEntryKind fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SC_SPEC_ENTRY_FUNCTION_V0:
+        return "function_v0";
+      case SC_SPEC_ENTRY_UDT_STRUCT_V0:
+        return "udt_struct_v0";
+      case SC_SPEC_ENTRY_UDT_UNION_V0:
+        return "udt_union_v0";
+      case SC_SPEC_ENTRY_UDT_ENUM_V0:
+        return "udt_enum_v0";
+      case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
+        return "udt_error_enum_v0";
+      case SC_SPEC_ENTRY_EVENT_V0:
+        return "event_v0";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCSpecEntryKind fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "function_v0":
+        return SC_SPEC_ENTRY_FUNCTION_V0;
+      case "udt_struct_v0":
+        return SC_SPEC_ENTRY_UDT_STRUCT_V0;
+      case "udt_union_v0":
+        return SC_SPEC_ENTRY_UDT_UNION_V0;
+      case "udt_enum_v0":
+        return SC_SPEC_ENTRY_UDT_ENUM_V0;
+      case "udt_error_enum_v0":
+        return SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0;
+      case "event_v0":
+        return SC_SPEC_ENTRY_EVENT_V0;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

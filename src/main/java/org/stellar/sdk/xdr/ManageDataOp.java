@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -68,5 +69,33 @@ public class ManageDataOp implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ManageDataOp fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("data_name", dataName.toJsonObject());
+    jsonMap.put("data_value", dataValue != null ? dataValue.toJsonObject() : null);
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ManageDataOp fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ManageDataOp instance = new ManageDataOp();
+    instance.dataName = String64.fromJsonObject(jsonMap.get("data_name"));
+    instance.dataValue =
+        jsonMap.get("data_value") != null
+            ? DataValue.fromJsonObject(jsonMap.get("data_value"))
+            : null;
+    return instance;
   }
 }

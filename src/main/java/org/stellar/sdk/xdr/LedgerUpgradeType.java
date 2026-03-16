@@ -85,4 +85,56 @@ public enum LedgerUpgradeType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerUpgradeType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case LEDGER_UPGRADE_VERSION:
+        return "version";
+      case LEDGER_UPGRADE_BASE_FEE:
+        return "base_fee";
+      case LEDGER_UPGRADE_MAX_TX_SET_SIZE:
+        return "max_tx_set_size";
+      case LEDGER_UPGRADE_BASE_RESERVE:
+        return "base_reserve";
+      case LEDGER_UPGRADE_FLAGS:
+        return "flags";
+      case LEDGER_UPGRADE_CONFIG:
+        return "config";
+      case LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE:
+        return "max_soroban_tx_set_size";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static LedgerUpgradeType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "version":
+        return LEDGER_UPGRADE_VERSION;
+      case "base_fee":
+        return LEDGER_UPGRADE_BASE_FEE;
+      case "max_tx_set_size":
+        return LEDGER_UPGRADE_MAX_TX_SET_SIZE;
+      case "base_reserve":
+        return LEDGER_UPGRADE_BASE_RESERVE;
+      case "flags":
+        return LEDGER_UPGRADE_FLAGS;
+      case "config":
+        return LEDGER_UPGRADE_CONFIG;
+      case "max_soroban_tx_set_size":
+        return LEDGER_UPGRADE_MAX_SOROBAN_TX_SET_SIZE;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

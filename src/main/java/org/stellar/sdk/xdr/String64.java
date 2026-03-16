@@ -56,4 +56,23 @@ public class String64 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static String64 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return string64.toJsonObject();
+  }
+
+  static String64 fromJsonObject(Object json) {
+    String64 instance = new String64();
+    instance.string64 = XdrString.fromJsonObject(json);
+    return instance;
+  }
 }

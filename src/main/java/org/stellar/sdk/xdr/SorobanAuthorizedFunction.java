@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -101,5 +102,73 @@ public class SorobanAuthorizedFunction implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SorobanAuthorizedFunction fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant
+        == SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("contract_fn", contractFn.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant
+        == SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("create_contract_host_fn", createContractHostFn.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant
+        == SorobanAuthorizedFunctionType
+            .SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("create_contract_v2_host_fn", createContractV2HostFn.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static SorobanAuthorizedFunction fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for SorobanAuthorizedFunction, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    SorobanAuthorizedFunctionType discriminant = SorobanAuthorizedFunctionType.fromJsonObject(key);
+    if (key.equals("contract_fn")) {
+      SorobanAuthorizedFunction instance = new SorobanAuthorizedFunction();
+      instance.discriminant = discriminant;
+      instance.contractFn = InvokeContractArgs.fromJsonObject(jsonMap.get("contract_fn"));
+      return instance;
+    }
+    if (key.equals("create_contract_host_fn")) {
+      SorobanAuthorizedFunction instance = new SorobanAuthorizedFunction();
+      instance.discriminant = discriminant;
+      instance.createContractHostFn =
+          CreateContractArgs.fromJsonObject(jsonMap.get("create_contract_host_fn"));
+      return instance;
+    }
+    if (key.equals("create_contract_v2_host_fn")) {
+      SorobanAuthorizedFunction instance = new SorobanAuthorizedFunction();
+      instance.discriminant = discriminant;
+      instance.createContractV2HostFn =
+          CreateContractArgsV2.fromJsonObject(jsonMap.get("create_contract_v2_host_fn"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for SorobanAuthorizedFunction");
   }
 }

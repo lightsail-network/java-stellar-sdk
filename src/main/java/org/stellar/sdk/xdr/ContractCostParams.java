@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -82,5 +83,29 @@ public class ContractCostParams implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ContractCostParams fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return XdrElement.arrayToJsonArray(
+        ContractCostParams, i -> ContractCostParams[i].toJsonObject());
+  }
+
+  static ContractCostParams fromJsonObject(Object json) {
+    ContractCostParams instance = new ContractCostParams();
+    instance.ContractCostParams =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) json,
+            ContractCostParamEntry.class,
+            item -> ContractCostParamEntry.fromJsonObject(item));
+    return instance;
   }
 }

@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -77,5 +78,48 @@ public class ConfigSettingSCPTiming implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ConfigSettingSCPTiming fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put(
+        "ledger_target_close_time_milliseconds", ledgerTargetCloseTimeMilliseconds.toJsonObject());
+    jsonMap.put(
+        "nomination_timeout_initial_milliseconds",
+        nominationTimeoutInitialMilliseconds.toJsonObject());
+    jsonMap.put(
+        "nomination_timeout_increment_milliseconds",
+        nominationTimeoutIncrementMilliseconds.toJsonObject());
+    jsonMap.put(
+        "ballot_timeout_initial_milliseconds", ballotTimeoutInitialMilliseconds.toJsonObject());
+    jsonMap.put(
+        "ballot_timeout_increment_milliseconds", ballotTimeoutIncrementMilliseconds.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ConfigSettingSCPTiming fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ConfigSettingSCPTiming instance = new ConfigSettingSCPTiming();
+    instance.ledgerTargetCloseTimeMilliseconds =
+        Uint32.fromJsonObject(jsonMap.get("ledger_target_close_time_milliseconds"));
+    instance.nominationTimeoutInitialMilliseconds =
+        Uint32.fromJsonObject(jsonMap.get("nomination_timeout_initial_milliseconds"));
+    instance.nominationTimeoutIncrementMilliseconds =
+        Uint32.fromJsonObject(jsonMap.get("nomination_timeout_increment_milliseconds"));
+    instance.ballotTimeoutInitialMilliseconds =
+        Uint32.fromJsonObject(jsonMap.get("ballot_timeout_initial_milliseconds"));
+    instance.ballotTimeoutIncrementMilliseconds =
+        Uint32.fromJsonObject(jsonMap.get("ballot_timeout_increment_milliseconds"));
+    return instance;
   }
 }

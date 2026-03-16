@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * NodeID's original definition in the XDR file is:
@@ -51,5 +52,31 @@ public class NodeID implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static NodeID fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return StrKey.encodeEd25519PublicKey(this.NodeID.getEd25519().getUint256());
+  }
+
+  static NodeID fromJsonObject(Object json) {
+    String strKey = (String) json;
+    byte[] raw = StrKey.decodeEd25519PublicKey(strKey);
+    PublicKey pk = new PublicKey();
+    pk.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
+    Uint256 ed25519 = new Uint256();
+    ed25519.setUint256(raw);
+    pk.setEd25519(ed25519);
+    NodeID instance = new NodeID();
+    instance.NodeID = pk;
+    return instance;
   }
 }

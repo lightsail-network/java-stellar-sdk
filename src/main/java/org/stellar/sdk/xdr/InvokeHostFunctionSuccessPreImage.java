@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -82,5 +84,34 @@ public class InvokeHostFunctionSuccessPreImage implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static InvokeHostFunctionSuccessPreImage fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("return_value", returnValue.toJsonObject());
+    jsonMap.put("events", XdrElement.arrayToJsonArray(events, i -> events[i].toJsonObject()));
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static InvokeHostFunctionSuccessPreImage fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    InvokeHostFunctionSuccessPreImage instance = new InvokeHostFunctionSuccessPreImage();
+    instance.returnValue = SCVal.fromJsonObject(jsonMap.get("return_value"));
+    instance.events =
+        XdrElement.jsonArrayToArray(
+            (List<Object>) jsonMap.get("events"),
+            ContractEvent.class,
+            item -> ContractEvent.fromJsonObject(item));
+    return instance;
   }
 }

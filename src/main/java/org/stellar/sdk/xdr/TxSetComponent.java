@@ -5,6 +5,8 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -76,6 +78,48 @@ public class TxSetComponent implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static TxSetComponent fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    if (discriminant == TxSetComponentType.TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("txset_comp_txs_maybe_discounted_fee", txsMaybeDiscountedFee.toJsonObject());
+      return jsonMap;
+    }
+    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+  }
+
+  @SuppressWarnings("unchecked")
+  static TxSetComponent fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    if (jsonMap.containsKey("$schema")) {
+      jsonMap = new LinkedHashMap<>(jsonMap);
+      jsonMap.remove("$schema");
+    }
+    if (jsonMap.size() != 1) {
+      throw new IllegalArgumentException(
+          "Expected a single-key object for TxSetComponent, got: " + json);
+    }
+    String key = jsonMap.keySet().iterator().next();
+    TxSetComponentType discriminant = TxSetComponentType.fromJsonObject(key);
+    if (key.equals("txset_comp_txs_maybe_discounted_fee")) {
+      TxSetComponent instance = new TxSetComponent();
+      instance.discriminant = discriminant;
+      instance.txsMaybeDiscountedFee =
+          TxSetComponentTxsMaybeDiscountedFee.fromJsonObject(
+              jsonMap.get("txset_comp_txs_maybe_discounted_fee"));
+      return instance;
+    }
+    throw new IllegalArgumentException("Unknown key '" + key + "' for TxSetComponent");
   }
 
   /**
@@ -156,6 +200,36 @@ public class TxSetComponent implements XdrElement {
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
       return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static TxSetComponentTxsMaybeDiscountedFee fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("base_fee", baseFee != null ? baseFee.toJsonObject() : null);
+      jsonMap.put("txs", XdrElement.arrayToJsonArray(txs, i -> txs[i].toJsonObject()));
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static TxSetComponentTxsMaybeDiscountedFee fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      TxSetComponentTxsMaybeDiscountedFee instance = new TxSetComponentTxsMaybeDiscountedFee();
+      instance.baseFee =
+          jsonMap.get("base_fee") != null ? Int64.fromJsonObject(jsonMap.get("base_fee")) : null;
+      instance.txs =
+          XdrElement.jsonArrayToArray(
+              (List<Object>) jsonMap.get("txs"),
+              TransactionEnvelope.class,
+              item -> TransactionEnvelope.fromJsonObject(item));
+      return instance;
     }
   }
 }

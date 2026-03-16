@@ -56,4 +56,23 @@ public class String32 implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static String32 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    return string32.toJsonObject();
+  }
+
+  static String32 fromJsonObject(Object json) {
+    String32 instance = new String32();
+    instance.string32 = XdrString.fromJsonObject(json);
+    return instance;
+  }
 }

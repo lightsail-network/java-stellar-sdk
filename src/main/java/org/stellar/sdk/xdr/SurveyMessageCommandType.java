@@ -61,4 +61,32 @@ public enum SurveyMessageCommandType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SurveyMessageCommandType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case TIME_SLICED_SURVEY_TOPOLOGY:
+        return "time_sliced_survey_topology";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SurveyMessageCommandType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "time_sliced_survey_topology":
+        return TIME_SLICED_SURVEY_TOPOLOGY;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

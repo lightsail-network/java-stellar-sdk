@@ -82,4 +82,44 @@ public enum AccountFlags implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static AccountFlags fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case AUTH_REQUIRED_FLAG:
+        return "required_flag";
+      case AUTH_REVOCABLE_FLAG:
+        return "revocable_flag";
+      case AUTH_IMMUTABLE_FLAG:
+        return "immutable_flag";
+      case AUTH_CLAWBACK_ENABLED_FLAG:
+        return "clawback_enabled_flag";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static AccountFlags fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "required_flag":
+        return AUTH_REQUIRED_FLAG;
+      case "revocable_flag":
+        return AUTH_REVOCABLE_FLAG;
+      case "immutable_flag":
+        return AUTH_IMMUTABLE_FLAG;
+      case "clawback_enabled_flag":
+        return AUTH_CLAWBACK_ENABLED_FLAG;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

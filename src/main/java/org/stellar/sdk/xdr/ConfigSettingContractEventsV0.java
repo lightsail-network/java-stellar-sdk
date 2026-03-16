@@ -5,6 +5,7 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,5 +66,31 @@ public class ConfigSettingContractEventsV0 implements XdrElement {
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
+  }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static ConfigSettingContractEventsV0 fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    jsonMap.put("tx_max_contract_events_size_bytes", txMaxContractEventsSizeBytes.toJsonObject());
+    jsonMap.put("fee_contract_events1_kb", feeContractEvents1KB.toJsonObject());
+    return jsonMap;
+  }
+
+  @SuppressWarnings("unchecked")
+  static ConfigSettingContractEventsV0 fromJsonObject(Object json) {
+    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+    ConfigSettingContractEventsV0 instance = new ConfigSettingContractEventsV0();
+    instance.txMaxContractEventsSizeBytes =
+        Uint32.fromJsonObject(jsonMap.get("tx_max_contract_events_size_bytes"));
+    instance.feeContractEvents1KB = Int64.fromJsonObject(jsonMap.get("fee_contract_events1_kb"));
+    return instance;
   }
 }

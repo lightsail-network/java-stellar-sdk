@@ -60,4 +60,32 @@ public enum SCEnvMetaKind implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static SCEnvMetaKind fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case SC_ENV_META_KIND_INTERFACE_VERSION:
+        return "sc_env_meta_kind_interface_version";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static SCEnvMetaKind fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "sc_env_meta_kind_interface_version":
+        return SC_ENV_META_KIND_INTERFACE_VERSION;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }

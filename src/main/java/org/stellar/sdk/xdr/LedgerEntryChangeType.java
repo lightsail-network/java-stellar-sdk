@@ -77,4 +77,48 @@ public enum LedgerEntryChangeType implements XdrElement {
     xdrDataInputStream.setMaxInputLen(xdr.length);
     return decode(xdrDataInputStream);
   }
+
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  public static LedgerEntryChangeType fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  Object toJsonObject() {
+    switch (this) {
+      case LEDGER_ENTRY_CREATED:
+        return "created";
+      case LEDGER_ENTRY_UPDATED:
+        return "updated";
+      case LEDGER_ENTRY_REMOVED:
+        return "removed";
+      case LEDGER_ENTRY_STATE:
+        return "state";
+      case LEDGER_ENTRY_RESTORED:
+        return "restored";
+      default:
+        throw new IllegalArgumentException("Unknown enum value: " + this.value);
+    }
+  }
+
+  static LedgerEntryChangeType fromJsonObject(Object json) {
+    String value = (String) json;
+    switch (value) {
+      case "created":
+        return LEDGER_ENTRY_CREATED;
+      case "updated":
+        return LEDGER_ENTRY_UPDATED;
+      case "removed":
+        return LEDGER_ENTRY_REMOVED;
+      case "state":
+        return LEDGER_ENTRY_STATE;
+      case "restored":
+        return LEDGER_ENTRY_RESTORED;
+      default:
+        throw new IllegalArgumentException("Unknown JSON value: " + value);
+    }
+  }
 }
