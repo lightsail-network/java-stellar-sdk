@@ -68,6 +68,16 @@ tasks {
         useJUnitPlatform()
     }
 
+    // Optional corpus verifier for SEP-0051/XDR-JSON. It is intentionally not wired into
+    // `test` or `check`; run it explicitly via `./gradlew verifyXdrJson --args='...'`.
+    register<JavaExec>("verifyXdrJson") {
+        group = "verification"
+        description = "Verifies generated XDR JSON against a corpus and the stellar CLI."
+        classpath = sourceSets.test.get().runtimeClasspath
+        mainClass.set("org.stellar.sdk.xdr.XdrJsonCorpusVerifier")
+        dependsOn(testClasses)
+    }
+
     val sourcesJar by creating(Jar::class) {
         archiveClassifier = "sources"
         from(sourceSets.main.get().allSource)
