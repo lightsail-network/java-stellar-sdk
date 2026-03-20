@@ -70,8 +70,8 @@ public class MuxedAccount {
       byte[] rawMed25519 = StrKey.decodeMed25519PublicKey(address);
       StrKey.RawMuxedAccountStrKeyParameter parameter =
           StrKey.fromRawMuxedAccountStrKey(rawMed25519);
-      this.accountId = StrKey.encodeEd25519PublicKey(parameter.getEd25519().getUint256());
-      this.muxedId = parameter.getId().getUint64().getNumber();
+      this.accountId = StrKey.encodeEd25519PublicKey(parameter.getEd25519());
+      this.muxedId = parameter.getId();
     } else {
       throw new IllegalArgumentException("Invalid address");
     }
@@ -87,10 +87,10 @@ public class MuxedAccount {
     if (muxedId == null) {
       return accountId;
     }
-    org.stellar.sdk.xdr.MuxedAccount.MuxedAccountMed25519 med25519 = toXdr().getMed25519();
     return StrKey.encodeMed25519PublicKey(
         StrKey.toRawMuxedAccountStrKey(
-            new StrKey.RawMuxedAccountStrKeyParameter(med25519.getEd25519(), med25519.getId())));
+            new StrKey.RawMuxedAccountStrKeyParameter(
+                StrKey.decodeEd25519PublicKey(accountId), muxedId)));
   }
 
   /**

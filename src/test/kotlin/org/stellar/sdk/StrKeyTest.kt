@@ -461,17 +461,14 @@ class StrKeyTest :
           ),
         ) { testCase ->
           val ed25519Bytes = Util.hexToBytes(testCase.ed25519Hex)
-          val ed25519 = org.stellar.sdk.xdr.Uint256(ed25519Bytes)
-          val id =
-            org.stellar.sdk.xdr.Uint64(org.stellar.sdk.xdr.XdrUnsignedHyperInteger(testCase.id))
-          val param = StrKey.RawMuxedAccountStrKeyParameter(ed25519, id)
+          val param = StrKey.RawMuxedAccountStrKeyParameter(ed25519Bytes, testCase.id)
 
           val bytes = StrKey.toRawMuxedAccountStrKey(param)
           bytes.size shouldBe 40
 
           val decoded = StrKey.fromRawMuxedAccountStrKey(bytes)
-          decoded.ed25519.uint256 shouldBe ed25519Bytes
-          decoded.id.uint64.number shouldBe testCase.id
+          decoded.ed25519 shouldBe ed25519Bytes
+          decoded.id shouldBe testCase.id
         }
       }
 

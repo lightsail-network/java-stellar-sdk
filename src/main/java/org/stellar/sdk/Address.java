@@ -12,6 +12,9 @@ import org.stellar.sdk.xdr.PoolID;
 import org.stellar.sdk.xdr.SCAddress;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
+import org.stellar.sdk.xdr.Uint256;
+import org.stellar.sdk.xdr.Uint64;
+import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /**
  * Represents a single address in the Stellar network. An address can represent an account,
@@ -117,8 +120,8 @@ public class Address {
         return fromMuxedAccount(
             StrKey.toRawMuxedAccountStrKey(
                 new StrKey.RawMuxedAccountStrKeyParameter(
-                    scAddress.getMuxedAccount().getEd25519(),
-                    scAddress.getMuxedAccount().getId())));
+                    scAddress.getMuxedAccount().getEd25519().getUint256(),
+                    scAddress.getMuxedAccount().getId().getUint64().getNumber())));
       case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
         if (scAddress.getClaimableBalanceId().getDiscriminant()
             != ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0) {
@@ -174,8 +177,8 @@ public class Address {
             StrKey.fromRawMuxedAccountStrKey(this.key);
         MuxedEd25519Account muxedEd25519Account =
             MuxedEd25519Account.builder()
-                .id(parameter.getId())
-                .ed25519(parameter.getEd25519())
+                .id(new Uint64(new XdrUnsignedHyperInteger(parameter.getId())))
+                .ed25519(new Uint256(parameter.getEd25519()))
                 .build();
         scAddress.setMuxedAccount(muxedEd25519Account);
         break;
