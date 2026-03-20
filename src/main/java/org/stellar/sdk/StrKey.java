@@ -10,9 +10,6 @@ import java.util.Optional;
 import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.exception.UnexpectedException;
-import org.stellar.sdk.xdr.Uint256;
-import org.stellar.sdk.xdr.Uint64;
-import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /**
  * StrKey is a helper class that allows encoding and decoding Stellar keys to/from strings, i.e.
@@ -20,6 +17,7 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
  */
 public class StrKey {
 
+  private static final BigInteger UINT64_MAX = new BigInteger("18446744073709551615");
   private static final byte[] b32Table = decodingTable();
   private static final Base32 base32Codec = Base32Factory.getInstance();
 
@@ -584,11 +582,22 @@ public class StrKey {
 
   @Value
   static class RawMuxedAccountStrKeyParameter {
-    @NonNull Uint256 ed25519;
-    @NonNull Uint64 id;
+    byte @NonNull [] ed25519;
+    @NonNull BigInteger id;
   }
 
   static byte[] toRawMuxedAccountStrKey(RawMuxedAccountStrKeyParameter parameter) {
+    byte[] ed25519Bytes = parameter.getEd25519();
+    if (ed25519Bytes.length != 32) {
+      throw new IllegalArgumentException(
+          "Muxed account ed25519 bytes must be 32 bytes long, got " + ed25519Bytes.length);
+    }
+    if (parameter.getId().compareTo(BigInteger.ZERO) < 0
+        || parameter.getId().compareTo(UINT64_MAX) > 0) {
+      throw new IllegalArgumentException(
+          "Muxed account ID must be between 0 and 2^64 - 1 inclusive");
+    }
+
     // Get the 64-bit ID. This is the critical part of the explanation.
     //
     // THE KEY INSIGHT: Why using .longValue() is safe for a uint64
@@ -633,8 +642,7 @@ public class StrKey {
     // buffer,
     // it correctly serializes the original uint64 value into 8 bytes, regardless of whether Java
     // interpreted the intermediate `long` as positive or negative.
-    long idLong = parameter.getId().getUint64().getNumber().longValue();
-    byte[] ed25519Bytes = parameter.getEd25519().getUint256();
+    long idLong = parameter.getId().longValue();
     return ByteBuffer.allocate(ed25519Bytes.length + 8).put(ed25519Bytes).putLong(idLong).array();
   }
 
@@ -648,9 +656,7 @@ public class StrKey {
     buffer.get(ed25519Bytes);
     byte[] idBytes = new byte[8];
     buffer.get(idBytes);
-    Uint256 ed25519 = new Uint256(ed25519Bytes);
-    Uint64 id = new Uint64(new XdrUnsignedHyperInteger(new BigInteger(1, idBytes)));
-    return new RawMuxedAccountStrKeyParameter(ed25519, id);
+    return new RawMuxedAccountStrKeyParameter(ed25519Bytes, new BigInteger(1, idBytes));
   }
 
   enum VersionByte {
