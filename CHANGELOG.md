@@ -4,6 +4,7 @@
 - feat: sort `ScMap` entries by key in `Scv.toMap` following Soroban runtime ordering rules, as the network requires ScMap keys to be in ascending order. `Scv.toMap` now accepts `Map<SCVal, SCVal>`; the previous `toMap(LinkedHashMap<SCVal, SCVal>)` overload is deprecated.
 - feat: add `closeTime`, `headerXdr`, and `metadataXdr` to `GetLatestLedgerResponse`.
 - chore: bump [stellar-xdr](https://github.com/stellar/stellar-xdr) to v25.0.
+- refactor!: remove deprecated `StrKey` helpers `encodeEd25519PublicKey(AccountID)`, `encodeMuxedAccount(MuxedAccount)`, `decodeMuxedAccount(String)`, `encodeToXDRAccountId(String)`, and `encodeToXDRMuxedAccount(String)`; use `StrKey.encodeEd25519PublicKey(byte[])`, `org.stellar.sdk.MuxedAccount`, and `KeyPair#getXdrAccountId()` instead.
 
 ## 2.2.3
 

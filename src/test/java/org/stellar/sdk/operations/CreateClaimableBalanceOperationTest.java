@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,16 +16,12 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.AssetTypeNative;
 import org.stellar.sdk.Claimant;
 import org.stellar.sdk.KeyPair;
+import org.stellar.sdk.MuxedAccount;
 import org.stellar.sdk.Network;
 import org.stellar.sdk.Predicate;
-import org.stellar.sdk.StrKey;
 import org.stellar.sdk.Transaction;
 import org.stellar.sdk.TransactionBuilder;
 import org.stellar.sdk.TransactionPreconditions;
-import org.stellar.sdk.xdr.CryptoKeyType;
-import org.stellar.sdk.xdr.MuxedAccount;
-import org.stellar.sdk.xdr.Uint64;
-import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 // TODO: refactor the test
 public class CreateClaimableBalanceOperationTest {
@@ -136,17 +133,10 @@ public class CreateClaimableBalanceOperationTest {
     // different sequence number changes the claimable balance id
     assertEquals(expectedIdSeq124, transaction.getClaimableBalanceId(0));
 
-    // MuxedAccount muxedAccount = ;
-    MuxedAccount muxedAccount = new MuxedAccount();
-    muxedAccount.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
-    MuxedAccount.MuxedAccountMed25519 med = new MuxedAccount.MuxedAccountMed25519();
-    med.setEd25519(StrKey.encodeToXDRMuxedAccount(sourceAccount).getEd25519());
-    med.setId(new Uint64(new XdrUnsignedHyperInteger(41l)));
-    muxedAccount.setMed25519(med);
+    MuxedAccount muxedAccount = new MuxedAccount(sourceAccount, BigInteger.valueOf(41L));
 
     transaction =
-        new TransactionBuilder(
-                new Account(StrKey.encodeMuxedAccount(muxedAccount), 123l), Network.TESTNET)
+        new TransactionBuilder(new Account(muxedAccount.getAddress(), 123l), Network.TESTNET)
             .addOperation(op0)
             .addOperation(BumpSequenceOperation.builder().bumpTo(2).build())
             .setTimeout(TransactionPreconditions.TIMEOUT_INFINITE)

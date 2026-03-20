@@ -10,11 +10,6 @@ import java.util.Optional;
 import lombok.NonNull;
 import lombok.Value;
 import org.stellar.sdk.exception.UnexpectedException;
-import org.stellar.sdk.xdr.AccountID;
-import org.stellar.sdk.xdr.CryptoKeyType;
-import org.stellar.sdk.xdr.MuxedAccount;
-import org.stellar.sdk.xdr.PublicKey;
-import org.stellar.sdk.xdr.PublicKeyType;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint64;
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
@@ -351,127 +346,6 @@ public class StrKey {
     }
   }
 
-  /**
-   * Encodes raw data to strkey Stellar account ID (G...)
-   *
-   * <p>This method is deprecated and will be removed in future versions, use {@link
-   * #encodeEd25519PublicKey(byte[])} instead.
-   *
-   * @param accountID data to encode
-   * @return "G..." representation of the key
-   */
-  @Deprecated
-  public static String encodeEd25519PublicKey(AccountID accountID) {
-    char[] encoded =
-        encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
-    return String.valueOf(encoded);
-  }
-
-  /**
-   * Encodes raw data to strkey Stellar muxed account ID (M... or G...)
-   *
-   * <p>This method is deprecated and will be removed in future versions, use {@link
-   * org.stellar.sdk.MuxedAccount} instead.
-   *
-   * @param muxedAccount the muxed account to encode
-   * @return "M..." or "G..." representation of the key
-   */
-  @Deprecated
-  public static String encodeMuxedAccount(MuxedAccount muxedAccount) {
-    switch (muxedAccount.getDiscriminant()) {
-      case KEY_TYPE_MUXED_ED25519:
-        return String.valueOf(
-            encodeCheck(
-                VersionByte.MED25519_PUBLIC_KEY, getMuxedEd25519AccountBytes(muxedAccount)));
-      case KEY_TYPE_ED25519:
-        return String.valueOf(
-            encodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.getEd25519().getUint256()));
-      default:
-        throw new IllegalArgumentException("invalid discriminant");
-    }
-  }
-
-  /**
-   * Decodes strkey Stellar account ID (G...) or muxed account ID (M...) to {@link MuxedAccount}.
-   *
-   * <p>This method is deprecated and will be removed in future versions, use {@link
-   * org.stellar.sdk.MuxedAccount} instead.
-   *
-   * @param address the address to decode
-   * @return {@link MuxedAccount} representation of the key
-   */
-  @Deprecated
-  public static MuxedAccount decodeMuxedAccount(String address) {
-    return encodeToXDRMuxedAccount(address);
-  }
-
-  /**
-   * Encodes strkey Stellar account ID (G...) to {@link AccountID}.
-   *
-   * <p>This method is deprecated and will be removed in future versions, use {@link
-   * KeyPair#getXdrAccountId()} instead.
-   *
-   * @param data the data to encode
-   * @return {@link AccountID} representation of the key
-   */
-  @Deprecated
-  public static AccountID encodeToXDRAccountId(String data) {
-    AccountID accountID = new AccountID();
-    PublicKey publicKey = new PublicKey();
-    publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
-    try {
-      publicKey.setEd25519(Uint256.fromXdrByteArray(decodeEd25519PublicKey(data)));
-    } catch (IOException e) {
-      throw new IllegalArgumentException("invalid address: " + data, e);
-    }
-    accountID.setAccountID(publicKey);
-    return accountID;
-  }
-
-  /**
-   * Encodes strkey Stellar account ID (G...) or muxed account ID (M...) to {@link MuxedAccount}.
-   *
-   * <p>This method is deprecated and will be removed in future versions, use {@link
-   * org.stellar.sdk.MuxedAccount} instead.
-   *
-   * @param data the data to encode
-   * @return {@link MuxedAccount} representation of the key
-   */
-  @Deprecated
-  public static MuxedAccount encodeToXDRMuxedAccount(String data) {
-    MuxedAccount muxed = new MuxedAccount();
-
-    if (data.isEmpty()) {
-      throw new IllegalArgumentException("address is empty");
-    }
-    switch (decodeVersionByte(data)) {
-      case ACCOUNT_ID:
-        muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
-        byte[] rawEd25519PublicKey = decodeEd25519PublicKey(data);
-        try {
-          muxed.setEd25519(Uint256.fromXdrByteArray(rawEd25519PublicKey));
-        } catch (IOException e) {
-          throw new IllegalArgumentException("invalid address: " + data, e);
-        }
-        break;
-      case MED25519_PUBLIC_KEY:
-        byte[] input = decodeCheck(VersionByte.MED25519_PUBLIC_KEY, data.toCharArray());
-        muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
-        MuxedAccount.MuxedAccountMed25519 med = new MuxedAccount.MuxedAccountMed25519();
-        try {
-          med.setEd25519(Uint256.fromXdrByteArray(Arrays.copyOfRange(input, 0, 32)));
-          med.setId(Uint64.fromXdrByteArray(Arrays.copyOfRange(input, 32, 40)));
-        } catch (IOException e) {
-          throw new IllegalArgumentException("invalid address: " + data, e);
-        }
-        muxed.setMed25519(med);
-        break;
-      default:
-        throw new IllegalArgumentException("Version byte is invalid");
-    }
-    return muxed;
-  }
-
   static VersionByte decodeVersionByte(String data) {
     byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
     byte[] decoded = base32decode(dataBytes);
@@ -669,21 +543,6 @@ public class StrKey {
       table[alphabet.charAt(i)] = (byte) i;
     }
     return table;
-  }
-
-  @Deprecated
-  private static byte[] getMuxedEd25519AccountBytes(MuxedAccount muxedAccount) {
-    byte[] accountBytes = muxedAccount.getMed25519().getEd25519().getUint256();
-    byte[] idBytes = muxedAccount.getMed25519().getId().getUint64().getNumber().toByteArray();
-    byte[] idPaddedBytes = new byte[8];
-    int idNumBytesToCopy = Math.min(idBytes.length, 8);
-    int idCopyStartIndex = idBytes.length - idNumBytesToCopy;
-    System.arraycopy(
-        idBytes, idCopyStartIndex, idPaddedBytes, 8 - idNumBytesToCopy, idNumBytesToCopy);
-    byte[] result = new byte[accountBytes.length + idPaddedBytes.length];
-    System.arraycopy(accountBytes, 0, result, 0, accountBytes.length);
-    System.arraycopy(idPaddedBytes, 0, result, accountBytes.length, idPaddedBytes.length);
-    return result;
   }
 
   private static byte[] removeBase32Padding(byte[] data) {
