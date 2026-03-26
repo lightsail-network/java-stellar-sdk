@@ -1,10 +1,11 @@
 # Changelog
 
 ## Pending
-- feat: sort `ScMap` entries by key in `Scv.toMap` following Soroban runtime ordering rules, as the network requires ScMap keys to be in ascending order. `Scv.toMap` now accepts `Map<SCVal, SCVal>`; the previous `toMap(LinkedHashMap<SCVal, SCVal>)` overload is deprecated.
-- feat: add `closeTime`, `headerXdr`, and `metadataXdr` to `GetLatestLedgerResponse`.
-- chore: bump [stellar-xdr](https://github.com/stellar/stellar-xdr) to v25.0.
-- refactor!: remove deprecated `StrKey` helpers `encodeEd25519PublicKey(AccountID)`, `encodeMuxedAccount(MuxedAccount)`, `decodeMuxedAccount(String)`, `encodeToXDRAccountId(String)`, and `encodeToXDRMuxedAccount(String)`; use `StrKey.encodeEd25519PublicKey(byte[])`, `org.stellar.sdk.MuxedAccount`, and `KeyPair#getXdrAccountId()` instead.
+- feat: sort `ScMap` entries by key in `Scv.toMap` following Soroban runtime ordering rules, as the network requires ScMap keys to be in ascending order. `Scv.toMap` now accepts `Map<SCVal, SCVal>`; the previous `toMap(LinkedHashMap<SCVal, SCVal>)` overload is deprecated. ([#766](https://github.com/lightsail-network/java-stellar-sdk/pull/766))
+- feat: add SEP-0051 support. ([#776](https://github.com/lightsail-network/java-stellar-sdk/pull/776))
+- feat: add `closeTime`, `headerXdr`, and `metadataXdr` to `GetLatestLedgerResponse`. ([#768](https://github.com/lightsail-network/java-stellar-sdk/pull/768))
+- chore: bump [stellar-xdr](https://github.com/stellar/stellar-xdr) to v25.0. ([#769](https://github.com/lightsail-network/java-stellar-sdk/pull/769))
+- refactor!: remove deprecated `StrKey` helpers `encodeEd25519PublicKey(AccountID)`, `encodeMuxedAccount(MuxedAccount)`, `decodeMuxedAccount(String)`, `encodeToXDRAccountId(String)`, and `encodeToXDRMuxedAccount(String)`; use `StrKey.encodeEd25519PublicKey(byte[])`, `org.stellar.sdk.MuxedAccount`, and `KeyPair#getXdrAccountId()` instead. ([#779](https://github.com/lightsail-network/java-stellar-sdk/pull/779))
 
 ## 2.2.3
 
