@@ -192,7 +192,9 @@ import org.stellar.sdk.Base64Factory;
  *     // Cost of performing BN254 scalar element exponentiation
  *     Bn254FrPow = 83,
  *      // Cost of performing BN254 scalar element inversion
- *     Bn254FrInv = 84
+ *     Bn254FrInv = 84,
+ *     // Cost of performing BN254 G1 multi-scalar multiplication (MSM)
+ *     Bn254G1Msm = 85
  * };
  * </pre>
  */
@@ -281,7 +283,8 @@ public enum ContractCostType implements XdrElement {
   Bn254FrAddSub(81),
   Bn254FrMul(82),
   Bn254FrPow(83),
-  Bn254FrInv(84);
+  Bn254FrInv(84),
+  Bn254G1Msm(85);
 
   private final int value;
 
@@ -468,6 +471,8 @@ public enum ContractCostType implements XdrElement {
         return Bn254FrPow;
       case 84:
         return Bn254FrInv;
+      case 85:
+        return Bn254G1Msm;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -674,6 +679,8 @@ public enum ContractCostType implements XdrElement {
         return "bn254frpow";
       case Bn254FrInv:
         return "bn254frinv";
+      case Bn254G1Msm:
+        return "bn254g1msm";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -852,6 +859,8 @@ public enum ContractCostType implements XdrElement {
         return Bn254FrPow;
       case "bn254frinv":
         return Bn254FrInv;
+      case "bn254g1msm":
+        return Bn254G1Msm;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

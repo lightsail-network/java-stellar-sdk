@@ -24,6 +24,7 @@ import org.stellar.sdk.Base64Factory;
  * case CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
  * case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
  * case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+ * case CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN:
  *     void;
  * };
  * </pre>
@@ -45,6 +46,7 @@ public class ClaimClaimableBalanceResult implements XdrElement {
       case CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
       case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
       case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+      case CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN:
         break;
     }
   }
@@ -68,6 +70,7 @@ public class ClaimClaimableBalanceResult implements XdrElement {
       case CLAIM_CLAIMABLE_BALANCE_LINE_FULL:
       case CLAIM_CLAIMABLE_BALANCE_NO_TRUST:
       case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
+      case CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN:
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);
@@ -119,6 +122,9 @@ public class ClaimClaimableBalanceResult implements XdrElement {
     if (discriminant == ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED) {
       return "not_authorized";
     }
+    if (discriminant == ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN) {
+      return "trustline_frozen";
+    }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
   }
 
@@ -131,7 +137,8 @@ public class ClaimClaimableBalanceResult implements XdrElement {
           || strVal.equals("cannot_claim")
           || strVal.equals("line_full")
           || strVal.equals("no_trust")
-          || strVal.equals("not_authorized"))) {
+          || strVal.equals("not_authorized")
+          || strVal.equals("trustline_frozen"))) {
         throw new IllegalArgumentException(
             "Unexpected string '" + strVal + "' for ClaimClaimableBalanceResult");
       }

@@ -24,6 +24,7 @@ import org.stellar.sdk.Base64Factory;
  * case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
  * case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
  * case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
+ * case LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN:
  *     void;
  * };
  * </pre>
@@ -45,6 +46,7 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
       case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
       case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
       case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
+      case LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN:
         break;
     }
   }
@@ -68,6 +70,7 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
       case LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED:
       case LIQUIDITY_POOL_WITHDRAW_LINE_FULL:
       case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
+      case LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN:
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);
@@ -119,6 +122,9 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
     if (discriminant == LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM) {
       return "under_minimum";
     }
+    if (discriminant == LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN) {
+      return "trustline_frozen";
+    }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
   }
 
@@ -131,7 +137,8 @@ public class LiquidityPoolWithdrawResult implements XdrElement {
           || strVal.equals("no_trust")
           || strVal.equals("underfunded")
           || strVal.equals("line_full")
-          || strVal.equals("under_minimum"))) {
+          || strVal.equals("under_minimum")
+          || strVal.equals("trustline_frozen"))) {
         throw new IllegalArgumentException(
             "Unexpected string '" + strVal + "' for LiquidityPoolWithdrawResult");
       }

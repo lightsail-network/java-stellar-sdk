@@ -6,6 +6,7 @@
 - feat: add `closeTime`, `headerXdr`, and `metadataXdr` to `GetLatestLedgerResponse`. ([#768](https://github.com/lightsail-network/java-stellar-sdk/pull/768))
 - chore: bump [stellar-xdr](https://github.com/stellar/stellar-xdr) to v25.0. ([#769](https://github.com/lightsail-network/java-stellar-sdk/pull/769))
 - refactor!: remove deprecated `StrKey` helpers `encodeEd25519PublicKey(AccountID)`, `encodeMuxedAccount(MuxedAccount)`, `decodeMuxedAccount(String)`, `encodeToXDRAccountId(String)`, and `encodeToXDRMuxedAccount(String)`; use `StrKey.encodeEd25519PublicKey(byte[])`, `org.stellar.sdk.MuxedAccount`, and `KeyPair#getXdrAccountId()` instead. ([#779](https://github.com/lightsail-network/java-stellar-sdk/pull/779))
+- chore: bump [stellar-xdr](https://github.com/stellar/stellar-xdr) to v26.0.
 
 ## 2.2.3
 

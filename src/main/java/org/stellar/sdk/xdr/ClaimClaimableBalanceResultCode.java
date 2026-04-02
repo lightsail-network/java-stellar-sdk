@@ -18,7 +18,8 @@ import org.stellar.sdk.Base64Factory;
  *     CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM = -2,
  *     CLAIM_CLAIMABLE_BALANCE_LINE_FULL = -3,
  *     CLAIM_CLAIMABLE_BALANCE_NO_TRUST = -4,
- *     CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -5
+ *     CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED = -5,
+ *     CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN = -6
  * };
  * </pre>
  */
@@ -28,7 +29,8 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
   CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM(-2),
   CLAIM_CLAIMABLE_BALANCE_LINE_FULL(-3),
   CLAIM_CLAIMABLE_BALANCE_NO_TRUST(-4),
-  CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED(-5);
+  CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED(-5),
+  CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN(-6);
 
   private final int value;
 
@@ -57,6 +59,8 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
         return CLAIM_CLAIMABLE_BALANCE_NO_TRUST;
       case -5:
         return CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED;
+      case -6:
+        return CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -106,6 +110,8 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
         return "no_trust";
       case CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED:
         return "not_authorized";
+      case CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN:
+        return "trustline_frozen";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -126,6 +132,8 @@ public enum ClaimClaimableBalanceResultCode implements XdrElement {
         return CLAIM_CLAIMABLE_BALANCE_NO_TRUST;
       case "not_authorized":
         return CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED;
+      case "trustline_frozen":
+        return CLAIM_CLAIMABLE_BALANCE_TRUSTLINE_FROZEN;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

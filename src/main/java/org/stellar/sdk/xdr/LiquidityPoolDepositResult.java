@@ -26,6 +26,7 @@ import org.stellar.sdk.Base64Factory;
  * case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
  * case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
  * case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
+ * case LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN:
  *     void;
  * };
  * </pre>
@@ -49,6 +50,7 @@ public class LiquidityPoolDepositResult implements XdrElement {
       case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
       case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
       case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
+      case LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN:
         break;
     }
   }
@@ -73,6 +75,7 @@ public class LiquidityPoolDepositResult implements XdrElement {
       case LIQUIDITY_POOL_DEPOSIT_LINE_FULL:
       case LIQUIDITY_POOL_DEPOSIT_BAD_PRICE:
       case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
+      case LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN:
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);
@@ -130,6 +133,9 @@ public class LiquidityPoolDepositResult implements XdrElement {
     if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_POOL_FULL) {
       return "pool_full";
     }
+    if (discriminant == LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN) {
+      return "trustline_frozen";
+    }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
   }
 
@@ -144,7 +150,8 @@ public class LiquidityPoolDepositResult implements XdrElement {
           || strVal.equals("underfunded")
           || strVal.equals("line_full")
           || strVal.equals("bad_price")
-          || strVal.equals("pool_full"))) {
+          || strVal.equals("pool_full")
+          || strVal.equals("trustline_frozen"))) {
         throw new IllegalArgumentException(
             "Unexpected string '" + strVal + "' for LiquidityPoolDepositResult");
       }
