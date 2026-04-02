@@ -24,7 +24,9 @@ import org.stellar.sdk.Base64Factory;
  *                                                // pool share
  *     LIQUIDITY_POOL_WITHDRAW_LINE_FULL = -4,    // would go above limit for one
  *                                                // of the assets
- *     LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5 // didn't withdraw enough
+ *     LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM = -5, // didn't withdraw enough
+ *     LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN = -6  // trustline for one of the
+ *                                                    // assets is frozen
  * };
  * </pre>
  */
@@ -34,7 +36,8 @@ public enum LiquidityPoolWithdrawResultCode implements XdrElement {
   LIQUIDITY_POOL_WITHDRAW_NO_TRUST(-2),
   LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED(-3),
   LIQUIDITY_POOL_WITHDRAW_LINE_FULL(-4),
-  LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM(-5);
+  LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM(-5),
+  LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN(-6);
 
   private final int value;
 
@@ -63,6 +66,8 @@ public enum LiquidityPoolWithdrawResultCode implements XdrElement {
         return LIQUIDITY_POOL_WITHDRAW_LINE_FULL;
       case -5:
         return LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM;
+      case -6:
+        return LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -112,6 +117,8 @@ public enum LiquidityPoolWithdrawResultCode implements XdrElement {
         return "line_full";
       case LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM:
         return "under_minimum";
+      case LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN:
+        return "trustline_frozen";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -132,6 +139,8 @@ public enum LiquidityPoolWithdrawResultCode implements XdrElement {
         return LIQUIDITY_POOL_WITHDRAW_LINE_FULL;
       case "under_minimum":
         return LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM;
+      case "trustline_frozen":
+        return LIQUIDITY_POOL_WITHDRAW_TRUSTLINE_FROZEN;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

@@ -35,7 +35,8 @@ import org.stellar.sdk.Base64Factory;
  *     txBAD_SPONSORSHIP = -14,        // sponsorship not confirmed
  *     txBAD_MIN_SEQ_AGE_OR_GAP = -15, // minSeqAge or minSeqLedgerGap conditions not met
  *     txMALFORMED = -16,              // precondition is invalid
- *     txSOROBAN_INVALID = -17         // soroban-specific preconditions were not met
+ *     txSOROBAN_INVALID = -17,        // soroban-specific preconditions were not met
+ *     txFROZEN_KEY_ACCESSED = -18     // a 'frozen' ledger key is accessed by any operation
  * };
  * </pre>
  */
@@ -58,7 +59,8 @@ public enum TransactionResultCode implements XdrElement {
   txBAD_SPONSORSHIP(-14),
   txBAD_MIN_SEQ_AGE_OR_GAP(-15),
   txMALFORMED(-16),
-  txSOROBAN_INVALID(-17);
+  txSOROBAN_INVALID(-17),
+  txFROZEN_KEY_ACCESSED(-18);
 
   private final int value;
 
@@ -113,6 +115,8 @@ public enum TransactionResultCode implements XdrElement {
         return txMALFORMED;
       case -17:
         return txSOROBAN_INVALID;
+      case -18:
+        return txFROZEN_KEY_ACCESSED;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -187,6 +191,8 @@ public enum TransactionResultCode implements XdrElement {
         return "txmalformed";
       case txSOROBAN_INVALID:
         return "txsoroban_invalid";
+      case txFROZEN_KEY_ACCESSED:
+        return "txfrozen_key_accessed";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -233,6 +239,8 @@ public enum TransactionResultCode implements XdrElement {
         return txMALFORMED;
       case "txsoroban_invalid":
         return txSOROBAN_INVALID;
+      case "txfrozen_key_accessed":
+        return txFROZEN_KEY_ACCESSED;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

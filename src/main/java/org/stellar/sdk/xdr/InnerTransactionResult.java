@@ -44,6 +44,7 @@ import org.stellar.sdk.Base64Factory;
  *     case txBAD_MIN_SEQ_AGE_OR_GAP:
  *     case txMALFORMED:
  *     case txSOROBAN_INVALID:
+ *     case txFROZEN_KEY_ACCESSED:
  *         void;
  *     }
  *     result;
@@ -155,6 +156,7 @@ public class InnerTransactionResult implements XdrElement {
    *     case txBAD_MIN_SEQ_AGE_OR_GAP:
    *     case txMALFORMED:
    *     case txSOROBAN_INVALID:
+   *     case txFROZEN_KEY_ACCESSED:
    *         void;
    *     }
    * </pre>
@@ -193,6 +195,7 @@ public class InnerTransactionResult implements XdrElement {
         case txBAD_MIN_SEQ_AGE_OR_GAP:
         case txMALFORMED:
         case txSOROBAN_INVALID:
+        case txFROZEN_KEY_ACCESSED:
           break;
       }
     }
@@ -243,6 +246,7 @@ public class InnerTransactionResult implements XdrElement {
         case txBAD_MIN_SEQ_AGE_OR_GAP:
         case txMALFORMED:
         case txSOROBAN_INVALID:
+        case txFROZEN_KEY_ACCESSED:
           break;
         default:
           throw new IOException("Unknown discriminant value: " + discriminant);
@@ -334,6 +338,9 @@ public class InnerTransactionResult implements XdrElement {
       if (discriminant == TransactionResultCode.txSOROBAN_INVALID) {
         return "txsoroban_invalid";
       }
+      if (discriminant == TransactionResultCode.txFROZEN_KEY_ACCESSED) {
+        return "txfrozen_key_accessed";
+      }
       throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
     }
 
@@ -355,7 +362,8 @@ public class InnerTransactionResult implements XdrElement {
             || strVal.equals("txbad_sponsorship")
             || strVal.equals("txbad_min_seq_age_or_gap")
             || strVal.equals("txmalformed")
-            || strVal.equals("txsoroban_invalid"))) {
+            || strVal.equals("txsoroban_invalid")
+            || strVal.equals("txfrozen_key_accessed"))) {
           throw new IllegalArgumentException(
               "Unexpected string '" + strVal + "' for InnerTransactionResultResult");
         }

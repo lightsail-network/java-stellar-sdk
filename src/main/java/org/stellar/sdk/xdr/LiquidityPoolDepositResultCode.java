@@ -27,7 +27,9 @@ import org.stellar.sdk.Base64Factory;
  *     LIQUIDITY_POOL_DEPOSIT_LINE_FULL = -5,      // pool share trust line doesn't
  *                                                 // have sufficient limit
  *     LIQUIDITY_POOL_DEPOSIT_BAD_PRICE = -6,      // deposit price outside bounds
- *     LIQUIDITY_POOL_DEPOSIT_POOL_FULL = -7       // pool reserves are full
+ *     LIQUIDITY_POOL_DEPOSIT_POOL_FULL = -7,      // pool reserves are full
+ *     LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN = -8  // trustline for one of the
+ *                                                   // assets is frozen
  * };
  * </pre>
  */
@@ -39,7 +41,8 @@ public enum LiquidityPoolDepositResultCode implements XdrElement {
   LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED(-4),
   LIQUIDITY_POOL_DEPOSIT_LINE_FULL(-5),
   LIQUIDITY_POOL_DEPOSIT_BAD_PRICE(-6),
-  LIQUIDITY_POOL_DEPOSIT_POOL_FULL(-7);
+  LIQUIDITY_POOL_DEPOSIT_POOL_FULL(-7),
+  LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN(-8);
 
   private final int value;
 
@@ -72,6 +75,8 @@ public enum LiquidityPoolDepositResultCode implements XdrElement {
         return LIQUIDITY_POOL_DEPOSIT_BAD_PRICE;
       case -7:
         return LIQUIDITY_POOL_DEPOSIT_POOL_FULL;
+      case -8:
+        return LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -125,6 +130,8 @@ public enum LiquidityPoolDepositResultCode implements XdrElement {
         return "bad_price";
       case LIQUIDITY_POOL_DEPOSIT_POOL_FULL:
         return "pool_full";
+      case LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN:
+        return "trustline_frozen";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -149,6 +156,8 @@ public enum LiquidityPoolDepositResultCode implements XdrElement {
         return LIQUIDITY_POOL_DEPOSIT_BAD_PRICE;
       case "pool_full":
         return LIQUIDITY_POOL_DEPOSIT_POOL_FULL;
+      case "trustline_frozen":
+        return LIQUIDITY_POOL_DEPOSIT_TRUSTLINE_FROZEN;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

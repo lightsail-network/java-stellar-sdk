@@ -53,6 +53,14 @@ import org.stellar.sdk.Base64Factory;
  *     ConfigSettingContractLedgerCostExtV0 contractLedgerCostExt;
  * case CONFIG_SETTING_SCP_TIMING:
  *     ConfigSettingSCPTiming contractSCPTiming;
+ * case CONFIG_SETTING_FROZEN_LEDGER_KEYS:
+ *     FrozenLedgerKeys frozenLedgerKeys;
+ * case CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA:
+ *     FrozenLedgerKeysDelta frozenLedgerKeysDelta;
+ * case CONFIG_SETTING_FREEZE_BYPASS_TXS:
+ *     FreezeBypassTxs freezeBypassTxs;
+ * case CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA:
+ *     FreezeBypassTxsDelta freezeBypassTxsDelta;
  * };
  * </pre>
  */
@@ -79,6 +87,10 @@ public class ConfigSettingEntry implements XdrElement {
   private ConfigSettingContractParallelComputeV0 contractParallelCompute;
   private ConfigSettingContractLedgerCostExtV0 contractLedgerCostExt;
   private ConfigSettingSCPTiming contractSCPTiming;
+  private FrozenLedgerKeys frozenLedgerKeys;
+  private FrozenLedgerKeysDelta frozenLedgerKeysDelta;
+  private FreezeBypassTxs freezeBypassTxs;
+  private FreezeBypassTxsDelta freezeBypassTxsDelta;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -137,6 +149,18 @@ public class ConfigSettingEntry implements XdrElement {
         break;
       case CONFIG_SETTING_SCP_TIMING:
         contractSCPTiming.encode(stream);
+        break;
+      case CONFIG_SETTING_FROZEN_LEDGER_KEYS:
+        frozenLedgerKeys.encode(stream);
+        break;
+      case CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA:
+        frozenLedgerKeysDelta.encode(stream);
+        break;
+      case CONFIG_SETTING_FREEZE_BYPASS_TXS:
+        freezeBypassTxs.encode(stream);
+        break;
+      case CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA:
+        freezeBypassTxsDelta.encode(stream);
         break;
     }
   }
@@ -231,6 +255,20 @@ public class ConfigSettingEntry implements XdrElement {
       case CONFIG_SETTING_SCP_TIMING:
         decodedConfigSettingEntry.contractSCPTiming =
             ConfigSettingSCPTiming.decode(stream, maxDepth);
+        break;
+      case CONFIG_SETTING_FROZEN_LEDGER_KEYS:
+        decodedConfigSettingEntry.frozenLedgerKeys = FrozenLedgerKeys.decode(stream, maxDepth);
+        break;
+      case CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA:
+        decodedConfigSettingEntry.frozenLedgerKeysDelta =
+            FrozenLedgerKeysDelta.decode(stream, maxDepth);
+        break;
+      case CONFIG_SETTING_FREEZE_BYPASS_TXS:
+        decodedConfigSettingEntry.freezeBypassTxs = FreezeBypassTxs.decode(stream, maxDepth);
+        break;
+      case CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA:
+        decodedConfigSettingEntry.freezeBypassTxsDelta =
+            FreezeBypassTxsDelta.decode(stream, maxDepth);
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);
@@ -351,6 +389,26 @@ public class ConfigSettingEntry implements XdrElement {
     if (discriminant == ConfigSettingID.CONFIG_SETTING_SCP_TIMING) {
       LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
       jsonMap.put("scp_timing", contractSCPTiming.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_FROZEN_LEDGER_KEYS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("frozen_ledger_keys", frozenLedgerKeys.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("frozen_ledger_keys_delta", frozenLedgerKeysDelta.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_FREEZE_BYPASS_TXS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("freeze_bypass_txs", freezeBypassTxs.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == ConfigSettingID.CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("freeze_bypass_txs_delta", freezeBypassTxsDelta.toJsonObject());
       return jsonMap;
     }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
@@ -490,6 +548,33 @@ public class ConfigSettingEntry implements XdrElement {
       ConfigSettingEntry instance = new ConfigSettingEntry();
       instance.discriminant = discriminant;
       instance.contractSCPTiming = ConfigSettingSCPTiming.fromJsonObject(jsonMap.get("scp_timing"));
+      return instance;
+    }
+    if (key.equals("frozen_ledger_keys")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.frozenLedgerKeys =
+          FrozenLedgerKeys.fromJsonObject(jsonMap.get("frozen_ledger_keys"));
+      return instance;
+    }
+    if (key.equals("frozen_ledger_keys_delta")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.frozenLedgerKeysDelta =
+          FrozenLedgerKeysDelta.fromJsonObject(jsonMap.get("frozen_ledger_keys_delta"));
+      return instance;
+    }
+    if (key.equals("freeze_bypass_txs")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.freezeBypassTxs = FreezeBypassTxs.fromJsonObject(jsonMap.get("freeze_bypass_txs"));
+      return instance;
+    }
+    if (key.equals("freeze_bypass_txs_delta")) {
+      ConfigSettingEntry instance = new ConfigSettingEntry();
+      instance.discriminant = discriminant;
+      instance.freezeBypassTxsDelta =
+          FreezeBypassTxsDelta.fromJsonObject(jsonMap.get("freeze_bypass_txs_delta"));
       return instance;
     }
     throw new IllegalArgumentException("Unknown key '" + key + "' for ConfigSettingEntry");

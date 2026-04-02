@@ -29,7 +29,11 @@ import org.stellar.sdk.Base64Factory;
  *     CONFIG_SETTING_EVICTION_ITERATOR = 13,
  *     CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 = 14,
  *     CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 = 15,
- *     CONFIG_SETTING_SCP_TIMING = 16
+ *     CONFIG_SETTING_SCP_TIMING = 16,
+ *     CONFIG_SETTING_FROZEN_LEDGER_KEYS = 17,
+ *     CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA = 18,
+ *     CONFIG_SETTING_FREEZE_BYPASS_TXS = 19,
+ *     CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA = 20
  * };
  * </pre>
  */
@@ -50,7 +54,11 @@ public enum ConfigSettingID implements XdrElement {
   CONFIG_SETTING_EVICTION_ITERATOR(13),
   CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0(14),
   CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0(15),
-  CONFIG_SETTING_SCP_TIMING(16);
+  CONFIG_SETTING_SCP_TIMING(16),
+  CONFIG_SETTING_FROZEN_LEDGER_KEYS(17),
+  CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA(18),
+  CONFIG_SETTING_FREEZE_BYPASS_TXS(19),
+  CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA(20);
 
   private final int value;
 
@@ -100,6 +108,14 @@ public enum ConfigSettingID implements XdrElement {
         return CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0;
       case 16:
         return CONFIG_SETTING_SCP_TIMING;
+      case 17:
+        return CONFIG_SETTING_FROZEN_LEDGER_KEYS;
+      case 18:
+        return CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA;
+      case 19:
+        return CONFIG_SETTING_FREEZE_BYPASS_TXS;
+      case 20:
+        return CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -170,6 +186,14 @@ public enum ConfigSettingID implements XdrElement {
         return "contract_ledger_cost_ext_v0";
       case CONFIG_SETTING_SCP_TIMING:
         return "scp_timing";
+      case CONFIG_SETTING_FROZEN_LEDGER_KEYS:
+        return "frozen_ledger_keys";
+      case CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA:
+        return "frozen_ledger_keys_delta";
+      case CONFIG_SETTING_FREEZE_BYPASS_TXS:
+        return "freeze_bypass_txs";
+      case CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA:
+        return "freeze_bypass_txs_delta";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -212,6 +236,14 @@ public enum ConfigSettingID implements XdrElement {
         return CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0;
       case "scp_timing":
         return CONFIG_SETTING_SCP_TIMING;
+      case "frozen_ledger_keys":
+        return CONFIG_SETTING_FROZEN_LEDGER_KEYS;
+      case "frozen_ledger_keys_delta":
+        return CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA;
+      case "freeze_bypass_txs":
+        return CONFIG_SETTING_FREEZE_BYPASS_TXS;
+      case "freeze_bypass_txs_delta":
+        return CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }
