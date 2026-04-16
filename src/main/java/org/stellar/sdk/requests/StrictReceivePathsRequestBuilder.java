@@ -10,18 +10,41 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
-/** Builds requests connected to paths. */
+/**
+ * Builds requests to the Horizon {@code /paths/strict-receive} endpoint.
+ *
+ * <p>Finds payment paths where the destination amount is fixed. Specify either a source account or
+ * a set of source assets, along with the destination asset and amount, to discover available
+ * payment paths.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class StrictReceivePathsRequestBuilder extends RequestBuilder {
   public StrictReceivePathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "");
     this.setSegments("paths", "strict-receive");
   }
 
+  /**
+   * Sets the destination account for the path payment.
+   *
+   * @param account the destination account ID
+   * @return this builder instance for chaining
+   */
   public StrictReceivePathsRequestBuilder destinationAccount(String account) {
     uriBuilder.setQueryParameter("destination_account", account);
     return this;
   }
 
+  /**
+   * Sets the source account whose assets will be used as the starting point for path finding.
+   * Mutually exclusive with {@link #sourceAssets(List)}.
+   *
+   * @param account the source account ID
+   * @return this builder instance for chaining
+   * @throws IllegalArgumentException if {@code source_assets} has already been set
+   */
   public StrictReceivePathsRequestBuilder sourceAccount(String account) {
     if (uriBuilder.build().queryParameter("source_assets") != null) {
       throw new IllegalArgumentException("cannot set both source_assets and source_account");
@@ -30,6 +53,14 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * Sets the source assets to consider as the starting point for path finding. Mutually exclusive
+   * with {@link #sourceAccount(String)}.
+   *
+   * @param assets the list of source assets
+   * @return this builder instance for chaining
+   * @throws IllegalArgumentException if {@code source_account} has already been set
+   */
   public StrictReceivePathsRequestBuilder sourceAssets(List<Asset> assets) {
     if (uriBuilder.build().queryParameter("source_account") != null) {
       throw new IllegalArgumentException("cannot set both source_assets and source_account");
@@ -38,11 +69,23 @@ public class StrictReceivePathsRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * Sets the fixed destination amount the recipient should receive.
+   *
+   * @param amount the destination amount
+   * @return this builder instance for chaining
+   */
   public StrictReceivePathsRequestBuilder destinationAmount(String amount) {
     uriBuilder.setQueryParameter("destination_amount", amount);
     return this;
   }
 
+  /**
+   * Sets the asset the recipient wants to receive.
+   *
+   * @param asset the destination asset
+   * @return this builder instance for chaining
+   */
   public StrictReceivePathsRequestBuilder destinationAsset(Asset asset) {
     uriBuilder.setQueryParameter("destination_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
