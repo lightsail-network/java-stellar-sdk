@@ -5,9 +5,9 @@ import org.stellar.sdk.Asset;
 import org.stellar.sdk.TrustLineAsset;
 
 /**
- * Abstract base class for all Horizon API response objects.
+ * Abstract base class for SDK response objects, shared by both Horizon and Stellar RPC responses.
  *
- * <p>Provides common utility methods shared by Horizon responses, such as constructing {@link
+ * <p>Provides common utility methods used across response types, such as constructing {@link
  * org.stellar.sdk.TrustLineAsset} instances from response fields.
  */
 @Getter
