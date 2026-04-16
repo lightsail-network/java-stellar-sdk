@@ -8,12 +8,26 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.OrderBookResponse;
 
-/** Builds requests connected to order book. */
+/**
+ * Builds requests to the Horizon {@code /order_book} endpoint.
+ *
+ * <p>Retrieves bids and asks for a given asset pair from the Stellar DEX order book. Both buying
+ * and selling assets must be specified.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class OrderBookRequestBuilder extends RequestBuilder {
   public OrderBookRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "order_book");
   }
 
+  /**
+   * Sets the asset being bought (i.e. the counter asset in the order book).
+   *
+   * @param asset the buying asset
+   * @return this builder instance for chaining
+   */
   public OrderBookRequestBuilder buyingAsset(Asset asset) {
     uriBuilder.setQueryParameter("buying_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
@@ -24,6 +38,12 @@ public class OrderBookRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * Sets the asset being sold (i.e. the base asset in the order book).
+   *
+   * @param asset the selling asset
+   * @return this builder instance for chaining
+   */
   public OrderBookRequestBuilder sellingAsset(Asset asset) {
     uriBuilder.setQueryParameter("selling_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {

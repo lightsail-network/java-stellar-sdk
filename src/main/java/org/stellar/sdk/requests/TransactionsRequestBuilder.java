@@ -8,7 +8,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
 
-/** Builds requests connected to transactions. */
+/**
+ * Builds requests to the Horizon {@code /transactions} endpoint.
+ *
+ * <p>Retrieves transactions that have been included in validated ledgers, with optional filters by
+ * account, ledger, or liquidity pool.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class TransactionsRequestBuilder extends RequestBuilder {
   public TransactionsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "transactions");

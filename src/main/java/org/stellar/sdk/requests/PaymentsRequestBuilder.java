@@ -10,7 +10,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
-/** Builds requests connected to payments. */
+/**
+ * Builds requests to the Horizon {@code /payments} endpoint.
+ *
+ * <p>Retrieves payment-type operations (payments, path payments, account merges), with optional
+ * filters by account, ledger, or transaction.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class PaymentsRequestBuilder extends RequestBuilder {
   protected Set<String> toJoin;
 

@@ -7,7 +7,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.LiquidityPoolResponse;
 import org.stellar.sdk.responses.Page;
 
-/** Builds requests connected to liquidity pools. */
+/**
+ * Builds requests to the Horizon {@code /liquidity_pools} endpoint.
+ *
+ * <p>Retrieves liquidity pools on the Stellar network, with optional filters by reserves or
+ * participating account.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class LiquidityPoolsRequestBuilder extends RequestBuilder {
   private static final String RESERVES_PARAMETER_NAME = "reserves";
   private static final String ACCOUNT_PARAMETER_NAME = "account";

@@ -10,7 +10,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.AccountResponse;
 import org.stellar.sdk.responses.Page;
 
-/** Builds requests connected to accounts. */
+/**
+ * Builds requests to the Horizon {@code /accounts} endpoint.
+ *
+ * <p>Retrieves accounts on the Stellar network, with optional filters by signer, asset, liquidity
+ * pool, or sponsor.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class AccountsRequestBuilder extends RequestBuilder {
   private static final String ASSET_PARAMETER_NAME = "asset";
   private static final String LIQUIDITY_POOL_PARAMETER_NAME = "liquidity_pool";

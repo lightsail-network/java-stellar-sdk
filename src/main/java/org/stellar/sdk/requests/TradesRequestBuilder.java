@@ -10,7 +10,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TradeResponse;
 
-/** Builds requests connected to trades. */
+/**
+ * Builds requests to the Horizon {@code /trades} endpoint.
+ *
+ * <p>Retrieves completed trades on the Stellar DEX, with optional filters by asset pair, offer,
+ * account, or liquidity pool.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class TradesRequestBuilder extends RequestBuilder {
   private static final String TRADE_TYPE_PARAMETER_NAME = "trade_type";
 
@@ -18,6 +26,12 @@ public class TradesRequestBuilder extends RequestBuilder {
     super(httpClient, serverURI, "trades");
   }
 
+  /**
+   * Filters trades to only those involving the given base asset.
+   *
+   * @param asset the base asset to filter by
+   * @return this builder instance for chaining
+   */
   public TradesRequestBuilder baseAsset(Asset asset) {
     uriBuilder.setQueryParameter("base_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
@@ -28,6 +42,12 @@ public class TradesRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * Filters trades to only those involving the given counter asset.
+   *
+   * @param asset the counter asset to filter by
+   * @return this builder instance for chaining
+   */
   public TradesRequestBuilder counterAsset(Asset asset) {
     uriBuilder.setQueryParameter("counter_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
@@ -129,6 +149,13 @@ public class TradesRequestBuilder extends RequestBuilder {
     return execute(this.httpClient, this.buildUri());
   }
 
+  /**
+   * Filters trades to only those that originated from the given offer. Pass {@code null} to clear a
+   * previously set offer ID filter.
+   *
+   * @param offerId the offer ID to filter by, or {@code null} to remove the filter
+   * @return this builder instance for chaining
+   */
   public TradesRequestBuilder offerId(Long offerId) {
     if (offerId == null) {
       uriBuilder.removeAllQueryParameters("offer_id");

@@ -10,7 +10,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
-/** Builds requests connected to operations. */
+/**
+ * Builds requests to the Horizon {@code /operations} endpoint.
+ *
+ * <p>Retrieves operations that have been included in validated ledgers, with optional filters by
+ * account, ledger, transaction, or liquidity pool.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class OperationsRequestBuilder extends RequestBuilder {
   protected Set<String> toJoin;
 

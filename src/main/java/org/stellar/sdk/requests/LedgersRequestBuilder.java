@@ -7,7 +7,14 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.LedgerResponse;
 import org.stellar.sdk.responses.Page;
 
-/** Builds requests connected to ledgers. */
+/**
+ * Builds requests to the Horizon {@code /ledgers} endpoint.
+ *
+ * <p>Retrieves ledger records representing closed ledgers on the Stellar network.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class LedgersRequestBuilder extends RequestBuilder {
   public LedgersRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "ledgers");

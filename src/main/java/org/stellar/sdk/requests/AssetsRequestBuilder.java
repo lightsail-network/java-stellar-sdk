@@ -20,11 +20,23 @@ public class AssetsRequestBuilder extends RequestBuilder {
     super(httpClient, serverURI, "assets");
   }
 
+  /**
+   * Filters the results to only include assets with the given asset code.
+   *
+   * @param assetCode the asset code to filter by (e.g. {@code "USD"})
+   * @return this builder instance for chaining
+   */
   public AssetsRequestBuilder assetCode(String assetCode) {
     uriBuilder.setQueryParameter("asset_code", assetCode);
     return this;
   }
 
+  /**
+   * Filters the results to only include assets issued by the given account.
+   *
+   * @param assetIssuer the issuer account ID to filter by
+   * @return this builder instance for chaining
+   */
   public AssetsRequestBuilder assetIssuer(String assetIssuer) {
     uriBuilder.setQueryParameter("asset_issuer", assetIssuer);
     return this;

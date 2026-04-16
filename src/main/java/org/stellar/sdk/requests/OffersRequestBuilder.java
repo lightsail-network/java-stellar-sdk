@@ -8,7 +8,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
 
-/** Builds requests connected to offers. */
+/**
+ * Builds requests to the Horizon {@code /offers} endpoint.
+ *
+ * <p>Retrieves offers currently on the Stellar DEX order books, with optional filters by seller,
+ * sponsor, or asset pair.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class OffersRequestBuilder extends RequestBuilder {
   public OffersRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "offers");
