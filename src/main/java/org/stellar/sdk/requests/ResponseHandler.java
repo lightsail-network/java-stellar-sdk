@@ -14,6 +14,22 @@ import org.stellar.sdk.responses.SubmitTransactionAsyncResponse;
 import org.stellar.sdk.responses.gson.GsonSingleton;
 import org.stellar.sdk.responses.gson.TypedResponse;
 
+/**
+ * Handles HTTP responses and converts them into typed Java objects.
+ *
+ * <p>Successful responses (2xx) are deserialized into the target type {@code T} using Gson. Error
+ * responses are translated into the appropriate SDK exception:
+ *
+ * <ul>
+ *   <li>{@link org.stellar.sdk.exception.TooManyRequestsException} for 429
+ *   <li>{@link org.stellar.sdk.exception.RequestTimeoutException} for 504
+ *   <li>{@link org.stellar.sdk.exception.BadRequestException} for other 4xx
+ *   <li>{@link org.stellar.sdk.exception.BadResponseException} for other 5xx
+ *   <li>{@link org.stellar.sdk.exception.UnknownResponseException} for unrecognized status codes
+ * </ul>
+ *
+ * @param <T> the expected response type
+ */
 @SuppressWarnings("unchecked")
 public class ResponseHandler<T> {
 
@@ -25,7 +41,7 @@ public class ResponseHandler<T> {
    * the compiled class. In other cases, that is not possible." More info:
    * http://stackoverflow.com/a/14506181
    *
-   * @param type
+   * @param type the type token representing the response class to deserialize into
    */
   public ResponseHandler(TypeToken<T> type) {
     this.type = type;
@@ -38,10 +54,12 @@ public class ResponseHandler<T> {
    * @param response The HTTP response to handle
    * @return The parsed object of type T
    * @throws TooManyRequestsException If the response code is 429 (Too Many Requests)
+   * @throws RequestTimeoutException If the response code is 504 (Gateway Timeout)
    * @throws UnexpectedException If the response body is empty or there's an unexpected error
    *     reading the response
-   * @throws BadRequestException If the response code is in the 4xx range
-   * @throws BadResponseException If the response code is in the 5xx range
+   * @throws BadRequestException If the response code is in the 4xx range (except 429)
+   * @throws BadResponseException If the response code is in the 5xx range (except 504)
+   * @throws UnknownResponseException If the response code is not in the 2xx, 4xx, or 5xx range
    */
   public T handleResponse(final Response response) {
     return handleResponse(response, false);
@@ -61,8 +79,10 @@ public class ResponseHandler<T> {
    * @param content The pre-read response body content
    * @return The parsed object of type T
    * @throws TooManyRequestsException If the response code is 429 (Too Many Requests)
-   * @throws BadRequestException If the response code is in the 4xx range
-   * @throws BadResponseException If the response code is in the 5xx range
+   * @throws RequestTimeoutException If the response code is 504 (Gateway Timeout)
+   * @throws BadRequestException If the response code is in the 4xx range (except 429)
+   * @throws BadResponseException If the response code is in the 5xx range (except 504)
+   * @throws UnknownResponseException If the response code is not in the 2xx, 4xx, or 5xx range
    */
   public T handleResponse(final Response response, String content) {
     return handleResponseContent(response, content, false);
@@ -77,10 +97,12 @@ public class ResponseHandler<T> {
    *     org.stellar.sdk.Server#submitTransactionXdrAsync(String)}.
    * @return The parsed object of type T
    * @throws TooManyRequestsException If the response code is 429 (Too Many Requests)
+   * @throws RequestTimeoutException If the response code is 504 (Gateway Timeout)
    * @throws UnexpectedException If the response body is empty or there's an unexpected error
    *     reading the response
-   * @throws BadRequestException If the response code is in the 4xx range
-   * @throws BadResponseException If the response code is in the 5xx range
+   * @throws BadRequestException If the response code is in the 4xx range (except 429)
+   * @throws BadResponseException If the response code is in the 5xx range (except 504)
+   * @throws UnknownResponseException If the response code is not in the 2xx, 4xx, or 5xx range
    */
   public T handleResponse(final Response response, boolean submitTransactionAsync) {
     try {

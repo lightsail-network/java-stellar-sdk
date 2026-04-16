@@ -13,7 +13,11 @@ import org.stellar.sdk.xdr.AssetType;
  */
 @Value
 public class ChangeTrustAsset {
-  /** The type of the asset. */
+  /**
+   * The type of the asset.
+   *
+   * @return the asset type
+   */
   @NonNull AssetType assetType;
 
   /**
@@ -23,6 +27,8 @@ public class ChangeTrustAsset {
    * <p>If assetType is one of {@link AssetType#ASSET_TYPE_NATIVE}, {@link
    * AssetType#ASSET_TYPE_CREDIT_ALPHANUM4} or {@link AssetType#ASSET_TYPE_CREDIT_ALPHANUM12} then
    * this field will be set.
+   *
+   * @return the asset, or null for liquidity pool shares
    */
   @Nullable Asset asset;
 
@@ -31,6 +37,8 @@ public class ChangeTrustAsset {
    * operation is for a regular asset.
    *
    * <p>If assetType is {@link AssetType#ASSET_TYPE_POOL_SHARE} then this field will be set.
+   *
+   * @return the liquidity pool, or null for regular assets
    */
   @Nullable LiquidityPool liquidityPool;
 

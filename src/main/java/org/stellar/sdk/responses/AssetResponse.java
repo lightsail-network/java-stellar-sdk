@@ -5,6 +5,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
 
+/**
+ * Represents the response from the Horizon {@code /assets} endpoint.
+ *
+ * <p>Contains metadata for a single asset, including its type, code, issuer, optional contract ID,
+ * account and balance statistics, authorization flags, and related API links.
+ *
+ * @see org.stellar.sdk.requests.AssetsRequestBuilder
+ */
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class AssetResponse extends Response implements Pageable {

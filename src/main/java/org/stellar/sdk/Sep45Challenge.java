@@ -62,7 +62,7 @@ public class Sep45Challenge {
    * <p>This method creates challenge authorization entries that can be used to authenticate a
    * contract account.
    *
-   * @param server The Soroban RPC server to use for simulating the transaction.
+   * @param server The Stellar RPC server to use for simulating the transaction.
    * @param serverSigner The server's signing keypair.
    * @param clientContractId The client's contract account ID (C... address).
    * @param homeDomain The home domain of the service requiring authentication.
@@ -107,7 +107,7 @@ public class Sep45Challenge {
    * <p>This method creates challenge authorization entries that can be used to authenticate a
    * contract account, optionally including client domain verification.
    *
-   * @param server The Soroban RPC server to use for simulating the transaction.
+   * @param server The Stellar RPC server to use for simulating the transaction.
    * @param serverSigner The server's signing keypair.
    * @param clientContractId The client's contract account ID (C... address).
    * @param homeDomain The home domain of the service requiring authentication.
@@ -551,7 +551,7 @@ public class Sep45Challenge {
    * verify signatures by simulating the transaction. A successful simulation indicates valid
    * signatures.
    *
-   * @param server The Soroban RPC server to use for simulating the transaction.
+   * @param server The Stellar RPC server to use for simulating the transaction.
    * @param authorizationEntriesXdr The base64 XDR-encoded authorization entries.
    * @param serverAccountId The expected server account ID (G... address).
    * @param webAuthContractId The expected web authentication contract ID (C... address).
@@ -617,7 +617,7 @@ public class Sep45Challenge {
   /**
    * Verifies a SEP-45 challenge authorization entries by simulating the transaction.
    *
-   * @param server The Soroban RPC server to use for simulating the transaction.
+   * @param server The Stellar RPC server to use for simulating the transaction.
    * @param authorizationEntriesXdr The base64 XDR-encoded authorization entries.
    * @param serverAccountId The expected server account ID (G... address).
    * @param webAuthContractId The expected web authentication contract ID (C... address).
@@ -649,31 +649,76 @@ public class Sep45Challenge {
   @Value
   @Builder
   public static class ChallengeAuthorizationEntries {
-    /** The list of authorization entries. */
+    /**
+     * The list of authorization entries.
+     *
+     * @param authorizationEntries the authorization entries
+     * @return the authorization entries
+     */
     @NonNull List<SorobanAuthorizationEntry> authorizationEntries;
 
-    /** The client contract account ID (C... address). */
+    /**
+     * The client contract account ID (C... address).
+     *
+     * @param clientContractId the client contract ID
+     * @return the client contract ID
+     */
     @NonNull String clientContractId;
 
-    /** The server account ID (G... address). */
+    /**
+     * The server account ID (G... address).
+     *
+     * @param serverAccountId the server account ID
+     * @return the server account ID
+     */
     @NonNull String serverAccountId;
 
-    /** The web authentication contract ID (C... address). */
+    /**
+     * The web authentication contract ID (C... address).
+     *
+     * @param webAuthContractId the web auth contract ID
+     * @return the web auth contract ID
+     */
     @NonNull String webAuthContractId;
 
-    /** The home domain. */
+    /**
+     * The home domain.
+     *
+     * @param homeDomain the home domain
+     * @return the home domain
+     */
     @NonNull String homeDomain;
 
-    /** The web auth domain. */
+    /**
+     * The web auth domain.
+     *
+     * @param webAuthDomain the web auth domain
+     * @return the web auth domain
+     */
     @NonNull String webAuthDomain;
 
-    /** The nonce value. */
+    /**
+     * The nonce value.
+     *
+     * @param nonce the nonce
+     * @return the nonce
+     */
     @NonNull String nonce;
 
-    /** The client domain (optional, for client domain verification). */
+    /**
+     * The client domain (optional, for client domain verification).
+     *
+     * @param clientDomain the client domain
+     * @return the client domain, or null if not present
+     */
     @Nullable String clientDomain;
 
-    /** The client domain account ID (optional, for client domain verification). */
+    /**
+     * The client domain account ID (optional, for client domain verification).
+     *
+     * @param clientDomainAccountId the client domain account ID
+     * @return the client domain account ID, or null if not present
+     */
     @Nullable String clientDomainAccountId;
   }
 }

@@ -65,7 +65,7 @@ public class Federation {
    * @return FederationResponse
    * @throws IllegalArgumentException Address is malformed
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws NotFoundException Stellar address not found in the federation server
    * @throws StellarTomlNotFoundInvalidException Stellar.toml file not found or invalid
    * @throws NoFederationServerException No federation server defined in stellar.toml file
@@ -106,7 +106,7 @@ public class Federation {
    * @param domain The domain to get the federation server URI from. (e.g. `example.com`)
    * @return FederationResponse
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws NotFoundException Stellar address not found in the federation server
    * @throws StellarTomlNotFoundInvalidException Stellar.toml file not found or invalid
    * @throws FederationServerInvalidException Federation server is invalid
@@ -171,7 +171,7 @@ public class Federation {
    * @param domain The domain to get the federation server URI from.
    * @return The federation server URI.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws StellarTomlNotFoundInvalidException Stellar.toml file not found or invalid
    * @throws NoFederationServerException No federation server defined in stellar.toml file
    * @throws FederationServerInvalidException Federation server is invalid

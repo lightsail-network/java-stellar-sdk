@@ -20,9 +20,10 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link ClaimableBalanceResponse}. This method is
    * helpful for getting the links.
    *
+   * @param uri the Horizon URI to request
    * @return {@link ClaimableBalanceResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -47,7 +48,7 @@ public class ClaimableBalancesRequestBuilder extends RequestBuilder {
    * @param id specifies which claimable balance to load.
    * @return The claimable balance details.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

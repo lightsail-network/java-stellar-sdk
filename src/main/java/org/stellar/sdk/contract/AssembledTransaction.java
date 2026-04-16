@@ -29,6 +29,19 @@ import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.xdr.*;
 
+/**
+ * Represents an assembled Stellar smart contract invocation transaction.
+ *
+ * <p>This class manages the full lifecycle of a contract call: building the transaction, simulating
+ * it via Stellar RPC, managing authorization entries, signing, submitting, and polling for the
+ * result. It also handles automatic restoration of expired contract state when needed.
+ *
+ * <p>Use {@link AssembledTransaction#isReadCall()} to check whether the invocation is read-only
+ * (simulation-only) or requires on-chain submission.
+ *
+ * @param <T> the type of the parsed result from the contract function invocation
+ * @see org.stellar.sdk.SorobanServer
+ */
 public class AssembledTransaction<T> {
   private final SorobanServer server;
   private final int submitTimeout;

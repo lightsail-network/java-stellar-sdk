@@ -4,6 +4,15 @@ import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
+/**
+ * Represents the response from the Horizon {@code /fee_stats} endpoint.
+ *
+ * <p>Contains fee statistics for the last ledger, including the base fee, ledger capacity usage,
+ * and fee distributions (minimum, maximum, mode, and percentiles p10–p99) for both the fees
+ * actually charged and the maximum fees bid by transactions.
+ *
+ * @see org.stellar.sdk.requests.FeeStatsRequestBuilder
+ */
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class FeeStatsResponse extends Response {

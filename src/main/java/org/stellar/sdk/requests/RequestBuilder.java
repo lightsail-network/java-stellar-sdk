@@ -57,6 +57,7 @@ public abstract class RequestBuilder {
    *     documentation</a>
    * @param cursor A cursor is a value that points to a specific location in a collection of
    *     resources.
+   * @return this builder instance for chaining
    */
   public RequestBuilder cursor(String cursor) {
     uriBuilder.setQueryParameter("cursor", cursor);
@@ -67,7 +68,8 @@ public abstract class RequestBuilder {
    * Sets <code>limit</code> parameter on the request. It defines maximum number of records to
    * return. For range and default values check documentation of the endpoint requested.
    *
-   * @param number maxium number of records to return
+   * @param number maximum number of records to return
+   * @return this builder instance for chaining
    */
   public RequestBuilder limit(int number) {
     uriBuilder.setQueryParameter("limit", String.valueOf(number));
@@ -78,6 +80,7 @@ public abstract class RequestBuilder {
    * Sets <code>order</code> parameter on the request.
    *
    * @param direction {@link org.stellar.sdk.requests.RequestBuilder.Order}
+   * @return this builder instance for chaining
    */
   public RequestBuilder order(Order direction) {
     uriBuilder.setQueryParameter("order", direction.getValue());
@@ -152,7 +155,7 @@ public abstract class RequestBuilder {
    * @param typeToken The TypeToken representing the type of the response
    * @return The response object of type T
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

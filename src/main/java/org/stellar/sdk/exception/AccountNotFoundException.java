@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * Exception thrown when trying to load an account that doesn't exist on the Stellar network.
  *
- * <p>Only applicable to Soroban RPC Request.
+ * <p>Only applicable to Stellar RPC requests.
  */
 @Getter
 public class AccountNotFoundException extends NetworkException {

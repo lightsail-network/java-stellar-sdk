@@ -155,6 +155,8 @@ public class TransactionBuilder {
   /**
    * Builds a transaction and increments the sequence number on the source account after transaction
    * is constructed.
+   *
+   * @return the constructed {@link Transaction}
    */
   public Transaction build() {
     // ensure that the preconditions are valid

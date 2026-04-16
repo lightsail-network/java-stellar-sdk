@@ -10,6 +10,16 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
+/**
+ * Builds requests to the Horizon {@code /paths/strict-send} endpoint.
+ *
+ * <p>Finds payment paths where the source amount is fixed. Specify either a destination account or
+ * a set of destination assets, along with the source asset and amount, to discover available
+ * payment paths.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class StrictSendPathsRequestBuilder extends RequestBuilder {
   public StrictSendPathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "");
@@ -56,7 +66,7 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link PathResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -80,7 +90,7 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link PathResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

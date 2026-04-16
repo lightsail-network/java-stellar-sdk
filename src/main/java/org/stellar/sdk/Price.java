@@ -12,10 +12,18 @@ import org.stellar.sdk.xdr.Int32;
 /** Represents Price. Price in Stellar is represented as a fraction. */
 @Value
 public class Price {
-  /** numerator */
+  /**
+   * The numerator of the price fraction.
+   *
+   * @return the numerator
+   */
   int numerator;
 
-  /** denominator */
+  /**
+   * The denominator of the price fraction.
+   *
+   * @return the denominator
+   */
   int denominator;
 
   /**
@@ -24,6 +32,7 @@ public class Price {
    * and denominator. It's safer to create a Price object using the constructor.
    *
    * @param price Ex. "1.25"
+   * @return a new {@link Price} instance
    */
   public static Price fromString(@NonNull String price) {
     BigDecimal maxInt = new BigDecimal(Integer.MAX_VALUE);
@@ -57,12 +66,21 @@ public class Price {
     return new Price(n.intValue(), d.intValue());
   }
 
-  /** Generates a Price SDK object from the XDR representation. */
+  /**
+   * Generates a Price SDK object from the XDR representation.
+   *
+   * @param price the XDR Price object
+   * @return a new {@link Price} instance
+   */
   public static Price fromXdr(org.stellar.sdk.xdr.Price price) {
     return new Price(price.getN().getInt32(), price.getD().getInt32());
   }
 
-  /** Generates Price XDR object. */
+  /**
+   * Generates Price XDR object.
+   *
+   * @return the XDR representation of this Price
+   */
   public org.stellar.sdk.xdr.Price toXdr() {
     org.stellar.sdk.xdr.Price xdr = new org.stellar.sdk.xdr.Price();
     Int32 n = new Int32();
@@ -74,7 +92,11 @@ public class Price {
     return xdr;
   }
 
-  /** Returns price as a string. */
+  /**
+   * Returns price as a string.
+   *
+   * @return the string representation of this Price
+   */
   @Override
   public String toString() {
     MathContext mc = MathContext.DECIMAL64;

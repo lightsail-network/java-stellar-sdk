@@ -39,7 +39,7 @@ public class Page<T> extends Response implements TypedResponse<Page<T>> {
   /**
    * @return The next page of results or null when there is no link for the next page of results
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

@@ -5,6 +5,12 @@ import java.util.List;
 import lombok.Value;
 import org.stellar.sdk.responses.AssetAmount;
 
+/**
+ * Represents a liquidity pool within a Horizon effect response.
+ *
+ * <p>Contains the pool's identifier, fee (in basis points), type, total trustlines, total shares,
+ * and the list of reserve asset amounts.
+ */
 @Value
 public class LiquidityPool {
   @SerializedName("id")

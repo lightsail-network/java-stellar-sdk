@@ -20,7 +20,11 @@ public class Network {
   public static final Network SANDBOX =
       new Network("Local Sandbox Stellar Network ; September 2022");
 
-  /** The network passphrase */
+  /**
+   * The network passphrase
+   *
+   * @return the network passphrase
+   */
   @NonNull private final String networkPassphrase;
 
   /**

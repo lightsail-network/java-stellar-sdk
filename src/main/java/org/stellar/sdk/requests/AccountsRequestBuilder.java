@@ -25,8 +25,10 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link AccountResponse}. This method is helpful
    * for getting the links.
    *
+   * @param uri the Horizon URI to request
+   * @return the {@link AccountResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -52,8 +54,9 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-account">Account
    *     Details</a>
    * @param account Account to fetch
+   * @return the {@link AccountResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -165,9 +168,11 @@ public class AccountsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link Page} of {@link AccountResponse}. This
    * method is helpful for getting the next set of results.
    *
+   * @param httpClient the {@link OkHttpClient} to use
+   * @param uri the Horizon URI to request
    * @return {@link Page} of {@link AccountResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -206,6 +211,9 @@ public class AccountsRequestBuilder extends RequestBuilder {
 
   /**
    * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   *
+   * @param listener the event listener to receive events
+   * @return an {@link SSEStream} for real-time event streaming
    */
   public SSEStream<AccountResponse> stream(final EventListener<AccountResponse> listener) {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
@@ -217,7 +225,7 @@ public class AccountsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link AccountResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

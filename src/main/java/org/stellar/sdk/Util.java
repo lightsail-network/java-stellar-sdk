@@ -129,6 +129,7 @@ public class Util {
    * Throws {@link IllegalArgumentException} if the given asset is native (XLM).
    *
    * @param asset The asset to check
+   * @return the asset cast to {@link AssetTypeCreditAlphaNum}
    */
   public static AssetTypeCreditAlphaNum assertNonNativeAsset(Asset asset) {
     if (asset instanceof AssetTypeCreditAlphaNum) {

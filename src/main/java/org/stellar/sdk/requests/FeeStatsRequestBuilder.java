@@ -7,6 +7,14 @@ import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.FeeStatsResponse;
 
+/**
+ * Builds requests to the Horizon {@code /fee_stats} endpoint.
+ *
+ * <p>Returns fee statistics for the Stellar network, including percentile distributions of both
+ * charged fees and maximum fees bid, to help choose appropriate transaction fees.
+ *
+ * @see org.stellar.sdk.responses.FeeStatsResponse
+ */
 public class FeeStatsRequestBuilder extends RequestBuilder {
   public FeeStatsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "fee_stats");
@@ -17,7 +25,7 @@ public class FeeStatsRequestBuilder extends RequestBuilder {
    *
    * @return {@link FeeStatsResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

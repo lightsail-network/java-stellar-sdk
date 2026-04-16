@@ -16,7 +16,11 @@ import org.stellar.sdk.xdr.TransactionSignaturePayload;
 
 /** Abstract class for transaction classes. */
 public abstract class AbstractTransaction {
-  /** The network that the transaction is to be submitted to. */
+  /**
+   * The network that the transaction is to be submitted to.
+   *
+   * @return the {@link Network} for this transaction
+   */
   @NonNull @Getter protected final Network network;
 
   /** List of signatures attached to this transaction. */
@@ -154,6 +158,7 @@ public abstract class AbstractTransaction {
    * </code>
    *
    * @param envelope Base-64 encoded <code>TransactionEnvelope</code>
+   * @param network the network that the transaction is to be submitted to
    * @return the {@link Transaction} or {@link FeeBumpTransaction} instance
    * @throws IllegalArgumentException if the envelope is malformed
    */

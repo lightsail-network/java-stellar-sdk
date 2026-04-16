@@ -18,10 +18,18 @@ import lombok.Getter;
  */
 @Getter
 public class NetworkException extends SdkException {
-  /** The status code of the response. */
+  /**
+   * The status code of the response.
+   *
+   * @return the HTTP status code, or null if not available
+   */
   private final Integer code;
 
-  /** The raw body of the response. */
+  /**
+   * The raw body of the response.
+   *
+   * @return the response body string, or null if not available
+   */
   private final String body;
 
   public NetworkException(Integer code, String body) {

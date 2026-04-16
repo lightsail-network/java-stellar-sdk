@@ -45,6 +45,7 @@ public class TradesRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-trades-by-account-id">Trades
    *     for Account</a>
    * @param account Account for which to get trades
+   * @return this builder instance for chaining
    */
   public TradesRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "trades");
@@ -58,6 +59,7 @@ public class TradesRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-related-trades">Trades
    *     for Liquidity Pool</a>
    * @param liquidityPoolId Liquidity pool for which to get trades
+   * @return this builder instance for chaining
    */
   public TradesRequestBuilder forLiquidityPool(String liquidityPoolId) {
     this.setSegments("liquidity_pools", String.valueOf(liquidityPoolId), "trades");
@@ -85,7 +87,7 @@ public class TradesRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link TradeResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -109,7 +111,7 @@ public class TradesRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link TradeResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -168,6 +170,9 @@ public class TradesRequestBuilder extends RequestBuilder {
 
   /**
    * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   *
+   * @param listener the event listener to receive events
+   * @return an {@link SSEStream} for real-time event streaming
    */
   public SSEStream<TradeResponse> stream(final EventListener<TradeResponse> listener) {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);

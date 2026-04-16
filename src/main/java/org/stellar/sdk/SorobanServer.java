@@ -63,8 +63,8 @@ import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 
 /**
- * Main class used to connect to the Soroban-RPC instance and exposes an interface for requests to
- * that instance.
+ * Main class used to connect to the Stellar RPC (formerly Soroban-RPC) instance and exposes an
+ * interface for requests to that instance.
  */
 public class SorobanServer implements Closeable {
   private static final int SUBMIT_TRANSACTION_TIMEOUT = 60; // seconds
@@ -76,7 +76,7 @@ public class SorobanServer implements Closeable {
   /**
    * Creates a new SorobanServer instance.
    *
-   * @param serverURI The URI of the Soroban-RPC instance to connect to.
+   * @param serverURI The URI of the Stellar RPC instance to connect to.
    */
   public SorobanServer(String serverURI) {
     this(
@@ -92,7 +92,7 @@ public class SorobanServer implements Closeable {
   /**
    * Creates a new SorobanServer instance.
    *
-   * @param serverURI The URI of the Soroban-RPC instance to connect to.
+   * @param serverURI The URI of the Stellar RPC instance to connect to.
    * @param httpClient The {@link OkHttpClient} instance to use for requests.
    */
   public SorobanServer(String serverURI, OkHttpClient httpClient) {
@@ -109,10 +109,10 @@ public class SorobanServer implements Closeable {
    * @return An {@link Account} object containing the sequence number and current state of the
    *     account.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws AccountNotFoundException If the account does not exist on the network. You may need to
    *     fund it first.
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -147,8 +147,8 @@ public class SorobanServer implements Closeable {
    *
    * @return A {@link GetHealthResponse} object containing the health check result.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -166,8 +166,8 @@ public class SorobanServer implements Closeable {
    *
    * @return A {@link GetFeeStatsResponse} object containing the fee stats.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -191,8 +191,8 @@ public class SorobanServer implements Closeable {
    * @return A {@link GetLedgerEntriesResponse.LedgerEntryResult} object containing the ledger entry
    *     result.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -245,8 +245,8 @@ public class SorobanServer implements Closeable {
    * @return A {@link GetLedgerEntriesResponse} object containing the current values.
    * @throws IllegalArgumentException If the keys collection is empty or invalid.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -286,8 +286,8 @@ public class SorobanServer implements Closeable {
    * @return A {@link GetTransactionResponse} object containing the transaction status, result, and
    *     other details.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -367,8 +367,8 @@ public class SorobanServer implements Closeable {
    * @return A {@link GetTransactionsResponse} object containing the transactions that match the
    *     request.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -391,8 +391,8 @@ public class SorobanServer implements Closeable {
    * @param getLedgersRequest The {@link GetLedgersRequest} to use for the request.
    * @return A {@link GetLedgersResponse} object containing the ledgers that match the request.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -413,8 +413,8 @@ public class SorobanServer implements Closeable {
    * @param getEventsRequest The {@link GetEventsRequest} to use for the request.
    * @return A {@link GetEventsResponse} object containing the events that match the request.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -432,8 +432,8 @@ public class SorobanServer implements Closeable {
    *
    * @return A {@link GetVersionInfoResponse} object containing the version information.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -447,12 +447,12 @@ public class SorobanServer implements Closeable {
   }
 
   /**
-   * Fetches metadata about the network which Soroban-RPC is connected to.
+   * Fetches metadata about the network which Stellar RPC is connected to.
    *
    * @return A {@link GetNetworkResponse} object containing the network metadata.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -466,12 +466,12 @@ public class SorobanServer implements Closeable {
   }
 
   /**
-   * Fetches the latest ledger meta info from network which Soroban-RPC is connected to.
+   * Fetches the latest ledger meta info from network which Stellar RPC is connected to.
    *
    * @return A {@link GetLatestLedgerResponse} object containing the latest ledger meta info.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -498,8 +498,8 @@ public class SorobanServer implements Closeable {
    * @return A {@link SimulateTransactionResponse} object containing the cost, footprint,
    *     result/auth requirements (if applicable), and error of the transaction.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -524,6 +524,9 @@ public class SorobanServer implements Closeable {
    * An alias for {@link #simulateTransaction(Transaction,
    * SimulateTransactionRequest.ResourceConfig, SimulateTransactionRequest.AuthMode)} with no
    * resource leeway, and no auth mode set.
+   *
+   * @param transaction The transaction to simulate.
+   * @return A {@link SimulateTransactionResponse} object containing the simulation result.
    */
   public SimulateTransactionResponse simulateTransaction(Transaction transaction) {
     return simulateTransaction(transaction, null, null);
@@ -557,8 +560,8 @@ public class SorobanServer implements Closeable {
    *     be padded with the contract's minimum resource fees discovered from the simulation.
    * @throws PrepareTransactionException If preparing the transaction fails.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -607,7 +610,7 @@ public class SorobanServer implements Closeable {
 
   /**
    * Submit a real transaction to the Stellar network. This is the only way to make changes
-   * "on-chain". Unlike Horizon, Soroban-RPC does not wait for transaction completion. It simply
+   * "on-chain". Unlike Horizon, Stellar RPC does not wait for transaction completion. It simply
    * validates the transaction and enqueues it. Clients should call {@link
    * SorobanServer#getTransaction} to learn about transaction's status.
    *
@@ -615,8 +618,8 @@ public class SorobanServer implements Closeable {
    * @return A {@link SendTransactionResponse} object containing some details about the transaction
    *     that was submitted.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.
@@ -765,17 +768,17 @@ public class SorobanServer implements Closeable {
   }
 
   /**
-   * Sends a request to the Soroban-RPC instance.
+   * Sends a request to the Stellar RPC instance.
    *
    * @param method The method to call.
    * @param params The parameters to send.
    * @param responseType The response type to expect.
    * @param <T> The type of the request parameters.
    * @param <R> The type of the response result.
-   * @return The response from the Soroban-RPC instance.
+   * @return The response from the Stellar RPC instance.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
-   * @throws SorobanRpcException If the Soroban-RPC instance returns an error response.
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
    *     connectivity problems, etc.

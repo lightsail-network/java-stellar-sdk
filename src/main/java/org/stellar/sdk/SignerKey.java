@@ -58,10 +58,16 @@ public class SignerKey {
    *   <li>HASH_X: 32-byte SHA-256 hash
    *   <li>ED25519_SIGNED_PAYLOAD: Variable length encoded payload with public key
    * </ul>
+   *
+   * @return the raw key bytes
    */
   byte[] key;
 
-  /** The type of this signer key. */
+  /**
+   * The type of this signer key.
+   *
+   * @return the signer key type
+   */
   SignerKeyType type;
 
   /**
@@ -396,10 +402,18 @@ public class SignerKey {
    */
   @Value
   public static class Ed25519SignedPayload {
-    /** The Ed25519 public key (32 bytes) that must sign the payload. */
+    /**
+     * The Ed25519 public key (32 bytes) that must sign the payload.
+     *
+     * @return the Ed25519 public key bytes
+     */
     byte[] ed25519PublicKey;
 
-    /** The payload to be signed (up to 64 bytes). */
+    /**
+     * The payload to be signed (up to 64 bytes).
+     *
+     * @return the payload bytes
+     */
     byte[] payload;
 
     /**
