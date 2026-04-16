@@ -7,7 +7,14 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.LedgerResponse;
 import org.stellar.sdk.responses.Page;
 
-/** Builds requests connected to ledgers. */
+/**
+ * Builds requests to the Horizon {@code /ledgers} endpoint.
+ *
+ * <p>Retrieves ledger records representing closed ledgers on the Stellar network.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class LedgersRequestBuilder extends RequestBuilder {
   public LedgersRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "ledgers");
@@ -17,9 +24,10 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link LedgerResponse}. This method is helpful
    * for getting the links.
    *
+   * @param uri the Horizon URI to request
    * @return {@link LedgerResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -47,7 +55,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @param ledgerSeq Ledger to fetch
    * @return {@link LedgerResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -74,7 +82,7 @@ public class LedgersRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link LedgerResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -113,6 +121,9 @@ public class LedgersRequestBuilder extends RequestBuilder {
 
   /**
    * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   *
+   * @param listener the event listener to receive events
+   * @return an {@link SSEStream} for real-time event streaming
    */
   public SSEStream<LedgerResponse> stream(final EventListener<LedgerResponse> listener) {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);

@@ -14,10 +14,18 @@ import lombok.NonNull;
 @EqualsAndHashCode(callSuper = false)
 @Getter
 public abstract class AssetTypeCreditAlphaNum extends Asset {
-  /** Asset code */
+  /**
+   * Asset code.
+   *
+   * @return the asset code string
+   */
   @NonNull protected final String code;
 
-  /** Asset issuer */
+  /**
+   * Asset issuer.
+   *
+   * @return the issuer account ID (starting with {@code G})
+   */
   @NonNull protected final String issuer;
 
   /**

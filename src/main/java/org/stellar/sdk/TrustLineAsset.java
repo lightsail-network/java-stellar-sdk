@@ -17,7 +17,11 @@ import org.stellar.sdk.xdr.Hash;
 public class TrustLineAsset {
   private static final int LIQUIDITY_POOL_ID_LENGTH = 64;
 
-  /** The type of the asset. */
+  /**
+   * The type of the asset.
+   *
+   * @return the asset type
+   */
   @NonNull private final AssetType assetType;
 
   /**
@@ -27,6 +31,8 @@ public class TrustLineAsset {
    * <p>If assetType is one of {@link AssetType#ASSET_TYPE_NATIVE}, {@link
    * AssetType#ASSET_TYPE_CREDIT_ALPHANUM4} or {@link AssetType#ASSET_TYPE_CREDIT_ALPHANUM12} then
    * this field will be set.
+   *
+   * @return the asset, or null if this is a liquidity pool share
    */
   @Nullable private final Asset asset;
 
@@ -35,6 +41,8 @@ public class TrustLineAsset {
    * trustline is for a regular asset.
    *
    * <p>If assetType is {@link AssetType#ASSET_TYPE_POOL_SHARE} then this field will be set.
+   *
+   * @return the liquidity pool ID, or null if this is a regular asset
    */
   @Nullable private final String liquidityPoolId;
 

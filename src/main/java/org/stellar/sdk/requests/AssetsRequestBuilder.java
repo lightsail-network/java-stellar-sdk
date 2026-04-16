@@ -8,16 +8,35 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.AssetResponse;
 import org.stellar.sdk.responses.Page;
 
+/**
+ * Builds requests to the Horizon {@code /assets} endpoint.
+ *
+ * <p>Allows filtering by asset code and asset issuer, with support for cursor-based pagination.
+ *
+ * @see org.stellar.sdk.responses.AssetResponse
+ */
 public class AssetsRequestBuilder extends RequestBuilder {
   public AssetsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "assets");
   }
 
+  /**
+   * Filters the results to only include assets with the given asset code.
+   *
+   * @param assetCode the asset code to filter by (e.g. {@code "USD"})
+   * @return this builder instance for chaining
+   */
   public AssetsRequestBuilder assetCode(String assetCode) {
     uriBuilder.setQueryParameter("asset_code", assetCode);
     return this;
   }
 
+  /**
+   * Filters the results to only include assets issued by the given account.
+   *
+   * @param assetIssuer the issuer account ID to filter by
+   * @return this builder instance for chaining
+   */
   public AssetsRequestBuilder assetIssuer(String assetIssuer) {
     uriBuilder.setQueryParameter("asset_issuer", assetIssuer);
     return this;
@@ -31,7 +50,7 @@ public class AssetsRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link AssetResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -55,7 +74,7 @@ public class AssetsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link AssetResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

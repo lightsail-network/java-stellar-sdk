@@ -23,7 +23,11 @@ import java.math.BigInteger;
  * @see Transaction
  */
 public abstract class Memo {
-  /** Creates new MemoNone instance. */
+  /**
+   * Creates new MemoNone instance.
+   *
+   * @return a new {@link MemoNone}
+   */
   public static MemoNone none() {
     return new MemoNone();
   }
@@ -32,6 +36,7 @@ public abstract class Memo {
    * Creates new {@link MemoText} instance.
    *
    * @param text Memo text.
+   * @return a new {@link MemoText}
    */
   public static MemoText text(String text) {
     return new MemoText(text);
@@ -41,6 +46,7 @@ public abstract class Memo {
    * Creates new {@link MemoText} instance.
    *
    * @param text Memo text as bytes.
+   * @return a new {@link MemoText}
    */
   public static MemoText text(byte[] text) {
     return new MemoText(text);
@@ -50,6 +56,7 @@ public abstract class Memo {
    * Creates new {@link MemoId} instance.
    *
    * @param id Memo id.
+   * @return a new {@link MemoId}
    */
   public static MemoId id(BigInteger id) {
     return new MemoId(id);
@@ -59,6 +66,7 @@ public abstract class Memo {
    * Creates new {@link MemoId} instance.
    *
    * @param id Memo id.
+   * @return a new {@link MemoId}
    */
   public static MemoId id(Long id) {
     return new MemoId(id);
@@ -68,6 +76,7 @@ public abstract class Memo {
    * Creates new {@link MemoHash} instance from byte array.
    *
    * @param bytes Memo hash bytes.
+   * @return a new {@link MemoHash}
    */
   public static MemoHash hash(byte[] bytes) {
     return new MemoHash(bytes);
@@ -77,6 +86,7 @@ public abstract class Memo {
    * Creates new {@link MemoHash} instance from hex-encoded string
    *
    * @param hexString Memo hash hex-encoded string
+   * @return a new {@link MemoHash}
    */
   public static MemoHash hash(String hexString) {
     return new MemoHash(hexString);
@@ -86,6 +96,7 @@ public abstract class Memo {
    * Creates new {@link MemoReturnHash} instance from byte array.
    *
    * @param bytes Memo return hash bytes.
+   * @return a new {@link MemoReturnHash}
    */
   public static MemoReturnHash returnHash(byte[] bytes) {
     return new MemoReturnHash(bytes);
@@ -95,6 +106,7 @@ public abstract class Memo {
    * Creates new {@link MemoReturnHash} instance from hex-encoded string.
    *
    * @param hexString Memo return hash hex-encoded string.
+   * @return a new {@link MemoReturnHash}
    */
   public static MemoReturnHash returnHash(String hexString) {
     return new MemoReturnHash(hexString);

@@ -88,7 +88,7 @@ public class SorobanDataBuilder {
    * Sets up the resource metrics.
    *
    * <p>You should almost NEVER need this, as its often generated/provided to you by transaction
-   * simulation/preflight from a Soroban RPC server.
+   * simulation/preflight from a Stellar RPC server.
    *
    * @param resources the resource metrics to set
    * @return this builder instance
@@ -152,11 +152,28 @@ public class SorobanDataBuilder {
   @Builder(toBuilder = true)
   @Value
   public static class Resources {
-    // number of CPU instructions (uint32)
+    /**
+     * number of CPU instructions (uint32)
+     *
+     * @param cpuInstructions the number of CPU instructions
+     * @return the number of CPU instructions
+     */
     @NonNull Long cpuInstructions;
-    // number of bytes being read from disk (uint32)
+
+    /**
+     * number of bytes read from the ledger (uint32)
+     *
+     * @param diskReadBytes the number of bytes read from the ledger
+     * @return the number of bytes read from the ledger
+     */
     @NonNull Long diskReadBytes;
-    // number of bytes being written to disk and memory (uint32)
+
+    /**
+     * number of bytes written to the ledger (uint32)
+     *
+     * @param writeBytes the number of bytes written to the ledger
+     * @return the number of bytes written to the ledger
+     */
     @NonNull Long writeBytes;
   }
 }

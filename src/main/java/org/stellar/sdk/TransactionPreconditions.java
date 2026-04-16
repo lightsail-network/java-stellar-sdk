@@ -29,17 +29,28 @@ public class TransactionPreconditions {
   public static final long MAX_EXTRA_SIGNERS_COUNT = 2;
   public static final BigInteger TIMEOUT_INFINITE = BigInteger.ZERO;
 
-  // We strongly recommend setting it, but in fact, a transaction without timebounds will also be
-  // accepted by stellar-core.
-  /** The time bounds for the transaction. */
+  /**
+   * The time bounds for the transaction.
+   *
+   * @param timeBounds the time bounds
+   * @return the time bounds
+   */
   TimeBounds timeBounds;
 
-  /** The ledger bounds for the transaction. */
+  /**
+   * The ledger bounds for the transaction.
+   *
+   * @param ledgerBounds the ledger bounds
+   * @return the ledger bounds, or null if not set
+   */
   @Nullable LedgerBounds ledgerBounds;
 
   /**
    * The minimum source account sequence number this transaction is valid for. if <code>null</code>,
    * the transaction is valid when **source account's sequence number == tx.sequence - 1**.
+   *
+   * @param minSeqNumber the minimum sequence number
+   * @return the minimum sequence number, or null if not set
    */
   @Nullable Long minSeqNumber; // int64
 
@@ -47,6 +58,9 @@ public class TransactionPreconditions {
    * The minimum amount of time between source account sequence time and the ledger time when this
    * transaction will become valid. If the value is <code>0</code>, the transaction is unrestricted
    * by the account sequence age. Cannot be negative.
+   *
+   * @param minSeqAge the minimum sequence age
+   * @return the minimum sequence age
    */
   @Builder.Default @NonNull BigInteger minSeqAge = BigInteger.ZERO; // uint64
 
@@ -54,10 +68,18 @@ public class TransactionPreconditions {
    * The minimum number of ledgers between source account sequence and the ledger number when this
    * transaction will become valid. If the value is <code>0</code>, the transaction is unrestricted
    * by the account sequence ledger. Cannot be negative.
+   *
+   * @param minSeqLedgerGap the minimum sequence ledger gap
+   * @return the minimum sequence ledger gap
    */
   long minSeqLedgerGap; // uint32
 
-  /** Required extra signers. */
+  /**
+   * Required extra signers.
+   *
+   * @param extraSigners the list of extra signers
+   * @return the extra signers list
+   */
   @Builder.Default @NonNull List<SignerKey> extraSigners = new ArrayList<>();
 
   /**

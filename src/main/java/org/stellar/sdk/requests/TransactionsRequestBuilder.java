@@ -8,7 +8,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.TransactionResponse;
 
-/** Builds requests connected to transactions. */
+/**
+ * Builds requests to the Horizon {@code /transactions} endpoint.
+ *
+ * <p>Retrieves transactions that have been included in validated ledgers, with optional filters by
+ * account, ledger, or liquidity pool.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class TransactionsRequestBuilder extends RequestBuilder {
   public TransactionsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "transactions");
@@ -18,9 +26,10 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link TransactionResponse}. This method is
    * helpful for getting the links.
    *
+   * @param uri the Horizon URI to request
    * @return {@link TransactionResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -48,7 +57,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param transactionId Transaction to fetch
    * @return {@link TransactionResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -74,6 +83,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-transactions-by-account-id">Transactions
    *     for Account</a>
    * @param account Account for which to get transactions
+   * @return this builder instance for chaining
    */
   public TransactionsRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "transactions");
@@ -87,6 +97,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-transactions">Transactions
    *     for ClaimableBalance</a>
    * @param claimableBalance Claimable Balance for which to get transactions
+   * @return this builder instance for chaining
    */
   public TransactionsRequestBuilder forClaimableBalance(@NonNull String claimableBalance) {
     this.setSegments("claimable_balances", claimableBalance, "transactions");
@@ -100,6 +111,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-transactions">Transactions
    *     for Ledger</a>
    * @param ledgerSeq Ledger for which to get transactions
+   * @return this builder instance for chaining
    */
   public TransactionsRequestBuilder forLedger(long ledgerSeq) {
     this.setSegments("ledgers", String.valueOf(ledgerSeq), "transactions");
@@ -113,6 +125,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/lp-retrieve-related-transactions">Transactions
    *     for Liquidity Pool</a>
    * @param liquidityPoolId Liquidity pool for which to get transactions
+   * @return this builder instance for chaining
    */
   public TransactionsRequestBuilder forLiquidityPool(String liquidityPoolId) {
     this.setSegments("liquidity_pools", liquidityPoolId, "transactions");
@@ -124,6 +137,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * transactions are returned.
    *
    * @param value Set to <code>true</code> to include failed transactions.
+   * @return this builder instance for chaining
    */
   public TransactionsRequestBuilder includeFailed(boolean value) {
     uriBuilder.setQueryParameter("include_failed", String.valueOf(value));
@@ -137,7 +151,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link TransactionResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -177,6 +191,9 @@ public class TransactionsRequestBuilder extends RequestBuilder {
 
   /**
    * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   *
+   * @param listener the event listener to receive events
+   * @return an {@link SSEStream} for real-time event streaming
    */
   public SSEStream<TransactionResponse> stream(final EventListener<TransactionResponse> listener) {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
@@ -187,7 +204,7 @@ public class TransactionsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link TransactionResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

@@ -8,7 +8,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.OfferResponse;
 import org.stellar.sdk.responses.Page;
 
-/** Builds requests connected to offers. */
+/**
+ * Builds requests to the Horizon {@code /offers} endpoint.
+ *
+ * <p>Retrieves offers currently on the Stellar DEX order books, with optional filters by seller,
+ * sponsor, or asset pair.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class OffersRequestBuilder extends RequestBuilder {
   public OffersRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "offers");
@@ -18,9 +26,10 @@ public class OffersRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link OfferResponse}. This method is helpful
    * for getting the links.
    *
+   * @param uri the Horizon URI to request
    * @return {@link OfferResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -45,7 +54,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @param offerId specifies which offer to load.
    * @return {@link OfferResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -124,7 +133,7 @@ public class OffersRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link OfferResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -163,6 +172,9 @@ public class OffersRequestBuilder extends RequestBuilder {
 
   /**
    * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   *
+   * @param listener the event listener to receive events
+   * @return an {@link SSEStream} for real-time event streaming
    */
   public SSEStream<OfferResponse> stream(final EventListener<OfferResponse> listener) {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);

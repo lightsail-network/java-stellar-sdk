@@ -20,10 +20,18 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
  */
 @Value
 public class TimeBounds {
-  /** the UNIX timestamp (in seconds) */
+  /**
+   * the UNIX timestamp (in seconds)
+   *
+   * @return the minimum time
+   */
   BigInteger minTime;
 
-  /** the UNIX timestamp (in seconds) */
+  /**
+   * the UNIX timestamp (in seconds)
+   *
+   * @return the maximum time
+   */
   BigInteger maxTime;
 
   /**

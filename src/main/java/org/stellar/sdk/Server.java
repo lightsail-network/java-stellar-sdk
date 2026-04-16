@@ -29,7 +29,12 @@ public class Server implements Closeable {
   private final HttpUrl serverURI;
   @Getter @Setter private OkHttpClient httpClient;
 
-  /** submitHttpClient is used only for submitting transactions. The read timeout is longer. */
+  /**
+   * submitHttpClient is used only for submitting transactions. The read timeout is longer.
+   *
+   * @param submitHttpClient the OkHttpClient used for submitting transactions
+   * @return the OkHttpClient used for submitting transactions
+   */
   @Getter @Setter private OkHttpClient submitHttpClient;
 
   /**
@@ -89,7 +94,7 @@ public class Server implements Closeable {
    * @param address The address of the account to load, muxed accounts are supported.
    * @return {@link Account} object
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -166,7 +171,7 @@ public class Server implements Closeable {
   }
 
   /**
-   * @return {@link FeeStatsResponse} instance.
+   * @return {@link FeeStatsRequestBuilder} instance.
    */
   public FeeStatsRequestBuilder feeStats() {
     return new FeeStatsRequestBuilder(httpClient, serverURI);
@@ -187,6 +192,16 @@ public class Server implements Closeable {
   }
 
   /**
+   * Returns a {@link TradeAggregationsRequestBuilder} instance.
+   *
+   * @param baseAsset the base asset
+   * @param counterAsset the counter asset
+   * @param startTime lower time boundary represented as milliseconds since epoch
+   * @param endTime upper time boundary represented as milliseconds since epoch
+   * @param resolution the duration of each aggregation bucket in milliseconds. Allowed values:
+   *     60000 (1 minute), 300000 (5 minutes), 900000 (15 minutes), 3600000 (1 hour), 86400000 (1
+   *     day), 604800000 (1 week)
+   * @param offset segments can be offset using this parameter (in milliseconds)
    * @return {@link TradeAggregationsRequestBuilder} instance.
    */
   public TradeAggregationsRequestBuilder tradeAggregations(
@@ -243,7 +258,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -285,7 +300,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -316,7 +331,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -352,7 +367,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -384,7 +399,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -412,7 +427,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -460,7 +475,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -496,7 +511,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -537,7 +552,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -574,7 +589,7 @@ public class Server implements Closeable {
    * @throws AccountRequiresMemoException when a transaction is trying to submit an operation to an
    *     account which requires a memo.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

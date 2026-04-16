@@ -21,16 +21,24 @@ public class LiquidityPool {
   /**
    * The first asset in the pool, it must respect the rule assetA &lt; assetB. Check {@link
    * Asset#compareTo(Asset)} for details.
+   *
+   * @return the first asset in the pool
    */
   @NonNull Asset assetA;
 
   /**
    * The second asset in the pool, it must respect the rule assetA &lt; assetB. Check {@link
    * Asset#compareTo(Asset)} for details.
+   *
+   * @return the second asset in the pool
    */
   @NonNull Asset assetB;
 
-  /** The liquidity pool fee. For now the only fee supported is {@link LiquidityPool#FEE}. */
+  /**
+   * The liquidity pool fee. For now the only fee supported is {@link LiquidityPool#FEE}.
+   *
+   * @return the fee in basis points
+   */
   int fee;
 
   /**

@@ -34,10 +34,18 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 @EqualsAndHashCode
 public class MuxedAccount {
 
-  /** The ed25519 account ID. It starts with the letter "G". */
+  /**
+   * The ed25519 account ID. It starts with the letter "G".
+   *
+   * @return the ed25519 account ID
+   */
   @NonNull private final String accountId;
 
-  /** The optional account multiplexing ID. It is a 64-bit unsigned integer. */
+  /**
+   * The optional account multiplexing ID. It is a 64-bit unsigned integer.
+   *
+   * @return the account multiplexing ID, or null if not set
+   */
   @Nullable private final BigInteger muxedId;
 
   /**

@@ -11,19 +11,35 @@ import lombok.Value;
  */
 @Value
 public class FederationResponse {
-  /** Stellar address (e.g. `bob*stellar.org`). */
+  /**
+   * Stellar address (e.g. {@code bob*stellar.org}).
+   *
+   * @return the Stellar address
+   */
   @SerializedName("stellar_address")
   String stellarAddress;
 
-  /** Account ID (e.g. `GAVHK7L...`). */
+  /**
+   * Account ID (e.g. {@code GAVHK7L...}).
+   *
+   * @return the account ID
+   */
   @SerializedName("account_id")
   String accountId;
 
-  /** Memo type or null when no memo attached */
+  /**
+   * Memo type or null when no memo attached.
+   *
+   * @return the memo type, or null
+   */
   @SerializedName("memo_type")
   String memoType;
 
-  /** Memo value or null when no memo attached */
+  /**
+   * Memo value or null when no memo attached.
+   *
+   * @return the memo value, or null
+   */
   @SerializedName("memo")
   String memo;
 }

@@ -48,6 +48,7 @@ public class Sep10Challenge {
    *     target="_blank">fully qualified domain name</a> of the service requiring authentication.
    * @param webAuthDomain The fully qualified domain name of the service issuing the challenge.
    * @param timebounds The lifetime of the challenge token.
+   * @return the SEP-10 challenge transaction
    */
   public static Transaction newChallenge(
       KeyPair signer,
@@ -76,6 +77,7 @@ public class Sep10Challenge {
    * @param clientSigningKey The stellar account listed as the SIGNING_KEY on the client domain's
    *     TOML file.
    * @param memo The memo of the challenge transaction.
+   * @return the SEP-10 challenge transaction
    */
   public static Transaction newChallenge(
       KeyPair signer,
@@ -162,6 +164,7 @@ public class Sep10Challenge {
    * @param clientDomain The domain of the client application requesting authentication.
    * @param clientSigningKey The stellar account listed as the SIGNING_KEY on the client domain's
    *     TOML file.
+   * @return the SEP-10 challenge transaction
    */
   public static Transaction newChallenge(
       KeyPair signer,

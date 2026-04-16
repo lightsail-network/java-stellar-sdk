@@ -22,6 +22,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-effects-by-account-id">Effects
    *     for Account</a>
    * @param account Account for which to get effects
+   * @return this builder instance for chaining
    */
   public EffectsRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "effects");
@@ -35,6 +36,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-effects">Effects
    *     for Ledger</a>
    * @param ledgerSeq Ledger for which to get effects
+   * @return this builder instance for chaining
    */
   public EffectsRequestBuilder forLedger(long ledgerSeq) {
     this.setSegments("ledgers", String.valueOf(ledgerSeq), "effects");
@@ -48,6 +50,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transactions-effects">Effect
    *     for Transaction</a>
    * @param transactionId Transaction ID for which to get effects
+   * @return this builder instance for chaining
    */
   public EffectsRequestBuilder forTransaction(@NonNull String transactionId) {
     this.setSegments("transactions", transactionId, "effects");
@@ -58,9 +61,10 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * Builds request to <code>GET /liquidity_pools/{poolID}/effects</code>
    *
    * @see <a
-   *     href="ttps://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-related-effects">Effects
+   *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-related-effects">Effects
    *     for Liquidity Pool</a>
    * @param liquidityPoolId Liquidity pool for which to get effects
+   * @return this builder instance for chaining
    */
   public EffectsRequestBuilder forLiquidityPool(String liquidityPoolId) {
     this.setSegments("liquidity_pools", liquidityPoolId, "effects");
@@ -74,6 +78,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-operations-effects">Effect
    *     for Operation</a>
    * @param operationId Operation ID for which to get effects
+   * @return this builder instance for chaining
    */
   public EffectsRequestBuilder forOperation(long operationId) {
     this.setSegments("operations", String.valueOf(operationId), "effects");
@@ -88,7 +93,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link EffectResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -127,6 +132,9 @@ public class EffectsRequestBuilder extends RequestBuilder {
 
   /**
    * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   *
+   * @param listener the event listener to receive events
+   * @return an {@link SSEStream} for real-time event streaming
    */
   public SSEStream<EffectResponse> stream(final EventListener<EffectResponse> listener) {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
@@ -137,7 +145,7 @@ public class EffectsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link EffectResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

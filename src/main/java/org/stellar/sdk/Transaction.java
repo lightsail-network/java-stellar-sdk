@@ -34,25 +34,53 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  * target="_blank">Transaction</a> in Stellar network.
  */
 public class Transaction extends AbstractTransaction {
-  /** Max fee paid for transaction in stroops (1 stroop = 0.0000001 XLM). */
+  /**
+   * Max fee paid for transaction in stroops (1 stroop = 0.0000001 XLM).
+   *
+   * @return the fee in stroops
+   */
   @Getter private final long fee;
 
-  /** The source account for this transaction. */
+  /**
+   * The source account for this transaction.
+   *
+   * @return the source account ID
+   */
   @Getter @NonNull private final String sourceAccount;
 
-  /** The sequence number of the account creating this transaction. */
+  /**
+   * The sequence number of the account creating this transaction.
+   *
+   * @return the sequence number
+   */
   @Getter private final long sequenceNumber;
 
-  /** Operations included in the transaction. */
+  /**
+   * Operations included in the transaction.
+   *
+   * @return the operations array
+   */
   @Getter @NonNull private final Operation[] operations;
 
-  /** Memo attached to the transaction. */
+  /**
+   * Memo attached to the transaction.
+   *
+   * @return the memo
+   */
   @Getter @NonNull private final Memo memo;
 
-  /** The preconditions for the transaction. */
+  /**
+   * The preconditions for the transaction.
+   *
+   * @return the transaction preconditions
+   */
   @Getter private final TransactionPreconditions preconditions;
 
-  /** The Soroban data for the transaction. */
+  /**
+   * The Soroban data for the transaction.
+   *
+   * @return the Soroban data, or null if not a Soroban transaction
+   */
   @Getter private final SorobanTransactionData sorobanData;
 
   private EnvelopeType envelopeType = EnvelopeType.ENVELOPE_TYPE_TX;

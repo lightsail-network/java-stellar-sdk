@@ -66,7 +66,11 @@ public class KeyPair {
     this.ed25519PublicKey = ed25519PublicKey;
   }
 
-  /** Returns true if this Keypair is capable of signing */
+  /**
+   * Returns true if this Keypair is capable of signing.
+   *
+   * @return {@code true} if this keypair has a private key
+   */
   public boolean canSign() {
     return privateKey != null;
   }
@@ -181,7 +185,11 @@ public class KeyPair {
     return new KeyPair(publicKey, privateKey);
   }
 
-  /** Returns the human-readable account ID encoded in strkey. */
+  /**
+   * Returns the human-readable account ID encoded in strkey.
+   *
+   * @return the account ID starting with {@code G}
+   */
   public String getAccountId() {
     return StrKey.encodeEd25519PublicKey(getPublicKey());
   }
@@ -203,12 +211,20 @@ public class KeyPair {
     return StrKey.encodeEd25519SecretSeed(privateKey.getEncoded());
   }
 
-  /** Returns the raw 32 byte public key. */
+  /**
+   * Returns the raw 32 byte public key.
+   *
+   * @return a copy of the 32-byte public key
+   */
   public byte[] getPublicKey() {
     return Arrays.copyOf(publicKeyBytes, 32);
   }
 
-  /** Returns the signature hint for this keypair. */
+  /**
+   * Returns the signature hint for this keypair.
+   *
+   * @return the last 4 bytes of the XDR-encoded public key as a {@link SignatureHint}
+   */
   public SignatureHint getSignatureHint() {
     ByteArrayOutputStream publicKeyBytesStream = new ByteArrayOutputStream();
     XdrDataOutputStream xdrOutputStream = new XdrDataOutputStream(publicKeyBytesStream);
@@ -227,7 +243,11 @@ public class KeyPair {
     return signatureHint;
   }
 
-  /** Returns the XDR {@link org.stellar.sdk.xdr.PublicKey} for this keypair. */
+  /**
+   * Returns the XDR {@link org.stellar.sdk.xdr.PublicKey} for this keypair.
+   *
+   * @return the XDR public key
+   */
   public org.stellar.sdk.xdr.PublicKey getXdrPublicKey() {
     org.stellar.sdk.xdr.PublicKey publicKey = new org.stellar.sdk.xdr.PublicKey();
     publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
@@ -237,7 +257,11 @@ public class KeyPair {
     return publicKey;
   }
 
-  /** Returns the XDR {@link AccountID} for this keypair. */
+  /**
+   * Returns the XDR {@link AccountID} for this keypair.
+   *
+   * @return the XDR account ID
+   */
   public AccountID getXdrAccountId() {
     AccountID accountID = new AccountID();
     accountID.setAccountID(getXdrPublicKey());

@@ -62,6 +62,7 @@ public abstract class Asset implements Comparable<Asset> {
    * Generates Asset object from a given XDR object
    *
    * @param xdr XDR object
+   * @return the corresponding {@link Asset} instance
    */
   public static Asset fromXdr(org.stellar.sdk.xdr.Asset xdr) {
     switch (xdr.getDiscriminant()) {
@@ -76,10 +77,18 @@ public abstract class Asset implements Comparable<Asset> {
     }
   }
 
-  /** Returns asset type. */
+  /**
+   * Returns asset type.
+   *
+   * @return the {@link AssetType} of this asset
+   */
   public abstract AssetType getType();
 
-  /** Generates XDR object from a given Asset object */
+  /**
+   * Generates XDR object from a given Asset object.
+   *
+   * @return the XDR representation of this asset
+   */
   public abstract org.stellar.sdk.xdr.Asset toXdr();
 
   @Override

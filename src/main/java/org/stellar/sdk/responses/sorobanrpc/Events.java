@@ -7,6 +7,13 @@ import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.ContractEvent;
 import org.stellar.sdk.xdr.TransactionEvent;
 
+/**
+ * Holds parsed event data from a Stellar RPC response.
+ *
+ * <p>Contains base64-encoded XDR strings for transaction events and contract events, along with
+ * convenience methods ({@link #parseTransactionEventsXdr()}, {@link #parseContractEventsXdr()}) to
+ * deserialize them into typed XDR objects.
+ */
 @Value
 public class Events {
   List<String> transactionEventsXdr;

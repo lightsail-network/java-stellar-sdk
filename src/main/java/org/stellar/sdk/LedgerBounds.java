@@ -14,10 +14,18 @@ import org.stellar.sdk.xdr.XdrUnsignedInteger;
  */
 @Value
 public class LedgerBounds {
-  /** Minimum ledger sequence number of the transaction. */
+  /**
+   * Minimum ledger sequence number of the transaction.
+   *
+   * @return the minimum ledger sequence number
+   */
   long minLedger;
 
-  /** Maximum ledger sequence number of the transaction. */
+  /**
+   * Maximum ledger sequence number of the transaction.
+   *
+   * @return the maximum ledger sequence number
+   */
   long maxLedger;
 
   public LedgerBounds(long minLedger, long maxLedger) {

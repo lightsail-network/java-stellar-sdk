@@ -7,7 +7,11 @@ import lombok.NonNull;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 abstract class MemoHashAbstract extends Memo {
-  /** 32 bytes long array contained in this memo. */
+  /**
+   * 32 bytes long array contained in this memo.
+   *
+   * @return 32 bytes long array
+   */
   protected byte @NonNull [] bytes;
 
   public MemoHashAbstract(byte @NonNull [] bytes) {
@@ -29,6 +33,8 @@ abstract class MemoHashAbstract extends Memo {
    *   MemoHash memo = new MemoHash("e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526");
    *   memo.getHexValue(); // e98869bba8bce08c10b78406202127f3888c25454cd37b02600862452751f526
    * </code>
+   *
+   * @return hex representation of bytes
    */
   public String getHexValue() {
     return Util.bytesToHex(this.bytes).toLowerCase();

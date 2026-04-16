@@ -3,7 +3,7 @@ package org.stellar.sdk.exception;
 import lombok.Getter;
 
 /**
- * Throws when Soroban-RPC instance responds with error.
+ * Thrown when a Stellar RPC (formerly Soroban-RPC) instance responds with an error.
  *
  * @see <a href="https://www.jsonrpc.org/specification#error_object" target="_blank">JSON-RPC 2.0
  *     Specification - Error object</a>

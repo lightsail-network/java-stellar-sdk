@@ -10,12 +10,30 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.PathResponse;
 
+/**
+ * Builds requests to the Horizon {@code /paths/strict-send} endpoint.
+ *
+ * <p>Finds payment paths where the source amount is fixed. Specify either a destination account or
+ * a set of destination assets, along with the source asset and amount, to discover available
+ * payment paths.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class StrictSendPathsRequestBuilder extends RequestBuilder {
   public StrictSendPathsRequestBuilder(OkHttpClient httpClient, HttpUrl serverURI) {
     super(httpClient, serverURI, "");
     this.setSegments("paths", "strict-send");
   }
 
+  /**
+   * Sets the destination account whose assets will be accepted as the end point for path finding.
+   * Mutually exclusive with {@link #destinationAssets(List)}.
+   *
+   * @param account the destination account ID
+   * @return this builder instance for chaining
+   * @throws IllegalArgumentException if {@code destination_assets} has already been set
+   */
   public StrictSendPathsRequestBuilder destinationAccount(String account) {
     if (uriBuilder.build().queryParameter("destination_assets") != null) {
       throw new IllegalArgumentException(
@@ -25,6 +43,14 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * Sets the destination assets to consider as the end point for path finding. Mutually exclusive
+   * with {@link #destinationAccount(String)}.
+   *
+   * @param assets the list of destination assets
+   * @return this builder instance for chaining
+   * @throws IllegalArgumentException if {@code destination_account} has already been set
+   */
   public StrictSendPathsRequestBuilder destinationAssets(List<Asset> assets) {
     if (uriBuilder.build().queryParameter("destination_account") != null) {
       throw new IllegalArgumentException(
@@ -34,11 +60,23 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
     return this;
   }
 
+  /**
+   * Sets the fixed source amount the sender wants to spend.
+   *
+   * @param amount the source amount
+   * @return this builder instance for chaining
+   */
   public StrictSendPathsRequestBuilder sourceAmount(String amount) {
     uriBuilder.setQueryParameter("source_amount", amount);
     return this;
   }
 
+  /**
+   * Sets the asset the sender wants to send.
+   *
+   * @param asset the source asset
+   * @return this builder instance for chaining
+   */
   public StrictSendPathsRequestBuilder sourceAsset(Asset asset) {
     uriBuilder.setQueryParameter("source_asset_type", getAssetType(asset));
     if (asset instanceof AssetTypeCreditAlphaNum) {
@@ -56,7 +94,7 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link PathResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -80,7 +118,7 @@ public class StrictSendPathsRequestBuilder extends RequestBuilder {
    *
    * @return {@link Page} of {@link PathResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad

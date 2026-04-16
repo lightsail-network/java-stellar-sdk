@@ -22,6 +22,21 @@ import org.stellar.sdk.Util;
 import org.stellar.sdk.responses.Pageable;
 import org.stellar.sdk.responses.gson.GsonSingleton;
 
+/**
+ * Implements Server-Sent Events (SSE) streaming from a Horizon endpoint.
+ *
+ * <p>Maintains a persistent HTTP connection to Horizon and delivers parsed response events to the
+ * registered {@link EventListener}. The stream automatically reconnects after connection loss using
+ * the last received event ID as a cursor, with a configurable reconnect timeout (default {@value
+ * #DEFAULT_RECONNECT_TIMEOUT} ms).
+ *
+ * <p>Instances are obtained via the {@code stream()} method on Horizon request builders (e.g.,
+ * {@link AccountsRequestBuilder#stream(EventListener)}). Call {@link #close()} to stop the stream
+ * and release resources.
+ *
+ * @param <T> the Horizon response type delivered to the listener
+ * @see EventListener
+ */
 public class SSEStream<T extends org.stellar.sdk.responses.Response> implements Closeable {
   static final long DEFAULT_RECONNECT_TIMEOUT = 15 * 1000L;
 

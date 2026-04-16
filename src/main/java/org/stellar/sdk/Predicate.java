@@ -66,7 +66,11 @@ public abstract class Predicate {
   @AllArgsConstructor
   @Getter
   public static class Not extends Predicate {
-    /** The inner predicate to negate. */
+    /**
+     * The inner predicate to negate.
+     *
+     * @return the inner predicate
+     */
     private final Predicate inner;
 
     @Override
@@ -83,10 +87,18 @@ public abstract class Predicate {
   @AllArgsConstructor
   @Getter
   public static class Or extends Predicate {
-    /** The left predicate. */
+    /**
+     * The left predicate.
+     *
+     * @return the left predicate
+     */
     private final Predicate left;
 
-    /** The right predicate. */
+    /**
+     * The right predicate.
+     *
+     * @return the right predicate
+     */
     private final Predicate right;
 
     @Override
@@ -103,10 +115,18 @@ public abstract class Predicate {
   @AllArgsConstructor
   @Getter
   public static class And extends Predicate {
-    /** The left predicate. */
+    /**
+     * The left predicate.
+     *
+     * @return the left predicate
+     */
     private final Predicate left;
 
-    /** The right predicate. */
+    /**
+     * The right predicate.
+     *
+     * @return the right predicate
+     */
     private final Predicate right;
 
     @Override

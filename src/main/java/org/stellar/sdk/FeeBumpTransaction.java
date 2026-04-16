@@ -21,13 +21,25 @@ import org.stellar.sdk.xdr.TransactionSignaturePayload;
  */
 @Getter
 public class FeeBumpTransaction extends AbstractTransaction {
-  /** The account paying for the transaction fee. (in stroops) */
+  /**
+   * The account paying for the transaction fee.
+   *
+   * @return the fee source account address
+   */
   @NonNull private final String feeSource;
 
-  /** The max fee willing to be paid for this transaction. */
+  /**
+   * The max fee willing to be paid for this transaction (in stroops).
+   *
+   * @return the maximum fee in stroops
+   */
   private final long fee;
 
-  /** The inner transaction that is being wrapped by this fee bump transaction. */
+  /**
+   * The inner transaction that is being wrapped by this fee bump transaction.
+   *
+   * @return the wrapped inner {@link Transaction}
+   */
   @NonNull private final Transaction innerTransaction;
 
   private FeeBumpTransaction(

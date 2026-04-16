@@ -10,7 +10,15 @@ import org.stellar.sdk.exception.TooManyRequestsException;
 import org.stellar.sdk.responses.Page;
 import org.stellar.sdk.responses.operations.OperationResponse;
 
-/** Builds requests connected to operations. */
+/**
+ * Builds requests to the Horizon {@code /operations} endpoint.
+ *
+ * <p>Retrieves operations that have been included in validated ledgers, with optional filters by
+ * account, ledger, transaction, or liquidity pool.
+ *
+ * @see <a href="https://developers.stellar.org/docs/data/apis/horizon/api-reference">Horizon API
+ *     reference</a>
+ */
 public class OperationsRequestBuilder extends RequestBuilder {
   protected Set<String> toJoin;
 
@@ -23,9 +31,10 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * Requests specific <code>uri</code> and returns {@link OperationResponse}. This method is
    * helpful for getting the links.
    *
+   * @param uri the Horizon URI to request
    * @return {@link OperationResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -53,7 +62,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @param operationId Operation to fetch
    * @return {@link OperationResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -79,6 +88,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/get-operations-by-account-id">Operations
    *     for Account</a>
    * @param account Account for which to get operations
+   * @return this builder instance for chaining
    */
   public OperationsRequestBuilder forAccount(@NonNull String account) {
     this.setSegments("accounts", account, "operations");
@@ -92,6 +102,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/cb-retrieve-related-operations">Operations
    *     for ClaimableBalance</a>
    * @param claimableBalance Claimable Balance for which to get operations
+   * @return this builder instance for chaining
    */
   public OperationsRequestBuilder forClaimableBalance(@NonNull String claimableBalance) {
     this.setSegments("claimable_balances", claimableBalance, "operations");
@@ -105,6 +116,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-ledgers-operations">Operations
    *     for Ledger</a>
    * @param ledgerSeq Ledger for which to get operations
+   * @return this builder instance for chaining
    */
   public OperationsRequestBuilder forLedger(long ledgerSeq) {
     this.setSegments("ledgers", String.valueOf(ledgerSeq), "operations");
@@ -118,6 +130,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-a-transactions-operations">Operations
    *     for Transaction</a>
    * @param transactionId Transaction ID for which to get operations
+   * @return this builder instance for chaining
    */
   public OperationsRequestBuilder forTransaction(@NonNull String transactionId) {
     this.setSegments("transactions", transactionId, "operations");
@@ -131,6 +144,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    *     href="https://developers.stellar.org/docs/data/apis/horizon/api-reference/lp-retrieve-related-operations">Operations
    *     for Liquidity Pool</a>
    * @param liquidityPoolId Liquidity pool for which to get operations
+   * @return this builder instance for chaining
    */
   public OperationsRequestBuilder forLiquidityPool(String liquidityPoolId) {
     this.setSegments("liquidity_pools", liquidityPoolId, "operations");
@@ -142,6 +156,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * operations of successful transactions are returned.
    *
    * @param value Set to <code>true</code> to include operations of failed transactions.
+   * @return this builder instance for chaining
    */
   public OperationsRequestBuilder includeFailed(boolean value) {
     uriBuilder.setQueryParameter("include_failed", String.valueOf(value));
@@ -153,6 +168,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * transaction data is not included.
    *
    * @param include Set to <code>true</code> to include transaction data in the operations response.
+   * @return this builder instance for chaining
    */
   public OperationsRequestBuilder includeTransactions(boolean include) {
     updateToJoin("transactions", include);
@@ -180,7 +196,7 @@ public class OperationsRequestBuilder extends RequestBuilder {
    * @param uri {@link HttpUrl} URI to send the request to.
    * @return {@link Page} of {@link OperationResponse}
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkError
+   *     NetworkException
    * @throws org.stellar.sdk.exception.BadRequestException if the request fails due to a bad request
    *     (4xx)
    * @throws org.stellar.sdk.exception.BadResponseException if the request fails due to a bad
@@ -219,6 +235,9 @@ public class OperationsRequestBuilder extends RequestBuilder {
 
   /**
    * An overloaded version of {@link #stream(EventListener, long)} with default reconnect timeout.
+   *
+   * @param listener the event listener to receive events
+   * @return an {@link SSEStream} for real-time event streaming
    */
   public SSEStream<OperationResponse> stream(final EventListener<OperationResponse> listener) {
     return stream(listener, SSEStream.DEFAULT_RECONNECT_TIMEOUT);
