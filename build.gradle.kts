@@ -54,7 +54,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.14.2")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.79")  // mock https
+    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.84")  // mock https
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
