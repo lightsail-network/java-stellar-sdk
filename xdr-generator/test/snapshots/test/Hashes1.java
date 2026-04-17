@@ -26,6 +26,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Hashes1 implements XdrElement {
+  /**
+   * Value of the {@code Hashes1} field.
+   *
+   * @param Hashes1 the {@code Hashes1} field value
+   * @return the {@code Hashes1} field value
+   */
   private Hash[] Hashes1;
   public void encode(XdrDataOutputStream stream) throws IOException {
     int Hashes1Size = getHashes1().length;

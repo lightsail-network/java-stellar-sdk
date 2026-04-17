@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import lombok.Setter;
 
+/** XDR-aware input stream with padding handling and decode safety checks. */
 public class XdrDataInputStream extends DataInputStream {
 
     /** Default maximum decoding depth to prevent stack overflow from deeply nested structures. */
@@ -19,12 +20,14 @@ public class XdrDataInputStream extends DataInputStream {
      * Maximum input length, -1 if unknown.
      * This is used to validate that the declared size of variable-length
      * arrays/opaques doesn't exceed the remaining input length, preventing DoS attacks.
+     *
+     * @param maxInputLen the maximum input length, or -1 if unknown
      */
     @Setter
     private int maxInputLen = -1;
 
     /**
-     * Creates a XdrDataInputStream that uses the specified
+     * Creates an XdrDataInputStream that uses the specified
      * underlying InputStream.
      *
      * @param in the specified input stream
@@ -69,6 +72,8 @@ public class XdrDataInputStream extends DataInputStream {
      * @deprecated This method does not validate the array length and may cause
      * OutOfMemoryError or NegativeArraySizeException with untrusted input.
      * Use generated XDR type decoders instead which include proper validation.
+     * @return the decoded integer array
+     * @throws IOException if an I/O error occurs while reading the array
      */
     @Deprecated
     public int[] readIntArray() throws IOException {
@@ -88,6 +93,8 @@ public class XdrDataInputStream extends DataInputStream {
      * @deprecated This method does not validate the array length and may cause
      * OutOfMemoryError or NegativeArraySizeException with untrusted input.
      * Use generated XDR type decoders instead which include proper validation.
+     * @return the decoded float array
+     * @throws IOException if an I/O error occurs while reading the array
      */
     @Deprecated
     public float[] readFloatArray() throws IOException {
@@ -107,6 +114,8 @@ public class XdrDataInputStream extends DataInputStream {
      * @deprecated This method does not validate the array length and may cause
      * OutOfMemoryError or NegativeArraySizeException with untrusted input.
      * Use generated XDR type decoders instead which include proper validation.
+     * @return the decoded double array
+     * @throws IOException if an I/O error occurs while reading the array
      */
     @Deprecated
     public double[] readDoubleArray() throws IOException {

@@ -47,8 +47,26 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Nester implements XdrElement {
+  /**
+   * Value of the {@code nestedEnum} field.
+   *
+   * @param nestedEnum the {@code nestedEnum} field value
+   * @return the {@code nestedEnum} field value
+   */
   private NesterNestedEnum nestedEnum;
+  /**
+   * Value of the {@code nestedStruct} field.
+   *
+   * @param nestedStruct the {@code nestedStruct} field value
+   * @return the {@code nestedStruct} field value
+   */
   private NesterNestedStruct nestedStruct;
+  /**
+   * Value of the {@code nestedUnion} field.
+   *
+   * @param nestedUnion the {@code nestedUnion} field value
+   * @return the {@code nestedUnion} field value
+   */
   private NesterNestedUnion nestedUnion;
   public void encode(XdrDataOutputStream stream) throws IOException{
     nestedEnum.encode(stream);
@@ -195,6 +213,12 @@ public class Nester implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class NesterNestedStruct implements XdrElement {
+    /**
+     * Value of the {@code blah} field.
+     *
+     * @param blah the {@code blah} field value
+     * @return the {@code blah} field value
+     */
     private Integer blah;
     public void encode(XdrDataOutputStream stream) throws IOException{
       stream.writeInt(blah);
@@ -260,7 +284,19 @@ public class Nester implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class NesterNestedUnion implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Color discriminant;
+    /**
+     * Value of the {@code blah2} field.
+     *
+     * @param blah2 the {@code blah2} field value
+     * @return the {@code blah2} field value
+     */
     private Integer blah2;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

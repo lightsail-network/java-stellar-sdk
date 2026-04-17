@@ -15,10 +15,24 @@ import org.stellar.sdk.Base64Factory;
  */
 @Value
 public class XdrUnsignedHyperInteger implements XdrElement {
+  /** Largest value representable by XDR unsigned hyper integer. */
   public static final BigInteger MAX_VALUE = new BigInteger("18446744073709551615");
+  /** Smallest value representable by XDR unsigned hyper integer. */
   public static final BigInteger MIN_VALUE = BigInteger.ZERO;
+
+  /**
+   * Numeric value stored by this XDR unsigned hyper integer.
+   *
+   * @return the unsigned 64-bit value
+   */
   BigInteger number;
 
+  /**
+   * Creates an {@link XdrUnsignedHyperInteger} from a {@link BigInteger}.
+   *
+   * @param number the unsigned 64-bit value
+   * @throws IllegalArgumentException if {@code number} is outside the valid range
+   */
   public XdrUnsignedHyperInteger(BigInteger number) {
     if (number.compareTo(MIN_VALUE) < 0 || number.compareTo(MAX_VALUE) > 0) {
       throw new IllegalArgumentException("number must be between 0 and 2^64 - 1 inclusive");
@@ -26,6 +40,12 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     this.number = number;
   }
 
+  /**
+   * Creates an {@link XdrUnsignedHyperInteger} from a non-negative {@link Long}.
+   *
+   * @param number the unsigned 64-bit value
+   * @throws IllegalArgumentException if {@code number} is negative
+   */
   public XdrUnsignedHyperInteger(Long number) {
     if (number < 0) {
       throw new IllegalArgumentException(
@@ -34,11 +54,25 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     this.number = BigInteger.valueOf(number);
   }
 
+  /**
+   * Encodes this value to XDR.
+   *
+   * @param stream the destination XDR output stream
+   * @throws IOException if an I/O error occurs while writing the value
+   */
   @Override
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.write(getBytes());
   }
 
+  /**
+   * Decodes an {@link XdrUnsignedHyperInteger} from the provided stream.
+   *
+   * @param stream the source XDR input stream
+   * @param maxDepth the maximum decoding depth, ignored for this leaf type
+   * @return the decoded {@link XdrUnsignedHyperInteger}
+   * @throws IOException if an I/O error occurs while reading the value
+   */
   public static XdrUnsignedHyperInteger decode(XdrDataInputStream stream, int maxDepth) throws IOException {
     // maxDepth is intentionally not checked - XdrUnsignedHyperInteger is a leaf type with no recursive decoding
     byte[] bytes = new byte[8];
@@ -47,6 +81,14 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     return new XdrUnsignedHyperInteger(uint64);
   }
 
+  /**
+   * Decodes an {@link XdrUnsignedHyperInteger} from the provided stream using the default maximum
+   * depth.
+   *
+   * @param stream the source XDR input stream
+   * @return the decoded {@link XdrUnsignedHyperInteger}
+   * @throws IOException if an I/O error occurs while reading the value
+   */
   public static XdrUnsignedHyperInteger decode(XdrDataInputStream stream) throws IOException {
     return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
   }
@@ -61,6 +103,11 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     return paddedBytes;
   }
 
+  /**
+   * Serializes this value to JSON.
+   *
+   * @return the JSON representation of this value
+   */
   @Override
   public String toJson() {
     return XdrElement.gson.toJson(toJsonObject());
@@ -70,6 +117,13 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     return this.number.toString();
   }
 
+  /**
+   * Parses an {@link XdrUnsignedHyperInteger} from JSON.
+   *
+   * @param json the JSON representation
+   * @return the parsed {@link XdrUnsignedHyperInteger}, or {@code null} if the input is {@code null}
+   * @throws IllegalArgumentException if the JSON value is invalid
+   */
   public static XdrUnsignedHyperInteger fromJson(String json) {
     return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
   }
@@ -81,11 +135,25 @@ public class XdrUnsignedHyperInteger implements XdrElement {
     return new XdrUnsignedHyperInteger(XdrElement.jsonToBigInteger(json));
   }
 
+  /**
+   * Decodes an {@link XdrUnsignedHyperInteger} from a base64-encoded XDR string.
+   *
+   * @param xdr the base64-encoded XDR string
+   * @return the decoded {@link XdrUnsignedHyperInteger}
+   * @throws IOException if the input is invalid or cannot be decoded
+   */
   public static XdrUnsignedHyperInteger fromXdrBase64(String xdr) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes);
   }
 
+  /**
+   * Decodes an {@link XdrUnsignedHyperInteger} from raw XDR bytes.
+   *
+   * @param xdr the raw XDR bytes
+   * @return the decoded {@link XdrUnsignedHyperInteger}
+   * @throws IOException if the input is invalid or cannot be decoded
+   */
   public static XdrUnsignedHyperInteger fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);

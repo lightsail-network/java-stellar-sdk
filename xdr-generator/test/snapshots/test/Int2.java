@@ -26,6 +26,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Int2 implements XdrElement {
+  /**
+   * Value of the {@code int2} field.
+   *
+   * @param int2 the {@code int2} field value
+   * @return the {@code int2} field value
+   */
   private Long int2;
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeLong(int2);

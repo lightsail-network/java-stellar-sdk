@@ -26,6 +26,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Str implements XdrElement {
+  /**
+   * Value of the {@code str} field.
+   *
+   * @param str the {@code str} field value
+   * @return the {@code str} field value
+   */
   private XdrString str;
   public void encode(XdrDataOutputStream stream) throws IOException {
     int strSize = str.getBytes().length;

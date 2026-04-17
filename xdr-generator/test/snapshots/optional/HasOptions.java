@@ -33,8 +33,26 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class HasOptions implements XdrElement {
+  /**
+   * Value of the {@code firstOption} field.
+   *
+   * @param firstOption the {@code firstOption} field value
+   * @return the {@code firstOption} field value
+   */
   private Integer firstOption;
+  /**
+   * Value of the {@code secondOption} field.
+   *
+   * @param secondOption the {@code secondOption} field value
+   * @return the {@code secondOption} field value
+   */
   private Integer secondOption;
+  /**
+   * Value of the {@code thirdOption} field.
+   *
+   * @param thirdOption the {@code thirdOption} field value
+   * @return the {@code thirdOption} field value
+   */
   private Arr thirdOption;
   public void encode(XdrDataOutputStream stream) throws IOException{
     if (firstOption != null) {

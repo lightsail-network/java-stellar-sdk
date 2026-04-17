@@ -43,8 +43,26 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class MyUnion implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private UnionKey discriminant;
+  /**
+   * Value of the {@code one} field.
+   *
+   * @param one the {@code one} field value
+   * @return the {@code one} field value
+   */
   private MyUnionOne one;
+  /**
+   * Value of the {@code two} field.
+   *
+   * @param two the {@code two} field value
+   * @return the {@code two} field value
+   */
   private MyUnionTwo two;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -169,6 +187,12 @@ public class MyUnion implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class MyUnionOne implements XdrElement {
+    /**
+     * Value of the {@code someInt} field.
+     *
+     * @param someInt the {@code someInt} field value
+     * @return the {@code someInt} field value
+     */
     private Integer someInt;
     public void encode(XdrDataOutputStream stream) throws IOException{
       stream.writeInt(someInt);
@@ -232,7 +256,19 @@ public class MyUnion implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class MyUnionTwo implements XdrElement {
+    /**
+     * Value of the {@code someInt} field.
+     *
+     * @param someInt the {@code someInt} field value
+     * @return the {@code someInt} field value
+     */
     private Integer someInt;
+    /**
+     * Value of the {@code foo} field.
+     *
+     * @param foo the {@code foo} field value
+     * @return the {@code foo} field value
+     */
     private Foo foo;
     public void encode(XdrDataOutputStream stream) throws IOException{
       stream.writeInt(someInt);
