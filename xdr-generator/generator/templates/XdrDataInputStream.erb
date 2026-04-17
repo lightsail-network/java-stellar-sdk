@@ -27,7 +27,7 @@ public class XdrDataInputStream extends DataInputStream {
     private int maxInputLen = -1;
 
     /**
-     * Creates a XdrDataInputStream that uses the specified
+     * Creates an XdrDataInputStream that uses the specified
      * underlying InputStream.
      *
      * @param in the specified input stream

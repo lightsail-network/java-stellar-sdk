@@ -11,7 +11,7 @@ public class XdrDataOutputStream extends DataOutputStream {
     private final XdrOutputStream mOut;
 
     /**
-     * Creates a XdrDataOutputStream that uses the specified underlying OutputStream.
+     * Creates an XdrDataOutputStream that uses the specified underlying OutputStream.
      *
      * @param out the specified output stream
      */
