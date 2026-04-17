@@ -26,6 +26,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IntUnion2 implements XdrElement {
+  /**
+   * Value of the {@code IntUnion2} field.
+   *
+   * @param IntUnion2 the {@code IntUnion2} field value
+   * @return the {@code IntUnion2} field value
+   */
   private IntUnion IntUnion2;
   public void encode(XdrDataOutputStream stream) throws IOException {
     IntUnion2.encode(stream);

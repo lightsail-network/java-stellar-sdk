@@ -327,6 +327,7 @@ class Generator < Xdrgen::Generators::Base
 
   def render_struct(struct, out)
     struct.members.each do |m|
+      render_field_javadoc(out, m.name)
       out.puts "private #{decl_string(m.declaration)} #{m.name};"
     end
 
@@ -416,6 +417,7 @@ class Generator < Xdrgen::Generators::Base
   # ============================================================================
 
   def render_typedef(typedef, out)
+    render_field_javadoc(out, typedef.name)
     out.puts "private #{decl_string typedef.declaration} #{typedef.name};"
     out.puts "public void encode(XdrDataOutputStream stream) throws IOException {"
     out.indent do
@@ -486,9 +488,11 @@ class Generator < Xdrgen::Generators::Base
   # ============================================================================
 
   def render_union(union, out)
+    render_field_javadoc(out, "discriminant")
     out.puts "private #{type_string union.discriminant.type} discriminant;"
     union.arms.each do |arm|
       next if arm.void?
+      render_field_javadoc(out, arm.name)
       out.puts "private #{decl_string(arm.declaration)} #{arm.name};"
     end
     out.break
@@ -806,6 +810,15 @@ class Generator < Xdrgen::Generators::Base
     out.puts " * <pre>"
     out.puts " * " + escape_html(defn.text_value).split("\n").join("\n * ")
     out.puts " * </pre>"
+    out.puts " */"
+  end
+
+  def render_field_javadoc(out, field_name)
+    out.puts "/**"
+    out.puts " * Value of the {@code #{field_name}} field."
+    out.puts " *"
+    out.puts " * @param #{field_name} the {@code #{field_name}} field value"
+    out.puts " * @return the {@code #{field_name}} field value"
     out.puts " */"
   end
 

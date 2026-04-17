@@ -6,24 +6,55 @@ import java.nio.charset.StandardCharsets;
 import lombok.Value;
 import org.stellar.sdk.Base64Factory;
 
+/** Represents XDR string data. */
 @Value
 public class XdrString implements XdrElement {
+  /**
+   * Raw bytes of the XDR string value.
+   *
+   * @return the encoded string bytes
+   */
   byte[] bytes;
 
+  /**
+   * Creates an {@link XdrString} from raw bytes.
+   *
+   * @param bytes the string bytes
+   */
   public XdrString(byte[] bytes) {
     this.bytes = bytes;
   }
 
+  /**
+   * Creates an {@link XdrString} from UTF-8 text.
+   *
+   * @param text the text value
+   */
   public XdrString(String text) {
     this.bytes = text.getBytes(StandardCharsets.UTF_8);
   }
 
+  /**
+   * Encodes this string to XDR.
+   *
+   * @param stream the destination XDR output stream
+   * @throws IOException if an I/O error occurs while writing the value
+   */
   @Override
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(this.bytes.length);
     stream.write(this.bytes, 0, this.bytes.length);
   }
 
+  /**
+   * Decodes an {@link XdrString} from the provided stream.
+   *
+   * @param stream the source XDR input stream
+   * @param maxDepth the maximum decoding depth, ignored for this leaf type
+   * @param maxSize the maximum allowed string size in bytes
+   * @return the decoded {@link XdrString}
+   * @throws IOException if the encoded size is invalid or an I/O error occurs
+   */
   public static XdrString decode(XdrDataInputStream stream, int maxDepth, int maxSize) throws IOException {
     // maxDepth is intentionally not checked - XdrString is a leaf type with no recursive decoding
     int size = stream.readInt();
@@ -42,19 +73,50 @@ public class XdrString implements XdrElement {
     return new XdrString(bytes);
   }
 
+  /**
+   * Decodes an {@link XdrString} from the provided stream using the default maximum depth.
+   *
+   * @param stream the source XDR input stream
+   * @param maxSize the maximum allowed string size in bytes
+   * @return the decoded {@link XdrString}
+   * @throws IOException if the encoded size is invalid or an I/O error occurs
+   */
   public static XdrString decode(XdrDataInputStream stream, int maxSize) throws IOException {
     return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH, maxSize);
   }
 
+  /**
+   * Decodes an {@link XdrString} from a base64-encoded XDR string.
+   *
+   * @param xdr the base64-encoded XDR string
+   * @param maxSize the maximum allowed string size in bytes
+   * @return the decoded {@link XdrString}
+   * @throws IOException if the input is invalid or cannot be decoded
+   */
   public static XdrString fromXdrBase64(String xdr, int maxSize) throws IOException {
     byte[] bytes = Base64Factory.getInstance().decode(xdr);
     return fromXdrByteArray(bytes, maxSize);
   }
 
+  /**
+   * Decodes an {@link XdrString} from a base64-encoded XDR string.
+   *
+   * @param xdr the base64-encoded XDR string
+   * @return the decoded {@link XdrString}
+   * @throws IOException if the input is invalid or cannot be decoded
+   */
   public static XdrString fromXdrBase64(String xdr) throws IOException {
     return fromXdrBase64(xdr, Integer.MAX_VALUE);
   }
 
+  /**
+   * Decodes an {@link XdrString} from raw XDR bytes.
+   *
+   * @param xdr the raw XDR bytes
+   * @param maxSize the maximum allowed string size in bytes
+   * @return the decoded {@link XdrString}
+   * @throws IOException if the input is invalid or cannot be decoded
+   */
   public static XdrString fromXdrByteArray(byte[] xdr, int maxSize) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
@@ -62,6 +124,13 @@ public class XdrString implements XdrElement {
     return decode(xdrDataInputStream, maxSize);
   }
 
+  /**
+   * Decodes an {@link XdrString} from raw XDR bytes.
+   *
+   * @param xdr the raw XDR bytes
+   * @return the decoded {@link XdrString}
+   * @throws IOException if the input is invalid or cannot be decoded
+   */
   public static XdrString fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
@@ -69,6 +138,11 @@ public class XdrString implements XdrElement {
     return decode(xdrDataInputStream, Integer.MAX_VALUE);
   }
 
+  /**
+   * Serializes this value to JSON.
+   *
+   * @return the JSON representation of this string
+   */
   @Override
   public String toJson() {
     return XdrElement.gson.toJson(toJsonObject());
@@ -78,6 +152,12 @@ public class XdrString implements XdrElement {
     return XdrElement.bytesToEscapedAscii(this.bytes);
   }
 
+  /**
+   * Parses an {@link XdrString} from JSON.
+   *
+   * @param json the JSON representation
+   * @return the parsed {@link XdrString}, or {@code null} if the input is {@code null}
+   */
   public static XdrString fromJson(String json) {
     return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
   }
@@ -92,6 +172,11 @@ public class XdrString implements XdrElement {
     return new XdrString(XdrElement.escapedAsciiToBytes((String) json));
   }
 
+  /**
+   * Returns this value decoded as a UTF-8 string.
+   *
+   * @return the UTF-8 string representation
+   */
   @Override
   public String toString() {
     return new String(bytes, StandardCharsets.UTF_8);

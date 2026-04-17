@@ -26,6 +26,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Uint512 implements XdrElement {
+  /**
+   * Value of the {@code uint512} field.
+   *
+   * @param uint512 the {@code uint512} field value
+   * @return the {@code uint512} field value
+   */
   private byte[] uint512;
   public void encode(XdrDataOutputStream stream) throws IOException {
     int uint512Size = uint512.length;

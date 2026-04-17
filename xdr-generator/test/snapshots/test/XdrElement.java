@@ -16,6 +16,7 @@ import org.stellar.sdk.Base64Factory;
 
 /** Common parent interface for all generated classes. */
 public interface XdrElement {
+  /** Shared Gson instance used by generated XDR classes for JSON serialization. */
   Gson gson =
       new GsonBuilder()
           .disableHtmlEscaping()
@@ -23,12 +24,30 @@ public interface XdrElement {
           .setObjectToNumberStrategy(ToNumberPolicy.BIG_DECIMAL)
           .create();
 
+  /**
+   * Encodes this value to XDR and writes it to the provided stream.
+   *
+   * @param stream the destination XDR output stream
+   * @throws IOException if an I/O error occurs while writing the value
+   */
   void encode(XdrDataOutputStream stream) throws IOException;
 
+  /**
+   * Encodes this value to XDR and returns the base64-encoded result.
+   *
+   * @return the base64-encoded XDR representation
+   * @throws IOException if an I/O error occurs while encoding the value
+   */
   default String toXdrBase64() throws IOException {
     return Base64Factory.getInstance().encodeToString(toXdrByteArray());
   }
 
+  /**
+   * Encodes this value to XDR and returns the raw bytes.
+   *
+   * @return the raw XDR byte representation
+   * @throws IOException if an I/O error occurs while encoding the value
+   */
   default byte[] toXdrByteArray() throws IOException {
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     XdrDataOutputStream xdrDataOutputStream = new XdrDataOutputStream(byteArrayOutputStream);
@@ -36,8 +55,19 @@ public interface XdrElement {
     return byteArrayOutputStream.toByteArray();
   }
 
+  /**
+   * Serializes this value to JSON.
+   *
+   * @return the JSON representation of this value
+   */
   String toJson();
 
+  /**
+   * Returns the lowercase hexadecimal representation of a byte array.
+   *
+   * @param bytes the bytes to encode
+   * @return the lowercase hexadecimal representation
+   */
   static String bytesToHex(byte[] bytes) {
     StringBuilder sb = new StringBuilder(bytes.length * 2);
     for (byte b : bytes) {
@@ -46,6 +76,13 @@ public interface XdrElement {
     return sb.toString();
   }
 
+  /**
+   * Decodes a hexadecimal string into bytes.
+   *
+   * @param hex the hexadecimal string to decode
+   * @return the decoded bytes
+   * @throws IllegalArgumentException if the input length is odd or contains non-hex characters
+   */
   static byte[] hexToBytes(String hex) {
     if (hex.length() % 2 != 0) {
       throw new IllegalArgumentException("Hex string must have an even length");
@@ -63,6 +100,12 @@ public interface XdrElement {
     return data;
   }
 
+  /**
+   * Converts a byte array to an escaped ASCII string suitable for JSON serialization.
+   *
+   * @param data the bytes to encode
+   * @return the escaped ASCII representation
+   */
   static String bytesToEscapedAscii(byte[] data) {
     StringBuilder sb = new StringBuilder();
     for (byte b : data) {
@@ -95,6 +138,13 @@ public interface XdrElement {
     return sb.toString();
   }
 
+  /**
+   * Decodes an escaped ASCII string produced by {@link #bytesToEscapedAscii(byte[])}.
+   *
+   * @param s the escaped ASCII string to decode
+   * @return the decoded bytes
+   * @throws IllegalArgumentException if the input contains invalid escape sequences or characters
+   */
   static byte[] escapedAsciiToBytes(String s) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     int i = 0;
@@ -155,6 +205,13 @@ public interface XdrElement {
     return out.toByteArray();
   }
 
+  /**
+   * Converts a JSON scalar into a Java {@code long}.
+   *
+   * @param json the JSON value to convert
+   * @return the converted {@code long} value
+   * @throws IllegalArgumentException if the JSON value is not a string or number
+   */
   static long jsonToLong(Object json) {
     if (json instanceof String) {
       return Long.parseLong((String) json);
@@ -168,6 +225,13 @@ public interface XdrElement {
     throw new IllegalArgumentException("Expected JSON string or number, got: " + json);
   }
 
+  /**
+   * Converts a JSON scalar into a {@link BigInteger}.
+   *
+   * @param json the JSON value to convert
+   * @return the converted {@link BigInteger} value
+   * @throws IllegalArgumentException if the JSON value is not a string or number
+   */
   static BigInteger jsonToBigInteger(Object json) {
     if (json instanceof String) {
       return new BigInteger((String) json);
@@ -181,6 +245,14 @@ public interface XdrElement {
     throw new IllegalArgumentException("Expected JSON string or number, got: " + json);
   }
 
+  /**
+   * Converts a Java array into a JSON array using the provided mapper.
+   *
+   * @param array the array to convert
+   * @param mapper maps each element index to a JSON-compatible value
+   * @param <T> the Java element type
+   * @return the converted JSON array
+   */
   @SuppressWarnings("unchecked")
   static <T> List<Object> arrayToJsonArray(T[] array, IntFunction<Object> mapper) {
     List<Object> list = new ArrayList<>(array.length);
@@ -190,6 +262,15 @@ public interface XdrElement {
     return list;
   }
 
+  /**
+   * Converts a JSON array into a Java array using the provided mapper.
+   *
+   * @param list the JSON array to convert
+   * @param clazz the Java array component type
+   * @param mapper maps each JSON value to the target Java type
+   * @param <T> the Java element type
+   * @return the converted Java array
+   */
   @SuppressWarnings("unchecked")
   static <T> T[] jsonArrayToArray(List<Object> list, Class<T> clazz, Function<Object, T> mapper) {
     T[] array = (T[]) Array.newInstance(clazz, list.size());

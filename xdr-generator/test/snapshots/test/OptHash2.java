@@ -26,6 +26,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OptHash2 implements XdrElement {
+  /**
+   * Value of the {@code optHash2} field.
+   *
+   * @param optHash2 the {@code optHash2} field value
+   * @return the {@code optHash2} field value
+   */
   private Hash optHash2;
   public void encode(XdrDataOutputStream stream) throws IOException {
     if (optHash2 != null) {

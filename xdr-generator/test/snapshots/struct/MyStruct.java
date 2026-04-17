@@ -35,10 +35,40 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class MyStruct implements XdrElement {
+  /**
+   * Value of the {@code someInt} field.
+   *
+   * @param someInt the {@code someInt} field value
+   * @return the {@code someInt} field value
+   */
   private Integer someInt;
+  /**
+   * Value of the {@code aBigInt} field.
+   *
+   * @param aBigInt the {@code aBigInt} field value
+   * @return the {@code aBigInt} field value
+   */
   private Int64 aBigInt;
+  /**
+   * Value of the {@code someOpaque} field.
+   *
+   * @param someOpaque the {@code someOpaque} field value
+   * @return the {@code someOpaque} field value
+   */
   private byte[] someOpaque;
+  /**
+   * Value of the {@code someString} field.
+   *
+   * @param someString the {@code someString} field value
+   * @return the {@code someString} field value
+   */
   private XdrString someString;
+  /**
+   * Value of the {@code maxString} field.
+   *
+   * @param maxString the {@code maxString} field value
+   * @return the {@code maxString} field value
+   */
   private XdrString maxString;
   public void encode(XdrDataOutputStream stream) throws IOException{
     stream.writeInt(someInt);

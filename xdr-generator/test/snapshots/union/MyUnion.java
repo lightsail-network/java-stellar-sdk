@@ -36,8 +36,26 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class MyUnion implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private UnionKey discriminant;
+  /**
+   * Value of the {@code error} field.
+   *
+   * @param error the {@code error} field value
+   * @return the {@code error} field value
+   */
   private Error error;
+  /**
+   * Value of the {@code things} field.
+   *
+   * @param things the {@code things} field value
+   * @return the {@code things} field value
+   */
   private Multi[] things;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

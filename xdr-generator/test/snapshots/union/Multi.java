@@ -26,6 +26,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Multi implements XdrElement {
+  /**
+   * Value of the {@code Multi} field.
+   *
+   * @param Multi the {@code Multi} field value
+   * @return the {@code Multi} field value
+   */
   private Integer Multi;
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(Multi);

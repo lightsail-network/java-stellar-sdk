@@ -26,6 +26,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestArray implements XdrElement {
+  /**
+   * Value of the {@code TestArray} field.
+   *
+   * @param TestArray the {@code TestArray} field value
+   * @return the {@code TestArray} field value
+   */
   private Integer[] TestArray;
   public void encode(XdrDataOutputStream stream) throws IOException {
     int TestArraySize = getTestArray().length;

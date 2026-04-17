@@ -31,6 +31,12 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LotsOfMyStructs implements XdrElement {
+  /**
+   * Value of the {@code members} field.
+   *
+   * @param members the {@code members} field value
+   * @return the {@code members} field value
+   */
   private MyStruct[] members;
   public void encode(XdrDataOutputStream stream) throws IOException{
     int membersSize = getMembers().length;

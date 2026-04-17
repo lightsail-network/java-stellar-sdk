@@ -31,6 +31,12 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class HasStuff implements XdrElement {
+  /**
+   * Value of the {@code data} field.
+   *
+   * @param data the {@code data} field value
+   * @return the {@code data} field value
+   */
   private LotsOfMyStructs data;
   public void encode(XdrDataOutputStream stream) throws IOException{
     data.encode(stream);

@@ -37,12 +37,54 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class MyStruct implements XdrElement {
+  /**
+   * Value of the {@code field1} field.
+   *
+   * @param field1 the {@code field1} field value
+   * @return the {@code field1} field value
+   */
   private Uint512 field1;
+  /**
+   * Value of the {@code field2} field.
+   *
+   * @param field2 the {@code field2} field value
+   * @return the {@code field2} field value
+   */
   private OptHash1 field2;
+  /**
+   * Value of the {@code field3} field.
+   *
+   * @param field3 the {@code field3} field value
+   * @return the {@code field3} field value
+   */
   private Int1 field3;
+  /**
+   * Value of the {@code field4} field.
+   *
+   * @param field4 the {@code field4} field value
+   * @return the {@code field4} field value
+   */
   private XdrUnsignedInteger field4;
+  /**
+   * Value of the {@code field5} field.
+   *
+   * @param field5 the {@code field5} field value
+   * @return the {@code field5} field value
+   */
   private Float field5;
+  /**
+   * Value of the {@code field6} field.
+   *
+   * @param field6 the {@code field6} field value
+   * @return the {@code field6} field value
+   */
   private Double field6;
+  /**
+   * Value of the {@code field7} field.
+   *
+   * @param field7 the {@code field7} field value
+   * @return the {@code field7} field value
+   */
   private Boolean field7;
   public void encode(XdrDataOutputStream stream) throws IOException{
     field1.encode(stream);
