@@ -4,11 +4,11 @@ plugins {
     id("signing")
     id("maven-publish")
     id("project-report")
-    id("com.diffplug.spotless") version "7.2.1"
-    id("com.github.ben-manes.versions") version "0.52.0"
-    id("io.freefair.lombok") version "8.14"
-    id("com.gradleup.nmcp.aggregation").version("1.0.2")
-    kotlin("jvm") version "2.2.0"
+    id("com.diffplug.spotless") version "8.4.0"
+    id("com.github.ben-manes.versions") version "0.54.0"
+    id("io.freefair.lombok") version "9.2.0"
+    id("com.gradleup.nmcp.aggregation").version("1.4.4")
+    kotlin("jvm") version "2.3.20"
 }
 
 group = "network.lightsail"
@@ -46,15 +46,15 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
     implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
-    implementation("com.google.code.gson:gson:2.13.1")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.81")
-    implementation("commons-codec:commons-codec:1.19.0")
+    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.84")
+    implementation("commons-codec:commons-codec:1.21.0")
 
     testImplementation(kotlin("stdlib"))
-    testImplementation("org.mockito:mockito-core:5.14.2")
+    testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.79")  // mock https
+    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.84")  // mock https
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
