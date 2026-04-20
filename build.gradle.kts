@@ -47,7 +47,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
     implementation("com.google.code.gson:gson:2.13.1")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.81")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.84")
     implementation("commons-codec:commons-codec:1.19.0")
 
     testImplementation(kotlin("stdlib"))
