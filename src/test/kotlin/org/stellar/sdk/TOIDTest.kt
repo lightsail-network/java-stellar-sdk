@@ -2,7 +2,7 @@ package org.stellar.sdk
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.datatest.withData
+import io.kotest.datatest.withTests
 import io.kotest.matchers.shouldBe
 
 class TOIDTest :
@@ -12,7 +12,7 @@ class TOIDTest :
     val opFirst = 1L
 
     context("test toInt64 and fromInt64") {
-      withData(
+      withTests(
         nameFn = { (toid, id) ->
           "TOID(${toid.ledgerSequence}, ${toid.transactionOrder}, ${toid.operationIndex}) should be $id"
         },

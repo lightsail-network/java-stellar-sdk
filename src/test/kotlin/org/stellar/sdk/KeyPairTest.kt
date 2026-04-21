@@ -2,7 +2,7 @@ package org.stellar.sdk
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.datatest.withData
+import io.kotest.datatest.withTests
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import java.util.Base64
@@ -36,7 +36,7 @@ class KeyPairTest :
           "gsYRSEQhTffqA9opPepAENCr2WG6z5iBHHubxxbRzWaHf8FBWcu",
         )
 
-      withData(
+      withTests(
         nameFn = { "should create keypair from secret seed ${it.first}" },
         testKeypairs.toList(),
       ) { (seed, expectedAccountId) ->
@@ -56,11 +56,11 @@ class KeyPairTest :
         newPair.accountId shouldBe original.accountId
       }
 
-      withData(nameFn = { "should throw for invalid seed: $it" }, invalidSeeds) { invalidSeed ->
+      withTests(nameFn = { "should throw for invalid seed: $it" }, invalidSeeds) { invalidSeed ->
         shouldThrow<IllegalArgumentException> { KeyPair.fromSecretSeed(invalidSeed) }
       }
 
-      withData(nameFn = { "should throw for invalid seed char array: $it" }, invalidSeeds) {
+      withTests(nameFn = { "should throw for invalid seed char array: $it" }, invalidSeeds) {
         invalidSeed ->
         shouldThrow<IllegalArgumentException> { KeyPair.fromSecretSeed(invalidSeed.toCharArray()) }
       }
@@ -79,7 +79,7 @@ class KeyPairTest :
           "gsYRSEQhTffqA9opPepAENCr2WG6z5iBHHubxxbRzWaHf8FBWcu",
         )
 
-      withData(nameFn = { "should create keypair from account ID $it" }, testKeypairs.values) {
+      withTests(nameFn = { "should create keypair from account ID $it" }, testKeypairs.values) {
         accountId ->
         val keypair = KeyPair.fromAccountId(accountId)
 
@@ -87,7 +87,7 @@ class KeyPairTest :
         keypair.accountId shouldBe accountId
       }
 
-      withData(nameFn = { "should throw for invalid account ID: $it" }, invalidAccountIds) {
+      withTests(nameFn = { "should throw for invalid account ID: $it" }, invalidAccountIds) {
         invalidAccountId ->
         shouldThrow<IllegalArgumentException> { KeyPair.fromAccountId(invalidAccountId) }
       }
@@ -220,7 +220,7 @@ class KeyPairTest :
 
       data class MessageTestCase(val input: List<Byte>, val expectedSigHex: String)
 
-      withData(
+      withTests(
         nameFn = { case -> "should sign and verify message: ${case.input}" },
         listOf(
           MessageTestCase(
@@ -243,7 +243,7 @@ class KeyPairTest :
         messageKeypair.verifyMessage(inputAsByteArray, expectedSig) shouldBe true
       }
 
-      withData(
+      withTests(
         nameFn = { "should fail message verification with invalid signature: $it" },
         listOf(
           "540d7eee179f370bf634a49c1fa9fe4a58e3d7990b0207be336c04edfcc539ff8bd0c31bb2c0359b07c9651cb2ae104e4504657b5d17d43c69c7e50e23811b0d",
@@ -317,7 +317,7 @@ class KeyPairTest :
             "SBPAJWWJJMPPOY2R726MFC7XHT4WXMJ2YCML6EB46UJZC5SIHCTLETT4",
         )
 
-      withData(
+      withTests(
         nameFn = { (index, account, _) ->
           "should create keypair from BIP39 seed for account $index: $account"
         },

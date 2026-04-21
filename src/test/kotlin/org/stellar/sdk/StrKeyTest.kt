@@ -2,7 +2,7 @@ package org.stellar.sdk
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.datatest.withData
+import io.kotest.datatest.withTests
 import io.kotest.matchers.shouldBe
 
 class StrKeyTest :
@@ -17,7 +17,7 @@ class StrKeyTest :
       }
 
       context("is valid") {
-        withData(
+        withTests(
           nameFn = { "should be true for $it" },
           "GBBM6BKZPEHWYO3E3YKREDPQXMS4VK35YLNU7NFBRI26RAN7GI5POFBB",
           "GB7KKHHVYLDIZEKYJPAJUOTBE5E3NJAXPSDZK7O6O44WR3EBRO5HRPVT",
@@ -33,7 +33,7 @@ class StrKeyTest :
           StrKey.isValidEd25519PublicKey(publicKey) shouldBe true
         }
 
-        withData(
+        withTests(
           nameFn = { "should be false for $it" },
           "GA3D5KRYM6CB7OWOOOORR3Z4T7GNZLKERYNZGGA5SOAOPIFY6YQHES5", // corrupted payload
           "GBPXX0A5N4JYPESHAADMQKBPWZWQDQ64ZV6ZL2S3LAGW4SY7NTCMWIVL", // wrong checksum
@@ -63,7 +63,7 @@ class StrKeyTest :
       }
 
       context("should validate valid seeds") {
-        withData(
+        withTests(
           nameFn = { "should be true for $it" },
           "SAB5556L5AN5KSR5WF7UOEFDCIODEWEO7H2UR4S5R62DFTQOGLKOVZDY",
           "SCZTUEKSEH2VYZQC6VLOTOM4ZDLMAGV4LUMH4AASZ4ORF27V2X64F2S2",
@@ -77,7 +77,7 @@ class StrKeyTest :
       }
 
       context("should reject invalid seeds") {
-        withData(
+        withTests(
           nameFn = { "should be false for $it" },
           "GBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5TWUC", // wrong version
           "SAB5556L5AN5KSR5WF7UOEFDCIODEWEO7H2UR4S5R62DFTQOGLKOVZDYT", // too long
@@ -249,7 +249,7 @@ class StrKeyTest :
             "PBJCHUKZMTFSLOMNC7P4TS4VJJBTCYL3XKSOLXAUJSD56C4LHND5SAAAAAAQMAAAADDCO"
           ) shouldBe true
         }
-        withData(
+        withTests(
           nameFn = { "should be false for $it" },
           "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAQACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB6IAAAAAAAAPM",
           "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4Z2PQ",
@@ -339,7 +339,7 @@ class StrKeyTest :
 
     context("should reject all invalid StrKey cases") {
       // https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md
-      withData(
+      withTests(
         nameFn = { "should throw IllegalArgumentException for $it" },
         "GAAAAAAAACGC6",
         "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAACJUR",
@@ -412,7 +412,7 @@ class StrKeyTest :
       )
 
       context("round trip consistency") {
-        withData(
+        withTests(
           nameFn = { "should handle ${it.description}" },
           MuxedAccountTestCase(
             "ID = 0",
@@ -473,7 +473,7 @@ class StrKeyTest :
       }
 
       context("error handling") {
-        withData(
+        withTests(
           nameFn = { "should throw for ${it.first}" },
           Pair("too short bytes (39)", 39),
           Pair("too long bytes (41)", 41),

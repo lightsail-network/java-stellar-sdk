@@ -6,7 +6,7 @@ plugins {
     id("project-report")
     id("com.diffplug.spotless") version "8.4.0"
     id("com.github.ben-manes.versions") version "0.54.0"
-    id("io.freefair.lombok") version "9.2.0"
+    id("io.freefair.lombok") version "9.4.0"
     id("com.gradleup.nmcp").version("1.4.4")
     kotlin("jvm") version "2.3.20"
 }
@@ -60,9 +60,8 @@ dependencies {
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
-    testImplementation("io.kotest:kotest-assertions-core:5.9.1")
-    testImplementation("io.kotest:kotest-framework-datatest:5.9.1")
+    testImplementation("io.kotest:kotest-runner-junit5:6.1.11")
+    testImplementation("io.kotest:kotest-assertions-core:6.1.11")
 }
 
 tasks {
