@@ -16,12 +16,14 @@ version = "2.2.3"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
+        // Tests and Kotlin compilation use JDK 21. The published SDK jar
+        // still targets JDK 8 bytecode via `options.release = 8` below.
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(21)
 }
 
 repositories {
@@ -145,6 +147,7 @@ tasks {
 
     compileJava {
         options.encoding = "UTF-8"
+        options.release = 8
     }
 
     compileTestJava {
