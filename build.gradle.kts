@@ -7,7 +7,7 @@ plugins {
     id("com.diffplug.spotless") version "8.4.0"
     id("com.github.ben-manes.versions") version "0.54.0"
     id("io.freefair.lombok") version "9.2.0"
-    id("com.gradleup.nmcp.aggregation").version("1.4.4")
+    id("com.gradleup.nmcp").version("1.4.4")
     kotlin("jvm") version "2.3.20"
 }
 
@@ -210,8 +210,8 @@ signing {
     sign(publishing.publications["mavenJava"])
 }
 
-nmcpAggregation {
-    centralPortal {
+nmcp {
+    publishAllPublicationsToCentralPortal {
         username = System.getenv("SONATYPE_USERNAME")
         password = System.getenv("SONATYPE_PASSWORD")
         // publish manually from the portal
@@ -219,7 +219,4 @@ nmcpAggregation {
         // or if you want to publish automatically
         // publishingType = "AUTOMATIC"
     }
-
-    // Publish all projects that apply the 'maven-publish' plugin
-    publishAllProjectsProbablyBreakingProjectIsolation()
 }
