@@ -1,7 +1,7 @@
 package org.stellar.sdk
 
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.datatest.withData
+import io.kotest.datatest.withTests
 import io.kotest.matchers.shouldBe
 
 data class PriceTestCase(
@@ -13,7 +13,7 @@ data class PriceTestCase(
 class PriceTest :
   FunSpec({
     context("Price.fromString()") {
-      withData(
+      withTests(
         nameFn = {
           "should parse '${it.input}' to ${it.expectedNumerator}/${it.expectedDenominator}"
         },
