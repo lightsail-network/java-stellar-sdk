@@ -7,7 +7,7 @@ plugins {
     id("com.diffplug.spotless") version "8.4.0"
     id("com.github.ben-manes.versions") version "0.54.0"
     id("io.freefair.lombok") version "9.2.0"
-    id("com.gradleup.nmcp.aggregation").version("1.4.4")
+    id("com.gradleup.nmcp").version("1.4.4")
     kotlin("jvm") version "2.3.20"
 }
 
@@ -24,6 +24,10 @@ kotlin {
     jvmToolchain(8)
 }
 
+repositories {
+    mavenCentral()
+}
+
 spotless {
     java {
         importOrder("java", "javax", "org.stellar")
@@ -34,10 +38,6 @@ spotless {
         target("src/test/kotlin/**/*.kt")
         ktfmt("0.56").googleStyle()
     }
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -78,12 +78,12 @@ tasks {
         dependsOn(testClasses)
     }
 
-    val sourcesJar by creating(Jar::class) {
+    val sourcesJar by registering(Jar::class) {
         archiveClassifier = "sources"
         from(sourceSets.main.get().allSource)
     }
 
-    val uberJar by creating(Jar::class) {
+    val uberJar by registering(Jar::class) {
         // https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_exampl
         archiveClassifier = "uber"
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -107,7 +107,7 @@ tasks {
         }
     }
 
-    val javadocJar by creating(Jar::class) {
+    val javadocJar by registering(Jar::class) {
         archiveClassifier = "javadoc"
         dependsOn(javadoc)
         from(javadoc.get().destinationDir) // It needs to be placed after the javadoc task, otherwise it cannot read the path we set.
@@ -139,6 +139,10 @@ tasks {
         dependsOn(jacocoTestReport)
     }
 
+    assemble {
+        dependsOn(sourcesJar, uberJar, javadocJar)
+    }
+
     compileJava {
         options.encoding = "UTF-8"
     }
@@ -146,13 +150,6 @@ tasks {
     compileTestJava {
         options.encoding = "UTF-8"
     }
-}
-
-artifacts {
-    archives(tasks.jar)
-    archives(tasks["uberJar"])
-    archives(tasks["javadocJar"])
-    archives(tasks["sourcesJar"])
 }
 
 publishing {
@@ -213,8 +210,8 @@ signing {
     sign(publishing.publications["mavenJava"])
 }
 
-nmcpAggregation {
-    centralPortal {
+nmcp {
+    publishAllPublicationsToCentralPortal {
         username = System.getenv("SONATYPE_USERNAME")
         password = System.getenv("SONATYPE_PASSWORD")
         // publish manually from the portal
@@ -222,7 +219,4 @@ nmcpAggregation {
         // or if you want to publish automatically
         // publishingType = "AUTOMATIC"
     }
-
-    // Publish all projects that apply the 'maven-publish' plugin
-    publishAllProjectsProbablyBreakingProjectIsolation()
 }
