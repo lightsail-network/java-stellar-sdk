@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "network.lightsail"
-version = "3.0.0-beta1"
+version = "3.0.0"
 
 java {
     toolchain {
