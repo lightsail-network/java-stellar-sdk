@@ -2,6 +2,23 @@
 
 ## Pending
 
+## 3.0.0
+
+This release contains the exact same content as 3.0.0-beta1. Below is the changelog since 2.2.3.
+
+### Update
+- fix: use OkHttp's public SSE factory for Horizon streams and force SSE requests to bypass caches. ([#791](https://github.com/lightsail-network/java-stellar-sdk/pull/791))
+- feat: sort `ScMap` entries by key in `Scv.toMap` following Soroban runtime ordering rules, as the network requires `ScMap` keys to be in ascending order. `Scv.toMap` now accepts `Map<SCVal, SCVal>`; the previous `toMap(LinkedHashMap<SCVal, SCVal>)` overload is deprecated. ([#766](https://github.com/lightsail-network/java-stellar-sdk/pull/766))
+- feat: add SEP-0051 support. ([#774](https://github.com/lightsail-network/java-stellar-sdk/pull/774))
+- feat: add `closeTime`, `headerXdr`, and `metadataXdr` to `GetLatestLedgerResponse`. ([#768](https://github.com/lightsail-network/java-stellar-sdk/pull/768))
+- chore: update various dependencies to the latest compatible versions. ([#786](https://github.com/lightsail-network/java-stellar-sdk/pull/786), [#790](https://github.com/lightsail-network/java-stellar-sdk/pull/790))
+- docs: add more detailed API and XDR generator documentation. ([#783](https://github.com/lightsail-network/java-stellar-sdk/pull/783), [#784](https://github.com/lightsail-network/java-stellar-sdk/pull/784))
+- chore: building the project from source now requires JDK 21 and Gradle 9.4.1. Published SDK artifacts still target Java 8 bytecode. ([#788](https://github.com/lightsail-network/java-stellar-sdk/pull/788), [#789](https://github.com/lightsail-network/java-stellar-sdk/pull/789))
+- chore: bump generated XDR definitions to `stellar-xdr` v26.0, including the v25.0 changes introduced earlier in this release cycle. ([#769](https://github.com/lightsail-network/java-stellar-sdk/pull/769), [#781](https://github.com/lightsail-network/java-stellar-sdk/pull/781))
+
+### Breaking changes
+- refactor!: remove deprecated `StrKey` helpers `encodeEd25519PublicKey(AccountID)`, `encodeMuxedAccount(MuxedAccount)`, `decodeMuxedAccount(String)`, `encodeToXDRAccountId(String)`, and `encodeToXDRMuxedAccount(String)`; use `StrKey.encodeEd25519PublicKey(byte[])`, `org.stellar.sdk.MuxedAccount`, and `KeyPair#getXdrAccountId()` instead. ([#779](https://github.com/lightsail-network/java-stellar-sdk/pull/779))
+
 ## 3.0.0-beta1
 
 ### Update
