@@ -2,6 +2,11 @@
 
 ## Pending
 
+## 3.0.0-beta1
+
+### Update
+- chore: re-release of `3.0.0-beta0`; no SDK changes. The prior tag failed to reach Maven Central because the release workflow still invoked the old `publishAggregationToCentralPortal` task name after the nmcp plugin switch.
+
 ## 3.0.0-beta0
 
 ### Update
