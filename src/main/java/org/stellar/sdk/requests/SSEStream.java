@@ -9,13 +9,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import okhttp3.CacheControl;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.internal.sse.RealEventSource;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
+import okhttp3.sse.EventSources;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.Util;
@@ -77,6 +78,9 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
 
     executorService.scheduleWithFixedDelay(
         () -> {
+          // This timeout is driven by EventSourceListener#onEvent. With the public OkHttp SSE API
+          // that means only parsed SSE data events refresh liveness; comment-only keepalive frames
+          // are not surfaced here and may still lead to reconnects if no business events arrive.
           if (System.currentTimeMillis() - latestEventTime.get() > reconnectTimeout) {
             latestEventTime.set(System.currentTimeMillis());
             isClosed.compareAndSet(false, true);
@@ -168,19 +172,17 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     Request.Builder builder =
         new Request.Builder()
             .url(addIdentificationQueryParameter(url))
-            .header("Accept", "text/event-stream");
+            .cacheControl(CacheControl.FORCE_NETWORK);
     String lastEventId = stream.lastEventId.get();
     if (lastEventId != null) {
       builder.header("Last-Event-ID", lastEventId);
     }
     Request request = builder.build();
-    RealEventSource eventSource =
-        new RealEventSource(
+    return EventSources.createFactory(okHttpClient)
+        .newEventSource(
             request,
             new StellarEventSourceListener<>(
                 stream, closeListener, responseClass, requestBuilder, listener, listenerId));
-    eventSource.connect(okHttpClient);
-    return eventSource;
   }
 
   private interface CloseListener {
@@ -257,7 +259,8 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
       if (stream.isStopped.get() || listenerId != stream.currentListenerId.get()) {
         return;
       }
-      // Update the timestamp of the last received event.
+      // Treat actual SSE data events as activity. Comment frames are handled internally by OkHttp
+      // and do not reach this callback, so they do not extend the reconnect timeout.
       stream.latestEventTime.set(System.currentTimeMillis());
 
       if (data.equals("\"hello\"") || data.equals("\"byebye\"")) {
