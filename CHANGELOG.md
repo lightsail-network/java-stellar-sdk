@@ -1,6 +1,7 @@
 # Changelog
 
 ## Pending
+- fix: use OkHttp's public SSE factory for Horizon streams and force SSE requests to bypass caches.
 - feat: sort `ScMap` entries by key in `Scv.toMap` following Soroban runtime ordering rules, as the network requires ScMap keys to be in ascending order. `Scv.toMap` now accepts `Map<SCVal, SCVal>`; the previous `toMap(LinkedHashMap<SCVal, SCVal>)` overload is deprecated. ([#766](https://github.com/lightsail-network/java-stellar-sdk/pull/766))
 - feat: add SEP-0051 support. ([#776](https://github.com/lightsail-network/java-stellar-sdk/pull/776))
 - feat: add `closeTime`, `headerXdr`, and `metadataXdr` to `GetLatestLedgerResponse`. ([#768](https://github.com/lightsail-network/java-stellar-sdk/pull/768))
