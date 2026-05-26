@@ -723,8 +723,8 @@ public class SorobanServer implements Closeable {
    *     been archived.
    * @throws ContractWasmRetrievalException If the RPC response contains unexpected ledger entry
    *     data.
-   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkException
+   * @throws org.stellar.sdk.exception.NetworkException The following three exceptions are
+   *     subclasses of NetworkException, thrown on RPC or transport failures.
    * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
@@ -805,8 +805,8 @@ public class SorobanServer implements Closeable {
    *     been archived.
    * @throws ContractWasmRetrievalException If the RPC response contains unexpected ledger entry
    *     data.
-   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
-   *     NetworkException
+   * @throws org.stellar.sdk.exception.NetworkException The following three exceptions are
+   *     subclasses of NetworkException, thrown on RPC or transport failures.
    * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
    * @throws RequestTimeoutException If the request timed out.
    * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
