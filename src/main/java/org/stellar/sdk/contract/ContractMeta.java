@@ -27,6 +27,10 @@ import org.stellar.sdk.xdr.SCMetaV0;
  * {@link SCMetaEntry} values, decode from contract Wasm bytes via {@link #fromWasm(byte[])}, or
  * decode from a SEP-0046 XDR stream via {@link #fromXdrBytes(byte[])}.
  *
+ * <p>This wrapper is shallow immutable: the entry list cannot be modified, but the contained {@link
+ * SCMetaEntry} objects are the underlying mutable XDR types. Do not mutate them after construction;
+ * doing so also affects {@link #equals(Object)}, {@link #hashCode()}, and the decoded views.
+ *
  * @see <a
  *     href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0046.md">SEP-0046</a>
  * @see <a

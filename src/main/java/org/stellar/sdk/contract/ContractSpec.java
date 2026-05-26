@@ -28,27 +28,26 @@ import org.stellar.sdk.xdr.XdrString;
  * Represents a SEP-0048 contract interface specification.
  *
  * <p>Entries are stored in module order and exposed as an unmodifiable list. The classified views
- * ({@link #getFunctions()}, {@link #getEvents()}, etc.) are computed once at construction.
- * Construct with raw {@link SCSpecEntry} values, decode from contract Wasm bytes via {@link
- * #fromWasm(byte[])}, or decode from a SEP-0048 XDR stream via {@link #fromXdrBytes(byte[])}.
+ * ({@link #getFunctions()}, {@link #getEvents()}, etc.) are derived from {@link #getEntries()} on
+ * each call. Construct with raw {@link SCSpecEntry} values, decode from contract Wasm bytes via
+ * {@link #fromWasm(byte[])}, or decode from a SEP-0048 XDR stream via {@link
+ * #fromXdrBytes(byte[])}.
  *
  * <p>SEP-0048 does not require entry names to be unique, so the {@code getFunction}/{@code
  * getEvent}/{@code getUdt} lookups return the first matching entry in module order.
+ *
+ * <p>This wrapper is shallow immutable: the entry list cannot be modified, but the contained {@link
+ * SCSpecEntry} objects are the underlying mutable XDR types. Do not mutate them after construction;
+ * doing so also affects {@link #equals(Object)}, {@link #hashCode()}, and the classified views.
  *
  * @see <a
  *     href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0048.md">SEP-0048</a>
  */
 @Getter
-@EqualsAndHashCode(of = "entries")
-@ToString(of = "entries")
+@EqualsAndHashCode
+@ToString
 public final class ContractSpec {
   private final List<SCSpecEntry> entries;
-  private final List<SCSpecFunctionV0> functions;
-  private final List<SCSpecEventV0> events;
-  private final List<SCSpecUDTStructV0> structs;
-  private final List<SCSpecUDTUnionV0> unions;
-  private final List<SCSpecUDTEnumV0> enums;
-  private final List<SCSpecUDTErrorEnumV0> errorEnums;
 
   public ContractSpec() {
     this(Collections.emptyList());
@@ -66,29 +65,34 @@ public final class ContractSpec {
       copy.add(entry);
     }
     this.entries = Collections.unmodifiableList(copy);
-    this.functions =
-        classify(
-            this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_FUNCTION_V0, SCSpecEntry::getFunctionV0);
-    this.events =
-        classify(this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_EVENT_V0, SCSpecEntry::getEventV0);
-    this.structs =
-        classify(
-            this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_UDT_STRUCT_V0, SCSpecEntry::getUdtStructV0);
-    this.unions =
-        classify(
-            this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_UDT_UNION_V0, SCSpecEntry::getUdtUnionV0);
-    this.enums =
-        classify(
-            this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ENUM_V0, SCSpecEntry::getUdtEnumV0);
-    this.errorEnums =
-        classify(
-            this.entries,
-            SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0,
-            SCSpecEntry::getUdtErrorEnumV0);
   }
 
-  private static <T> List<T> classify(
-      List<SCSpecEntry> entries, SCSpecEntryKind kind, Function<SCSpecEntry, T> extractor) {
+  public List<SCSpecFunctionV0> getFunctions() {
+    return classify(SCSpecEntryKind.SC_SPEC_ENTRY_FUNCTION_V0, SCSpecEntry::getFunctionV0);
+  }
+
+  public List<SCSpecEventV0> getEvents() {
+    return classify(SCSpecEntryKind.SC_SPEC_ENTRY_EVENT_V0, SCSpecEntry::getEventV0);
+  }
+
+  public List<SCSpecUDTStructV0> getStructs() {
+    return classify(SCSpecEntryKind.SC_SPEC_ENTRY_UDT_STRUCT_V0, SCSpecEntry::getUdtStructV0);
+  }
+
+  public List<SCSpecUDTUnionV0> getUnions() {
+    return classify(SCSpecEntryKind.SC_SPEC_ENTRY_UDT_UNION_V0, SCSpecEntry::getUdtUnionV0);
+  }
+
+  public List<SCSpecUDTEnumV0> getEnums() {
+    return classify(SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ENUM_V0, SCSpecEntry::getUdtEnumV0);
+  }
+
+  public List<SCSpecUDTErrorEnumV0> getErrorEnums() {
+    return classify(
+        SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0, SCSpecEntry::getUdtErrorEnumV0);
+  }
+
+  private <T> List<T> classify(SCSpecEntryKind kind, Function<SCSpecEntry, T> extractor) {
     List<T> result = new ArrayList<>();
     for (SCSpecEntry entry : entries) {
       if (entry.getDiscriminant() == kind) {
