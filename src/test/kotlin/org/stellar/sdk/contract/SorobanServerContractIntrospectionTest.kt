@@ -333,7 +333,7 @@ class SorobanServerContractIntrospectionTest :
 
       newServer().use { server ->
         val info = server.getContractInfo(CONTRACT_ID)
-        info.meta.supportedSeps() shouldBe listOf(41, 40)
+        info.meta.supportedSeps() shouldBe setOf(41, 40)
         info.spec.entries.isEmpty() shouldBe true
       }
     }

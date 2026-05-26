@@ -68,24 +68,26 @@ class ContractMetaTest :
 
     test("supportedSeps parses comma-separated") {
       val meta = ContractMeta.fromWasm(wasmWith(meta("sep", "41,40")))
-      meta.supportedSeps() shouldBe listOf(41, 40)
+      meta.supportedSeps() shouldBe setOf(41, 40)
       meta.implementsSep(40) shouldBe true
       meta.implementsSep(42) shouldBe false
     }
 
-    test("supportedSeps merges multiple entries") {
+    test("supportedSeps merges multiple entries and preserves first-seen order") {
       val meta = ContractMeta.fromWasm(wasmWith(meta("sep", "41"), meta("sep", "40,46")))
-      meta.supportedSeps() shouldBe listOf(41, 40, 46)
+      meta.supportedSeps() shouldBe setOf(41, 40, 46)
+      // Iteration order is deterministic (first-seen), though SEP-0047 assigns it no meaning.
+      meta.supportedSeps().toList() shouldBe listOf(41, 40, 46)
     }
 
     test("supportedSeps accepts leading zeros and deduplicates") {
       val meta = ContractMeta.fromWasm(wasmWith(meta("sep", "041"), meta("sep", "41,41,40")))
-      meta.supportedSeps() shouldBe listOf(41, 40)
+      meta.supportedSeps() shouldBe setOf(41, 40)
     }
 
     test("supportedSeps skips invalid by default") {
       val meta = ContractMeta.fromWasm(wasmWith(meta("sep", "41, ,abc,40")))
-      meta.supportedSeps() shouldBe listOf(41, 40)
+      meta.supportedSeps() shouldBe setOf(41, 40)
     }
 
     test("supportedSeps rejects invalid in strict mode") {
@@ -126,5 +128,24 @@ class ContractMetaTest :
 
     test("constructor rejects null elements") {
       shouldThrow<IllegalArgumentException> { ContractMeta(listOf(meta("k", "v"), null)) }
+    }
+
+    // SEP-0046: "entries should not span sections". Splitting a single SCMetaEntry across two
+    // contractmetav0 sections must be rejected, because each section is decoded as a
+    // self-contained stream rather than the bytes being concatenated first.
+    test("entries must not span sections") {
+      val entryBytes = XdrStreams.serializeScMetaEntries(listOf(meta("rsver", "1.78.0")))
+      val split = entryBytes.size / 2
+      val firstHalf = entryBytes.copyOfRange(0, split)
+      val secondHalf = entryBytes.copyOfRange(split, entryBytes.size)
+      val wasm =
+        ByteArrayOutputStream()
+          .apply {
+            write(WasmTestSupport.WASM_HEADER)
+            write(WasmTestSupport.buildCustomSection("contractmetav0", firstHalf))
+            write(WasmTestSupport.buildCustomSection("contractmetav0", secondHalf))
+          }
+          .toByteArray()
+      shouldThrow<InvalidWasmException> { ContractMeta.fromWasm(wasm) }
     }
   })

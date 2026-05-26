@@ -1,9 +1,6 @@
 package org.stellar.sdk.contract;
 
 import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,7 +72,7 @@ final class WasmCustomSections {
               "Invalid Wasm custom section: name extends past section end.");
         }
         int nameEnd = (int) nameEndLong;
-        String name = decodeUtf8Strict(wasm, nameStart, nameEnd - nameStart);
+        String name = decodeSectionName(Arrays.copyOfRange(wasm, nameStart, nameEnd));
         byte[] payload = Arrays.copyOfRange(wasm, nameEnd, sectionEnd);
         sections.add(new AbstractMap.SimpleImmutableEntry<>(name, payload));
       }
@@ -134,14 +131,9 @@ final class WasmCustomSections {
     throw new InvalidWasmException("Invalid Wasm module: LEB128 value is too long.");
   }
 
-  private static String decodeUtf8Strict(byte[] data, int offset, int length) {
-    CharsetDecoder decoder =
-        StandardCharsets.UTF_8
-            .newDecoder()
-            .onMalformedInput(CodingErrorAction.REPORT)
-            .onUnmappableCharacter(CodingErrorAction.REPORT);
+  private static String decodeSectionName(byte[] data) {
     try {
-      return decoder.decode(java.nio.ByteBuffer.wrap(data, offset, length)).toString();
+      return Utf8.strictDecode(data);
     } catch (CharacterCodingException e) {
       throw new InvalidWasmException("Invalid Wasm custom section: name is not UTF-8.", e);
     }

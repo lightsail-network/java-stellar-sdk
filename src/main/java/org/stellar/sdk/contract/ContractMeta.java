@@ -2,16 +2,12 @@ package org.stellar.sdk.contract;
 
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,7 +35,7 @@ import org.stellar.sdk.xdr.SCMetaV0;
 @Getter
 @EqualsAndHashCode
 @ToString
-public final class ContractMeta implements Iterable<SCMetaEntry> {
+public final class ContractMeta {
   private final List<SCMetaEntry> entries;
 
   public ContractMeta() {
@@ -157,10 +153,15 @@ public final class ContractMeta implements Iterable<SCMetaEntry> {
   }
 
   /**
-   * Returns SEP-0047 SEP identifiers declared via {@code sep} metadata entries. Values are returned
-   * in first-seen order with duplicates removed. Invalid identifiers are skipped.
+   * Returns SEP-0047 SEP identifiers declared via {@code sep} metadata entries. Invalid identifiers
+   * are skipped.
+   *
+   * <p>SEP-0047 treats the declared identifiers as an unordered set: the value "may be in any
+   * order" and the same identifier may be repeated across entries. The returned set is
+   * de-duplicated; its iteration order is the first-seen order purely for deterministic output and
+   * carries no meaning.
    */
-  public List<Integer> supportedSeps() {
+  public Set<Integer> supportedSeps() {
     return supportedSeps(false);
   }
 
@@ -172,9 +173,8 @@ public final class ContractMeta implements Iterable<SCMetaEntry> {
    * @throws IllegalArgumentException if {@code strict} is true and an identifier is invalid
    * @throws InvalidWasmException if a key or value is not valid UTF-8
    */
-  public List<Integer> supportedSeps(boolean strict) {
-    Set<Integer> seen = new HashSet<>();
-    List<Integer> supported = new ArrayList<>();
+  public Set<Integer> supportedSeps(boolean strict) {
+    Set<Integer> supported = new LinkedHashSet<>();
     for (String value : getAll("sep")) {
       for (String rawPart : value.split(",", -1)) {
         String sep = rawPart.trim();
@@ -190,21 +190,16 @@ public final class ContractMeta implements Iterable<SCMetaEntry> {
           }
           continue;
         }
-        int sepNumber;
         try {
-          sepNumber = Integer.parseInt(sep);
+          supported.add(Integer.parseInt(sep));
         } catch (NumberFormatException e) {
           if (strict) {
             throw new IllegalArgumentException("Invalid SEP identifier: '" + sep + "'.", e);
           }
-          continue;
-        }
-        if (seen.add(sepNumber)) {
-          supported.add(sepNumber);
         }
       }
     }
-    return Collections.unmodifiableList(supported);
+    return Collections.unmodifiableSet(supported);
   }
 
   /** Returns whether the contract declares support for {@code sep} via SEP-0047. */
@@ -212,19 +207,9 @@ public final class ContractMeta implements Iterable<SCMetaEntry> {
     return supportedSeps().contains(sep);
   }
 
-  @Override
-  public Iterator<SCMetaEntry> iterator() {
-    return entries.iterator();
-  }
-
   private static String decodeMetaString(byte[] data) {
-    CharsetDecoder decoder =
-        StandardCharsets.UTF_8
-            .newDecoder()
-            .onMalformedInput(CodingErrorAction.REPORT)
-            .onUnmappableCharacter(CodingErrorAction.REPORT);
     try {
-      return decoder.decode(java.nio.ByteBuffer.wrap(data)).toString();
+      return Utf8.strictDecode(data);
     } catch (CharacterCodingException e) {
       throw new InvalidWasmException("Contract meta contains a non-UTF-8 string.", e);
     }

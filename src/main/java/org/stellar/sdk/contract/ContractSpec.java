@@ -2,16 +2,13 @@ package org.stellar.sdk.contract;
 
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -30,18 +27,28 @@ import org.stellar.sdk.xdr.XdrString;
 /**
  * Represents a SEP-0048 contract interface specification.
  *
- * <p>Entries are stored in module order and exposed as an unmodifiable list. Construct with raw
- * {@link SCSpecEntry} values, decode from contract Wasm bytes via {@link #fromWasm(byte[])}, or
- * decode from a SEP-0048 XDR stream via {@link #fromXdrBytes(byte[])}.
+ * <p>Entries are stored in module order and exposed as an unmodifiable list. The classified views
+ * ({@link #getFunctions()}, {@link #getEvents()}, etc.) are computed once at construction.
+ * Construct with raw {@link SCSpecEntry} values, decode from contract Wasm bytes via {@link
+ * #fromWasm(byte[])}, or decode from a SEP-0048 XDR stream via {@link #fromXdrBytes(byte[])}.
+ *
+ * <p>SEP-0048 does not require entry names to be unique, so the {@code getFunction}/{@code
+ * getEvent}/{@code getUdt} lookups return the first matching entry in module order.
  *
  * @see <a
  *     href="https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0048.md">SEP-0048</a>
  */
 @Getter
-@EqualsAndHashCode
-@ToString
-public final class ContractSpec implements Iterable<SCSpecEntry> {
+@EqualsAndHashCode(of = "entries")
+@ToString(of = "entries")
+public final class ContractSpec {
   private final List<SCSpecEntry> entries;
+  private final List<SCSpecFunctionV0> functions;
+  private final List<SCSpecEventV0> events;
+  private final List<SCSpecUDTStructV0> structs;
+  private final List<SCSpecUDTUnionV0> unions;
+  private final List<SCSpecUDTEnumV0> enums;
+  private final List<SCSpecUDTErrorEnumV0> errorEnums;
 
   public ContractSpec() {
     this(Collections.emptyList());
@@ -59,6 +66,39 @@ public final class ContractSpec implements Iterable<SCSpecEntry> {
       copy.add(entry);
     }
     this.entries = Collections.unmodifiableList(copy);
+    this.functions =
+        classify(
+            this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_FUNCTION_V0, SCSpecEntry::getFunctionV0);
+    this.events =
+        classify(this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_EVENT_V0, SCSpecEntry::getEventV0);
+    this.structs =
+        classify(
+            this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_UDT_STRUCT_V0, SCSpecEntry::getUdtStructV0);
+    this.unions =
+        classify(
+            this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_UDT_UNION_V0, SCSpecEntry::getUdtUnionV0);
+    this.enums =
+        classify(
+            this.entries, SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ENUM_V0, SCSpecEntry::getUdtEnumV0);
+    this.errorEnums =
+        classify(
+            this.entries,
+            SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0,
+            SCSpecEntry::getUdtErrorEnumV0);
+  }
+
+  private static <T> List<T> classify(
+      List<SCSpecEntry> entries, SCSpecEntryKind kind, Function<SCSpecEntry, T> extractor) {
+    List<T> result = new ArrayList<>();
+    for (SCSpecEntry entry : entries) {
+      if (entry.getDiscriminant() == kind) {
+        T value = extractor.apply(entry);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return Collections.unmodifiableList(result);
   }
 
   /**
@@ -110,74 +150,9 @@ public final class ContractSpec implements Iterable<SCSpecEntry> {
     return XdrStreams.serializeScSpecEntries(entries);
   }
 
-  public List<SCSpecFunctionV0> getFunctions() {
-    List<SCSpecFunctionV0> functions = new ArrayList<>();
-    for (SCSpecEntry entry : entries) {
-      if (entry.getDiscriminant() == SCSpecEntryKind.SC_SPEC_ENTRY_FUNCTION_V0
-          && entry.getFunctionV0() != null) {
-        functions.add(entry.getFunctionV0());
-      }
-    }
-    return Collections.unmodifiableList(functions);
-  }
-
-  public List<SCSpecEventV0> getEvents() {
-    List<SCSpecEventV0> events = new ArrayList<>();
-    for (SCSpecEntry entry : entries) {
-      if (entry.getDiscriminant() == SCSpecEntryKind.SC_SPEC_ENTRY_EVENT_V0
-          && entry.getEventV0() != null) {
-        events.add(entry.getEventV0());
-      }
-    }
-    return Collections.unmodifiableList(events);
-  }
-
-  public List<SCSpecUDTStructV0> getStructs() {
-    List<SCSpecUDTStructV0> structs = new ArrayList<>();
-    for (SCSpecEntry entry : entries) {
-      if (entry.getDiscriminant() == SCSpecEntryKind.SC_SPEC_ENTRY_UDT_STRUCT_V0
-          && entry.getUdtStructV0() != null) {
-        structs.add(entry.getUdtStructV0());
-      }
-    }
-    return Collections.unmodifiableList(structs);
-  }
-
-  public List<SCSpecUDTUnionV0> getUnions() {
-    List<SCSpecUDTUnionV0> unions = new ArrayList<>();
-    for (SCSpecEntry entry : entries) {
-      if (entry.getDiscriminant() == SCSpecEntryKind.SC_SPEC_ENTRY_UDT_UNION_V0
-          && entry.getUdtUnionV0() != null) {
-        unions.add(entry.getUdtUnionV0());
-      }
-    }
-    return Collections.unmodifiableList(unions);
-  }
-
-  public List<SCSpecUDTEnumV0> getEnums() {
-    List<SCSpecUDTEnumV0> enums = new ArrayList<>();
-    for (SCSpecEntry entry : entries) {
-      if (entry.getDiscriminant() == SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ENUM_V0
-          && entry.getUdtEnumV0() != null) {
-        enums.add(entry.getUdtEnumV0());
-      }
-    }
-    return Collections.unmodifiableList(enums);
-  }
-
-  public List<SCSpecUDTErrorEnumV0> getErrorEnums() {
-    List<SCSpecUDTErrorEnumV0> errorEnums = new ArrayList<>();
-    for (SCSpecEntry entry : entries) {
-      if (entry.getDiscriminant() == SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0
-          && entry.getUdtErrorEnumV0() != null) {
-        errorEnums.add(entry.getUdtErrorEnumV0());
-      }
-    }
-    return Collections.unmodifiableList(errorEnums);
-  }
-
   /**
-   * Returns the function with the given name, if present.
+   * Returns the first function with the given name, if present. SEP-0048 does not require names to
+   * be unique.
    *
    * @throws InvalidWasmException if a function name is not valid UTF-8
    */
@@ -194,7 +169,8 @@ public final class ContractSpec implements Iterable<SCSpecEntry> {
   }
 
   /**
-   * Returns the event with the given name, if present.
+   * Returns the first event with the given name, if present. SEP-0048 does not require names to be
+   * unique.
    *
    * @throws InvalidWasmException if an event name is not valid UTF-8
    */
@@ -211,8 +187,8 @@ public final class ContractSpec implements Iterable<SCSpecEntry> {
   }
 
   /**
-   * Returns the user-defined type entry (struct, union, enum, or error enum) with the given name,
-   * if present.
+   * Returns the first user-defined type entry (struct, union, enum, or error enum) with the given
+   * name, if present. SEP-0048 does not require names to be unique.
    *
    * @throws InvalidWasmException if a type name is not valid UTF-8
    */
@@ -227,11 +203,6 @@ public final class ContractSpec implements Iterable<SCSpecEntry> {
       }
     }
     return Optional.empty();
-  }
-
-  @Override
-  public Iterator<SCSpecEntry> iterator() {
-    return entries.iterator();
   }
 
   private static String getUdtName(SCSpecEntry entry) {
@@ -257,24 +228,19 @@ public final class ContractSpec implements Iterable<SCSpecEntry> {
     if (symbol == null || symbol.getSCSymbol() == null) {
       throw new InvalidWasmException("Contract spec contains a null symbol.");
     }
-    return decodeUtf8Strict(symbol.getSCSymbol().getBytes(), "symbol");
+    return decodeName(symbol.getSCSymbol().getBytes(), "symbol");
   }
 
   private static String decodeString(XdrString value) {
     if (value == null) {
       throw new InvalidWasmException("Contract spec contains a null string.");
     }
-    return decodeUtf8Strict(value.getBytes(), "string");
+    return decodeName(value.getBytes(), "string");
   }
 
-  private static String decodeUtf8Strict(byte[] data, String kind) {
-    CharsetDecoder decoder =
-        StandardCharsets.UTF_8
-            .newDecoder()
-            .onMalformedInput(CodingErrorAction.REPORT)
-            .onUnmappableCharacter(CodingErrorAction.REPORT);
+  private static String decodeName(byte[] data, String kind) {
     try {
-      return decoder.decode(java.nio.ByteBuffer.wrap(data)).toString();
+      return Utf8.strictDecode(data);
     } catch (CharacterCodingException e) {
       throw new InvalidWasmException("Contract spec contains a non-UTF-8 " + kind + ".", e);
     }
