@@ -219,4 +219,28 @@ class ContractSpecTest :
     test("constructor rejects null elements") {
       shouldThrow<IllegalArgumentException> { ContractSpec(listOf(functionEntry("a"), null)) }
     }
+
+    test("entry with null discriminant does not break getUdt lookup") {
+      val malformed = SCSpecEntry()
+      val spec = ContractSpec(listOf(malformed, structEntry("S")))
+      spec.getUdt("S").isPresent shouldBe true
+      spec.getUdt("missing").isPresent shouldBe false
+    }
+
+    test("null symbol bytes rejected by lookup with InvalidWasmException") {
+      val fn =
+        SCSpecFunctionV0().apply {
+          doc = XdrString(ByteArray(0))
+          name = SCSymbol().apply { scSymbol = XdrString(null as ByteArray?) }
+          inputs = arrayOf<SCSpecFunctionInputV0>()
+          outputs = arrayOf<SCSpecTypeDef>()
+        }
+      val entry =
+        SCSpecEntry().apply {
+          discriminant = SCSpecEntryKind.SC_SPEC_ENTRY_FUNCTION_V0
+          functionV0 = fn
+        }
+      val spec = ContractSpec(listOf(entry))
+      shouldThrow<InvalidWasmException> { spec.getFunction("anything") }
+    }
   })

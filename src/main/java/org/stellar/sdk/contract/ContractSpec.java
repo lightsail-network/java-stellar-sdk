@@ -210,6 +210,9 @@ public final class ContractSpec {
   }
 
   private static String getUdtName(SCSpecEntry entry) {
+    if (entry.getDiscriminant() == null) {
+      return null;
+    }
     switch (entry.getDiscriminant()) {
       case SC_SPEC_ENTRY_UDT_STRUCT_V0:
         return entry.getUdtStructV0() != null
@@ -243,6 +246,9 @@ public final class ContractSpec {
   }
 
   private static String decodeName(byte[] data, String kind) {
+    if (data == null) {
+      throw new InvalidWasmException("Contract spec contains a null " + kind + ".");
+    }
     try {
       return Utf8.strictDecode(data);
     } catch (CharacterCodingException e) {

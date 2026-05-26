@@ -130,6 +130,22 @@ class ContractMetaTest :
       shouldThrow<IllegalArgumentException> { ContractMeta(listOf(meta("k", "v"), null)) }
     }
 
+    test("malformed SC_META_V0 with null v0 throws on access") {
+      val entry = SCMetaEntry().apply { discriminant = SCMetaKind.SC_META_V0 }
+      val meta = ContractMeta(listOf(entry))
+      shouldThrow<InvalidWasmException> { meta.items() }
+    }
+
+    test("malformed SC_META_V0 with null key bytes throws on access") {
+      val entry =
+        SCMetaEntry().apply {
+          discriminant = SCMetaKind.SC_META_V0
+          v0 = SCMetaV0().apply { `val` = XdrString("v".toByteArray(Charsets.UTF_8)) }
+        }
+      val meta = ContractMeta(listOf(entry))
+      shouldThrow<InvalidWasmException> { meta.items() }
+    }
+
     // SEP-0046: "entries should not span sections". Splitting a single SCMetaEntry across two
     // contractmetav0 sections must be rejected, because each section is decoded as a
     // self-contained stream rather than the bytes being concatenated first.

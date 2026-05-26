@@ -61,8 +61,9 @@ public final class ContractMeta {
   }
 
   /**
-   * Creates a {@link ContractMeta} from contract Wasm bytes by concatenating all {@code
-   * contractmetav0} custom sections in module order.
+   * Creates a {@link ContractMeta} from contract Wasm bytes by decoding each {@code contractmetav0}
+   * custom section as a self-contained XDR stream and appending the resulting entries in module
+   * order. Per SEP-0046, an entry never spans two sections.
    *
    * @param wasm contract Wasm bytes
    * @throws InvalidWasmException if the Wasm module or metadata section cannot be decoded
@@ -110,10 +111,18 @@ public final class ContractMeta {
   public List<Map.Entry<String, String>> items() {
     List<Map.Entry<String, String>> items = new ArrayList<>();
     for (SCMetaEntry entry : entries) {
-      if (entry.getDiscriminant() != SCMetaKind.SC_META_V0 || entry.getV0() == null) {
+      if (entry.getDiscriminant() != SCMetaKind.SC_META_V0) {
+        // Forward compatibility: ignore meta kinds this version does not understand.
         continue;
       }
       SCMetaV0 v0 = entry.getV0();
+      if (v0 == null
+          || v0.getKey() == null
+          || v0.getVal() == null
+          || v0.getKey().getBytes() == null
+          || v0.getVal().getBytes() == null) {
+        throw new InvalidWasmException("Contract meta contains a malformed SC_META_V0 entry.");
+      }
       items.add(
           new AbstractMap.SimpleImmutableEntry<>(
               decodeMetaString(v0.getKey().getBytes()), decodeMetaString(v0.getVal().getBytes())));

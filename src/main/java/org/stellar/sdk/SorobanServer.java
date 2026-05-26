@@ -897,8 +897,7 @@ public class SorobanServer implements Closeable {
    *
    * <p>This method issues two RPC requests (one for the contract instance ledger entry, one for the
    * contract code ledger entry) and parses the Wasm a single time. Prefer this over calling {@link
-   * #getContractMeta}, {@link #getContractSpec}, and this method separately when more than one view
-   * is needed.
+   * #getContractMeta} and {@link #getContractSpec} separately when more than one view is needed.
    *
    * @param contractId The contract ID, encoded as a Stellar Contract Address.
    * @return The parsed {@link ContractInfo}.
