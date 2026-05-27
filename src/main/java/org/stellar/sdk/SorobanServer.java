@@ -196,8 +196,7 @@ public class SorobanServer implements Closeable {
   /**
    * Reads the current value of contract data ledger entries directly.
    *
-   * @param contractId The contract ID containing the data to load. Encoded as Stellar Contract
-   *     Address. e.g. "CCJZ5DGASBWQXR5MPFCJXMBI333XE5U3FSJTNQU7RIKE3P5GN2K2WYD5"
+   * @param contractId The contract ID containing the data to load.
    * @param key The key of the contract data to load.
    * @param durability The "durability keyspace" that this ledger key belongs to, which is either
    *     {@link Durability#TEMPORARY} or {@link Durability#PERSISTENT}.
@@ -712,8 +711,7 @@ public class SorobanServer implements Closeable {
    * <p>This first reads the contract instance ledger entry to discover the executable, then fetches
    * the {@code CONTRACT_CODE} ledger entry referenced by the instance.
    *
-   * @param contractId The contract ID. Encoded as a Stellar Contract Address, e.g.
-   *     "CCJZ5DGASBWQXR5MPFCJXMBI333XE5U3FSJTNQU7RIKE3P5GN2K2WYD5".
+   * @param contractId The contract ID. Encoded as a Stellar Contract Address.
    * @return The contract Wasm bytecode.
    * @throws IllegalArgumentException If the contract ID is not a valid contract strkey.
    * @throws ContractInstanceNotFoundException If the contract instance ledger entry does not exist.
