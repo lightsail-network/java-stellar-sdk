@@ -42,15 +42,15 @@ final class XdrStreams {
   }
 
   static byte[] serializeScMetaEntries(Iterable<SCMetaEntry> entries) {
-    return serializeStream(entries, (entry, stream) -> entry.encode(stream));
+    return serializeStream(entries, SCMetaEntry::encode);
   }
 
   static byte[] serializeScSpecEntries(Iterable<SCSpecEntry> entries) {
-    return serializeStream(entries, (entry, stream) -> entry.encode(stream));
+    return serializeStream(entries, SCSpecEntry::encode);
   }
 
   static byte[] serializeScEnvMetaEntries(Iterable<SCEnvMetaEntry> entries) {
-    return serializeStream(entries, (entry, stream) -> entry.encode(stream));
+    return serializeStream(entries, SCEnvMetaEntry::encode);
   }
 
   private static <T> List<T> parseStream(byte[] data, XdrDecoder<T> decoder, String entryName) {
@@ -67,9 +67,7 @@ final class XdrStreams {
       T entry;
       try {
         entry = decoder.decode(xdrStream);
-      } catch (IOException e) {
-        throw new InvalidWasmException("Invalid XDR stream for " + entryName + ".", e);
-      } catch (IllegalArgumentException e) {
+      } catch (IOException | IllegalArgumentException e) {
         throw new InvalidWasmException("Invalid XDR stream for " + entryName + ".", e);
       }
       int currentAvailable = byteStream.available();

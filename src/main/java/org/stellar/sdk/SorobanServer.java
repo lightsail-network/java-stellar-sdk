@@ -798,7 +798,7 @@ public class SorobanServer implements Closeable {
    *
    * @param wasmHash The 32-byte Wasm hash.
    * @return The contract Wasm bytecode.
-   * @throws IllegalArgumentException If {@code wasmHash} is null, not 32 bytes, or all zero.
+   * @throws IllegalArgumentException If {@code wasmHash} is null or not 32 bytes.
    * @throws ContractCodeNotFoundException If the contract code ledger entry does not exist or has
    *     been archived.
    * @throws ContractWasmRetrievalException If the RPC response contains unexpected ledger entry
@@ -817,16 +817,6 @@ public class SorobanServer implements Closeable {
     if (wasmHash.length != 32) {
       throw new IllegalArgumentException(
           "wasmHash must be 32 bytes, got " + wasmHash.length + " bytes");
-    }
-    boolean allZero = true;
-    for (byte b : wasmHash) {
-      if (b != 0) {
-        allZero = false;
-        break;
-      }
-    }
-    if (allZero) {
-      throw new IllegalArgumentException("wasmHash must not be all zero");
     }
 
     LedgerKey ledgerKey =

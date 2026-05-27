@@ -204,13 +204,6 @@ class SorobanServerContractIntrospectionTest :
       }
     }
 
-    test("getContractWasmByHash rejects all-zero hash") {
-      mockWebServer.start()
-      newServer().use { server ->
-        shouldThrow<IllegalArgumentException> { server.getContractWasmByHash(ByteArray(32)) }
-      }
-    }
-
     test("getContractWasm fetches instance then code") {
       val wasm = buildMinimalWasmWithMeta("rsver", "1.78.0")
       val executable =
