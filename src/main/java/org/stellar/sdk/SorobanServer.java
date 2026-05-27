@@ -22,6 +22,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.jetbrains.annotations.Nullable;
+import org.stellar.sdk.contract.ContractInfo;
+import org.stellar.sdk.contract.ContractMeta;
+import org.stellar.sdk.contract.ContractSpec;
+import org.stellar.sdk.contract.exception.ContractCodeNotFoundException;
+import org.stellar.sdk.contract.exception.ContractInstanceNotFoundException;
+import org.stellar.sdk.contract.exception.ContractWasmRetrievalException;
+import org.stellar.sdk.contract.exception.StellarAssetContractHasNoWasmException;
 import org.stellar.sdk.exception.AccountNotFoundException;
 import org.stellar.sdk.exception.ConnectionErrorException;
 import org.stellar.sdk.exception.PrepareTransactionException;
@@ -54,11 +61,17 @@ import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SorobanRpcResponse;
 import org.stellar.sdk.scval.Scv;
+import org.stellar.sdk.xdr.ContractCodeEntry;
 import org.stellar.sdk.xdr.ContractDataDurability;
+import org.stellar.sdk.xdr.ContractExecutable;
+import org.stellar.sdk.xdr.ContractExecutableType;
+import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.LedgerEntry;
 import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerKey;
+import org.stellar.sdk.xdr.SCContractInstance;
 import org.stellar.sdk.xdr.SCVal;
+import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 import org.stellar.sdk.xdr.SorobanTransactionData;
 
@@ -183,8 +196,7 @@ public class SorobanServer implements Closeable {
   /**
    * Reads the current value of contract data ledger entries directly.
    *
-   * @param contractId The contract ID containing the data to load. Encoded as Stellar Contract
-   *     Address. e.g. "CCJZ5DGASBWQXR5MPFCJXMBI333XE5U3FSJTNQU7RIKE3P5GN2K2WYD5"
+   * @param contractId The contract ID containing the data to load.
    * @param key The key of the contract data to load.
    * @param durability The "durability keyspace" that this ledger key belongs to, which is either
    *     {@link Durability#TEMPORARY} or {@link Durability#PERSISTENT}.
@@ -691,6 +703,207 @@ public class SorobanServer implements Closeable {
                 .clawback(Scv.fromBoolean(balanceMap.get(Scv.toSymbol("clawback"))))
                 .build())
         .build();
+  }
+
+  /**
+   * Fetches the Wasm bytecode of a deployed contract by its contract ID.
+   *
+   * <p>This first reads the contract instance ledger entry to discover the executable, then fetches
+   * the {@code CONTRACT_CODE} ledger entry referenced by the instance.
+   *
+   * @param contractId The contract ID. Encoded as a Stellar Contract Address.
+   * @return The contract Wasm bytecode.
+   * @throws IllegalArgumentException If the contract ID is not a valid contract strkey.
+   * @throws ContractInstanceNotFoundException If the contract instance ledger entry does not exist.
+   * @throws StellarAssetContractHasNoWasmException If the contract is a Stellar Asset Contract,
+   *     which has no Wasm.
+   * @throws ContractCodeNotFoundException If the contract code ledger entry does not exist or has
+   *     been archived.
+   * @throws ContractWasmRetrievalException If the RPC response contains unexpected ledger entry
+   *     data.
+   * @throws org.stellar.sdk.exception.NetworkException The following three exceptions are
+   *     subclasses of NetworkException, thrown on RPC or transport failures.
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
+   * @throws RequestTimeoutException If the request timed out.
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   */
+  public byte[] getContractWasm(String contractId) {
+    if (!StrKey.isValidContract(contractId)) {
+      throw new IllegalArgumentException("Invalid contract ID: " + contractId);
+    }
+
+    Address address = new Address(contractId);
+    LedgerKey ledgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_DATA)
+            .contractData(
+                LedgerKey.LedgerKeyContractData.builder()
+                    .contract(address.toSCAddress())
+                    .key(Scv.toLedgerKeyContractInstance())
+                    .durability(ContractDataDurability.PERSISTENT)
+                    .build())
+            .build();
+
+    GetLedgerEntriesResponse response = this.getLedgerEntries(Collections.singleton(ledgerKey));
+    List<GetLedgerEntriesResponse.LedgerEntryResult> entries = response.getEntries();
+    if (entries == null || entries.isEmpty()) {
+      throw new ContractInstanceNotFoundException(contractId);
+    }
+
+    LedgerEntry.LedgerEntryData ledgerEntryData =
+        parseLedgerEntryData(
+            entries.get(0).getXdr(),
+            "Failed to parse contract instance ledger entry, contractId: " + contractId);
+    if (ledgerEntryData.getDiscriminant() != LedgerEntryType.CONTRACT_DATA
+        || ledgerEntryData.getContractData() == null) {
+      throw new ContractWasmRetrievalException(
+          "Unexpected ledger entry type for contract instance, contractId: " + contractId);
+    }
+
+    SCVal value = ledgerEntryData.getContractData().getVal();
+    if (value == null
+        || value.getDiscriminant() != SCValType.SCV_CONTRACT_INSTANCE
+        || value.getInstance() == null) {
+      throw new ContractWasmRetrievalException(
+          "Unexpected ledger entry value for contract instance, contractId: " + contractId);
+    }
+
+    SCContractInstance instance = value.getInstance();
+    ContractExecutable executable = instance.getExecutable();
+    if (executable == null || executable.getDiscriminant() == null) {
+      throw new ContractWasmRetrievalException(
+          "Contract instance is missing an executable, contractId: " + contractId);
+    }
+
+    ContractExecutableType type = executable.getDiscriminant();
+    if (type == ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET) {
+      throw new StellarAssetContractHasNoWasmException(contractId);
+    }
+    if (type != ContractExecutableType.CONTRACT_EXECUTABLE_WASM) {
+      throw new ContractWasmRetrievalException(
+          "Unsupported contract executable type: " + type + ", contractId: " + contractId);
+    }
+
+    Hash wasmHash = executable.getWasm_hash();
+    if (wasmHash == null || wasmHash.getHash() == null) {
+      throw new ContractWasmRetrievalException(
+          "Contract instance is missing a Wasm hash, contractId: " + contractId);
+    }
+    return getContractWasmByHash(wasmHash.getHash());
+  }
+
+  /**
+   * Fetches the Wasm bytecode of a deployed contract by its Wasm hash.
+   *
+   * @param wasmHash The 32-byte Wasm hash.
+   * @return The contract Wasm bytecode.
+   * @throws IllegalArgumentException If {@code wasmHash} is null or not 32 bytes.
+   * @throws ContractCodeNotFoundException If the contract code ledger entry does not exist or has
+   *     been archived.
+   * @throws ContractWasmRetrievalException If the RPC response contains unexpected ledger entry
+   *     data.
+   * @throws org.stellar.sdk.exception.NetworkException The following three exceptions are
+   *     subclasses of NetworkException, thrown on RPC or transport failures.
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
+   * @throws RequestTimeoutException If the request timed out.
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   */
+  public byte[] getContractWasmByHash(byte[] wasmHash) {
+    if (wasmHash == null) {
+      throw new IllegalArgumentException("wasmHash must not be null");
+    }
+    if (wasmHash.length != 32) {
+      throw new IllegalArgumentException(
+          "wasmHash must be 32 bytes, got " + wasmHash.length + " bytes");
+    }
+
+    LedgerKey ledgerKey =
+        LedgerKey.builder()
+            .discriminant(LedgerEntryType.CONTRACT_CODE)
+            .contractCode(
+                LedgerKey.LedgerKeyContractCode.builder()
+                    .hash(new Hash(Arrays.copyOf(wasmHash, wasmHash.length)))
+                    .build())
+            .build();
+
+    GetLedgerEntriesResponse response = this.getLedgerEntries(Collections.singleton(ledgerKey));
+    List<GetLedgerEntriesResponse.LedgerEntryResult> entries = response.getEntries();
+    if (entries == null || entries.isEmpty()) {
+      throw new ContractCodeNotFoundException(Arrays.copyOf(wasmHash, wasmHash.length));
+    }
+
+    LedgerEntry.LedgerEntryData ledgerEntryData =
+        parseLedgerEntryData(entries.get(0).getXdr(), "Failed to parse contract code ledger entry");
+    if (ledgerEntryData.getDiscriminant() != LedgerEntryType.CONTRACT_CODE
+        || ledgerEntryData.getContractCode() == null) {
+      throw new ContractWasmRetrievalException("Unexpected ledger entry type for contract code");
+    }
+
+    ContractCodeEntry codeEntry = ledgerEntryData.getContractCode();
+    byte[] code = codeEntry.getCode();
+    if (code == null) {
+      throw new ContractWasmRetrievalException("Contract code ledger entry has no code bytes");
+    }
+    return code;
+  }
+
+  /**
+   * Fetches and parses the SEP-0046 metadata of a deployed contract.
+   *
+   * <p>This method fetches the contract Wasm and parses it locally. When you need more than one
+   * introspection view from the same contract, prefer {@link #getContractInfo(String)} to avoid
+   * fetching the Wasm multiple times.
+   *
+   * @param contractId The contract ID, encoded as a Stellar Contract Address.
+   * @return The parsed {@link ContractMeta}.
+   * @see #getContractWasm(String)
+   */
+  public ContractMeta getContractMeta(String contractId) {
+    return ContractMeta.fromWasm(getContractWasm(contractId));
+  }
+
+  /**
+   * Fetches and parses the SEP-0048 interface specification of a deployed contract.
+   *
+   * <p>This method fetches the contract Wasm and parses it locally. When you need more than one
+   * introspection view from the same contract, prefer {@link #getContractInfo(String)} to avoid
+   * fetching the Wasm multiple times.
+   *
+   * @param contractId The contract ID, encoded as a Stellar Contract Address.
+   * @return The parsed {@link ContractSpec}.
+   * @see #getContractWasm(String)
+   */
+  public ContractSpec getContractSpec(String contractId) {
+    return ContractSpec.fromWasm(getContractWasm(contractId));
+  }
+
+  /**
+   * Fetches and parses the SEP-0046 metadata, SEP-0048 specification, and environment metadata of a
+   * deployed contract.
+   *
+   * <p>This method issues two RPC requests (one for the contract instance ledger entry, one for the
+   * contract code ledger entry) and parses the Wasm a single time. Prefer this over calling {@link
+   * #getContractMeta} and {@link #getContractSpec} separately when more than one view is needed.
+   *
+   * @param contractId The contract ID, encoded as a Stellar Contract Address.
+   * @return The parsed {@link ContractInfo}.
+   * @see #getContractWasm(String)
+   */
+  public ContractInfo getContractInfo(String contractId) {
+    return ContractInfo.fromWasm(getContractWasm(contractId));
+  }
+
+  private static LedgerEntry.LedgerEntryData parseLedgerEntryData(String xdr, String errorContext) {
+    if (xdr == null || xdr.isEmpty()) {
+      throw new ContractWasmRetrievalException(errorContext + ": empty XDR payload");
+    }
+    try {
+      return LedgerEntry.LedgerEntryData.fromXdrBase64(xdr);
+    } catch (IOException | IllegalArgumentException e) {
+      throw new ContractWasmRetrievalException(errorContext, e);
+    }
   }
 
   public static Transaction assembleTransaction(

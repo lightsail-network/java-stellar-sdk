@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update
+- feat: add SEP-0046, SEP-0047, and SEP-0048 contract introspection support. New `ContractMeta`, `ContractSpec`, and `ContractInfo` wrappers under `org.stellar.sdk.contract` parse contract Wasm metadata and interface specs locally. `SorobanServer` adds `getContractWasm`, `getContractWasmByHash`, `getContractMeta`, `getContractSpec`, and `getContractInfo` for RPC-backed retrieval.
+
 ## 3.0.0
 
 This release contains the exact same content as 3.0.0-beta1. Below is the changelog since 2.2.3.
