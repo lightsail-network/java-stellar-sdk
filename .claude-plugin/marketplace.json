@@ -1,0 +1,24 @@
+{
+  "name": "lightsail-network",
+  "owner": {
+    "name": "lightsail-network"
+  },
+  "metadata": {
+    "description": "Agent skills for the Stellar Java SDK (network.lightsail:stellar-sdk)."
+  },
+  "plugins": [
+    {
+      "name": "java-stellar-sdk",
+      "source": "./",
+      "description": "Teaches AI coding agents how to build Stellar blockchain applications using the Java Stellar SDK: transactions, operations, Horizon API, Soroban smart contracts, XDR/SCVal, and SEP protocols.",
+      "version": "0.1.0",
+      "author": {
+        "name": "overcat"
+      },
+      "homepage": "https://github.com/lightsail-network/java-stellar-sdk",
+      "license": "Apache-2.0",
+      "category": "development",
+      "tags": ["stellar", "blockchain", "java", "sdk", "soroban", "agent-skill"]
+    }
+  ]
+}
