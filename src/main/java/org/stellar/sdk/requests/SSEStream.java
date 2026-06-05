@@ -68,7 +68,6 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
     this.reconnectTimeout = reconnectTimeout;
 
     executorService = Executors.newSingleThreadScheduledExecutor();
-    requestBuilder.buildUri(); // call this once to add the segments
   }
 
   private void start() {
@@ -117,7 +116,7 @@ public class SSEStream<T extends org.stellar.sdk.responses.Response> implements 
             requestBuilder,
             responseClass,
             listener,
-            requestBuilder.uriBuilder.build().toString(),
+            requestBuilder.buildUri().toString(),
             source -> isClosed.compareAndSet(false, true),
             newListenerId));
   }
