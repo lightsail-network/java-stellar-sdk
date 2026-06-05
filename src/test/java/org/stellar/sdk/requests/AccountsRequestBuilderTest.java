@@ -25,6 +25,25 @@ public class AccountsRequestBuilderTest {
   }
 
   @Test
+  public void testBuildUriIsIdempotent() {
+    Server server = new Server("https://horizon-testnet.stellar.org");
+    AccountsRequestBuilder builder = server.accounts().limit(200).order(RequestBuilder.Order.ASC);
+
+    assertEquals(
+        "https://horizon-testnet.stellar.org/accounts?limit=200&order=asc",
+        builder.buildUri().toString());
+    assertEquals(
+        "https://horizon-testnet.stellar.org/accounts?limit=200&order=asc",
+        builder.buildUri().toString());
+
+    builder.cursor("13537736921089");
+    assertEquals(
+        "https://horizon-testnet.stellar.org/accounts?limit=200&order=asc&cursor=13537736921089",
+        builder.buildUri().toString());
+    server.close();
+  }
+
+  @Test
   public void testForSigner() {
     Server server = new Server("https://horizon-testnet.stellar.org");
     HttpUrl uri =

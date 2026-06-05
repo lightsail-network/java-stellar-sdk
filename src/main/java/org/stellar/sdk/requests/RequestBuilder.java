@@ -123,12 +123,11 @@ public abstract class RequestBuilder {
   }
 
   HttpUrl buildUri() {
-    if (!segments.isEmpty()) {
-      for (String segment : segments) {
-        uriBuilder.addPathSegment(segment);
-      }
+    HttpUrl.Builder builder = uriBuilder.build().newBuilder();
+    for (String segment : segments) {
+      builder.addPathSegment(segment);
     }
-    return uriBuilder.build();
+    return builder.build();
   }
 
   /** Represents possible <code>order</code> parameter values. */
