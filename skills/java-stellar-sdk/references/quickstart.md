@@ -6,7 +6,7 @@ from the environment. See `transactions.md` for the full lifecycle.
 ## Install (Gradle)
 
 ```groovy
-implementation 'network.lightsail:stellar-sdk:3.0.0'
+implementation 'network.lightsail:stellar-sdk:3.1.0'
 ```
 
 ## Generate or load a keypair

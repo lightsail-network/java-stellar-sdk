@@ -22,14 +22,14 @@ Maven:
 <dependency>
     <groupId>network.lightsail</groupId>
     <artifactId>stellar-sdk</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-implementation 'network.lightsail:stellar-sdk:3.0.0'
+implementation 'network.lightsail:stellar-sdk:3.1.0'
 ```
 
 ## Import style

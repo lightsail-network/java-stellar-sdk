@@ -2,11 +2,13 @@
 
 ## Pending
 
+## 3.1.0
+
 ### Update
-- fix: make `RootRequestBuilder` request the Horizon root endpoint as `/` instead of the percent-encoded `/%2F` path.
-- fix: make Horizon request builder URL generation idempotent so repeated `buildUri()` or `execute()` calls on the same builder do not duplicate path segments.
-- docs: add an [Agent Skill](https://agentskills.io/) for the Java Stellar SDK under `skills/`, plus Claude Code plugin manifests in `.claude-plugin/`. The skill gives AI coding agents concise, Stellar-specific guidance (transactions, operations, Horizon, Soroban, XDR/SCVal, and SEP protocols) when generating application code with `stellar-sdk`.
-- feat: add SEP-0046, SEP-0047, and SEP-0048 contract introspection support. New `ContractMeta`, `ContractSpec`, and `ContractInfo` wrappers under `org.stellar.sdk.contract` parse contract Wasm metadata and interface specs locally. `SorobanServer` adds `getContractWasm`, `getContractWasmByHash`, `getContractMeta`, `getContractSpec`, and `getContractInfo` for RPC-backed retrieval.
+- fix: make `RootRequestBuilder` request the Horizon root endpoint as `/` instead of the percent-encoded `/%2F` path. ([#801](https://github.com/lightsail-network/java-stellar-sdk/pull/801))
+- fix: make Horizon request builder URL generation idempotent so repeated `buildUri()` or `execute()` calls on the same builder do not duplicate path segments. ([#798](https://github.com/lightsail-network/java-stellar-sdk/pull/798))
+- docs: add an [Agent Skill](https://agentskills.io/) for the Java Stellar SDK under `skills/`, plus Claude Code plugin manifests in `.claude-plugin/`. The skill gives AI coding agents concise, Stellar-specific guidance (transactions, operations, Horizon, Soroban, XDR/SCVal, and SEP protocols) when generating application code with `stellar-sdk`. ([#797](https://github.com/lightsail-network/java-stellar-sdk/pull/797))
+- feat: add SEP-0046, SEP-0047, and SEP-0048 contract introspection support. New `ContractMeta`, `ContractSpec`, and `ContractInfo` wrappers under `org.stellar.sdk.contract` parse contract Wasm metadata and interface specs locally. `SorobanServer` adds `getContractWasm`, `getContractWasmByHash`, `getContractMeta`, `getContractSpec`, and `getContractInfo` for RPC-backed retrieval. ([#796](https://github.com/lightsail-network/java-stellar-sdk/pull/796))
 
 ## 3.0.0
 
