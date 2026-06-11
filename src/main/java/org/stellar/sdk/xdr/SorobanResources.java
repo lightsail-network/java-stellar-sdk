@@ -35,9 +35,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanResources implements XdrElement {
+  /**
+   * Value of the {@code footprint} field.
+   *
+   * @param footprint the {@code footprint} field value
+   * @return the {@code footprint} field value
+   */
   private LedgerFootprint footprint;
+
+  /**
+   * Value of the {@code instructions} field.
+   *
+   * @param instructions the {@code instructions} field value
+   * @return the {@code instructions} field value
+   */
   private Uint32 instructions;
+
+  /**
+   * Value of the {@code diskReadBytes} field.
+   *
+   * @param diskReadBytes the {@code diskReadBytes} field value
+   * @return the {@code diskReadBytes} field value
+   */
   private Uint32 diskReadBytes;
+
+  /**
+   * Value of the {@code writeBytes} field.
+   *
+   * @param writeBytes the {@code writeBytes} field value
+   * @return the {@code writeBytes} field value
+   */
   private Uint32 writeBytes;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

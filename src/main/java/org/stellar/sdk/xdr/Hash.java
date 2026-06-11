@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Hash implements XdrElement {
+  /**
+   * Value of the {@code Hash} field.
+   *
+   * @param Hash the {@code Hash} field value
+   * @return the {@code Hash} field value
+   */
   private byte[] Hash;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

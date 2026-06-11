@@ -41,7 +41,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ManageBuyOfferResult implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private ManageBuyOfferResultCode discriminant;
+
+  /**
+   * Value of the {@code success} field.
+   *
+   * @param success the {@code success} field value
+   * @return the {@code success} field value
+   */
   private ManageOfferSuccessResult success;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

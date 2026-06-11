@@ -29,8 +29,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LiquidityPoolConstantProductParameters implements XdrElement {
+  /**
+   * Value of the {@code assetA} field.
+   *
+   * @param assetA the {@code assetA} field value
+   * @return the {@code assetA} field value
+   */
   private Asset assetA;
+
+  /**
+   * Value of the {@code assetB} field.
+   *
+   * @param assetB the {@code assetB} field value
+   * @return the {@code assetB} field value
+   */
   private Asset assetB;
+
+  /**
+   * Value of the {@code fee} field.
+   *
+   * @param fee the {@code fee} field value
+   * @return the {@code fee} field value
+   */
   private Int32 fee;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

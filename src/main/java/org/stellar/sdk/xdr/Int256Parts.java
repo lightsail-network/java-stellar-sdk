@@ -29,9 +29,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Int256Parts implements XdrElement {
+  /**
+   * Value of the {@code hi_hi} field.
+   *
+   * @param hi_hi the {@code hi_hi} field value
+   * @return the {@code hi_hi} field value
+   */
   private Int64 hi_hi;
+
+  /**
+   * Value of the {@code hi_lo} field.
+   *
+   * @param hi_lo the {@code hi_lo} field value
+   * @return the {@code hi_lo} field value
+   */
   private Uint64 hi_lo;
+
+  /**
+   * Value of the {@code lo_hi} field.
+   *
+   * @param lo_hi the {@code lo_hi} field value
+   * @return the {@code lo_hi} field value
+   */
   private Uint64 lo_hi;
+
+  /**
+   * Value of the {@code lo_lo} field.
+   *
+   * @param lo_lo the {@code lo_lo} field value
+   * @return the {@code lo_lo} field value
+   */
   private Uint64 lo_lo;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

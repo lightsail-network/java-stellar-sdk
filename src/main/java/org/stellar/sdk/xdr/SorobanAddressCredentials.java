@@ -30,9 +30,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanAddressCredentials implements XdrElement {
+  /**
+   * Value of the {@code address} field.
+   *
+   * @param address the {@code address} field value
+   * @return the {@code address} field value
+   */
   private SCAddress address;
+
+  /**
+   * Value of the {@code nonce} field.
+   *
+   * @param nonce the {@code nonce} field value
+   * @return the {@code nonce} field value
+   */
   private Int64 nonce;
+
+  /**
+   * Value of the {@code signatureExpirationLedger} field.
+   *
+   * @param signatureExpirationLedger the {@code signatureExpirationLedger} field value
+   * @return the {@code signatureExpirationLedger} field value
+   */
   private Uint32 signatureExpirationLedger;
+
+  /**
+   * Value of the {@code signature} field.
+   *
+   * @param signature the {@code signature} field value
+   * @return the {@code signature} field value
+   */
   private SCVal signature;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

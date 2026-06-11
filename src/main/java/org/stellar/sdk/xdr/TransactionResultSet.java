@@ -28,6 +28,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionResultSet implements XdrElement {
+  /**
+   * Value of the {@code results} field.
+   *
+   * @param results the {@code results} field value
+   * @return the {@code results} field value
+   */
   private TransactionResultPair[] results;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

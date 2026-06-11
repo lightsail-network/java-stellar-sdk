@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SignedTimeSlicedSurveyStopCollectingMessage implements XdrElement {
+  /**
+   * Value of the {@code signature} field.
+   *
+   * @param signature the {@code signature} field value
+   * @return the {@code signature} field value
+   */
   private Signature signature;
+
+  /**
+   * Value of the {@code stopCollecting} field.
+   *
+   * @param stopCollecting the {@code stopCollecting} field value
+   * @return the {@code stopCollecting} field value
+   */
   private TimeSlicedSurveyStopCollectingMessage stopCollecting;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

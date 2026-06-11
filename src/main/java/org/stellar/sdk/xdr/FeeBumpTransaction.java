@@ -40,9 +40,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class FeeBumpTransaction implements XdrElement {
+  /**
+   * Value of the {@code feeSource} field.
+   *
+   * @param feeSource the {@code feeSource} field value
+   * @return the {@code feeSource} field value
+   */
   private MuxedAccount feeSource;
+
+  /**
+   * Value of the {@code fee} field.
+   *
+   * @param fee the {@code fee} field value
+   * @return the {@code fee} field value
+   */
   private Int64 fee;
+
+  /**
+   * Value of the {@code innerTx} field.
+   *
+   * @param innerTx the {@code innerTx} field value
+   * @return the {@code innerTx} field value
+   */
   private FeeBumpTransactionInnerTx innerTx;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private FeeBumpTransactionExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -127,7 +154,20 @@ public class FeeBumpTransaction implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class FeeBumpTransactionInnerTx implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private EnvelopeType discriminant;
+
+    /**
+     * Value of the {@code v1} field.
+     *
+     * @param v1 the {@code v1} field value
+     * @return the {@code v1} field value
+     */
     private TransactionV1Envelope v1;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -231,6 +271,12 @@ public class FeeBumpTransaction implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class FeeBumpTransactionExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

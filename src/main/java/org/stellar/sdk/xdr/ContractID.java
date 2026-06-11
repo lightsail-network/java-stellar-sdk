@@ -22,6 +22,12 @@ import org.stellar.sdk.StrKey;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContractID implements XdrElement {
+  /**
+   * Value of the {@code ContractID} field.
+   *
+   * @param ContractID the {@code ContractID} field value
+   * @return the {@code ContractID} field value
+   */
   private Hash ContractID;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

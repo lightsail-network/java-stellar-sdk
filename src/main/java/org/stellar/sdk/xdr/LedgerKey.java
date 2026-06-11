@@ -87,16 +87,92 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerKey implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private LedgerEntryType discriminant;
+
+  /**
+   * Value of the {@code account} field.
+   *
+   * @param account the {@code account} field value
+   * @return the {@code account} field value
+   */
   private LedgerKeyAccount account;
+
+  /**
+   * Value of the {@code trustLine} field.
+   *
+   * @param trustLine the {@code trustLine} field value
+   * @return the {@code trustLine} field value
+   */
   private LedgerKeyTrustLine trustLine;
+
+  /**
+   * Value of the {@code offer} field.
+   *
+   * @param offer the {@code offer} field value
+   * @return the {@code offer} field value
+   */
   private LedgerKeyOffer offer;
+
+  /**
+   * Value of the {@code data} field.
+   *
+   * @param data the {@code data} field value
+   * @return the {@code data} field value
+   */
   private LedgerKeyData data;
+
+  /**
+   * Value of the {@code claimableBalance} field.
+   *
+   * @param claimableBalance the {@code claimableBalance} field value
+   * @return the {@code claimableBalance} field value
+   */
   private LedgerKeyClaimableBalance claimableBalance;
+
+  /**
+   * Value of the {@code liquidityPool} field.
+   *
+   * @param liquidityPool the {@code liquidityPool} field value
+   * @return the {@code liquidityPool} field value
+   */
   private LedgerKeyLiquidityPool liquidityPool;
+
+  /**
+   * Value of the {@code contractData} field.
+   *
+   * @param contractData the {@code contractData} field value
+   * @return the {@code contractData} field value
+   */
   private LedgerKeyContractData contractData;
+
+  /**
+   * Value of the {@code contractCode} field.
+   *
+   * @param contractCode the {@code contractCode} field value
+   * @return the {@code contractCode} field value
+   */
   private LedgerKeyContractCode contractCode;
+
+  /**
+   * Value of the {@code configSetting} field.
+   *
+   * @param configSetting the {@code configSetting} field value
+   * @return the {@code configSetting} field value
+   */
   private LedgerKeyConfigSetting configSetting;
+
+  /**
+   * Value of the {@code ttl} field.
+   *
+   * @param ttl the {@code ttl} field value
+   * @return the {@code ttl} field value
+   */
   private LedgerKeyTtl ttl;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -351,6 +427,12 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyAccount implements XdrElement {
+    /**
+     * Value of the {@code accountID} field.
+     *
+     * @param accountID the {@code accountID} field value
+     * @return the {@code accountID} field value
+     */
     private AccountID accountID;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -424,7 +506,20 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyTrustLine implements XdrElement {
+    /**
+     * Value of the {@code accountID} field.
+     *
+     * @param accountID the {@code accountID} field value
+     * @return the {@code accountID} field value
+     */
     private AccountID accountID;
+
+    /**
+     * Value of the {@code asset} field.
+     *
+     * @param asset the {@code asset} field value
+     * @return the {@code asset} field value
+     */
     private TrustLineAsset asset;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -502,7 +597,20 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyOffer implements XdrElement {
+    /**
+     * Value of the {@code sellerID} field.
+     *
+     * @param sellerID the {@code sellerID} field value
+     * @return the {@code sellerID} field value
+     */
     private AccountID sellerID;
+
+    /**
+     * Value of the {@code offerID} field.
+     *
+     * @param offerID the {@code offerID} field value
+     * @return the {@code offerID} field value
+     */
     private Int64 offerID;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -580,7 +688,20 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyData implements XdrElement {
+    /**
+     * Value of the {@code accountID} field.
+     *
+     * @param accountID the {@code accountID} field value
+     * @return the {@code accountID} field value
+     */
     private AccountID accountID;
+
+    /**
+     * Value of the {@code dataName} field.
+     *
+     * @param dataName the {@code dataName} field value
+     * @return the {@code dataName} field value
+     */
     private String64 dataName;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -656,6 +777,12 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyClaimableBalance implements XdrElement {
+    /**
+     * Value of the {@code balanceID} field.
+     *
+     * @param balanceID the {@code balanceID} field value
+     * @return the {@code balanceID} field value
+     */
     private ClaimableBalanceID balanceID;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -728,6 +855,12 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyLiquidityPool implements XdrElement {
+    /**
+     * Value of the {@code liquidityPoolID} field.
+     *
+     * @param liquidityPoolID the {@code liquidityPoolID} field value
+     * @return the {@code liquidityPoolID} field value
+     */
     private PoolID liquidityPoolID;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -802,8 +935,28 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyContractData implements XdrElement {
+    /**
+     * Value of the {@code contract} field.
+     *
+     * @param contract the {@code contract} field value
+     * @return the {@code contract} field value
+     */
     private SCAddress contract;
+
+    /**
+     * Value of the {@code key} field.
+     *
+     * @param key the {@code key} field value
+     * @return the {@code key} field value
+     */
     private SCVal key;
+
+    /**
+     * Value of the {@code durability} field.
+     *
+     * @param durability the {@code durability} field value
+     * @return the {@code durability} field value
+     */
     private ContractDataDurability durability;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -884,6 +1037,12 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyContractCode implements XdrElement {
+    /**
+     * Value of the {@code hash} field.
+     *
+     * @param hash the {@code hash} field value
+     * @return the {@code hash} field value
+     */
     private Hash hash;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -956,6 +1115,12 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyConfigSetting implements XdrElement {
+    /**
+     * Value of the {@code configSettingID} field.
+     *
+     * @param configSettingID the {@code configSettingID} field value
+     * @return the {@code configSettingID} field value
+     */
     private ConfigSettingID configSettingID;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -1029,6 +1194,12 @@ public class LedgerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerKeyTtl implements XdrElement {
+    /**
+     * Value of the {@code keyHash} field.
+     *
+     * @param keyHash the {@code keyHash} field value
+     * @return the {@code keyHash} field value
+     */
     private Hash keyHash;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

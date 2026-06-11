@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class BeginSponsoringFutureReservesOp implements XdrElement {
+  /**
+   * Value of the {@code sponsoredID} field.
+   *
+   * @param sponsoredID the {@code sponsoredID} field value
+   * @return the {@code sponsoredID} field value
+   */
   private AccountID sponsoredID;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

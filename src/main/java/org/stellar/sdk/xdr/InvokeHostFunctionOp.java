@@ -31,7 +31,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class InvokeHostFunctionOp implements XdrElement {
+  /**
+   * Value of the {@code hostFunction} field.
+   *
+   * @param hostFunction the {@code hostFunction} field value
+   * @return the {@code hostFunction} field value
+   */
   private HostFunction hostFunction;
+
+  /**
+   * Value of the {@code auth} field.
+   *
+   * @param auth the {@code auth} field value
+   * @return the {@code auth} field value
+   */
   private SorobanAuthorizationEntry[] auth;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

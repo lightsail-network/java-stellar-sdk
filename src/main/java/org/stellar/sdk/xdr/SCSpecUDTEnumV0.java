@@ -31,9 +31,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecUDTEnumV0 implements XdrElement {
+  /**
+   * Value of the {@code doc} field.
+   *
+   * @param doc the {@code doc} field value
+   * @return the {@code doc} field value
+   */
   private XdrString doc;
+
+  /**
+   * Value of the {@code lib} field.
+   *
+   * @param lib the {@code lib} field value
+   * @return the {@code lib} field value
+   */
   private XdrString lib;
+
+  /**
+   * Value of the {@code name} field.
+   *
+   * @param name the {@code name} field value
+   * @return the {@code name} field value
+   */
   private XdrString name;
+
+  /**
+   * Value of the {@code cases} field.
+   *
+   * @param cases the {@code cases} field value
+   * @return the {@code cases} field value
+   */
   private SCSpecUDTEnumCaseV0[] cases;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

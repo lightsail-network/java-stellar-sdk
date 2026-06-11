@@ -29,8 +29,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SimplePaymentResult implements XdrElement {
+  /**
+   * Value of the {@code destination} field.
+   *
+   * @param destination the {@code destination} field value
+   * @return the {@code destination} field value
+   */
   private AccountID destination;
+
+  /**
+   * Value of the {@code asset} field.
+   *
+   * @param asset the {@code asset} field value
+   * @return the {@code asset} field value
+   */
   private Asset asset;
+
+  /**
+   * Value of the {@code amount} field.
+   *
+   * @param amount the {@code amount} field value
+   * @return the {@code amount} field value
+   */
   private Int64 amount;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

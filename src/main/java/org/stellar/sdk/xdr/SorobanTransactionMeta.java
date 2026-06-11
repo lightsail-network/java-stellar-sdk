@@ -37,9 +37,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanTransactionMeta implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private SorobanTransactionMetaExt ext;
+
+  /**
+   * Value of the {@code events} field.
+   *
+   * @param events the {@code events} field value
+   * @return the {@code events} field value
+   */
   private ContractEvent[] events;
+
+  /**
+   * Value of the {@code returnValue} field.
+   *
+   * @param returnValue the {@code returnValue} field value
+   * @return the {@code returnValue} field value
+   */
   private SCVal returnValue;
+
+  /**
+   * Value of the {@code diagnosticEvents} field.
+   *
+   * @param diagnosticEvents the {@code diagnosticEvents} field value
+   * @return the {@code diagnosticEvents} field value
+   */
   private DiagnosticEvent[] diagnosticEvents;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

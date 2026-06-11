@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SequenceNumber implements XdrElement {
+  /**
+   * Value of the {@code SequenceNumber} field.
+   *
+   * @param SequenceNumber the {@code SequenceNumber} field value
+   * @return the {@code SequenceNumber} field value
+   */
   private Int64 SequenceNumber;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

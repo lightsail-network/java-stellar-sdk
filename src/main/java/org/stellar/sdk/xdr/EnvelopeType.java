@@ -22,7 +22,8 @@ import org.stellar.sdk.Base64Factory;
  *     ENVELOPE_TYPE_OP_ID = 6,
  *     ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
  *     ENVELOPE_TYPE_CONTRACT_ID = 8,
- *     ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
+ *     ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9,
+ *     ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS = 10
  * };
  * </pre>
  */
@@ -36,7 +37,8 @@ public enum EnvelopeType implements XdrElement {
   ENVELOPE_TYPE_OP_ID(6),
   ENVELOPE_TYPE_POOL_REVOKE_OP_ID(7),
   ENVELOPE_TYPE_CONTRACT_ID(8),
-  ENVELOPE_TYPE_SOROBAN_AUTHORIZATION(9);
+  ENVELOPE_TYPE_SOROBAN_AUTHORIZATION(9),
+  ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS(10);
 
   private final int value;
 
@@ -72,6 +74,8 @@ public enum EnvelopeType implements XdrElement {
         return ENVELOPE_TYPE_CONTRACT_ID;
       case 9:
         return ENVELOPE_TYPE_SOROBAN_AUTHORIZATION;
+      case 10:
+        return ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -128,6 +132,8 @@ public enum EnvelopeType implements XdrElement {
         return "contract_id";
       case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
         return "soroban_authorization";
+      case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS:
+        return "soroban_authorization_with_address";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -156,6 +162,8 @@ public enum EnvelopeType implements XdrElement {
         return ENVELOPE_TYPE_CONTRACT_ID;
       case "soroban_authorization":
         return ENVELOPE_TYPE_SOROBAN_AUTHORIZATION;
+      case "soroban_authorization_with_address":
+        return ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

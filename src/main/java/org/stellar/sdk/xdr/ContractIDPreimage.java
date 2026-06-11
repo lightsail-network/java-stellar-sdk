@@ -34,8 +34,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ContractIDPreimage implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private ContractIDPreimageType discriminant;
+
+  /**
+   * Value of the {@code fromAddress} field.
+   *
+   * @param fromAddress the {@code fromAddress} field value
+   * @return the {@code fromAddress} field value
+   */
   private ContractIDPreimageFromAddress fromAddress;
+
+  /**
+   * Value of the {@code fromAsset} field.
+   *
+   * @param fromAsset the {@code fromAsset} field value
+   * @return the {@code fromAsset} field value
+   */
   private Asset fromAsset;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -156,7 +176,20 @@ public class ContractIDPreimage implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class ContractIDPreimageFromAddress implements XdrElement {
+    /**
+     * Value of the {@code address} field.
+     *
+     * @param address the {@code address} field value
+     * @return the {@code address} field value
+     */
     private SCAddress address;
+
+    /**
+     * Value of the {@code salt} field.
+     *
+     * @param salt the {@code salt} field value
+     * @return the {@code salt} field value
+     */
     private Uint256 salt;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

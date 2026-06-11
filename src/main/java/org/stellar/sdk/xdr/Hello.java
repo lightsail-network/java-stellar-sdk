@@ -35,14 +35,76 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Hello implements XdrElement {
+  /**
+   * Value of the {@code ledgerVersion} field.
+   *
+   * @param ledgerVersion the {@code ledgerVersion} field value
+   * @return the {@code ledgerVersion} field value
+   */
   private Uint32 ledgerVersion;
+
+  /**
+   * Value of the {@code overlayVersion} field.
+   *
+   * @param overlayVersion the {@code overlayVersion} field value
+   * @return the {@code overlayVersion} field value
+   */
   private Uint32 overlayVersion;
+
+  /**
+   * Value of the {@code overlayMinVersion} field.
+   *
+   * @param overlayMinVersion the {@code overlayMinVersion} field value
+   * @return the {@code overlayMinVersion} field value
+   */
   private Uint32 overlayMinVersion;
+
+  /**
+   * Value of the {@code networkID} field.
+   *
+   * @param networkID the {@code networkID} field value
+   * @return the {@code networkID} field value
+   */
   private Hash networkID;
+
+  /**
+   * Value of the {@code versionStr} field.
+   *
+   * @param versionStr the {@code versionStr} field value
+   * @return the {@code versionStr} field value
+   */
   private XdrString versionStr;
+
+  /**
+   * Value of the {@code listeningPort} field.
+   *
+   * @param listeningPort the {@code listeningPort} field value
+   * @return the {@code listeningPort} field value
+   */
   private Integer listeningPort;
+
+  /**
+   * Value of the {@code peerID} field.
+   *
+   * @param peerID the {@code peerID} field value
+   * @return the {@code peerID} field value
+   */
   private NodeID peerID;
+
+  /**
+   * Value of the {@code cert} field.
+   *
+   * @param cert the {@code cert} field value
+   * @return the {@code cert} field value
+   */
   private AuthCert cert;
+
+  /**
+   * Value of the {@code nonce} field.
+   *
+   * @param nonce the {@code nonce} field value
+   * @return the {@code nonce} field value
+   */
   private Uint256 nonce;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

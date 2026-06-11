@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractHistoricalDataV0 implements XdrElement {
+  /**
+   * Value of the {@code feeHistorical1KB} field.
+   *
+   * @param feeHistorical1KB the {@code feeHistorical1KB} field value
+   * @return the {@code feeHistorical1KB} field value
+   */
   private Int64 feeHistorical1KB;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

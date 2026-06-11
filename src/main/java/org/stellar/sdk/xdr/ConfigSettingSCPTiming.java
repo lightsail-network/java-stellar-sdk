@@ -30,10 +30,49 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingSCPTiming implements XdrElement {
+  /**
+   * Value of the {@code ledgerTargetCloseTimeMilliseconds} field.
+   *
+   * @param ledgerTargetCloseTimeMilliseconds the {@code ledgerTargetCloseTimeMilliseconds} field
+   *     value
+   * @return the {@code ledgerTargetCloseTimeMilliseconds} field value
+   */
   private Uint32 ledgerTargetCloseTimeMilliseconds;
+
+  /**
+   * Value of the {@code nominationTimeoutInitialMilliseconds} field.
+   *
+   * @param nominationTimeoutInitialMilliseconds the {@code nominationTimeoutInitialMilliseconds}
+   *     field value
+   * @return the {@code nominationTimeoutInitialMilliseconds} field value
+   */
   private Uint32 nominationTimeoutInitialMilliseconds;
+
+  /**
+   * Value of the {@code nominationTimeoutIncrementMilliseconds} field.
+   *
+   * @param nominationTimeoutIncrementMilliseconds the {@code
+   *     nominationTimeoutIncrementMilliseconds} field value
+   * @return the {@code nominationTimeoutIncrementMilliseconds} field value
+   */
   private Uint32 nominationTimeoutIncrementMilliseconds;
+
+  /**
+   * Value of the {@code ballotTimeoutInitialMilliseconds} field.
+   *
+   * @param ballotTimeoutInitialMilliseconds the {@code ballotTimeoutInitialMilliseconds} field
+   *     value
+   * @return the {@code ballotTimeoutInitialMilliseconds} field value
+   */
   private Uint32 ballotTimeoutInitialMilliseconds;
+
+  /**
+   * Value of the {@code ballotTimeoutIncrementMilliseconds} field.
+   *
+   * @param ballotTimeoutIncrementMilliseconds the {@code ballotTimeoutIncrementMilliseconds} field
+   *     value
+   * @return the {@code ballotTimeoutIncrementMilliseconds} field value
+   */
   private Uint32 ballotTimeoutIncrementMilliseconds;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

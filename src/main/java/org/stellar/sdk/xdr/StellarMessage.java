@@ -80,27 +80,184 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class StellarMessage implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private MessageType discriminant;
+
+  /**
+   * Value of the {@code error} field.
+   *
+   * @param error the {@code error} field value
+   * @return the {@code error} field value
+   */
   private Error error;
+
+  /**
+   * Value of the {@code hello} field.
+   *
+   * @param hello the {@code hello} field value
+   * @return the {@code hello} field value
+   */
   private Hello hello;
+
+  /**
+   * Value of the {@code auth} field.
+   *
+   * @param auth the {@code auth} field value
+   * @return the {@code auth} field value
+   */
   private Auth auth;
+
+  /**
+   * Value of the {@code dontHave} field.
+   *
+   * @param dontHave the {@code dontHave} field value
+   * @return the {@code dontHave} field value
+   */
   private DontHave dontHave;
+
+  /**
+   * Value of the {@code peers} field.
+   *
+   * @param peers the {@code peers} field value
+   * @return the {@code peers} field value
+   */
   private PeerAddress[] peers;
+
+  /**
+   * Value of the {@code txSetHash} field.
+   *
+   * @param txSetHash the {@code txSetHash} field value
+   * @return the {@code txSetHash} field value
+   */
   private Uint256 txSetHash;
+
+  /**
+   * Value of the {@code txSet} field.
+   *
+   * @param txSet the {@code txSet} field value
+   * @return the {@code txSet} field value
+   */
   private TransactionSet txSet;
+
+  /**
+   * Value of the {@code generalizedTxSet} field.
+   *
+   * @param generalizedTxSet the {@code generalizedTxSet} field value
+   * @return the {@code generalizedTxSet} field value
+   */
   private GeneralizedTransactionSet generalizedTxSet;
+
+  /**
+   * Value of the {@code transaction} field.
+   *
+   * @param transaction the {@code transaction} field value
+   * @return the {@code transaction} field value
+   */
   private TransactionEnvelope transaction;
+
+  /**
+   * Value of the {@code signedTimeSlicedSurveyRequestMessage} field.
+   *
+   * @param signedTimeSlicedSurveyRequestMessage the {@code signedTimeSlicedSurveyRequestMessage}
+   *     field value
+   * @return the {@code signedTimeSlicedSurveyRequestMessage} field value
+   */
   private SignedTimeSlicedSurveyRequestMessage signedTimeSlicedSurveyRequestMessage;
+
+  /**
+   * Value of the {@code signedTimeSlicedSurveyResponseMessage} field.
+   *
+   * @param signedTimeSlicedSurveyResponseMessage the {@code signedTimeSlicedSurveyResponseMessage}
+   *     field value
+   * @return the {@code signedTimeSlicedSurveyResponseMessage} field value
+   */
   private SignedTimeSlicedSurveyResponseMessage signedTimeSlicedSurveyResponseMessage;
+
+  /**
+   * Value of the {@code signedTimeSlicedSurveyStartCollectingMessage} field.
+   *
+   * @param signedTimeSlicedSurveyStartCollectingMessage the {@code
+   *     signedTimeSlicedSurveyStartCollectingMessage} field value
+   * @return the {@code signedTimeSlicedSurveyStartCollectingMessage} field value
+   */
   private SignedTimeSlicedSurveyStartCollectingMessage signedTimeSlicedSurveyStartCollectingMessage;
+
+  /**
+   * Value of the {@code signedTimeSlicedSurveyStopCollectingMessage} field.
+   *
+   * @param signedTimeSlicedSurveyStopCollectingMessage the {@code
+   *     signedTimeSlicedSurveyStopCollectingMessage} field value
+   * @return the {@code signedTimeSlicedSurveyStopCollectingMessage} field value
+   */
   private SignedTimeSlicedSurveyStopCollectingMessage signedTimeSlicedSurveyStopCollectingMessage;
+
+  /**
+   * Value of the {@code qSetHash} field.
+   *
+   * @param qSetHash the {@code qSetHash} field value
+   * @return the {@code qSetHash} field value
+   */
   private Uint256 qSetHash;
+
+  /**
+   * Value of the {@code qSet} field.
+   *
+   * @param qSet the {@code qSet} field value
+   * @return the {@code qSet} field value
+   */
   private SCPQuorumSet qSet;
+
+  /**
+   * Value of the {@code envelope} field.
+   *
+   * @param envelope the {@code envelope} field value
+   * @return the {@code envelope} field value
+   */
   private SCPEnvelope envelope;
+
+  /**
+   * Value of the {@code getSCPLedgerSeq} field.
+   *
+   * @param getSCPLedgerSeq the {@code getSCPLedgerSeq} field value
+   * @return the {@code getSCPLedgerSeq} field value
+   */
   private Uint32 getSCPLedgerSeq;
+
+  /**
+   * Value of the {@code sendMoreMessage} field.
+   *
+   * @param sendMoreMessage the {@code sendMoreMessage} field value
+   * @return the {@code sendMoreMessage} field value
+   */
   private SendMore sendMoreMessage;
+
+  /**
+   * Value of the {@code sendMoreExtendedMessage} field.
+   *
+   * @param sendMoreExtendedMessage the {@code sendMoreExtendedMessage} field value
+   * @return the {@code sendMoreExtendedMessage} field value
+   */
   private SendMoreExtended sendMoreExtendedMessage;
+
+  /**
+   * Value of the {@code floodAdvert} field.
+   *
+   * @param floodAdvert the {@code floodAdvert} field value
+   * @return the {@code floodAdvert} field value
+   */
   private FloodAdvert floodAdvert;
+
+  /**
+   * Value of the {@code floodDemand} field.
+   *
+   * @param floodDemand the {@code floodDemand} field value
+   * @return the {@code floodDemand} field value
+   */
   private FloodDemand floodDemand;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

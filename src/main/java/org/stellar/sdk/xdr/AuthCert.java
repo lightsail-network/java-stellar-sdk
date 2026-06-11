@@ -29,8 +29,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class AuthCert implements XdrElement {
+  /**
+   * Value of the {@code pubkey} field.
+   *
+   * @param pubkey the {@code pubkey} field value
+   * @return the {@code pubkey} field value
+   */
   private Curve25519Public pubkey;
+
+  /**
+   * Value of the {@code expiration} field.
+   *
+   * @param expiration the {@code expiration} field value
+   * @return the {@code expiration} field value
+   */
   private Uint64 expiration;
+
+  /**
+   * Value of the {@code sig} field.
+   *
+   * @param sig the {@code sig} field value
+   * @return the {@code sig} field value
+   */
   private Signature sig;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

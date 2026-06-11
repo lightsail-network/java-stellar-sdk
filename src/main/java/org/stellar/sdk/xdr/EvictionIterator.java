@@ -28,8 +28,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class EvictionIterator implements XdrElement {
+  /**
+   * Value of the {@code bucketListLevel} field.
+   *
+   * @param bucketListLevel the {@code bucketListLevel} field value
+   * @return the {@code bucketListLevel} field value
+   */
   private Uint32 bucketListLevel;
+
+  /**
+   * Value of the {@code isCurrBucket} field.
+   *
+   * @param isCurrBucket the {@code isCurrBucket} field value
+   * @return the {@code isCurrBucket} field value
+   */
   private Boolean isCurrBucket;
+
+  /**
+   * Value of the {@code bucketFileOffset} field.
+   *
+   * @param bucketFileOffset the {@code bucketFileOffset} field value
+   * @return the {@code bucketFileOffset} field value
+   */
   private Uint64 bucketFileOffset;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

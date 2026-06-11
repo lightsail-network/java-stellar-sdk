@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Error implements XdrElement {
+  /**
+   * Value of the {@code code} field.
+   *
+   * @param code the {@code code} field value
+   * @return the {@code code} field value
+   */
   private ErrorCode code;
+
+  /**
+   * Value of the {@code msg} field.
+   *
+   * @param msg the {@code msg} field value
+   * @return the {@code msg} field value
+   */
   private XdrString msg;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

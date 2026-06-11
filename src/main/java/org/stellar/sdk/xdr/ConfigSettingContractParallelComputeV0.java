@@ -31,6 +31,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractParallelComputeV0 implements XdrElement {
+  /**
+   * Value of the {@code ledgerMaxDependentTxClusters} field.
+   *
+   * @param ledgerMaxDependentTxClusters the {@code ledgerMaxDependentTxClusters} field value
+   * @return the {@code ledgerMaxDependentTxClusters} field value
+   */
   private Uint32 ledgerMaxDependentTxClusters;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

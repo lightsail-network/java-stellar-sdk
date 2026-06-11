@@ -36,8 +36,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Asset implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private AssetType discriminant;
+
+  /**
+   * Value of the {@code alphaNum4} field.
+   *
+   * @param alphaNum4 the {@code alphaNum4} field value
+   * @return the {@code alphaNum4} field value
+   */
   private AlphaNum4 alphaNum4;
+
+  /**
+   * Value of the {@code alphaNum12} field.
+   *
+   * @param alphaNum12 the {@code alphaNum12} field value
+   * @return the {@code alphaNum12} field value
+   */
   private AlphaNum12 alphaNum12;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

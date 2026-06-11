@@ -30,8 +30,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class PersistedSCPState implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private Integer discriminant;
+
+  /**
+   * Value of the {@code v0} field.
+   *
+   * @param v0 the {@code v0} field value
+   * @return the {@code v0} field value
+   */
   private PersistedSCPStateV0 v0;
+
+  /**
+   * Value of the {@code v1} field.
+   *
+   * @param v1 the {@code v1} field value
+   * @return the {@code v1} field value
+   */
   private PersistedSCPStateV1 v1;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

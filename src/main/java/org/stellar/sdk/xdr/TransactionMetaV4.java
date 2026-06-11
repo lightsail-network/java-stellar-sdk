@@ -39,12 +39,60 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionMetaV4 implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code txChangesBefore} field.
+   *
+   * @param txChangesBefore the {@code txChangesBefore} field value
+   * @return the {@code txChangesBefore} field value
+   */
   private LedgerEntryChanges txChangesBefore;
+
+  /**
+   * Value of the {@code operations} field.
+   *
+   * @param operations the {@code operations} field value
+   * @return the {@code operations} field value
+   */
   private OperationMetaV2[] operations;
+
+  /**
+   * Value of the {@code txChangesAfter} field.
+   *
+   * @param txChangesAfter the {@code txChangesAfter} field value
+   * @return the {@code txChangesAfter} field value
+   */
   private LedgerEntryChanges txChangesAfter;
+
+  /**
+   * Value of the {@code sorobanMeta} field.
+   *
+   * @param sorobanMeta the {@code sorobanMeta} field value
+   * @return the {@code sorobanMeta} field value
+   */
   private SorobanTransactionMetaV2 sorobanMeta;
+
+  /**
+   * Value of the {@code events} field.
+   *
+   * @param events the {@code events} field value
+   * @return the {@code events} field value
+   */
   private TransactionEvent[] events;
+
+  /**
+   * Value of the {@code diagnosticEvents} field.
+   *
+   * @param diagnosticEvents the {@code diagnosticEvents} field value
+   * @return the {@code diagnosticEvents} field value
+   */
   private DiagnosticEvent[] diagnosticEvents;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

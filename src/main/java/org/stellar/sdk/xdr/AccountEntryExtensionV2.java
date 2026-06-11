@@ -39,9 +39,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class AccountEntryExtensionV2 implements XdrElement {
+  /**
+   * Value of the {@code numSponsored} field.
+   *
+   * @param numSponsored the {@code numSponsored} field value
+   * @return the {@code numSponsored} field value
+   */
   private Uint32 numSponsored;
+
+  /**
+   * Value of the {@code numSponsoring} field.
+   *
+   * @param numSponsoring the {@code numSponsoring} field value
+   * @return the {@code numSponsoring} field value
+   */
   private Uint32 numSponsoring;
+
+  /**
+   * Value of the {@code signerSponsoringIDs} field.
+   *
+   * @param signerSponsoringIDs the {@code signerSponsoringIDs} field value
+   * @return the {@code signerSponsoringIDs} field value
+   */
   private SponsorshipDescriptor[] signerSponsoringIDs;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private AccountEntryExtensionV2Ext ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -165,7 +192,20 @@ public class AccountEntryExtensionV2 implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class AccountEntryExtensionV2Ext implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v3} field.
+     *
+     * @param v3 the {@code v3} field value
+     * @return the {@code v3} field value
+     */
     private AccountEntryExtensionV3 v3;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

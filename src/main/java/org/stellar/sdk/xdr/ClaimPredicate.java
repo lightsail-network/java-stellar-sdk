@@ -40,11 +40,52 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ClaimPredicate implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private ClaimPredicateType discriminant;
+
+  /**
+   * Value of the {@code andPredicates} field.
+   *
+   * @param andPredicates the {@code andPredicates} field value
+   * @return the {@code andPredicates} field value
+   */
   private ClaimPredicate[] andPredicates;
+
+  /**
+   * Value of the {@code orPredicates} field.
+   *
+   * @param orPredicates the {@code orPredicates} field value
+   * @return the {@code orPredicates} field value
+   */
   private ClaimPredicate[] orPredicates;
+
+  /**
+   * Value of the {@code notPredicate} field.
+   *
+   * @param notPredicate the {@code notPredicate} field value
+   * @return the {@code notPredicate} field value
+   */
   private ClaimPredicate notPredicate;
+
+  /**
+   * Value of the {@code absBefore} field.
+   *
+   * @param absBefore the {@code absBefore} field value
+   * @return the {@code absBefore} field value
+   */
   private Int64 absBefore;
+
+  /**
+   * Value of the {@code relBefore} field.
+   *
+   * @param relBefore the {@code relBefore} field value
+   * @return the {@code relBefore} field value
+   */
   private Int64 relBefore;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

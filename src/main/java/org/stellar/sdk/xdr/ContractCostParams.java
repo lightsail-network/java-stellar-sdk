@@ -22,6 +22,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContractCostParams implements XdrElement {
+  /**
+   * Value of the {@code ContractCostParams} field.
+   *
+   * @param ContractCostParams the {@code ContractCostParams} field value
+   * @return the {@code ContractCostParams} field value
+   */
   private ContractCostParamEntry[] ContractCostParams;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

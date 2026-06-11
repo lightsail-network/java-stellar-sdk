@@ -36,8 +36,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerHeaderHistoryEntry implements XdrElement {
+  /**
+   * Value of the {@code hash} field.
+   *
+   * @param hash the {@code hash} field value
+   * @return the {@code hash} field value
+   */
   private Hash hash;
+
+  /**
+   * Value of the {@code header} field.
+   *
+   * @param header the {@code header} field value
+   * @return the {@code header} field value
+   */
   private LedgerHeader header;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private LedgerHeaderHistoryEntryExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -118,6 +138,12 @@ public class LedgerHeaderHistoryEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerHeaderHistoryEntryExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

@@ -60,13 +60,68 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecTypeDef implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SCSpecType discriminant;
+
+  /**
+   * Value of the {@code option} field.
+   *
+   * @param option the {@code option} field value
+   * @return the {@code option} field value
+   */
   private SCSpecTypeOption option;
+
+  /**
+   * Value of the {@code result} field.
+   *
+   * @param result the {@code result} field value
+   * @return the {@code result} field value
+   */
   private SCSpecTypeResult result;
+
+  /**
+   * Value of the {@code vec} field.
+   *
+   * @param vec the {@code vec} field value
+   * @return the {@code vec} field value
+   */
   private SCSpecTypeVec vec;
+
+  /**
+   * Value of the {@code map} field.
+   *
+   * @param map the {@code map} field value
+   * @return the {@code map} field value
+   */
   private SCSpecTypeMap map;
+
+  /**
+   * Value of the {@code tuple} field.
+   *
+   * @param tuple the {@code tuple} field value
+   * @return the {@code tuple} field value
+   */
   private SCSpecTypeTuple tuple;
+
+  /**
+   * Value of the {@code bytesN} field.
+   *
+   * @param bytesN the {@code bytesN} field value
+   * @return the {@code bytesN} field value
+   */
   private SCSpecTypeBytesN bytesN;
+
+  /**
+   * Value of the {@code udt} field.
+   *
+   * @param udt the {@code udt} field value
+   * @return the {@code udt} field value
+   */
   private SCSpecTypeUDT udt;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

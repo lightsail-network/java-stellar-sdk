@@ -46,9 +46,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class StellarValue implements XdrElement {
+  /**
+   * Value of the {@code txSetHash} field.
+   *
+   * @param txSetHash the {@code txSetHash} field value
+   * @return the {@code txSetHash} field value
+   */
   private Hash txSetHash;
+
+  /**
+   * Value of the {@code closeTime} field.
+   *
+   * @param closeTime the {@code closeTime} field value
+   * @return the {@code closeTime} field value
+   */
   private TimePoint closeTime;
+
+  /**
+   * Value of the {@code upgrades} field.
+   *
+   * @param upgrades the {@code upgrades} field value
+   * @return the {@code upgrades} field value
+   */
   private UpgradeType[] upgrades;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private StellarValueExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -163,7 +190,20 @@ public class StellarValue implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class StellarValueExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private StellarValueType discriminant;
+
+    /**
+     * Value of the {@code lcValueSignature} field.
+     *
+     * @param lcValueSignature the {@code lcValueSignature} field value
+     * @return the {@code lcValueSignature} field value
+     */
     private LedgerCloseValueSignature lcValueSignature;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

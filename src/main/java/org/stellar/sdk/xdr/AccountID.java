@@ -22,6 +22,12 @@ import org.stellar.sdk.StrKey;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountID implements XdrElement {
+  /**
+   * Value of the {@code AccountID} field.
+   *
+   * @param AccountID the {@code AccountID} field value
+   * @return the {@code AccountID} field value
+   */
   private PublicKey AccountID;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

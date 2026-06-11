@@ -52,15 +52,84 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class AccountEntry implements XdrElement {
+  /**
+   * Value of the {@code accountID} field.
+   *
+   * @param accountID the {@code accountID} field value
+   * @return the {@code accountID} field value
+   */
   private AccountID accountID;
+
+  /**
+   * Value of the {@code balance} field.
+   *
+   * @param balance the {@code balance} field value
+   * @return the {@code balance} field value
+   */
   private Int64 balance;
+
+  /**
+   * Value of the {@code seqNum} field.
+   *
+   * @param seqNum the {@code seqNum} field value
+   * @return the {@code seqNum} field value
+   */
   private SequenceNumber seqNum;
+
+  /**
+   * Value of the {@code numSubEntries} field.
+   *
+   * @param numSubEntries the {@code numSubEntries} field value
+   * @return the {@code numSubEntries} field value
+   */
   private Uint32 numSubEntries;
+
+  /**
+   * Value of the {@code inflationDest} field.
+   *
+   * @param inflationDest the {@code inflationDest} field value
+   * @return the {@code inflationDest} field value
+   */
   private AccountID inflationDest;
+
+  /**
+   * Value of the {@code flags} field.
+   *
+   * @param flags the {@code flags} field value
+   * @return the {@code flags} field value
+   */
   private Uint32 flags;
+
+  /**
+   * Value of the {@code homeDomain} field.
+   *
+   * @param homeDomain the {@code homeDomain} field value
+   * @return the {@code homeDomain} field value
+   */
   private String32 homeDomain;
+
+  /**
+   * Value of the {@code thresholds} field.
+   *
+   * @param thresholds the {@code thresholds} field value
+   * @return the {@code thresholds} field value
+   */
   private Thresholds thresholds;
+
+  /**
+   * Value of the {@code signers} field.
+   *
+   * @param signers the {@code signers} field value
+   * @return the {@code signers} field value
+   */
   private Signer[] signers;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private AccountEntryExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -210,7 +279,20 @@ public class AccountEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class AccountEntryExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v1} field.
+     *
+     * @param v1 the {@code v1} field value
+     * @return the {@code v1} field value
+     */
     private AccountEntryExtensionV1 v1;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

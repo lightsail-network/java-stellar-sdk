@@ -35,8 +35,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerCloseMetaBatch implements XdrElement {
+  /**
+   * Value of the {@code startSequence} field.
+   *
+   * @param startSequence the {@code startSequence} field value
+   * @return the {@code startSequence} field value
+   */
   private Uint32 startSequence;
+
+  /**
+   * Value of the {@code endSequence} field.
+   *
+   * @param endSequence the {@code endSequence} field value
+   * @return the {@code endSequence} field value
+   */
   private Uint32 endSequence;
+
+  /**
+   * Value of the {@code ledgerCloseMetas} field.
+   *
+   * @param ledgerCloseMetas the {@code ledgerCloseMetas} field value
+   * @return the {@code ledgerCloseMetas} field value
+   */
   private LedgerCloseMeta[] ledgerCloseMetas;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -58,20 +58,124 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractLedgerCostV0 implements XdrElement {
+  /**
+   * Value of the {@code ledgerMaxDiskReadEntries} field.
+   *
+   * @param ledgerMaxDiskReadEntries the {@code ledgerMaxDiskReadEntries} field value
+   * @return the {@code ledgerMaxDiskReadEntries} field value
+   */
   private Uint32 ledgerMaxDiskReadEntries;
+
+  /**
+   * Value of the {@code ledgerMaxDiskReadBytes} field.
+   *
+   * @param ledgerMaxDiskReadBytes the {@code ledgerMaxDiskReadBytes} field value
+   * @return the {@code ledgerMaxDiskReadBytes} field value
+   */
   private Uint32 ledgerMaxDiskReadBytes;
+
+  /**
+   * Value of the {@code ledgerMaxWriteLedgerEntries} field.
+   *
+   * @param ledgerMaxWriteLedgerEntries the {@code ledgerMaxWriteLedgerEntries} field value
+   * @return the {@code ledgerMaxWriteLedgerEntries} field value
+   */
   private Uint32 ledgerMaxWriteLedgerEntries;
+
+  /**
+   * Value of the {@code ledgerMaxWriteBytes} field.
+   *
+   * @param ledgerMaxWriteBytes the {@code ledgerMaxWriteBytes} field value
+   * @return the {@code ledgerMaxWriteBytes} field value
+   */
   private Uint32 ledgerMaxWriteBytes;
+
+  /**
+   * Value of the {@code txMaxDiskReadEntries} field.
+   *
+   * @param txMaxDiskReadEntries the {@code txMaxDiskReadEntries} field value
+   * @return the {@code txMaxDiskReadEntries} field value
+   */
   private Uint32 txMaxDiskReadEntries;
+
+  /**
+   * Value of the {@code txMaxDiskReadBytes} field.
+   *
+   * @param txMaxDiskReadBytes the {@code txMaxDiskReadBytes} field value
+   * @return the {@code txMaxDiskReadBytes} field value
+   */
   private Uint32 txMaxDiskReadBytes;
+
+  /**
+   * Value of the {@code txMaxWriteLedgerEntries} field.
+   *
+   * @param txMaxWriteLedgerEntries the {@code txMaxWriteLedgerEntries} field value
+   * @return the {@code txMaxWriteLedgerEntries} field value
+   */
   private Uint32 txMaxWriteLedgerEntries;
+
+  /**
+   * Value of the {@code txMaxWriteBytes} field.
+   *
+   * @param txMaxWriteBytes the {@code txMaxWriteBytes} field value
+   * @return the {@code txMaxWriteBytes} field value
+   */
   private Uint32 txMaxWriteBytes;
+
+  /**
+   * Value of the {@code feeDiskReadLedgerEntry} field.
+   *
+   * @param feeDiskReadLedgerEntry the {@code feeDiskReadLedgerEntry} field value
+   * @return the {@code feeDiskReadLedgerEntry} field value
+   */
   private Int64 feeDiskReadLedgerEntry;
+
+  /**
+   * Value of the {@code feeWriteLedgerEntry} field.
+   *
+   * @param feeWriteLedgerEntry the {@code feeWriteLedgerEntry} field value
+   * @return the {@code feeWriteLedgerEntry} field value
+   */
   private Int64 feeWriteLedgerEntry;
+
+  /**
+   * Value of the {@code feeDiskRead1KB} field.
+   *
+   * @param feeDiskRead1KB the {@code feeDiskRead1KB} field value
+   * @return the {@code feeDiskRead1KB} field value
+   */
   private Int64 feeDiskRead1KB;
+
+  /**
+   * Value of the {@code sorobanStateTargetSizeBytes} field.
+   *
+   * @param sorobanStateTargetSizeBytes the {@code sorobanStateTargetSizeBytes} field value
+   * @return the {@code sorobanStateTargetSizeBytes} field value
+   */
   private Int64 sorobanStateTargetSizeBytes;
+
+  /**
+   * Value of the {@code rentFee1KBSorobanStateSizeLow} field.
+   *
+   * @param rentFee1KBSorobanStateSizeLow the {@code rentFee1KBSorobanStateSizeLow} field value
+   * @return the {@code rentFee1KBSorobanStateSizeLow} field value
+   */
   private Int64 rentFee1KBSorobanStateSizeLow;
+
+  /**
+   * Value of the {@code rentFee1KBSorobanStateSizeHigh} field.
+   *
+   * @param rentFee1KBSorobanStateSizeHigh the {@code rentFee1KBSorobanStateSizeHigh} field value
+   * @return the {@code rentFee1KBSorobanStateSizeHigh} field value
+   */
   private Int64 rentFee1KBSorobanStateSizeHigh;
+
+  /**
+   * Value of the {@code sorobanStateRentFeeGrowthFactor} field.
+   *
+   * @param sorobanStateRentFeeGrowthFactor the {@code sorobanStateRentFeeGrowthFactor} field value
+   * @return the {@code sorobanStateRentFeeGrowthFactor} field value
+   */
   private Uint32 sorobanStateRentFeeGrowthFactor;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

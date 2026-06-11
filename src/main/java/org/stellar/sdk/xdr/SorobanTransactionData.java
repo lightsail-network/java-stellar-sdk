@@ -44,8 +44,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanTransactionData implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private SorobanTransactionDataExt ext;
+
+  /**
+   * Value of the {@code resources} field.
+   *
+   * @param resources the {@code resources} field value
+   * @return the {@code resources} field value
+   */
   private SorobanResources resources;
+
+  /**
+   * Value of the {@code resourceFee} field.
+   *
+   * @param resourceFee the {@code resourceFee} field value
+   * @return the {@code resourceFee} field value
+   */
   private Int64 resourceFee;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -128,7 +148,20 @@ public class SorobanTransactionData implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class SorobanTransactionDataExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code resourceExt} field.
+     *
+     * @param resourceExt the {@code resourceExt} field value
+     * @return the {@code resourceExt} field value
+     */
     private SorobanResourcesExtV0 resourceExt;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

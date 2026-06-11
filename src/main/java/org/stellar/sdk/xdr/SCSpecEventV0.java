@@ -33,11 +33,52 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecEventV0 implements XdrElement {
+  /**
+   * Value of the {@code doc} field.
+   *
+   * @param doc the {@code doc} field value
+   * @return the {@code doc} field value
+   */
   private XdrString doc;
+
+  /**
+   * Value of the {@code lib} field.
+   *
+   * @param lib the {@code lib} field value
+   * @return the {@code lib} field value
+   */
   private XdrString lib;
+
+  /**
+   * Value of the {@code name} field.
+   *
+   * @param name the {@code name} field value
+   * @return the {@code name} field value
+   */
   private SCSymbol name;
+
+  /**
+   * Value of the {@code prefixTopics} field.
+   *
+   * @param prefixTopics the {@code prefixTopics} field value
+   * @return the {@code prefixTopics} field value
+   */
   private SCSymbol[] prefixTopics;
+
+  /**
+   * Value of the {@code params} field.
+   *
+   * @param params the {@code params} field value
+   * @return the {@code params} field value
+   */
   private SCSpecEventParamV0[] params;
+
+  /**
+   * Value of the {@code dataFormat} field.
+   *
+   * @param dataFormat the {@code dataFormat} field value
+   * @return the {@code dataFormat} field value
+   */
   private SCSpecEventDataFormat dataFormat;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

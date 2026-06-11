@@ -29,7 +29,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanAuthorizedInvocation implements XdrElement {
+  /**
+   * Value of the {@code function} field.
+   *
+   * @param function the {@code function} field value
+   * @return the {@code function} field value
+   */
   private SorobanAuthorizedFunction function;
+
+  /**
+   * Value of the {@code subInvocations} field.
+   *
+   * @param subInvocations the {@code subInvocations} field value
+   * @return the {@code subInvocations} field value
+   */
   private SorobanAuthorizedInvocation[] subInvocations;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

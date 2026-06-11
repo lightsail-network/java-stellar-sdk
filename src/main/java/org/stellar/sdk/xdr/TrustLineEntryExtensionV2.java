@@ -34,7 +34,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TrustLineEntryExtensionV2 implements XdrElement {
+  /**
+   * Value of the {@code liquidityPoolUseCount} field.
+   *
+   * @param liquidityPoolUseCount the {@code liquidityPoolUseCount} field value
+   * @return the {@code liquidityPoolUseCount} field value
+   */
   private Int32 liquidityPoolUseCount;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private TrustLineEntryExtensionV2Ext ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -111,6 +124,12 @@ public class TrustLineEntryExtensionV2 implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class TrustLineEntryExtensionV2Ext implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

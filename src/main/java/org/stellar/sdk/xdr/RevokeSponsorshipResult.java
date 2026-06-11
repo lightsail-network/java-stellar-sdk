@@ -33,6 +33,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class RevokeSponsorshipResult implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private RevokeSponsorshipResultCode discriminant;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

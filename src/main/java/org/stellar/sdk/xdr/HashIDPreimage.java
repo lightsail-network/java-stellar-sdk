@@ -48,6 +48,15 @@ import org.stellar.sdk.Base64Factory;
  *         uint32 signatureExpirationLedger;
  *         SorobanAuthorizedInvocation invocation;
  *     } sorobanAuthorization;
+ * case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS:
+ *     struct
+ *     {
+ *         Hash networkID;
+ *         int64 nonce;
+ *         uint32 signatureExpirationLedger;
+ *         SCAddress address;
+ *         SorobanAuthorizedInvocation invocation;
+ *     } sorobanAuthorizationWithAddress;
  * };
  * </pre>
  */
@@ -56,11 +65,53 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class HashIDPreimage implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private EnvelopeType discriminant;
+
+  /**
+   * Value of the {@code operationID} field.
+   *
+   * @param operationID the {@code operationID} field value
+   * @return the {@code operationID} field value
+   */
   private HashIDPreimageOperationID operationID;
+
+  /**
+   * Value of the {@code revokeID} field.
+   *
+   * @param revokeID the {@code revokeID} field value
+   * @return the {@code revokeID} field value
+   */
   private HashIDPreimageRevokeID revokeID;
+
+  /**
+   * Value of the {@code contractID} field.
+   *
+   * @param contractID the {@code contractID} field value
+   * @return the {@code contractID} field value
+   */
   private HashIDPreimageContractID contractID;
+
+  /**
+   * Value of the {@code sorobanAuthorization} field.
+   *
+   * @param sorobanAuthorization the {@code sorobanAuthorization} field value
+   * @return the {@code sorobanAuthorization} field value
+   */
   private HashIDPreimageSorobanAuthorization sorobanAuthorization;
+
+  /**
+   * Value of the {@code sorobanAuthorizationWithAddress} field.
+   *
+   * @param sorobanAuthorizationWithAddress the {@code sorobanAuthorizationWithAddress} field value
+   * @return the {@code sorobanAuthorizationWithAddress} field value
+   */
+  private HashIDPreimageSorobanAuthorizationWithAddress sorobanAuthorizationWithAddress;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -76,6 +127,9 @@ public class HashIDPreimage implements XdrElement {
         break;
       case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
         sorobanAuthorization.encode(stream);
+        break;
+      case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS:
+        sorobanAuthorizationWithAddress.encode(stream);
         break;
     }
   }
@@ -101,6 +155,10 @@ public class HashIDPreimage implements XdrElement {
       case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION:
         decodedHashIDPreimage.sorobanAuthorization =
             HashIDPreimageSorobanAuthorization.decode(stream, maxDepth);
+        break;
+      case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS:
+        decodedHashIDPreimage.sorobanAuthorizationWithAddress =
+            HashIDPreimageSorobanAuthorizationWithAddress.decode(stream, maxDepth);
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);
@@ -154,6 +212,12 @@ public class HashIDPreimage implements XdrElement {
       jsonMap.put("soroban_authorization", sorobanAuthorization.toJsonObject());
       return jsonMap;
     }
+    if (discriminant == EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put(
+          "soroban_authorization_with_address", sorobanAuthorizationWithAddress.toJsonObject());
+      return jsonMap;
+    }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
   }
 
@@ -195,6 +259,14 @@ public class HashIDPreimage implements XdrElement {
           HashIDPreimageSorobanAuthorization.fromJsonObject(jsonMap.get("soroban_authorization"));
       return instance;
     }
+    if (key.equals("soroban_authorization_with_address")) {
+      HashIDPreimage instance = new HashIDPreimage();
+      instance.discriminant = discriminant;
+      instance.sorobanAuthorizationWithAddress =
+          HashIDPreimageSorobanAuthorizationWithAddress.fromJsonObject(
+              jsonMap.get("soroban_authorization_with_address"));
+      return instance;
+    }
     throw new IllegalArgumentException("Unknown key '" + key + "' for HashIDPreimage");
   }
 
@@ -215,8 +287,28 @@ public class HashIDPreimage implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class HashIDPreimageOperationID implements XdrElement {
+    /**
+     * Value of the {@code sourceAccount} field.
+     *
+     * @param sourceAccount the {@code sourceAccount} field value
+     * @return the {@code sourceAccount} field value
+     */
     private AccountID sourceAccount;
+
+    /**
+     * Value of the {@code seqNum} field.
+     *
+     * @param seqNum the {@code seqNum} field value
+     * @return the {@code seqNum} field value
+     */
     private SequenceNumber seqNum;
+
+    /**
+     * Value of the {@code opNum} field.
+     *
+     * @param opNum the {@code opNum} field value
+     * @return the {@code opNum} field value
+     */
     private Uint32 opNum;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -301,10 +393,44 @@ public class HashIDPreimage implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class HashIDPreimageRevokeID implements XdrElement {
+    /**
+     * Value of the {@code sourceAccount} field.
+     *
+     * @param sourceAccount the {@code sourceAccount} field value
+     * @return the {@code sourceAccount} field value
+     */
     private AccountID sourceAccount;
+
+    /**
+     * Value of the {@code seqNum} field.
+     *
+     * @param seqNum the {@code seqNum} field value
+     * @return the {@code seqNum} field value
+     */
     private SequenceNumber seqNum;
+
+    /**
+     * Value of the {@code opNum} field.
+     *
+     * @param opNum the {@code opNum} field value
+     * @return the {@code opNum} field value
+     */
     private Uint32 opNum;
+
+    /**
+     * Value of the {@code liquidityPoolID} field.
+     *
+     * @param liquidityPoolID the {@code liquidityPoolID} field value
+     * @return the {@code liquidityPoolID} field value
+     */
     private PoolID liquidityPoolID;
+
+    /**
+     * Value of the {@code asset} field.
+     *
+     * @param asset the {@code asset} field value
+     * @return the {@code asset} field value
+     */
     private Asset asset;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -394,7 +520,20 @@ public class HashIDPreimage implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class HashIDPreimageContractID implements XdrElement {
+    /**
+     * Value of the {@code networkID} field.
+     *
+     * @param networkID the {@code networkID} field value
+     * @return the {@code networkID} field value
+     */
     private Hash networkID;
+
+    /**
+     * Value of the {@code contractIDPreimage} field.
+     *
+     * @param contractIDPreimage the {@code contractIDPreimage} field value
+     * @return the {@code contractIDPreimage} field value
+     */
     private ContractIDPreimage contractIDPreimage;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -476,9 +615,36 @@ public class HashIDPreimage implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class HashIDPreimageSorobanAuthorization implements XdrElement {
+    /**
+     * Value of the {@code networkID} field.
+     *
+     * @param networkID the {@code networkID} field value
+     * @return the {@code networkID} field value
+     */
     private Hash networkID;
+
+    /**
+     * Value of the {@code nonce} field.
+     *
+     * @param nonce the {@code nonce} field value
+     * @return the {@code nonce} field value
+     */
     private Int64 nonce;
+
+    /**
+     * Value of the {@code signatureExpirationLedger} field.
+     *
+     * @param signatureExpirationLedger the {@code signatureExpirationLedger} field value
+     * @return the {@code signatureExpirationLedger} field value
+     */
     private Uint32 signatureExpirationLedger;
+
+    /**
+     * Value of the {@code invocation} field.
+     *
+     * @param invocation the {@code invocation} field value
+     * @return the {@code invocation} field value
+     */
     private SorobanAuthorizedInvocation invocation;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -549,6 +715,147 @@ public class HashIDPreimage implements XdrElement {
       instance.nonce = Int64.fromJsonObject(jsonMap.get("nonce"));
       instance.signatureExpirationLedger =
           Uint32.fromJsonObject(jsonMap.get("signature_expiration_ledger"));
+      instance.invocation = SorobanAuthorizedInvocation.fromJsonObject(jsonMap.get("invocation"));
+      return instance;
+    }
+  }
+
+  /**
+   * HashIDPreimageSorobanAuthorizationWithAddress's original definition in the XDR file is:
+   *
+   * <pre>
+   * struct
+   *     {
+   *         Hash networkID;
+   *         int64 nonce;
+   *         uint32 signatureExpirationLedger;
+   *         SCAddress address;
+   *         SorobanAuthorizedInvocation invocation;
+   *     }
+   * </pre>
+   */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder(toBuilder = true)
+  public static class HashIDPreimageSorobanAuthorizationWithAddress implements XdrElement {
+    /**
+     * Value of the {@code networkID} field.
+     *
+     * @param networkID the {@code networkID} field value
+     * @return the {@code networkID} field value
+     */
+    private Hash networkID;
+
+    /**
+     * Value of the {@code nonce} field.
+     *
+     * @param nonce the {@code nonce} field value
+     * @return the {@code nonce} field value
+     */
+    private Int64 nonce;
+
+    /**
+     * Value of the {@code signatureExpirationLedger} field.
+     *
+     * @param signatureExpirationLedger the {@code signatureExpirationLedger} field value
+     * @return the {@code signatureExpirationLedger} field value
+     */
+    private Uint32 signatureExpirationLedger;
+
+    /**
+     * Value of the {@code address} field.
+     *
+     * @param address the {@code address} field value
+     * @return the {@code address} field value
+     */
+    private SCAddress address;
+
+    /**
+     * Value of the {@code invocation} field.
+     *
+     * @param invocation the {@code invocation} field value
+     * @return the {@code invocation} field value
+     */
+    private SorobanAuthorizedInvocation invocation;
+
+    public void encode(XdrDataOutputStream stream) throws IOException {
+      networkID.encode(stream);
+      nonce.encode(stream);
+      signatureExpirationLedger.encode(stream);
+      address.encode(stream);
+      invocation.encode(stream);
+    }
+
+    public static HashIDPreimageSorobanAuthorizationWithAddress decode(
+        XdrDataInputStream stream, int maxDepth) throws IOException {
+      if (maxDepth <= 0) {
+        throw new IOException("Maximum decoding depth reached");
+      }
+      maxDepth -= 1;
+      HashIDPreimageSorobanAuthorizationWithAddress
+          decodedHashIDPreimageSorobanAuthorizationWithAddress =
+              new HashIDPreimageSorobanAuthorizationWithAddress();
+      decodedHashIDPreimageSorobanAuthorizationWithAddress.networkID =
+          Hash.decode(stream, maxDepth);
+      decodedHashIDPreimageSorobanAuthorizationWithAddress.nonce = Int64.decode(stream, maxDepth);
+      decodedHashIDPreimageSorobanAuthorizationWithAddress.signatureExpirationLedger =
+          Uint32.decode(stream, maxDepth);
+      decodedHashIDPreimageSorobanAuthorizationWithAddress.address =
+          SCAddress.decode(stream, maxDepth);
+      decodedHashIDPreimageSorobanAuthorizationWithAddress.invocation =
+          SorobanAuthorizedInvocation.decode(stream, maxDepth);
+      return decodedHashIDPreimageSorobanAuthorizationWithAddress;
+    }
+
+    public static HashIDPreimageSorobanAuthorizationWithAddress decode(XdrDataInputStream stream)
+        throws IOException {
+      return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
+    }
+
+    public static HashIDPreimageSorobanAuthorizationWithAddress fromXdrBase64(String xdr)
+        throws IOException {
+      byte[] bytes = Base64Factory.getInstance().decode(xdr);
+      return fromXdrByteArray(bytes);
+    }
+
+    public static HashIDPreimageSorobanAuthorizationWithAddress fromXdrByteArray(byte[] xdr)
+        throws IOException {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+      XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+      xdrDataInputStream.setMaxInputLen(xdr.length);
+      return decode(xdrDataInputStream);
+    }
+
+    @Override
+    public String toJson() {
+      return XdrElement.gson.toJson(toJsonObject());
+    }
+
+    public static HashIDPreimageSorobanAuthorizationWithAddress fromJson(String json) {
+      return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+    }
+
+    Object toJsonObject() {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("network_id", networkID.toJsonObject());
+      jsonMap.put("nonce", nonce.toJsonObject());
+      jsonMap.put("signature_expiration_ledger", signatureExpirationLedger.toJsonObject());
+      jsonMap.put("address", address.toJsonObject());
+      jsonMap.put("invocation", invocation.toJsonObject());
+      return jsonMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    static HashIDPreimageSorobanAuthorizationWithAddress fromJsonObject(Object json) {
+      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+      HashIDPreimageSorobanAuthorizationWithAddress instance =
+          new HashIDPreimageSorobanAuthorizationWithAddress();
+      instance.networkID = Hash.fromJsonObject(jsonMap.get("network_id"));
+      instance.nonce = Int64.fromJsonObject(jsonMap.get("nonce"));
+      instance.signatureExpirationLedger =
+          Uint32.fromJsonObject(jsonMap.get("signature_expiration_ledger"));
+      instance.address = SCAddress.fromJsonObject(jsonMap.get("address"));
       instance.invocation = SorobanAuthorizedInvocation.fromJsonObject(jsonMap.get("invocation"));
       return instance;
     }

@@ -27,7 +27,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCContractInstance implements XdrElement {
+  /**
+   * Value of the {@code executable} field.
+   *
+   * @param executable the {@code executable} field value
+   * @return the {@code executable} field value
+   */
   private ContractExecutable executable;
+
+  /**
+   * Value of the {@code storage} field.
+   *
+   * @param storage the {@code storage} field value
+   * @return the {@code storage} field value
+   */
   private SCMap storage;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -32,9 +32,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerCloseMeta implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private Integer discriminant;
+
+  /**
+   * Value of the {@code v0} field.
+   *
+   * @param v0 the {@code v0} field value
+   * @return the {@code v0} field value
+   */
   private LedgerCloseMetaV0 v0;
+
+  /**
+   * Value of the {@code v1} field.
+   *
+   * @param v1 the {@code v1} field value
+   * @return the {@code v1} field value
+   */
   private LedgerCloseMetaV1 v1;
+
+  /**
+   * Value of the {@code v2} field.
+   *
+   * @param v2 the {@code v2} field value
+   * @return the {@code v2} field value
+   */
   private LedgerCloseMetaV2 v2;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

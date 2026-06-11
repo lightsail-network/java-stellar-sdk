@@ -36,16 +36,92 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ContractCodeCostInputs implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code nInstructions} field.
+   *
+   * @param nInstructions the {@code nInstructions} field value
+   * @return the {@code nInstructions} field value
+   */
   private Uint32 nInstructions;
+
+  /**
+   * Value of the {@code nFunctions} field.
+   *
+   * @param nFunctions the {@code nFunctions} field value
+   * @return the {@code nFunctions} field value
+   */
   private Uint32 nFunctions;
+
+  /**
+   * Value of the {@code nGlobals} field.
+   *
+   * @param nGlobals the {@code nGlobals} field value
+   * @return the {@code nGlobals} field value
+   */
   private Uint32 nGlobals;
+
+  /**
+   * Value of the {@code nTableEntries} field.
+   *
+   * @param nTableEntries the {@code nTableEntries} field value
+   * @return the {@code nTableEntries} field value
+   */
   private Uint32 nTableEntries;
+
+  /**
+   * Value of the {@code nTypes} field.
+   *
+   * @param nTypes the {@code nTypes} field value
+   * @return the {@code nTypes} field value
+   */
   private Uint32 nTypes;
+
+  /**
+   * Value of the {@code nDataSegments} field.
+   *
+   * @param nDataSegments the {@code nDataSegments} field value
+   * @return the {@code nDataSegments} field value
+   */
   private Uint32 nDataSegments;
+
+  /**
+   * Value of the {@code nElemSegments} field.
+   *
+   * @param nElemSegments the {@code nElemSegments} field value
+   * @return the {@code nElemSegments} field value
+   */
   private Uint32 nElemSegments;
+
+  /**
+   * Value of the {@code nImports} field.
+   *
+   * @param nImports the {@code nImports} field value
+   * @return the {@code nImports} field value
+   */
   private Uint32 nImports;
+
+  /**
+   * Value of the {@code nExports} field.
+   *
+   * @param nExports the {@code nExports} field value
+   * @return the {@code nExports} field value
+   */
   private Uint32 nExports;
+
+  /**
+   * Value of the {@code nDataSegmentBytes} field.
+   *
+   * @param nDataSegmentBytes the {@code nDataSegmentBytes} field value
+   * @return the {@code nDataSegmentBytes} field value
+   */
   private Uint32 nDataSegmentBytes;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

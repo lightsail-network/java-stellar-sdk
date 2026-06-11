@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class CreateContractArgs implements XdrElement {
+  /**
+   * Value of the {@code contractIDPreimage} field.
+   *
+   * @param contractIDPreimage the {@code contractIDPreimage} field value
+   * @return the {@code contractIDPreimage} field value
+   */
   private ContractIDPreimage contractIDPreimage;
+
+  /**
+   * Value of the {@code executable} field.
+   *
+   * @param executable the {@code executable} field value
+   * @return the {@code executable} field value
+   */
   private ContractExecutable executable;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

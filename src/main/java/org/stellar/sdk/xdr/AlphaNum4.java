@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class AlphaNum4 implements XdrElement {
+  /**
+   * Value of the {@code assetCode} field.
+   *
+   * @param assetCode the {@code assetCode} field value
+   * @return the {@code assetCode} field value
+   */
   private AssetCode4 assetCode;
+
+  /**
+   * Value of the {@code issuer} field.
+   *
+   * @param issuer the {@code issuer} field value
+   * @return the {@code issuer} field value
+   */
   private AccountID issuer;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

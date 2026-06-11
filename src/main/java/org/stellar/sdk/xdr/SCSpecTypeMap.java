@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecTypeMap implements XdrElement {
+  /**
+   * Value of the {@code keyType} field.
+   *
+   * @param keyType the {@code keyType} field value
+   * @return the {@code keyType} field value
+   */
   private SCSpecTypeDef keyType;
+
+  /**
+   * Value of the {@code valueType} field.
+   *
+   * @param valueType the {@code valueType} field value
+   * @return the {@code valueType} field value
+   */
   private SCSpecTypeDef valueType;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

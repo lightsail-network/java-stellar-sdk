@@ -30,9 +30,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TimeSlicedSurveyRequestMessage implements XdrElement {
+  /**
+   * Value of the {@code request} field.
+   *
+   * @param request the {@code request} field value
+   * @return the {@code request} field value
+   */
   private SurveyRequestMessage request;
+
+  /**
+   * Value of the {@code nonce} field.
+   *
+   * @param nonce the {@code nonce} field value
+   * @return the {@code nonce} field value
+   */
   private Uint32 nonce;
+
+  /**
+   * Value of the {@code inboundPeersIndex} field.
+   *
+   * @param inboundPeersIndex the {@code inboundPeersIndex} field value
+   * @return the {@code inboundPeersIndex} field value
+   */
   private Uint32 inboundPeersIndex;
+
+  /**
+   * Value of the {@code outboundPeersIndex} field.
+   *
+   * @param outboundPeersIndex the {@code outboundPeersIndex} field value
+   * @return the {@code outboundPeersIndex} field value
+   */
   private Uint32 outboundPeersIndex;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

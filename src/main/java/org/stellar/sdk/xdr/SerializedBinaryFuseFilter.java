@@ -41,14 +41,76 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SerializedBinaryFuseFilter implements XdrElement {
+  /**
+   * Value of the {@code type} field.
+   *
+   * @param type the {@code type} field value
+   * @return the {@code type} field value
+   */
   private BinaryFuseFilterType type;
+
+  /**
+   * Value of the {@code inputHashSeed} field.
+   *
+   * @param inputHashSeed the {@code inputHashSeed} field value
+   * @return the {@code inputHashSeed} field value
+   */
   private ShortHashSeed inputHashSeed;
+
+  /**
+   * Value of the {@code filterSeed} field.
+   *
+   * @param filterSeed the {@code filterSeed} field value
+   * @return the {@code filterSeed} field value
+   */
   private ShortHashSeed filterSeed;
+
+  /**
+   * Value of the {@code segmentLength} field.
+   *
+   * @param segmentLength the {@code segmentLength} field value
+   * @return the {@code segmentLength} field value
+   */
   private Uint32 segmentLength;
+
+  /**
+   * Value of the {@code segementLengthMask} field.
+   *
+   * @param segementLengthMask the {@code segementLengthMask} field value
+   * @return the {@code segementLengthMask} field value
+   */
   private Uint32 segementLengthMask;
+
+  /**
+   * Value of the {@code segmentCount} field.
+   *
+   * @param segmentCount the {@code segmentCount} field value
+   * @return the {@code segmentCount} field value
+   */
   private Uint32 segmentCount;
+
+  /**
+   * Value of the {@code segmentCountLength} field.
+   *
+   * @param segmentCountLength the {@code segmentCountLength} field value
+   * @return the {@code segmentCountLength} field value
+   */
   private Uint32 segmentCountLength;
+
+  /**
+   * Value of the {@code fingerprintLength} field.
+   *
+   * @param fingerprintLength the {@code fingerprintLength} field value
+   * @return the {@code fingerprintLength} field value
+   */
   private Uint32 fingerprintLength;
+
+  /**
+   * Value of the {@code fingerprints} field.
+   *
+   * @param fingerprints the {@code fingerprints} field value
+   * @return the {@code fingerprints} field value
+   */
   private byte[] fingerprints;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

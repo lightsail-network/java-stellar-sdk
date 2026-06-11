@@ -38,12 +38,60 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecEntry implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SCSpecEntryKind discriminant;
+
+  /**
+   * Value of the {@code functionV0} field.
+   *
+   * @param functionV0 the {@code functionV0} field value
+   * @return the {@code functionV0} field value
+   */
   private SCSpecFunctionV0 functionV0;
+
+  /**
+   * Value of the {@code udtStructV0} field.
+   *
+   * @param udtStructV0 the {@code udtStructV0} field value
+   * @return the {@code udtStructV0} field value
+   */
   private SCSpecUDTStructV0 udtStructV0;
+
+  /**
+   * Value of the {@code udtUnionV0} field.
+   *
+   * @param udtUnionV0 the {@code udtUnionV0} field value
+   * @return the {@code udtUnionV0} field value
+   */
   private SCSpecUDTUnionV0 udtUnionV0;
+
+  /**
+   * Value of the {@code udtEnumV0} field.
+   *
+   * @param udtEnumV0 the {@code udtEnumV0} field value
+   * @return the {@code udtEnumV0} field value
+   */
   private SCSpecUDTEnumV0 udtEnumV0;
+
+  /**
+   * Value of the {@code udtErrorEnumV0} field.
+   *
+   * @param udtErrorEnumV0 the {@code udtErrorEnumV0} field value
+   * @return the {@code udtErrorEnumV0} field value
+   */
   private SCSpecUDTErrorEnumV0 udtErrorEnumV0;
+
+  /**
+   * Value of the {@code eventV0} field.
+   *
+   * @param eventV0 the {@code eventV0} field value
+   * @return the {@code eventV0} field value
+   */
   private SCSpecEventV0 eventV0;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -27,7 +27,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionEvent implements XdrElement {
+  /**
+   * Value of the {@code stage} field.
+   *
+   * @param stage the {@code stage} field value
+   * @return the {@code stage} field value
+   */
   private TransactionEventStage stage;
+
+  /**
+   * Value of the {@code event} field.
+   *
+   * @param event the {@code event} field value
+   * @return the {@code event} field value
+   */
   private ContractEvent event;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

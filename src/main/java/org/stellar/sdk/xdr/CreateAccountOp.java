@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class CreateAccountOp implements XdrElement {
+  /**
+   * Value of the {@code destination} field.
+   *
+   * @param destination the {@code destination} field value
+   * @return the {@code destination} field value
+   */
   private AccountID destination;
+
+  /**
+   * Value of the {@code startingBalance} field.
+   *
+   * @param startingBalance the {@code startingBalance} field value
+   * @return the {@code startingBalance} field value
+   */
   private Int64 startingBalance;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

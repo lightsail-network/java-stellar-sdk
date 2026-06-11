@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimePoint implements XdrElement {
+  /**
+   * Value of the {@code TimePoint} field.
+   *
+   * @param TimePoint the {@code TimePoint} field value
+   * @return the {@code TimePoint} field value
+   */
   private Uint64 TimePoint;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -30,8 +30,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCPNomination implements XdrElement {
+  /**
+   * Value of the {@code quorumSetHash} field.
+   *
+   * @param quorumSetHash the {@code quorumSetHash} field value
+   * @return the {@code quorumSetHash} field value
+   */
   private Hash quorumSetHash;
+
+  /**
+   * Value of the {@code votes} field.
+   *
+   * @param votes the {@code votes} field value
+   * @return the {@code votes} field value
+   */
   private Value[] votes;
+
+  /**
+   * Value of the {@code accepted} field.
+   *
+   * @param accepted the {@code accepted} field value
+   * @return the {@code accepted} field value
+   */
   private Value[] accepted;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

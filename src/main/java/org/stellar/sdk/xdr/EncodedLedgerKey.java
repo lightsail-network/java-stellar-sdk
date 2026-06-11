@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EncodedLedgerKey implements XdrElement {
+  /**
+   * Value of the {@code EncodedLedgerKey} field.
+   *
+   * @param EncodedLedgerKey the {@code EncodedLedgerKey} field value
+   * @return the {@code EncodedLedgerKey} field value
+   */
   private byte[] EncodedLedgerKey;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

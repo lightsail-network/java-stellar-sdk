@@ -33,10 +33,44 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ManageSellOfferOp implements XdrElement {
+  /**
+   * Value of the {@code selling} field.
+   *
+   * @param selling the {@code selling} field value
+   * @return the {@code selling} field value
+   */
   private Asset selling;
+
+  /**
+   * Value of the {@code buying} field.
+   *
+   * @param buying the {@code buying} field value
+   * @return the {@code buying} field value
+   */
   private Asset buying;
+
+  /**
+   * Value of the {@code amount} field.
+   *
+   * @param amount the {@code amount} field value
+   * @return the {@code amount} field value
+   */
   private Int64 amount;
+
+  /**
+   * Value of the {@code price} field.
+   *
+   * @param price the {@code price} field value
+   * @return the {@code price} field value
+   */
   private Price price;
+
+  /**
+   * Value of the {@code offerID} field.
+   *
+   * @param offerID the {@code offerID} field value
+   * @return the {@code offerID} field value
+   */
   private Int64 offerID;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

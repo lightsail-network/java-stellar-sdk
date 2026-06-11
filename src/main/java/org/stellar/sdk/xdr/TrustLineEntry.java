@@ -55,11 +55,52 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TrustLineEntry implements XdrElement {
+  /**
+   * Value of the {@code accountID} field.
+   *
+   * @param accountID the {@code accountID} field value
+   * @return the {@code accountID} field value
+   */
   private AccountID accountID;
+
+  /**
+   * Value of the {@code asset} field.
+   *
+   * @param asset the {@code asset} field value
+   * @return the {@code asset} field value
+   */
   private TrustLineAsset asset;
+
+  /**
+   * Value of the {@code balance} field.
+   *
+   * @param balance the {@code balance} field value
+   * @return the {@code balance} field value
+   */
   private Int64 balance;
+
+  /**
+   * Value of the {@code limit} field.
+   *
+   * @param limit the {@code limit} field value
+   * @return the {@code limit} field value
+   */
   private Int64 limit;
+
+  /**
+   * Value of the {@code flags} field.
+   *
+   * @param flags the {@code flags} field value
+   * @return the {@code flags} field value
+   */
   private Uint32 flags;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private TrustLineEntryExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -165,7 +206,20 @@ public class TrustLineEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class TrustLineEntryExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v1} field.
+     *
+     * @param v1 the {@code v1} field value
+     * @return the {@code v1} field value
+     */
     private TrustLineEntryV1 v1;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -293,7 +347,20 @@ public class TrustLineEntry implements XdrElement {
     @AllArgsConstructor
     @Builder(toBuilder = true)
     public static class TrustLineEntryV1 implements XdrElement {
+      /**
+       * Value of the {@code liabilities} field.
+       *
+       * @param liabilities the {@code liabilities} field value
+       * @return the {@code liabilities} field value
+       */
       private Liabilities liabilities;
+
+      /**
+       * Value of the {@code ext} field.
+       *
+       * @param ext the {@code ext} field value
+       * @return the {@code ext} field value
+       */
       private TrustLineEntryV1Ext ext;
 
       public void encode(XdrDataOutputStream stream) throws IOException {
@@ -372,7 +439,20 @@ public class TrustLineEntry implements XdrElement {
       @AllArgsConstructor
       @Builder(toBuilder = true)
       public static class TrustLineEntryV1Ext implements XdrElement {
+        /**
+         * Value of the {@code discriminant} field.
+         *
+         * @param discriminant the {@code discriminant} field value
+         * @return the {@code discriminant} field value
+         */
         private Integer discriminant;
+
+        /**
+         * Value of the {@code v2} field.
+         *
+         * @param v2 the {@code v2} field value
+         * @return the {@code v2} field value
+         */
         private TrustLineEntryExtensionV2 v2;
 
         public void encode(XdrDataOutputStream stream) throws IOException {

@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class UpgradeEntryMeta implements XdrElement {
+  /**
+   * Value of the {@code upgrade} field.
+   *
+   * @param upgrade the {@code upgrade} field value
+   * @return the {@code upgrade} field value
+   */
   private LedgerUpgrade upgrade;
+
+  /**
+   * Value of the {@code changes} field.
+   *
+   * @param changes the {@code changes} field value
+   * @return the {@code changes} field value
+   */
   private LedgerEntryChanges changes;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

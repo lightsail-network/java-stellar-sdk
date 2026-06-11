@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ShortHashSeed implements XdrElement {
+  /**
+   * Value of the {@code seed} field.
+   *
+   * @param seed the {@code seed} field value
+   * @return the {@code seed} field value
+   */
   private byte[] seed;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

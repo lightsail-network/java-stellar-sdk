@@ -28,6 +28,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractExecutionLanesV0 implements XdrElement {
+  /**
+   * Value of the {@code ledgerMaxTxCount} field.
+   *
+   * @param ledgerMaxTxCount the {@code ledgerMaxTxCount} field value
+   * @return the {@code ledgerMaxTxCount} field value
+   */
   private Uint32 ledgerMaxTxCount;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

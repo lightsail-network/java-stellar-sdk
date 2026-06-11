@@ -28,6 +28,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecTypeTuple implements XdrElement {
+  /**
+   * Value of the {@code valueTypes} field.
+   *
+   * @param valueTypes the {@code valueTypes} field value
+   * @return the {@code valueTypes} field value
+   */
   private SCSpecTypeDef[] valueTypes;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

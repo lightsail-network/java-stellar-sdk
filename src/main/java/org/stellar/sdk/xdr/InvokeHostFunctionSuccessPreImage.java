@@ -29,7 +29,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class InvokeHostFunctionSuccessPreImage implements XdrElement {
+  /**
+   * Value of the {@code returnValue} field.
+   *
+   * @param returnValue the {@code returnValue} field value
+   * @return the {@code returnValue} field value
+   */
   private SCVal returnValue;
+
+  /**
+   * Value of the {@code events} field.
+   *
+   * @param events the {@code events} field value
+   * @return the {@code events} field value
+   */
   private ContractEvent[] events;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

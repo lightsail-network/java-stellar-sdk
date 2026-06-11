@@ -32,9 +32,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ClaimAtom implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private ClaimAtomType discriminant;
+
+  /**
+   * Value of the {@code v0} field.
+   *
+   * @param v0 the {@code v0} field value
+   * @return the {@code v0} field value
+   */
   private ClaimOfferAtomV0 v0;
+
+  /**
+   * Value of the {@code orderBook} field.
+   *
+   * @param orderBook the {@code orderBook} field value
+   * @return the {@code orderBook} field value
+   */
   private ClaimOfferAtom orderBook;
+
+  /**
+   * Value of the {@code liquidityPool} field.
+   *
+   * @param liquidityPool the {@code liquidityPool} field value
+   * @return the {@code liquidityPool} field value
+   */
   private ClaimLiquidityAtom liquidityPool;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

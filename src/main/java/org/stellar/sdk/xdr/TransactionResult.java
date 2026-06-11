@@ -65,8 +65,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionResult implements XdrElement {
+  /**
+   * Value of the {@code feeCharged} field.
+   *
+   * @param feeCharged the {@code feeCharged} field value
+   * @return the {@code feeCharged} field value
+   */
   private Int64 feeCharged;
+
+  /**
+   * Value of the {@code result} field.
+   *
+   * @param result the {@code result} field value
+   * @return the {@code result} field value
+   */
   private TransactionResultResult result;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private TransactionResultExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -169,8 +189,28 @@ public class TransactionResult implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class TransactionResultResult implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private TransactionResultCode discriminant;
+
+    /**
+     * Value of the {@code innerResultPair} field.
+     *
+     * @param innerResultPair the {@code innerResultPair} field value
+     * @return the {@code innerResultPair} field value
+     */
     private InnerTransactionResultPair innerResultPair;
+
+    /**
+     * Value of the {@code results} field.
+     *
+     * @param results the {@code results} field value
+     * @return the {@code results} field value
+     */
     private OperationResult[] results;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -456,6 +496,12 @@ public class TransactionResult implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class TransactionResultExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

@@ -29,8 +29,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TopologyResponseBodyV2 implements XdrElement {
+  /**
+   * Value of the {@code inboundPeers} field.
+   *
+   * @param inboundPeers the {@code inboundPeers} field value
+   * @return the {@code inboundPeers} field value
+   */
   private TimeSlicedPeerDataList inboundPeers;
+
+  /**
+   * Value of the {@code outboundPeers} field.
+   *
+   * @param outboundPeers the {@code outboundPeers} field value
+   * @return the {@code outboundPeers} field value
+   */
   private TimeSlicedPeerDataList outboundPeers;
+
+  /**
+   * Value of the {@code nodeData} field.
+   *
+   * @param nodeData the {@code nodeData} field value
+   * @return the {@code nodeData} field value
+   */
   private TimeSlicedNodeData nodeData;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

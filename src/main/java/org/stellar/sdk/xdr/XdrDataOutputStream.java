@@ -4,15 +4,27 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/** XDR-aware output stream that writes variable-length values with the required padding. */
 public class XdrDataOutputStream extends DataOutputStream {
 
   private final XdrOutputStream mOut;
 
+  /**
+   * Creates an XdrDataOutputStream that uses the specified underlying OutputStream.
+   *
+   * @param out the specified output stream
+   */
   public XdrDataOutputStream(OutputStream out) {
     super(new XdrOutputStream(out));
     mOut = (XdrOutputStream) super.out;
   }
 
+  /**
+   * Writes an XDR variable-length array of integers.
+   *
+   * @param a the array to write
+   * @throws IOException if an I/O error occurs while writing the array
+   */
   public void writeIntArray(int[] a) throws IOException {
     writeInt(a.length);
     writeIntArray(a, a.length);
@@ -24,6 +36,12 @@ public class XdrDataOutputStream extends DataOutputStream {
     }
   }
 
+  /**
+   * Writes an XDR variable-length array of floats.
+   *
+   * @param a the array to write
+   * @throws IOException if an I/O error occurs while writing the array
+   */
   public void writeFloatArray(float[] a) throws IOException {
     writeInt(a.length);
     writeFloatArray(a, a.length);
@@ -35,6 +53,12 @@ public class XdrDataOutputStream extends DataOutputStream {
     }
   }
 
+  /**
+   * Writes an XDR variable-length array of doubles.
+   *
+   * @param a the array to write
+   * @throws IOException if an I/O error occurs while writing the array
+   */
   public void writeDoubleArray(double[] a) throws IOException {
     writeInt(a.length);
     writeDoubleArray(a, a.length);

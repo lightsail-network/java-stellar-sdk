@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SignedTimeSlicedSurveyResponseMessage implements XdrElement {
+  /**
+   * Value of the {@code responseSignature} field.
+   *
+   * @param responseSignature the {@code responseSignature} field value
+   * @return the {@code responseSignature} field value
+   */
   private Signature responseSignature;
+
+  /**
+   * Value of the {@code response} field.
+   *
+   * @param response the {@code response} field value
+   * @return the {@code response} field value
+   */
   private TimeSlicedSurveyResponseMessage response;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

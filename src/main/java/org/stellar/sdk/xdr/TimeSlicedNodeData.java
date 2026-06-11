@@ -42,15 +42,84 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TimeSlicedNodeData implements XdrElement {
+  /**
+   * Value of the {@code addedAuthenticatedPeers} field.
+   *
+   * @param addedAuthenticatedPeers the {@code addedAuthenticatedPeers} field value
+   * @return the {@code addedAuthenticatedPeers} field value
+   */
   private Uint32 addedAuthenticatedPeers;
+
+  /**
+   * Value of the {@code droppedAuthenticatedPeers} field.
+   *
+   * @param droppedAuthenticatedPeers the {@code droppedAuthenticatedPeers} field value
+   * @return the {@code droppedAuthenticatedPeers} field value
+   */
   private Uint32 droppedAuthenticatedPeers;
+
+  /**
+   * Value of the {@code totalInboundPeerCount} field.
+   *
+   * @param totalInboundPeerCount the {@code totalInboundPeerCount} field value
+   * @return the {@code totalInboundPeerCount} field value
+   */
   private Uint32 totalInboundPeerCount;
+
+  /**
+   * Value of the {@code totalOutboundPeerCount} field.
+   *
+   * @param totalOutboundPeerCount the {@code totalOutboundPeerCount} field value
+   * @return the {@code totalOutboundPeerCount} field value
+   */
   private Uint32 totalOutboundPeerCount;
+
+  /**
+   * Value of the {@code p75SCPFirstToSelfLatencyMs} field.
+   *
+   * @param p75SCPFirstToSelfLatencyMs the {@code p75SCPFirstToSelfLatencyMs} field value
+   * @return the {@code p75SCPFirstToSelfLatencyMs} field value
+   */
   private Uint32 p75SCPFirstToSelfLatencyMs;
+
+  /**
+   * Value of the {@code p75SCPSelfToOtherLatencyMs} field.
+   *
+   * @param p75SCPSelfToOtherLatencyMs the {@code p75SCPSelfToOtherLatencyMs} field value
+   * @return the {@code p75SCPSelfToOtherLatencyMs} field value
+   */
   private Uint32 p75SCPSelfToOtherLatencyMs;
+
+  /**
+   * Value of the {@code lostSyncCount} field.
+   *
+   * @param lostSyncCount the {@code lostSyncCount} field value
+   * @return the {@code lostSyncCount} field value
+   */
   private Uint32 lostSyncCount;
+
+  /**
+   * Value of the {@code isValidator} field.
+   *
+   * @param isValidator the {@code isValidator} field value
+   * @return the {@code isValidator} field value
+   */
   private Boolean isValidator;
+
+  /**
+   * Value of the {@code maxInboundPeerCount} field.
+   *
+   * @param maxInboundPeerCount the {@code maxInboundPeerCount} field value
+   * @return the {@code maxInboundPeerCount} field value
+   */
   private Uint32 maxInboundPeerCount;
+
+  /**
+   * Value of the {@code maxOutboundPeerCount} field.
+   *
+   * @param maxOutboundPeerCount the {@code maxOutboundPeerCount} field value
+   * @return the {@code maxOutboundPeerCount} field value
+   */
   private Uint32 maxOutboundPeerCount;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

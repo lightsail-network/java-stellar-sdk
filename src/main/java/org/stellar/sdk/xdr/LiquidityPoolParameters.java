@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LiquidityPoolParameters implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private LiquidityPoolType discriminant;
+
+  /**
+   * Value of the {@code constantProduct} field.
+   *
+   * @param constantProduct the {@code constantProduct} field value
+   * @return the {@code constantProduct} field value
+   */
   private LiquidityPoolConstantProductParameters constantProduct;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

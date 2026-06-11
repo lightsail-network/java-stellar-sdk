@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigUpgradeSet implements XdrElement {
+  /**
+   * Value of the {@code updatedEntry} field.
+   *
+   * @param updatedEntry the {@code updatedEntry} field value
+   * @return the {@code updatedEntry} field value
+   */
   private ConfigSettingEntry[] updatedEntry;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

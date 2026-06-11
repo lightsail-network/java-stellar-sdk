@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Auth implements XdrElement {
+  /**
+   * Value of the {@code flags} field.
+   *
+   * @param flags the {@code flags} field value
+   * @return the {@code flags} field value
+   */
   private Integer flags;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

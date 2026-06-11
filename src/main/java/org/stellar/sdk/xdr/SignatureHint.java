@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignatureHint implements XdrElement {
+  /**
+   * Value of the {@code SignatureHint} field.
+   *
+   * @param SignatureHint the {@code SignatureHint} field value
+   * @return the {@code SignatureHint} field value
+   */
   private byte[] SignatureHint;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

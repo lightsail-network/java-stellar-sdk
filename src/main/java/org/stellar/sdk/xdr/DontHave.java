@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class DontHave implements XdrElement {
+  /**
+   * Value of the {@code type} field.
+   *
+   * @param type the {@code type} field value
+   * @return the {@code type} field value
+   */
   private MessageType type;
+
+  /**
+   * Value of the {@code reqHash} field.
+   *
+   * @param reqHash the {@code reqHash} field value
+   * @return the {@code reqHash} field value
+   */
   private Uint256 reqHash;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

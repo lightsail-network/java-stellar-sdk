@@ -42,14 +42,76 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SetOptionsOp implements XdrElement {
+  /**
+   * Value of the {@code inflationDest} field.
+   *
+   * @param inflationDest the {@code inflationDest} field value
+   * @return the {@code inflationDest} field value
+   */
   private AccountID inflationDest;
+
+  /**
+   * Value of the {@code clearFlags} field.
+   *
+   * @param clearFlags the {@code clearFlags} field value
+   * @return the {@code clearFlags} field value
+   */
   private Uint32 clearFlags;
+
+  /**
+   * Value of the {@code setFlags} field.
+   *
+   * @param setFlags the {@code setFlags} field value
+   * @return the {@code setFlags} field value
+   */
   private Uint32 setFlags;
+
+  /**
+   * Value of the {@code masterWeight} field.
+   *
+   * @param masterWeight the {@code masterWeight} field value
+   * @return the {@code masterWeight} field value
+   */
   private Uint32 masterWeight;
+
+  /**
+   * Value of the {@code lowThreshold} field.
+   *
+   * @param lowThreshold the {@code lowThreshold} field value
+   * @return the {@code lowThreshold} field value
+   */
   private Uint32 lowThreshold;
+
+  /**
+   * Value of the {@code medThreshold} field.
+   *
+   * @param medThreshold the {@code medThreshold} field value
+   * @return the {@code medThreshold} field value
+   */
   private Uint32 medThreshold;
+
+  /**
+   * Value of the {@code highThreshold} field.
+   *
+   * @param highThreshold the {@code highThreshold} field value
+   * @return the {@code highThreshold} field value
+   */
   private Uint32 highThreshold;
+
+  /**
+   * Value of the {@code homeDomain} field.
+   *
+   * @param homeDomain the {@code homeDomain} field value
+   * @return the {@code homeDomain} field value
+   */
   private String32 homeDomain;
+
+  /**
+   * Value of the {@code signer} field.
+   *
+   * @param signer the {@code signer} field value
+   * @return the {@code signer} field value
+   */
   private Signer signer;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

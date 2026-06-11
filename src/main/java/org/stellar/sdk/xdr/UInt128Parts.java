@@ -27,7 +27,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class UInt128Parts implements XdrElement {
+  /**
+   * Value of the {@code hi} field.
+   *
+   * @param hi the {@code hi} field value
+   * @return the {@code hi} field value
+   */
   private Uint64 hi;
+
+  /**
+   * Value of the {@code lo} field.
+   *
+   * @param lo the {@code lo} field value
+   * @return the {@code lo} field value
+   */
   private Uint64 lo;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

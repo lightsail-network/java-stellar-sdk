@@ -31,7 +31,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCEnvMetaEntry implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SCEnvMetaKind discriminant;
+
+  /**
+   * Value of the {@code interfaceVersion} field.
+   *
+   * @param interfaceVersion the {@code interfaceVersion} field value
+   * @return the {@code interfaceVersion} field value
+   */
   private SCEnvMetaEntryInterfaceVersion interfaceVersion;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -135,7 +148,20 @@ public class SCEnvMetaEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class SCEnvMetaEntryInterfaceVersion implements XdrElement {
+    /**
+     * Value of the {@code protocol} field.
+     *
+     * @param protocol the {@code protocol} field value
+     * @return the {@code protocol} field value
+     */
     private Uint32 protocol;
+
+    /**
+     * Value of the {@code preRelease} field.
+     *
+     * @param preRelease the {@code preRelease} field value
+     * @return the {@code preRelease} field value
+     */
     private Uint32 preRelease;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

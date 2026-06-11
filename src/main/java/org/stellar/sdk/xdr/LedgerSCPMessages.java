@@ -29,7 +29,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerSCPMessages implements XdrElement {
+  /**
+   * Value of the {@code ledgerSeq} field.
+   *
+   * @param ledgerSeq the {@code ledgerSeq} field value
+   * @return the {@code ledgerSeq} field value
+   */
   private Uint32 ledgerSeq;
+
+  /**
+   * Value of the {@code messages} field.
+   *
+   * @param messages the {@code messages} field value
+   * @return the {@code messages} field value
+   */
   private SCPEnvelope[] messages;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

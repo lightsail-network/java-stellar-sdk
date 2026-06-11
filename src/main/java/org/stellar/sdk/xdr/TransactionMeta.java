@@ -37,11 +37,52 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionMeta implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private Integer discriminant;
+
+  /**
+   * Value of the {@code operations} field.
+   *
+   * @param operations the {@code operations} field value
+   * @return the {@code operations} field value
+   */
   private OperationMeta[] operations;
+
+  /**
+   * Value of the {@code v1} field.
+   *
+   * @param v1 the {@code v1} field value
+   * @return the {@code v1} field value
+   */
   private TransactionMetaV1 v1;
+
+  /**
+   * Value of the {@code v2} field.
+   *
+   * @param v2 the {@code v2} field value
+   * @return the {@code v2} field value
+   */
   private TransactionMetaV2 v2;
+
+  /**
+   * Value of the {@code v3} field.
+   *
+   * @param v3 the {@code v3} field value
+   * @return the {@code v3} field value
+   */
   private TransactionMetaV3 v3;
+
+  /**
+   * Value of the {@code v4} field.
+   *
+   * @param v4 the {@code v4} field value
+   * @return the {@code v4} field value
+   */
   private TransactionMetaV4 v4;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

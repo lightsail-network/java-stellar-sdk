@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Signature implements XdrElement {
+  /**
+   * Value of the {@code Signature} field.
+   *
+   * @param Signature the {@code Signature} field value
+   * @return the {@code Signature} field value
+   */
   private byte[] Signature;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

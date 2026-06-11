@@ -36,10 +36,44 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Memo implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private MemoType discriminant;
+
+  /**
+   * Value of the {@code text} field.
+   *
+   * @param text the {@code text} field value
+   * @return the {@code text} field value
+   */
   private XdrString text;
+
+  /**
+   * Value of the {@code id} field.
+   *
+   * @param id the {@code id} field value
+   * @return the {@code id} field value
+   */
   private Uint64 id;
+
+  /**
+   * Value of the {@code hash} field.
+   *
+   * @param hash the {@code hash} field value
+   * @return the {@code hash} field value
+   */
   private Hash hash;
+
+  /**
+   * Value of the {@code retHash} field.
+   *
+   * @param retHash the {@code retHash} field value
+   * @return the {@code retHash} field value
+   */
   private Hash retHash;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

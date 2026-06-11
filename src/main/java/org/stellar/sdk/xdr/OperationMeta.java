@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class OperationMeta implements XdrElement {
+  /**
+   * Value of the {@code changes} field.
+   *
+   * @param changes the {@code changes} field value
+   * @return the {@code changes} field value
+   */
   private LedgerEntryChanges changes;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

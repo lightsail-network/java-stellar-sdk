@@ -36,7 +36,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class AccountEntryExtensionV1 implements XdrElement {
+  /**
+   * Value of the {@code liabilities} field.
+   *
+   * @param liabilities the {@code liabilities} field value
+   * @return the {@code liabilities} field value
+   */
   private Liabilities liabilities;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private AccountEntryExtensionV1Ext ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -115,7 +128,20 @@ public class AccountEntryExtensionV1 implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class AccountEntryExtensionV1Ext implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v2} field.
+     *
+     * @param v2 the {@code v2} field value
+     * @return the {@code v2} field value
+     */
     private AccountEntryExtensionV2 v2;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

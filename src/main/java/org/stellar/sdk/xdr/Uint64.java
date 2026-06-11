@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Uint64 implements XdrElement {
+  /**
+   * Value of the {@code uint64} field.
+   *
+   * @param uint64 the {@code uint64} field value
+   * @return the {@code uint64} field value
+   */
   private XdrUnsignedHyperInteger uint64;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -32,8 +32,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Preconditions implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private PreconditionType discriminant;
+
+  /**
+   * Value of the {@code timeBounds} field.
+   *
+   * @param timeBounds the {@code timeBounds} field value
+   * @return the {@code timeBounds} field value
+   */
   private TimeBounds timeBounds;
+
+  /**
+   * Value of the {@code v2} field.
+   *
+   * @param v2 the {@code v2} field value
+   * @return the {@code v2} field value
+   */
   private PreconditionsV2 v2;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class DiagnosticEvent implements XdrElement {
+  /**
+   * Value of the {@code inSuccessfulContractCall} field.
+   *
+   * @param inSuccessfulContractCall the {@code inSuccessfulContractCall} field value
+   * @return the {@code inSuccessfulContractCall} field value
+   */
   private Boolean inSuccessfulContractCall;
+
+  /**
+   * Value of the {@code event} field.
+   *
+   * @param event the {@code event} field value
+   * @return the {@code event} field value
+   */
   private ContractEvent event;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

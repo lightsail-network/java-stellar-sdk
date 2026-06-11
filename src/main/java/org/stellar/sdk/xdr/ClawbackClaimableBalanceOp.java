@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ClawbackClaimableBalanceOp implements XdrElement {
+  /**
+   * Value of the {@code balanceID} field.
+   *
+   * @param balanceID the {@code balanceID} field value
+   * @return the {@code balanceID} field value
+   */
   private ClaimableBalanceID balanceID;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

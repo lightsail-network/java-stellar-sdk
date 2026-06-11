@@ -32,7 +32,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Claimant implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private ClaimantType discriminant;
+
+  /**
+   * Value of the {@code v0} field.
+   *
+   * @param v0 the {@code v0} field value
+   * @return the {@code v0} field value
+   */
   private ClaimantV0 v0;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -133,7 +146,20 @@ public class Claimant implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class ClaimantV0 implements XdrElement {
+    /**
+     * Value of the {@code destination} field.
+     *
+     * @param destination the {@code destination} field value
+     * @return the {@code destination} field value
+     */
     private AccountID destination;
+
+    /**
+     * Value of the {@code predicate} field.
+     *
+     * @param predicate the {@code predicate} field value
+     * @return the {@code predicate} field value
+     */
     private ClaimPredicate predicate;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

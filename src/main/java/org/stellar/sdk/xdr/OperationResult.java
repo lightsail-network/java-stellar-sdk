@@ -92,7 +92,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class OperationResult implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private OperationResultCode discriminant;
+
+  /**
+   * Value of the {@code tr} field.
+   *
+   * @param tr the {@code tr} field value
+   * @return the {@code tr} field value
+   */
   private OperationResultTr tr;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -293,33 +306,230 @@ public class OperationResult implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class OperationResultTr implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private OperationType discriminant;
+
+    /**
+     * Value of the {@code createAccountResult} field.
+     *
+     * @param createAccountResult the {@code createAccountResult} field value
+     * @return the {@code createAccountResult} field value
+     */
     private CreateAccountResult createAccountResult;
+
+    /**
+     * Value of the {@code paymentResult} field.
+     *
+     * @param paymentResult the {@code paymentResult} field value
+     * @return the {@code paymentResult} field value
+     */
     private PaymentResult paymentResult;
+
+    /**
+     * Value of the {@code pathPaymentStrictReceiveResult} field.
+     *
+     * @param pathPaymentStrictReceiveResult the {@code pathPaymentStrictReceiveResult} field value
+     * @return the {@code pathPaymentStrictReceiveResult} field value
+     */
     private PathPaymentStrictReceiveResult pathPaymentStrictReceiveResult;
+
+    /**
+     * Value of the {@code manageSellOfferResult} field.
+     *
+     * @param manageSellOfferResult the {@code manageSellOfferResult} field value
+     * @return the {@code manageSellOfferResult} field value
+     */
     private ManageSellOfferResult manageSellOfferResult;
+
+    /**
+     * Value of the {@code createPassiveSellOfferResult} field.
+     *
+     * @param createPassiveSellOfferResult the {@code createPassiveSellOfferResult} field value
+     * @return the {@code createPassiveSellOfferResult} field value
+     */
     private ManageSellOfferResult createPassiveSellOfferResult;
+
+    /**
+     * Value of the {@code setOptionsResult} field.
+     *
+     * @param setOptionsResult the {@code setOptionsResult} field value
+     * @return the {@code setOptionsResult} field value
+     */
     private SetOptionsResult setOptionsResult;
+
+    /**
+     * Value of the {@code changeTrustResult} field.
+     *
+     * @param changeTrustResult the {@code changeTrustResult} field value
+     * @return the {@code changeTrustResult} field value
+     */
     private ChangeTrustResult changeTrustResult;
+
+    /**
+     * Value of the {@code allowTrustResult} field.
+     *
+     * @param allowTrustResult the {@code allowTrustResult} field value
+     * @return the {@code allowTrustResult} field value
+     */
     private AllowTrustResult allowTrustResult;
+
+    /**
+     * Value of the {@code accountMergeResult} field.
+     *
+     * @param accountMergeResult the {@code accountMergeResult} field value
+     * @return the {@code accountMergeResult} field value
+     */
     private AccountMergeResult accountMergeResult;
+
+    /**
+     * Value of the {@code inflationResult} field.
+     *
+     * @param inflationResult the {@code inflationResult} field value
+     * @return the {@code inflationResult} field value
+     */
     private InflationResult inflationResult;
+
+    /**
+     * Value of the {@code manageDataResult} field.
+     *
+     * @param manageDataResult the {@code manageDataResult} field value
+     * @return the {@code manageDataResult} field value
+     */
     private ManageDataResult manageDataResult;
+
+    /**
+     * Value of the {@code bumpSeqResult} field.
+     *
+     * @param bumpSeqResult the {@code bumpSeqResult} field value
+     * @return the {@code bumpSeqResult} field value
+     */
     private BumpSequenceResult bumpSeqResult;
+
+    /**
+     * Value of the {@code manageBuyOfferResult} field.
+     *
+     * @param manageBuyOfferResult the {@code manageBuyOfferResult} field value
+     * @return the {@code manageBuyOfferResult} field value
+     */
     private ManageBuyOfferResult manageBuyOfferResult;
+
+    /**
+     * Value of the {@code pathPaymentStrictSendResult} field.
+     *
+     * @param pathPaymentStrictSendResult the {@code pathPaymentStrictSendResult} field value
+     * @return the {@code pathPaymentStrictSendResult} field value
+     */
     private PathPaymentStrictSendResult pathPaymentStrictSendResult;
+
+    /**
+     * Value of the {@code createClaimableBalanceResult} field.
+     *
+     * @param createClaimableBalanceResult the {@code createClaimableBalanceResult} field value
+     * @return the {@code createClaimableBalanceResult} field value
+     */
     private CreateClaimableBalanceResult createClaimableBalanceResult;
+
+    /**
+     * Value of the {@code claimClaimableBalanceResult} field.
+     *
+     * @param claimClaimableBalanceResult the {@code claimClaimableBalanceResult} field value
+     * @return the {@code claimClaimableBalanceResult} field value
+     */
     private ClaimClaimableBalanceResult claimClaimableBalanceResult;
+
+    /**
+     * Value of the {@code beginSponsoringFutureReservesResult} field.
+     *
+     * @param beginSponsoringFutureReservesResult the {@code beginSponsoringFutureReservesResult}
+     *     field value
+     * @return the {@code beginSponsoringFutureReservesResult} field value
+     */
     private BeginSponsoringFutureReservesResult beginSponsoringFutureReservesResult;
+
+    /**
+     * Value of the {@code endSponsoringFutureReservesResult} field.
+     *
+     * @param endSponsoringFutureReservesResult the {@code endSponsoringFutureReservesResult} field
+     *     value
+     * @return the {@code endSponsoringFutureReservesResult} field value
+     */
     private EndSponsoringFutureReservesResult endSponsoringFutureReservesResult;
+
+    /**
+     * Value of the {@code revokeSponsorshipResult} field.
+     *
+     * @param revokeSponsorshipResult the {@code revokeSponsorshipResult} field value
+     * @return the {@code revokeSponsorshipResult} field value
+     */
     private RevokeSponsorshipResult revokeSponsorshipResult;
+
+    /**
+     * Value of the {@code clawbackResult} field.
+     *
+     * @param clawbackResult the {@code clawbackResult} field value
+     * @return the {@code clawbackResult} field value
+     */
     private ClawbackResult clawbackResult;
+
+    /**
+     * Value of the {@code clawbackClaimableBalanceResult} field.
+     *
+     * @param clawbackClaimableBalanceResult the {@code clawbackClaimableBalanceResult} field value
+     * @return the {@code clawbackClaimableBalanceResult} field value
+     */
     private ClawbackClaimableBalanceResult clawbackClaimableBalanceResult;
+
+    /**
+     * Value of the {@code setTrustLineFlagsResult} field.
+     *
+     * @param setTrustLineFlagsResult the {@code setTrustLineFlagsResult} field value
+     * @return the {@code setTrustLineFlagsResult} field value
+     */
     private SetTrustLineFlagsResult setTrustLineFlagsResult;
+
+    /**
+     * Value of the {@code liquidityPoolDepositResult} field.
+     *
+     * @param liquidityPoolDepositResult the {@code liquidityPoolDepositResult} field value
+     * @return the {@code liquidityPoolDepositResult} field value
+     */
     private LiquidityPoolDepositResult liquidityPoolDepositResult;
+
+    /**
+     * Value of the {@code liquidityPoolWithdrawResult} field.
+     *
+     * @param liquidityPoolWithdrawResult the {@code liquidityPoolWithdrawResult} field value
+     * @return the {@code liquidityPoolWithdrawResult} field value
+     */
     private LiquidityPoolWithdrawResult liquidityPoolWithdrawResult;
+
+    /**
+     * Value of the {@code invokeHostFunctionResult} field.
+     *
+     * @param invokeHostFunctionResult the {@code invokeHostFunctionResult} field value
+     * @return the {@code invokeHostFunctionResult} field value
+     */
     private InvokeHostFunctionResult invokeHostFunctionResult;
+
+    /**
+     * Value of the {@code extendFootprintTTLResult} field.
+     *
+     * @param extendFootprintTTLResult the {@code extendFootprintTTLResult} field value
+     * @return the {@code extendFootprintTTLResult} field value
+     */
     private ExtendFootprintTTLResult extendFootprintTTLResult;
+
+    /**
+     * Value of the {@code restoreFootprintResult} field.
+     *
+     * @param restoreFootprintResult the {@code restoreFootprintResult} field value
+     * @return the {@code restoreFootprintResult} field value
+     */
     private RestoreFootprintResult restoreFootprintResult;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

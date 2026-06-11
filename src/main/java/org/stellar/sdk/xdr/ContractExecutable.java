@@ -30,7 +30,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ContractExecutable implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private ContractExecutableType discriminant;
+
+  /**
+   * Value of the {@code wasm_hash} field.
+   *
+   * @param wasm_hash the {@code wasm_hash} field value
+   * @return the {@code wasm_hash} field value
+   */
   private Hash wasm_hash;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

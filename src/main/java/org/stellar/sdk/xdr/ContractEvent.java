@@ -44,9 +44,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ContractEvent implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code contractID} field.
+   *
+   * @param contractID the {@code contractID} field value
+   * @return the {@code contractID} field value
+   */
   private ContractID contractID;
+
+  /**
+   * Value of the {@code type} field.
+   *
+   * @param type the {@code type} field value
+   * @return the {@code type} field value
+   */
   private ContractEventType type;
+
+  /**
+   * Value of the {@code body} field.
+   *
+   * @param body the {@code body} field value
+   * @return the {@code body} field value
+   */
   private ContractEventBody body;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -145,7 +172,20 @@ public class ContractEvent implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class ContractEventBody implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v0} field.
+     *
+     * @param v0 the {@code v0} field value
+     * @return the {@code v0} field value
+     */
     private ContractEventV0 v0;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -248,7 +288,20 @@ public class ContractEvent implements XdrElement {
     @AllArgsConstructor
     @Builder(toBuilder = true)
     public static class ContractEventV0 implements XdrElement {
+      /**
+       * Value of the {@code topics} field.
+       *
+       * @param topics the {@code topics} field value
+       * @return the {@code topics} field value
+       */
       private SCVal[] topics;
+
+      /**
+       * Value of the {@code data} field.
+       *
+       * @param data the {@code data} field value
+       * @return the {@code data} field value
+       */
       private SCVal data;
 
       public void encode(XdrDataOutputStream stream) throws IOException {

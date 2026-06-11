@@ -43,13 +43,68 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerUpgrade implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private LedgerUpgradeType discriminant;
+
+  /**
+   * Value of the {@code newLedgerVersion} field.
+   *
+   * @param newLedgerVersion the {@code newLedgerVersion} field value
+   * @return the {@code newLedgerVersion} field value
+   */
   private Uint32 newLedgerVersion;
+
+  /**
+   * Value of the {@code newBaseFee} field.
+   *
+   * @param newBaseFee the {@code newBaseFee} field value
+   * @return the {@code newBaseFee} field value
+   */
   private Uint32 newBaseFee;
+
+  /**
+   * Value of the {@code newMaxTxSetSize} field.
+   *
+   * @param newMaxTxSetSize the {@code newMaxTxSetSize} field value
+   * @return the {@code newMaxTxSetSize} field value
+   */
   private Uint32 newMaxTxSetSize;
+
+  /**
+   * Value of the {@code newBaseReserve} field.
+   *
+   * @param newBaseReserve the {@code newBaseReserve} field value
+   * @return the {@code newBaseReserve} field value
+   */
   private Uint32 newBaseReserve;
+
+  /**
+   * Value of the {@code newFlags} field.
+   *
+   * @param newFlags the {@code newFlags} field value
+   * @return the {@code newFlags} field value
+   */
   private Uint32 newFlags;
+
+  /**
+   * Value of the {@code newConfig} field.
+   *
+   * @param newConfig the {@code newConfig} field value
+   * @return the {@code newConfig} field value
+   */
   private ConfigUpgradeSetKey newConfig;
+
+  /**
+   * Value of the {@code newMaxSorobanTxSetSize} field.
+   *
+   * @param newMaxSorobanTxSetSize the {@code newMaxSorobanTxSetSize} field value
+   * @return the {@code newMaxSorobanTxSetSize} field value
+   */
   private Uint32 newMaxSorobanTxSetSize;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

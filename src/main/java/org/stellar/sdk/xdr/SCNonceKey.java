@@ -26,6 +26,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCNonceKey implements XdrElement {
+  /**
+   * Value of the {@code nonce} field.
+   *
+   * @param nonce the {@code nonce} field value
+   * @return the {@code nonce} field value
+   */
   private Int64 nonce;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

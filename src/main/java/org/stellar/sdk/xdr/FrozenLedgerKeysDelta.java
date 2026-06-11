@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class FrozenLedgerKeysDelta implements XdrElement {
+  /**
+   * Value of the {@code keysToFreeze} field.
+   *
+   * @param keysToFreeze the {@code keysToFreeze} field value
+   * @return the {@code keysToFreeze} field value
+   */
   private EncodedLedgerKey[] keysToFreeze;
+
+  /**
+   * Value of the {@code keysToUnfreeze} field.
+   *
+   * @param keysToUnfreeze the {@code keysToUnfreeze} field value
+   * @return the {@code keysToUnfreeze} field value
+   */
   private EncodedLedgerKey[] keysToUnfreeze;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

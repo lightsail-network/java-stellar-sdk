@@ -43,7 +43,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LiquidityPoolEntry implements XdrElement {
+  /**
+   * Value of the {@code liquidityPoolID} field.
+   *
+   * @param liquidityPoolID the {@code liquidityPoolID} field value
+   * @return the {@code liquidityPoolID} field value
+   */
   private PoolID liquidityPoolID;
+
+  /**
+   * Value of the {@code body} field.
+   *
+   * @param body the {@code body} field value
+   * @return the {@code body} field value
+   */
   private LiquidityPoolEntryBody body;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -129,7 +142,20 @@ public class LiquidityPoolEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LiquidityPoolEntryBody implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private LiquidityPoolType discriminant;
+
+    /**
+     * Value of the {@code constantProduct} field.
+     *
+     * @param constantProduct the {@code constantProduct} field value
+     * @return the {@code constantProduct} field value
+     */
     private LiquidityPoolEntryConstantProduct constantProduct;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -240,10 +266,44 @@ public class LiquidityPoolEntry implements XdrElement {
     @AllArgsConstructor
     @Builder(toBuilder = true)
     public static class LiquidityPoolEntryConstantProduct implements XdrElement {
+      /**
+       * Value of the {@code params} field.
+       *
+       * @param params the {@code params} field value
+       * @return the {@code params} field value
+       */
       private LiquidityPoolConstantProductParameters params;
+
+      /**
+       * Value of the {@code reserveA} field.
+       *
+       * @param reserveA the {@code reserveA} field value
+       * @return the {@code reserveA} field value
+       */
       private Int64 reserveA;
+
+      /**
+       * Value of the {@code reserveB} field.
+       *
+       * @param reserveB the {@code reserveB} field value
+       * @return the {@code reserveB} field value
+       */
       private Int64 reserveB;
+
+      /**
+       * Value of the {@code totalPoolShares} field.
+       *
+       * @param totalPoolShares the {@code totalPoolShares} field value
+       * @return the {@code totalPoolShares} field value
+       */
       private Int64 totalPoolShares;
+
+      /**
+       * Value of the {@code poolSharesTrustLineCount} field.
+       *
+       * @param poolSharesTrustLineCount the {@code poolSharesTrustLineCount} field value
+       * @return the {@code poolSharesTrustLineCount} field value
+       */
       private Int64 poolSharesTrustLineCount;
 
       public void encode(XdrDataOutputStream stream) throws IOException {

@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Price implements XdrElement {
+  /**
+   * Value of the {@code n} field.
+   *
+   * @param n the {@code n} field value
+   * @return the {@code n} field value
+   */
   private Int32 n;
+
+  /**
+   * Value of the {@code d} field.
+   *
+   * @param d the {@code d} field value
+   * @return the {@code d} field value
+   */
   private Int32 d;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

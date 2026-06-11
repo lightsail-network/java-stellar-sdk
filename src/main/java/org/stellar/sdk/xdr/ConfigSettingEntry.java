@@ -69,27 +69,180 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingEntry implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private ConfigSettingID discriminant;
+
+  /**
+   * Value of the {@code contractMaxSizeBytes} field.
+   *
+   * @param contractMaxSizeBytes the {@code contractMaxSizeBytes} field value
+   * @return the {@code contractMaxSizeBytes} field value
+   */
   private Uint32 contractMaxSizeBytes;
+
+  /**
+   * Value of the {@code contractCompute} field.
+   *
+   * @param contractCompute the {@code contractCompute} field value
+   * @return the {@code contractCompute} field value
+   */
   private ConfigSettingContractComputeV0 contractCompute;
+
+  /**
+   * Value of the {@code contractLedgerCost} field.
+   *
+   * @param contractLedgerCost the {@code contractLedgerCost} field value
+   * @return the {@code contractLedgerCost} field value
+   */
   private ConfigSettingContractLedgerCostV0 contractLedgerCost;
+
+  /**
+   * Value of the {@code contractHistoricalData} field.
+   *
+   * @param contractHistoricalData the {@code contractHistoricalData} field value
+   * @return the {@code contractHistoricalData} field value
+   */
   private ConfigSettingContractHistoricalDataV0 contractHistoricalData;
+
+  /**
+   * Value of the {@code contractEvents} field.
+   *
+   * @param contractEvents the {@code contractEvents} field value
+   * @return the {@code contractEvents} field value
+   */
   private ConfigSettingContractEventsV0 contractEvents;
+
+  /**
+   * Value of the {@code contractBandwidth} field.
+   *
+   * @param contractBandwidth the {@code contractBandwidth} field value
+   * @return the {@code contractBandwidth} field value
+   */
   private ConfigSettingContractBandwidthV0 contractBandwidth;
+
+  /**
+   * Value of the {@code contractCostParamsCpuInsns} field.
+   *
+   * @param contractCostParamsCpuInsns the {@code contractCostParamsCpuInsns} field value
+   * @return the {@code contractCostParamsCpuInsns} field value
+   */
   private ContractCostParams contractCostParamsCpuInsns;
+
+  /**
+   * Value of the {@code contractCostParamsMemBytes} field.
+   *
+   * @param contractCostParamsMemBytes the {@code contractCostParamsMemBytes} field value
+   * @return the {@code contractCostParamsMemBytes} field value
+   */
   private ContractCostParams contractCostParamsMemBytes;
+
+  /**
+   * Value of the {@code contractDataKeySizeBytes} field.
+   *
+   * @param contractDataKeySizeBytes the {@code contractDataKeySizeBytes} field value
+   * @return the {@code contractDataKeySizeBytes} field value
+   */
   private Uint32 contractDataKeySizeBytes;
+
+  /**
+   * Value of the {@code contractDataEntrySizeBytes} field.
+   *
+   * @param contractDataEntrySizeBytes the {@code contractDataEntrySizeBytes} field value
+   * @return the {@code contractDataEntrySizeBytes} field value
+   */
   private Uint32 contractDataEntrySizeBytes;
+
+  /**
+   * Value of the {@code stateArchivalSettings} field.
+   *
+   * @param stateArchivalSettings the {@code stateArchivalSettings} field value
+   * @return the {@code stateArchivalSettings} field value
+   */
   private StateArchivalSettings stateArchivalSettings;
+
+  /**
+   * Value of the {@code contractExecutionLanes} field.
+   *
+   * @param contractExecutionLanes the {@code contractExecutionLanes} field value
+   * @return the {@code contractExecutionLanes} field value
+   */
   private ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
+
+  /**
+   * Value of the {@code liveSorobanStateSizeWindow} field.
+   *
+   * @param liveSorobanStateSizeWindow the {@code liveSorobanStateSizeWindow} field value
+   * @return the {@code liveSorobanStateSizeWindow} field value
+   */
   private Uint64[] liveSorobanStateSizeWindow;
+
+  /**
+   * Value of the {@code evictionIterator} field.
+   *
+   * @param evictionIterator the {@code evictionIterator} field value
+   * @return the {@code evictionIterator} field value
+   */
   private EvictionIterator evictionIterator;
+
+  /**
+   * Value of the {@code contractParallelCompute} field.
+   *
+   * @param contractParallelCompute the {@code contractParallelCompute} field value
+   * @return the {@code contractParallelCompute} field value
+   */
   private ConfigSettingContractParallelComputeV0 contractParallelCompute;
+
+  /**
+   * Value of the {@code contractLedgerCostExt} field.
+   *
+   * @param contractLedgerCostExt the {@code contractLedgerCostExt} field value
+   * @return the {@code contractLedgerCostExt} field value
+   */
   private ConfigSettingContractLedgerCostExtV0 contractLedgerCostExt;
+
+  /**
+   * Value of the {@code contractSCPTiming} field.
+   *
+   * @param contractSCPTiming the {@code contractSCPTiming} field value
+   * @return the {@code contractSCPTiming} field value
+   */
   private ConfigSettingSCPTiming contractSCPTiming;
+
+  /**
+   * Value of the {@code frozenLedgerKeys} field.
+   *
+   * @param frozenLedgerKeys the {@code frozenLedgerKeys} field value
+   * @return the {@code frozenLedgerKeys} field value
+   */
   private FrozenLedgerKeys frozenLedgerKeys;
+
+  /**
+   * Value of the {@code frozenLedgerKeysDelta} field.
+   *
+   * @param frozenLedgerKeysDelta the {@code frozenLedgerKeysDelta} field value
+   * @return the {@code frozenLedgerKeysDelta} field value
+   */
   private FrozenLedgerKeysDelta frozenLedgerKeysDelta;
+
+  /**
+   * Value of the {@code freezeBypassTxs} field.
+   *
+   * @param freezeBypassTxs the {@code freezeBypassTxs} field value
+   * @return the {@code freezeBypassTxs} field value
+   */
   private FreezeBypassTxs freezeBypassTxs;
+
+  /**
+   * Value of the {@code freezeBypassTxsDelta} field.
+   *
+   * @param freezeBypassTxsDelta the {@code freezeBypassTxsDelta} field value
+   * @return the {@code freezeBypassTxsDelta} field value
+   */
   private FreezeBypassTxsDelta freezeBypassTxsDelta;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

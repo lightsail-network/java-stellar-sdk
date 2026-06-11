@@ -31,9 +31,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecFunctionV0 implements XdrElement {
+  /**
+   * Value of the {@code doc} field.
+   *
+   * @param doc the {@code doc} field value
+   * @return the {@code doc} field value
+   */
   private XdrString doc;
+
+  /**
+   * Value of the {@code name} field.
+   *
+   * @param name the {@code name} field value
+   * @return the {@code name} field value
+   */
   private SCSymbol name;
+
+  /**
+   * Value of the {@code inputs} field.
+   *
+   * @param inputs the {@code inputs} field value
+   * @return the {@code inputs} field value
+   */
   private SCSpecFunctionInputV0[] inputs;
+
+  /**
+   * Value of the {@code outputs} field.
+   *
+   * @param outputs the {@code outputs} field value
+   * @return the {@code outputs} field value
+   */
   private SCSpecTypeDef[] outputs;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

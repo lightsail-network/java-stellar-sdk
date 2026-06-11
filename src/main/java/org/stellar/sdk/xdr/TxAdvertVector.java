@@ -22,6 +22,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TxAdvertVector implements XdrElement {
+  /**
+   * Value of the {@code TxAdvertVector} field.
+   *
+   * @param TxAdvertVector the {@code TxAdvertVector} field value
+   * @return the {@code TxAdvertVector} field value
+   */
   private Hash[] TxAdvertVector;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

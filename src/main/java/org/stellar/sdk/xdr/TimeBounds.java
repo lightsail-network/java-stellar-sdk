@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TimeBounds implements XdrElement {
+  /**
+   * Value of the {@code minTime} field.
+   *
+   * @param minTime the {@code minTime} field value
+   * @return the {@code minTime} field value
+   */
   private TimePoint minTime;
+
+  /**
+   * Value of the {@code maxTime} field.
+   *
+   * @param maxTime the {@code maxTime} field value
+   * @return the {@code maxTime} field value
+   */
   private TimePoint maxTime;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
