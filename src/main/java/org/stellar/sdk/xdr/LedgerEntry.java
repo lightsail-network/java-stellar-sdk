@@ -62,8 +62,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerEntry implements XdrElement {
+  /**
+   * Value of the {@code lastModifiedLedgerSeq} field.
+   *
+   * @param lastModifiedLedgerSeq the {@code lastModifiedLedgerSeq} field value
+   * @return the {@code lastModifiedLedgerSeq} field value
+   */
   private Uint32 lastModifiedLedgerSeq;
+
+  /**
+   * Value of the {@code data} field.
+   *
+   * @param data the {@code data} field value
+   * @return the {@code data} field value
+   */
   private LedgerEntryData data;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private LedgerEntryExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -161,16 +181,92 @@ public class LedgerEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerEntryData implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private LedgerEntryType discriminant;
+
+    /**
+     * Value of the {@code account} field.
+     *
+     * @param account the {@code account} field value
+     * @return the {@code account} field value
+     */
     private AccountEntry account;
+
+    /**
+     * Value of the {@code trustLine} field.
+     *
+     * @param trustLine the {@code trustLine} field value
+     * @return the {@code trustLine} field value
+     */
     private TrustLineEntry trustLine;
+
+    /**
+     * Value of the {@code offer} field.
+     *
+     * @param offer the {@code offer} field value
+     * @return the {@code offer} field value
+     */
     private OfferEntry offer;
+
+    /**
+     * Value of the {@code data} field.
+     *
+     * @param data the {@code data} field value
+     * @return the {@code data} field value
+     */
     private DataEntry data;
+
+    /**
+     * Value of the {@code claimableBalance} field.
+     *
+     * @param claimableBalance the {@code claimableBalance} field value
+     * @return the {@code claimableBalance} field value
+     */
     private ClaimableBalanceEntry claimableBalance;
+
+    /**
+     * Value of the {@code liquidityPool} field.
+     *
+     * @param liquidityPool the {@code liquidityPool} field value
+     * @return the {@code liquidityPool} field value
+     */
     private LiquidityPoolEntry liquidityPool;
+
+    /**
+     * Value of the {@code contractData} field.
+     *
+     * @param contractData the {@code contractData} field value
+     * @return the {@code contractData} field value
+     */
     private ContractDataEntry contractData;
+
+    /**
+     * Value of the {@code contractCode} field.
+     *
+     * @param contractCode the {@code contractCode} field value
+     * @return the {@code contractCode} field value
+     */
     private ContractCodeEntry contractCode;
+
+    /**
+     * Value of the {@code configSetting} field.
+     *
+     * @param configSetting the {@code configSetting} field value
+     * @return the {@code configSetting} field value
+     */
     private ConfigSettingEntry configSetting;
+
+    /**
+     * Value of the {@code ttl} field.
+     *
+     * @param ttl the {@code ttl} field value
+     * @return the {@code ttl} field value
+     */
     private TTLEntry ttl;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -430,7 +526,20 @@ public class LedgerEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerEntryExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v1} field.
+     *
+     * @param v1 the {@code v1} field value
+     * @return the {@code v1} field value
+     */
     private LedgerEntryExtensionV1 v1;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

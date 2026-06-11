@@ -30,7 +30,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractEventsV0 implements XdrElement {
+  /**
+   * Value of the {@code txMaxContractEventsSizeBytes} field.
+   *
+   * @param txMaxContractEventsSizeBytes the {@code txMaxContractEventsSizeBytes} field value
+   * @return the {@code txMaxContractEventsSizeBytes} field value
+   */
   private Uint32 txMaxContractEventsSizeBytes;
+
+  /**
+   * Value of the {@code feeContractEvents1KB} field.
+   *
+   * @param feeContractEvents1KB the {@code feeContractEvents1KB} field value
+   * @return the {@code feeContractEvents1KB} field value
+   */
   private Int64 feeContractEvents1KB;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

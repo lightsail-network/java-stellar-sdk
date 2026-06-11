@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ExtendFootprintTTLOp implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code extendTo} field.
+   *
+   * @param extendTo the {@code extendTo} field value
+   * @return the {@code extendTo} field value
+   */
   private Uint32 extendTo;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

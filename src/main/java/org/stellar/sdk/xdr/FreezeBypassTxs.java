@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class FreezeBypassTxs implements XdrElement {
+  /**
+   * Value of the {@code txHashes} field.
+   *
+   * @param txHashes the {@code txHashes} field value
+   * @return the {@code txHashes} field value
+   */
   private Hash[] txHashes;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

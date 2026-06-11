@@ -22,6 +22,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SCMap implements XdrElement {
+  /**
+   * Value of the {@code SCMap} field.
+   *
+   * @param SCMap the {@code SCMap} field value
+   * @return the {@code SCMap} field value
+   */
   private SCMapEntry[] SCMap;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -27,7 +27,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigUpgradeSetKey implements XdrElement {
+  /**
+   * Value of the {@code contractID} field.
+   *
+   * @param contractID the {@code contractID} field value
+   * @return the {@code contractID} field value
+   */
   private ContractID contractID;
+
+  /**
+   * Value of the {@code contentHash} field.
+   *
+   * @param contentHash the {@code contentHash} field value
+   * @return the {@code contentHash} field value
+   */
   private Hash contentHash;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

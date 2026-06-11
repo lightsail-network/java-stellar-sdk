@@ -43,20 +43,124 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class PeerStats implements XdrElement {
+  /**
+   * Value of the {@code id} field.
+   *
+   * @param id the {@code id} field value
+   * @return the {@code id} field value
+   */
   private NodeID id;
+
+  /**
+   * Value of the {@code versionStr} field.
+   *
+   * @param versionStr the {@code versionStr} field value
+   * @return the {@code versionStr} field value
+   */
   private XdrString versionStr;
+
+  /**
+   * Value of the {@code messagesRead} field.
+   *
+   * @param messagesRead the {@code messagesRead} field value
+   * @return the {@code messagesRead} field value
+   */
   private Uint64 messagesRead;
+
+  /**
+   * Value of the {@code messagesWritten} field.
+   *
+   * @param messagesWritten the {@code messagesWritten} field value
+   * @return the {@code messagesWritten} field value
+   */
   private Uint64 messagesWritten;
+
+  /**
+   * Value of the {@code bytesRead} field.
+   *
+   * @param bytesRead the {@code bytesRead} field value
+   * @return the {@code bytesRead} field value
+   */
   private Uint64 bytesRead;
+
+  /**
+   * Value of the {@code bytesWritten} field.
+   *
+   * @param bytesWritten the {@code bytesWritten} field value
+   * @return the {@code bytesWritten} field value
+   */
   private Uint64 bytesWritten;
+
+  /**
+   * Value of the {@code secondsConnected} field.
+   *
+   * @param secondsConnected the {@code secondsConnected} field value
+   * @return the {@code secondsConnected} field value
+   */
   private Uint64 secondsConnected;
+
+  /**
+   * Value of the {@code uniqueFloodBytesRecv} field.
+   *
+   * @param uniqueFloodBytesRecv the {@code uniqueFloodBytesRecv} field value
+   * @return the {@code uniqueFloodBytesRecv} field value
+   */
   private Uint64 uniqueFloodBytesRecv;
+
+  /**
+   * Value of the {@code duplicateFloodBytesRecv} field.
+   *
+   * @param duplicateFloodBytesRecv the {@code duplicateFloodBytesRecv} field value
+   * @return the {@code duplicateFloodBytesRecv} field value
+   */
   private Uint64 duplicateFloodBytesRecv;
+
+  /**
+   * Value of the {@code uniqueFetchBytesRecv} field.
+   *
+   * @param uniqueFetchBytesRecv the {@code uniqueFetchBytesRecv} field value
+   * @return the {@code uniqueFetchBytesRecv} field value
+   */
   private Uint64 uniqueFetchBytesRecv;
+
+  /**
+   * Value of the {@code duplicateFetchBytesRecv} field.
+   *
+   * @param duplicateFetchBytesRecv the {@code duplicateFetchBytesRecv} field value
+   * @return the {@code duplicateFetchBytesRecv} field value
+   */
   private Uint64 duplicateFetchBytesRecv;
+
+  /**
+   * Value of the {@code uniqueFloodMessageRecv} field.
+   *
+   * @param uniqueFloodMessageRecv the {@code uniqueFloodMessageRecv} field value
+   * @return the {@code uniqueFloodMessageRecv} field value
+   */
   private Uint64 uniqueFloodMessageRecv;
+
+  /**
+   * Value of the {@code duplicateFloodMessageRecv} field.
+   *
+   * @param duplicateFloodMessageRecv the {@code duplicateFloodMessageRecv} field value
+   * @return the {@code duplicateFloodMessageRecv} field value
+   */
   private Uint64 duplicateFloodMessageRecv;
+
+  /**
+   * Value of the {@code uniqueFetchMessageRecv} field.
+   *
+   * @param uniqueFetchMessageRecv the {@code uniqueFetchMessageRecv} field value
+   * @return the {@code uniqueFetchMessageRecv} field value
+   */
   private Uint64 uniqueFetchMessageRecv;
+
+  /**
+   * Value of the {@code duplicateFetchMessageRecv} field.
+   *
+   * @param duplicateFetchMessageRecv the {@code duplicateFetchMessageRecv} field value
+   * @return the {@code duplicateFetchMessageRecv} field value
+   */
   private Uint64 duplicateFetchMessageRecv;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

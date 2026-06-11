@@ -35,8 +35,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class AccountEntryExtensionV3 implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code seqLedger} field.
+   *
+   * @param seqLedger the {@code seqLedger} field value
+   * @return the {@code seqLedger} field value
+   */
   private Uint32 seqLedger;
+
+  /**
+   * Value of the {@code seqTime} field.
+   *
+   * @param seqTime the {@code seqTime} field value
+   * @return the {@code seqTime} field value
+   */
   private TimePoint seqTime;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

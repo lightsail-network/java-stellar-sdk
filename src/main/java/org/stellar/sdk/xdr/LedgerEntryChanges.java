@@ -22,6 +22,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LedgerEntryChanges implements XdrElement {
+  /**
+   * Value of the {@code LedgerEntryChanges} field.
+   *
+   * @param LedgerEntryChanges the {@code LedgerEntryChanges} field value
+   * @return the {@code LedgerEntryChanges} field value
+   */
   private LedgerEntryChange[] LedgerEntryChanges;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

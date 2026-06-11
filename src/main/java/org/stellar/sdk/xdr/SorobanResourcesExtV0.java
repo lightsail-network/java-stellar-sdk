@@ -31,6 +31,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanResourcesExtV0 implements XdrElement {
+  /**
+   * Value of the {@code archivedSorobanEntries} field.
+   *
+   * @param archivedSorobanEntries the {@code archivedSorobanEntries} field value
+   * @return the {@code archivedSorobanEntries} field value
+   */
   private Uint32[] archivedSorobanEntries;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

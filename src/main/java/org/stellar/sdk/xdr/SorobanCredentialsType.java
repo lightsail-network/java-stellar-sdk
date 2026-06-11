@@ -14,13 +14,17 @@ import org.stellar.sdk.Base64Factory;
  * enum SorobanCredentialsType
  * {
  *     SOROBAN_CREDENTIALS_SOURCE_ACCOUNT = 0,
- *     SOROBAN_CREDENTIALS_ADDRESS = 1
+ *     SOROBAN_CREDENTIALS_ADDRESS = 1,
+ *     SOROBAN_CREDENTIALS_ADDRESS_V2 = 2,
+ *     SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES = 3
  * };
  * </pre>
  */
 public enum SorobanCredentialsType implements XdrElement {
   SOROBAN_CREDENTIALS_SOURCE_ACCOUNT(0),
-  SOROBAN_CREDENTIALS_ADDRESS(1);
+  SOROBAN_CREDENTIALS_ADDRESS(1),
+  SOROBAN_CREDENTIALS_ADDRESS_V2(2),
+  SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES(3);
 
   private final int value;
 
@@ -41,6 +45,10 @@ public enum SorobanCredentialsType implements XdrElement {
         return SOROBAN_CREDENTIALS_SOURCE_ACCOUNT;
       case 1:
         return SOROBAN_CREDENTIALS_ADDRESS;
+      case 2:
+        return SOROBAN_CREDENTIALS_ADDRESS_V2;
+      case 3:
+        return SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -81,6 +89,10 @@ public enum SorobanCredentialsType implements XdrElement {
         return "source_account";
       case SOROBAN_CREDENTIALS_ADDRESS:
         return "address";
+      case SOROBAN_CREDENTIALS_ADDRESS_V2:
+        return "address_v2";
+      case SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES:
+        return "address_with_delegates";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -93,6 +105,10 @@ public enum SorobanCredentialsType implements XdrElement {
         return SOROBAN_CREDENTIALS_SOURCE_ACCOUNT;
       case "address":
         return SOROBAN_CREDENTIALS_ADDRESS;
+      case "address_v2":
+        return SOROBAN_CREDENTIALS_ADDRESS_V2;
+      case "address_with_delegates":
+        return SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

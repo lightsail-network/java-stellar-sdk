@@ -31,8 +31,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class AllowTrustOp implements XdrElement {
+  /**
+   * Value of the {@code trustor} field.
+   *
+   * @param trustor the {@code trustor} field value
+   * @return the {@code trustor} field value
+   */
   private AccountID trustor;
+
+  /**
+   * Value of the {@code asset} field.
+   *
+   * @param asset the {@code asset} field value
+   * @return the {@code asset} field value
+   */
   private AssetCode asset;
+
+  /**
+   * Value of the {@code authorize} field.
+   *
+   * @param authorize the {@code authorize} field value
+   * @return the {@code authorize} field value
+   */
   private Uint32 authorize;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

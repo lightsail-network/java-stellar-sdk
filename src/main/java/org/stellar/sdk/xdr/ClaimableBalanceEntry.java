@@ -48,10 +48,44 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ClaimableBalanceEntry implements XdrElement {
+  /**
+   * Value of the {@code balanceID} field.
+   *
+   * @param balanceID the {@code balanceID} field value
+   * @return the {@code balanceID} field value
+   */
   private ClaimableBalanceID balanceID;
+
+  /**
+   * Value of the {@code claimants} field.
+   *
+   * @param claimants the {@code claimants} field value
+   * @return the {@code claimants} field value
+   */
   private Claimant[] claimants;
+
+  /**
+   * Value of the {@code asset} field.
+   *
+   * @param asset the {@code asset} field value
+   * @return the {@code asset} field value
+   */
   private Asset asset;
+
+  /**
+   * Value of the {@code amount} field.
+   *
+   * @param amount the {@code amount} field value
+   * @return the {@code amount} field value
+   */
   private Int64 amount;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ClaimableBalanceEntryExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -172,7 +206,20 @@ public class ClaimableBalanceEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class ClaimableBalanceEntryExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v1} field.
+     *
+     * @param v1 the {@code v1} field value
+     * @return the {@code v1} field value
+     */
     private ClaimableBalanceEntryExtensionV1 v1;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

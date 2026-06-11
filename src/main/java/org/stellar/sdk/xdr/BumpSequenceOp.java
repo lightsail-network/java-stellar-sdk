@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class BumpSequenceOp implements XdrElement {
+  /**
+   * Value of the {@code bumpTo} field.
+   *
+   * @param bumpTo the {@code bumpTo} field value
+   * @return the {@code bumpTo} field value
+   */
   private SequenceNumber bumpTo;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

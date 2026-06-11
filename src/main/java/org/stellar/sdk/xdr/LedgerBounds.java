@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerBounds implements XdrElement {
+  /**
+   * Value of the {@code minLedger} field.
+   *
+   * @param minLedger the {@code minLedger} field value
+   * @return the {@code minLedger} field value
+   */
   private Uint32 minLedger;
+
+  /**
+   * Value of the {@code maxLedger} field.
+   *
+   * @param maxLedger the {@code maxLedger} field value
+   * @return the {@code maxLedger} field value
+   */
   private Uint32 maxLedger;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TTLEntry implements XdrElement {
+  /**
+   * Value of the {@code keyHash} field.
+   *
+   * @param keyHash the {@code keyHash} field value
+   * @return the {@code keyHash} field value
+   */
   private Hash keyHash;
+
+  /**
+   * Value of the {@code liveUntilLedgerSeq} field.
+   *
+   * @param liveUntilLedgerSeq the {@code liveUntilLedgerSeq} field value
+   * @return the {@code liveUntilLedgerSeq} field value
+   */
   private Uint32 liveUntilLedgerSeq;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

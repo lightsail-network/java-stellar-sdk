@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Signer implements XdrElement {
+  /**
+   * Value of the {@code key} field.
+   *
+   * @param key the {@code key} field value
+   * @return the {@code key} field value
+   */
   private SignerKey key;
+
+  /**
+   * Value of the {@code weight} field.
+   *
+   * @param weight the {@code weight} field value
+   * @return the {@code weight} field value
+   */
   private Uint32 weight;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

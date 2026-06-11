@@ -36,8 +36,28 @@ import org.stellar.sdk.StrKey;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class MuxedAccount implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private CryptoKeyType discriminant;
+
+  /**
+   * Value of the {@code ed25519} field.
+   *
+   * @param ed25519 the {@code ed25519} field value
+   * @return the {@code ed25519} field value
+   */
   private Uint256 ed25519;
+
+  /**
+   * Value of the {@code med25519} field.
+   *
+   * @param med25519 the {@code med25519} field value
+   * @return the {@code med25519} field value
+   */
   private MuxedAccountMed25519 med25519;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -156,7 +176,20 @@ public class MuxedAccount implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class MuxedAccountMed25519 implements XdrElement {
+    /**
+     * Value of the {@code id} field.
+     *
+     * @param id the {@code id} field value
+     * @return the {@code id} field value
+     */
     private Uint64 id;
+
+    /**
+     * Value of the {@code ed25519} field.
+     *
+     * @param ed25519 the {@code ed25519} field value
+     * @return the {@code ed25519} field value
+     */
     private Uint256 ed25519;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

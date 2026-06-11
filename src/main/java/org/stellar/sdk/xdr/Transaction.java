@@ -51,12 +51,60 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Transaction implements XdrElement {
+  /**
+   * Value of the {@code sourceAccount} field.
+   *
+   * @param sourceAccount the {@code sourceAccount} field value
+   * @return the {@code sourceAccount} field value
+   */
   private MuxedAccount sourceAccount;
+
+  /**
+   * Value of the {@code fee} field.
+   *
+   * @param fee the {@code fee} field value
+   * @return the {@code fee} field value
+   */
   private Uint32 fee;
+
+  /**
+   * Value of the {@code seqNum} field.
+   *
+   * @param seqNum the {@code seqNum} field value
+   * @return the {@code seqNum} field value
+   */
   private SequenceNumber seqNum;
+
+  /**
+   * Value of the {@code cond} field.
+   *
+   * @param cond the {@code cond} field value
+   * @return the {@code cond} field value
+   */
   private Preconditions cond;
+
+  /**
+   * Value of the {@code memo} field.
+   *
+   * @param memo the {@code memo} field value
+   * @return the {@code memo} field value
+   */
   private Memo memo;
+
+  /**
+   * Value of the {@code operations} field.
+   *
+   * @param operations the {@code operations} field value
+   * @return the {@code operations} field value
+   */
   private Operation[] operations;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private TransactionExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -184,7 +232,20 @@ public class Transaction implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class TransactionExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code sorobanData} field.
+     *
+     * @param sorobanData the {@code sorobanData} field value
+     * @return the {@code sorobanData} field value
+     */
     private SorobanTransactionData sorobanData;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

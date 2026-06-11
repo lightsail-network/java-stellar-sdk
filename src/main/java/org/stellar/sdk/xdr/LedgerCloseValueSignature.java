@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerCloseValueSignature implements XdrElement {
+  /**
+   * Value of the {@code nodeID} field.
+   *
+   * @param nodeID the {@code nodeID} field value
+   * @return the {@code nodeID} field value
+   */
   private NodeID nodeID;
+
+  /**
+   * Value of the {@code signature} field.
+   *
+   * @param signature the {@code signature} field value
+   * @return the {@code signature} field value
+   */
   private Signature signature;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

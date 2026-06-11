@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TimeSlicedPeerData implements XdrElement {
+  /**
+   * Value of the {@code peerStats} field.
+   *
+   * @param peerStats the {@code peerStats} field value
+   * @return the {@code peerStats} field value
+   */
   private PeerStats peerStats;
+
+  /**
+   * Value of the {@code averageLatencyMs} field.
+   *
+   * @param averageLatencyMs the {@code averageLatencyMs} field value
+   * @return the {@code averageLatencyMs} field value
+   */
   private Uint32 averageLatencyMs;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

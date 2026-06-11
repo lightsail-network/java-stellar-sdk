@@ -40,9 +40,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanAuthorizedFunction implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SorobanAuthorizedFunctionType discriminant;
+
+  /**
+   * Value of the {@code contractFn} field.
+   *
+   * @param contractFn the {@code contractFn} field value
+   * @return the {@code contractFn} field value
+   */
   private InvokeContractArgs contractFn;
+
+  /**
+   * Value of the {@code createContractHostFn} field.
+   *
+   * @param createContractHostFn the {@code createContractHostFn} field value
+   * @return the {@code createContractHostFn} field value
+   */
   private CreateContractArgs createContractHostFn;
+
+  /**
+   * Value of the {@code createContractV2HostFn} field.
+   *
+   * @param createContractV2HostFn the {@code createContractV2HostFn} field value
+   * @return the {@code createContractV2HostFn} field value
+   */
   private CreateContractArgsV2 createContractV2HostFn;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

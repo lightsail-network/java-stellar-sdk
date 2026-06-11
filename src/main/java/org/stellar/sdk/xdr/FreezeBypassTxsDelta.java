@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class FreezeBypassTxsDelta implements XdrElement {
+  /**
+   * Value of the {@code addTxs} field.
+   *
+   * @param addTxs the {@code addTxs} field value
+   * @return the {@code addTxs} field value
+   */
   private Hash[] addTxs;
+
+  /**
+   * Value of the {@code removeTxs} field.
+   *
+   * @param removeTxs the {@code removeTxs} field value
+   * @return the {@code removeTxs} field value
+   */
   private Hash[] removeTxs;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -33,7 +33,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class AuthenticatedMessage implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private Uint32 discriminant;
+
+  /**
+   * Value of the {@code v0} field.
+   *
+   * @param v0 the {@code v0} field value
+   * @return the {@code v0} field value
+   */
   private AuthenticatedMessageV0 v0;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -137,8 +150,28 @@ public class AuthenticatedMessage implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class AuthenticatedMessageV0 implements XdrElement {
+    /**
+     * Value of the {@code sequence} field.
+     *
+     * @param sequence the {@code sequence} field value
+     * @return the {@code sequence} field value
+     */
     private Uint64 sequence;
+
+    /**
+     * Value of the {@code message} field.
+     *
+     * @param message the {@code message} field value
+     * @return the {@code message} field value
+     */
     private StellarMessage message;
+
+    /**
+     * Value of the {@code mac} field.
+     *
+     * @param mac the {@code mac} field value
+     * @return the {@code mac} field value
+     */
     private HmacSha256Mac mac;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class DecoratedSignature implements XdrElement {
+  /**
+   * Value of the {@code hint} field.
+   *
+   * @param hint the {@code hint} field value
+   * @return the {@code hint} field value
+   */
   private SignatureHint hint;
+
+  /**
+   * Value of the {@code signature} field.
+   *
+   * @param signature the {@code signature} field value
+   * @return the {@code signature} field value
+   */
   private Signature signature;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

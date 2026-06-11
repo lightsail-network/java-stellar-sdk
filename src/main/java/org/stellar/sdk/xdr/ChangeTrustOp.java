@@ -30,7 +30,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ChangeTrustOp implements XdrElement {
+  /**
+   * Value of the {@code line} field.
+   *
+   * @param line the {@code line} field value
+   * @return the {@code line} field value
+   */
   private ChangeTrustAsset line;
+
+  /**
+   * Value of the {@code limit} field.
+   *
+   * @param limit the {@code limit} field value
+   * @return the {@code limit} field value
+   */
   private Int64 limit;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

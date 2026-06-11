@@ -32,7 +32,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractLedgerCostExtV0 implements XdrElement {
+  /**
+   * Value of the {@code txMaxFootprintEntries} field.
+   *
+   * @param txMaxFootprintEntries the {@code txMaxFootprintEntries} field value
+   * @return the {@code txMaxFootprintEntries} field value
+   */
   private Uint32 txMaxFootprintEntries;
+
+  /**
+   * Value of the {@code feeWrite1KB} field.
+   *
+   * @param feeWrite1KB the {@code feeWrite1KB} field value
+   * @return the {@code feeWrite1KB} field value
+   */
   private Int64 feeWrite1KB;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

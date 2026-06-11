@@ -22,6 +22,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DependentTxCluster implements XdrElement {
+  /**
+   * Value of the {@code DependentTxCluster} field.
+   *
+   * @param DependentTxCluster the {@code DependentTxCluster} field value
+   * @return the {@code DependentTxCluster} field value
+   */
   private TransactionEnvelope[] DependentTxCluster;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

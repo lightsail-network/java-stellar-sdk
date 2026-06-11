@@ -31,7 +31,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class FeeBumpTransactionEnvelope implements XdrElement {
+  /**
+   * Value of the {@code tx} field.
+   *
+   * @param tx the {@code tx} field value
+   * @return the {@code tx} field value
+   */
   private FeeBumpTransaction tx;
+
+  /**
+   * Value of the {@code signatures} field.
+   *
+   * @param signatures the {@code signatures} field value
+   * @return the {@code signatures} field value
+   */
   private DecoratedSignature[] signatures;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

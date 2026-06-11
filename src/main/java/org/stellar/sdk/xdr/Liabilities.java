@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Liabilities implements XdrElement {
+  /**
+   * Value of the {@code buying} field.
+   *
+   * @param buying the {@code buying} field value
+   * @return the {@code buying} field value
+   */
   private Int64 buying;
+
+  /**
+   * Value of the {@code selling} field.
+   *
+   * @param selling the {@code selling} field value
+   * @return the {@code selling} field value
+   */
   private Int64 selling;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

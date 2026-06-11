@@ -30,8 +30,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCPQuorumSet implements XdrElement {
+  /**
+   * Value of the {@code threshold} field.
+   *
+   * @param threshold the {@code threshold} field value
+   * @return the {@code threshold} field value
+   */
   private Uint32 threshold;
+
+  /**
+   * Value of the {@code validators} field.
+   *
+   * @param validators the {@code validators} field value
+   * @return the {@code validators} field value
+   */
   private NodeID[] validators;
+
+  /**
+   * Value of the {@code innerSets} field.
+   *
+   * @param innerSets the {@code innerSets} field value
+   * @return the {@code innerSets} field value
+   */
   private SCPQuorumSet[] innerSets;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

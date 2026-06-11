@@ -30,8 +30,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class CreateClaimableBalanceOp implements XdrElement {
+  /**
+   * Value of the {@code asset} field.
+   *
+   * @param asset the {@code asset} field value
+   * @return the {@code asset} field value
+   */
   private Asset asset;
+
+  /**
+   * Value of the {@code amount} field.
+   *
+   * @param amount the {@code amount} field value
+   * @return the {@code amount} field value
+   */
   private Int64 amount;
+
+  /**
+   * Value of the {@code claimants} field.
+   *
+   * @param claimants the {@code claimants} field value
+   * @return the {@code claimants} field value
+   */
   private Claimant[] claimants;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

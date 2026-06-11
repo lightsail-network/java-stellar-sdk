@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataValue implements XdrElement {
+  /**
+   * Value of the {@code DataValue} field.
+   *
+   * @param DataValue the {@code DataValue} field value
+   * @return the {@code DataValue} field value
+   */
   private byte[] DataValue;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

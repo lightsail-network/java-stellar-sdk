@@ -37,11 +37,52 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ClaimOfferAtomV0 implements XdrElement {
+  /**
+   * Value of the {@code sellerEd25519} field.
+   *
+   * @param sellerEd25519 the {@code sellerEd25519} field value
+   * @return the {@code sellerEd25519} field value
+   */
   private Uint256 sellerEd25519;
+
+  /**
+   * Value of the {@code offerID} field.
+   *
+   * @param offerID the {@code offerID} field value
+   * @return the {@code offerID} field value
+   */
   private Int64 offerID;
+
+  /**
+   * Value of the {@code assetSold} field.
+   *
+   * @param assetSold the {@code assetSold} field value
+   * @return the {@code assetSold} field value
+   */
   private Asset assetSold;
+
+  /**
+   * Value of the {@code amountSold} field.
+   *
+   * @param amountSold the {@code amountSold} field value
+   * @return the {@code amountSold} field value
+   */
   private Int64 amountSold;
+
+  /**
+   * Value of the {@code assetBought} field.
+   *
+   * @param assetBought the {@code assetBought} field value
+   * @return the {@code assetBought} field value
+   */
   private Asset assetBought;
+
+  /**
+   * Value of the {@code amountBought} field.
+   *
+   * @param amountBought the {@code amountBought} field value
+   * @return the {@code amountBought} field value
+   */
   private Int64 amountBought;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

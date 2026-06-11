@@ -43,10 +43,44 @@ import org.stellar.sdk.StrKey;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SignerKey implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SignerKeyType discriminant;
+
+  /**
+   * Value of the {@code ed25519} field.
+   *
+   * @param ed25519 the {@code ed25519} field value
+   * @return the {@code ed25519} field value
+   */
   private Uint256 ed25519;
+
+  /**
+   * Value of the {@code preAuthTx} field.
+   *
+   * @param preAuthTx the {@code preAuthTx} field value
+   * @return the {@code preAuthTx} field value
+   */
   private Uint256 preAuthTx;
+
+  /**
+   * Value of the {@code hashX} field.
+   *
+   * @param hashX the {@code hashX} field value
+   * @return the {@code hashX} field value
+   */
   private Uint256 hashX;
+
+  /**
+   * Value of the {@code ed25519SignedPayload} field.
+   *
+   * @param ed25519SignedPayload the {@code ed25519SignedPayload} field value
+   * @return the {@code ed25519SignedPayload} field value
+   */
   private SignerKeyEd25519SignedPayload ed25519SignedPayload;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -201,7 +235,20 @@ public class SignerKey implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class SignerKeyEd25519SignedPayload implements XdrElement {
+    /**
+     * Value of the {@code ed25519} field.
+     *
+     * @param ed25519 the {@code ed25519} field value
+     * @return the {@code ed25519} field value
+     */
     private Uint256 ed25519;
+
+    /**
+     * Value of the {@code payload} field.
+     *
+     * @param payload the {@code payload} field value
+     * @return the {@code payload} field value
+     */
     private byte[] payload;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

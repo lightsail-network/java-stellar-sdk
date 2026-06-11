@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Thresholds implements XdrElement {
+  /**
+   * Value of the {@code Thresholds} field.
+   *
+   * @param Thresholds the {@code Thresholds} field value
+   * @return the {@code Thresholds} field value
+   */
   private byte[] Thresholds;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

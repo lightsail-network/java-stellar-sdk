@@ -36,8 +36,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class PeerAddress implements XdrElement {
+  /**
+   * Value of the {@code ip} field.
+   *
+   * @param ip the {@code ip} field value
+   * @return the {@code ip} field value
+   */
   private PeerAddressIp ip;
+
+  /**
+   * Value of the {@code port} field.
+   *
+   * @param port the {@code port} field value
+   * @return the {@code port} field value
+   */
   private Uint32 port;
+
+  /**
+   * Value of the {@code numFailures} field.
+   *
+   * @param numFailures the {@code numFailures} field value
+   * @return the {@code numFailures} field value
+   */
   private Uint32 numFailures;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -119,8 +139,28 @@ public class PeerAddress implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class PeerAddressIp implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private IPAddrType discriminant;
+
+    /**
+     * Value of the {@code ipv4} field.
+     *
+     * @param ipv4 the {@code ipv4} field value
+     * @return the {@code ipv4} field value
+     */
     private byte[] ipv4;
+
+    /**
+     * Value of the {@code ipv6} field.
+     *
+     * @param ipv6 the {@code ipv6} field value
+     * @return the {@code ipv6} field value
+     */
     private byte[] ipv6;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

@@ -22,6 +22,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SorobanAuthorizationEntries implements XdrElement {
+  /**
+   * Value of the {@code SorobanAuthorizationEntries} field.
+   *
+   * @param SorobanAuthorizationEntries the {@code SorobanAuthorizationEntries} field value
+   * @return the {@code SorobanAuthorizationEntries} field value
+   */
   private SorobanAuthorizationEntry[] SorobanAuthorizationEntries;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

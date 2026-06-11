@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class HmacSha256Mac implements XdrElement {
+  /**
+   * Value of the {@code mac} field.
+   *
+   * @param mac the {@code mac} field value
+   * @return the {@code mac} field value
+   */
   private byte[] mac;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

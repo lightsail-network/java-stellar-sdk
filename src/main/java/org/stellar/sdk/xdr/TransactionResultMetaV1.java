@@ -33,10 +33,44 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionResultMetaV1 implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code result} field.
+   *
+   * @param result the {@code result} field value
+   * @return the {@code result} field value
+   */
   private TransactionResultPair result;
+
+  /**
+   * Value of the {@code feeProcessing} field.
+   *
+   * @param feeProcessing the {@code feeProcessing} field value
+   * @return the {@code feeProcessing} field value
+   */
   private LedgerEntryChanges feeProcessing;
+
+  /**
+   * Value of the {@code txApplyProcessing} field.
+   *
+   * @param txApplyProcessing the {@code txApplyProcessing} field value
+   * @return the {@code txApplyProcessing} field value
+   */
   private TransactionMeta txApplyProcessing;
+
+  /**
+   * Value of the {@code postTxApplyFeeProcessing} field.
+   *
+   * @param postTxApplyFeeProcessing the {@code postTxApplyFeeProcessing} field value
+   * @return the {@code postTxApplyFeeProcessing} field value
+   */
   private LedgerEntryChanges postTxApplyFeeProcessing;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

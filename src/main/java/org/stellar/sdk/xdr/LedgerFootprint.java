@@ -29,7 +29,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerFootprint implements XdrElement {
+  /**
+   * Value of the {@code readOnly} field.
+   *
+   * @param readOnly the {@code readOnly} field value
+   * @return the {@code readOnly} field value
+   */
   private LedgerKey[] readOnly;
+
+  /**
+   * Value of the {@code readWrite} field.
+   *
+   * @param readWrite the {@code readWrite} field value
+   * @return the {@code readWrite} field value
+   */
   private LedgerKey[] readWrite;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

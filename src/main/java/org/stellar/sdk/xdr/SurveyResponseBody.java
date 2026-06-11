@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SurveyResponseBody implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SurveyMessageResponseType discriminant;
+
+  /**
+   * Value of the {@code topologyResponseBodyV2} field.
+   *
+   * @param topologyResponseBodyV2 the {@code topologyResponseBodyV2} field value
+   * @return the {@code topologyResponseBodyV2} field value
+   */
   private TopologyResponseBodyV2 topologyResponseBodyV2;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

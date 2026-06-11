@@ -31,10 +31,44 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LiquidityPoolDepositOp implements XdrElement {
+  /**
+   * Value of the {@code liquidityPoolID} field.
+   *
+   * @param liquidityPoolID the {@code liquidityPoolID} field value
+   * @return the {@code liquidityPoolID} field value
+   */
   private PoolID liquidityPoolID;
+
+  /**
+   * Value of the {@code maxAmountA} field.
+   *
+   * @param maxAmountA the {@code maxAmountA} field value
+   * @return the {@code maxAmountA} field value
+   */
   private Int64 maxAmountA;
+
+  /**
+   * Value of the {@code maxAmountB} field.
+   *
+   * @param maxAmountB the {@code maxAmountB} field value
+   * @return the {@code maxAmountB} field value
+   */
   private Int64 maxAmountB;
+
+  /**
+   * Value of the {@code minPrice} field.
+   *
+   * @param minPrice the {@code minPrice} field value
+   * @return the {@code minPrice} field value
+   */
   private Price minPrice;
+
+  /**
+   * Value of the {@code maxPrice} field.
+   *
+   * @param maxPrice the {@code maxPrice} field value
+   * @return the {@code maxPrice} field value
+   */
   private Price maxPrice;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

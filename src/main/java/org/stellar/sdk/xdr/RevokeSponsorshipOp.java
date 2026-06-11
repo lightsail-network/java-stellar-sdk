@@ -34,8 +34,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class RevokeSponsorshipOp implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private RevokeSponsorshipType discriminant;
+
+  /**
+   * Value of the {@code ledgerKey} field.
+   *
+   * @param ledgerKey the {@code ledgerKey} field value
+   * @return the {@code ledgerKey} field value
+   */
   private LedgerKey ledgerKey;
+
+  /**
+   * Value of the {@code signer} field.
+   *
+   * @param signer the {@code signer} field value
+   * @return the {@code signer} field value
+   */
   private RevokeSponsorshipOpSigner signer;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -155,7 +175,20 @@ public class RevokeSponsorshipOp implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class RevokeSponsorshipOpSigner implements XdrElement {
+    /**
+     * Value of the {@code accountID} field.
+     *
+     * @param accountID the {@code accountID} field value
+     * @return the {@code accountID} field value
+     */
     private AccountID accountID;
+
+    /**
+     * Value of the {@code signerKey} field.
+     *
+     * @param signerKey the {@code signerKey} field value
+     * @return the {@code signerKey} field value
+     */
     private SignerKey signerKey;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

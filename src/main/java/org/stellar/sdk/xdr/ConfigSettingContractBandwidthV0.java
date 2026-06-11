@@ -33,8 +33,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractBandwidthV0 implements XdrElement {
+  /**
+   * Value of the {@code ledgerMaxTxsSizeBytes} field.
+   *
+   * @param ledgerMaxTxsSizeBytes the {@code ledgerMaxTxsSizeBytes} field value
+   * @return the {@code ledgerMaxTxsSizeBytes} field value
+   */
   private Uint32 ledgerMaxTxsSizeBytes;
+
+  /**
+   * Value of the {@code txMaxSizeBytes} field.
+   *
+   * @param txMaxSizeBytes the {@code txMaxSizeBytes} field value
+   * @return the {@code txMaxSizeBytes} field value
+   */
   private Uint32 txMaxSizeBytes;
+
+  /**
+   * Value of the {@code feeTxSize1KB} field.
+   *
+   * @param feeTxSize1KB the {@code feeTxSize1KB} field value
+   * @return the {@code feeTxSize1KB} field value
+   */
   private Int64 feeTxSize1KB;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

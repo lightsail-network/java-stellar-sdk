@@ -29,8 +29,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class StoredDebugTransactionSet implements XdrElement {
+  /**
+   * Value of the {@code txSet} field.
+   *
+   * @param txSet the {@code txSet} field value
+   * @return the {@code txSet} field value
+   */
   private StoredTransactionSet txSet;
+
+  /**
+   * Value of the {@code ledgerSeq} field.
+   *
+   * @param ledgerSeq the {@code ledgerSeq} field value
+   * @return the {@code ledgerSeq} field value
+   */
   private Uint32 ledgerSeq;
+
+  /**
+   * Value of the {@code scpValue} field.
+   *
+   * @param scpValue the {@code scpValue} field value
+   * @return the {@code scpValue} field value
+   */
   private StellarValue scpValue;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

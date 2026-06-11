@@ -22,6 +22,10 @@ import org.stellar.sdk.Base64Factory;
  *     void;
  * case SOROBAN_CREDENTIALS_ADDRESS:
  *     SorobanAddressCredentials address;
+ * case SOROBAN_CREDENTIALS_ADDRESS_V2:
+ *     SorobanAddressCredentials addressV2;
+ * case SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES:
+ *     SorobanAddressCredentialsWithDelegates addressWithDelegates;
  * };
  * </pre>
  */
@@ -30,8 +34,37 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanCredentials implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SorobanCredentialsType discriminant;
+
+  /**
+   * Value of the {@code address} field.
+   *
+   * @param address the {@code address} field value
+   * @return the {@code address} field value
+   */
   private SorobanAddressCredentials address;
+
+  /**
+   * Value of the {@code addressV2} field.
+   *
+   * @param addressV2 the {@code addressV2} field value
+   * @return the {@code addressV2} field value
+   */
+  private SorobanAddressCredentials addressV2;
+
+  /**
+   * Value of the {@code addressWithDelegates} field.
+   *
+   * @param addressWithDelegates the {@code addressWithDelegates} field value
+   * @return the {@code addressWithDelegates} field value
+   */
+  private SorobanAddressCredentialsWithDelegates addressWithDelegates;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
@@ -40,6 +73,12 @@ public class SorobanCredentials implements XdrElement {
         break;
       case SOROBAN_CREDENTIALS_ADDRESS:
         address.encode(stream);
+        break;
+      case SOROBAN_CREDENTIALS_ADDRESS_V2:
+        addressV2.encode(stream);
+        break;
+      case SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES:
+        addressWithDelegates.encode(stream);
         break;
     }
   }
@@ -58,6 +97,13 @@ public class SorobanCredentials implements XdrElement {
         break;
       case SOROBAN_CREDENTIALS_ADDRESS:
         decodedSorobanCredentials.address = SorobanAddressCredentials.decode(stream, maxDepth);
+        break;
+      case SOROBAN_CREDENTIALS_ADDRESS_V2:
+        decodedSorobanCredentials.addressV2 = SorobanAddressCredentials.decode(stream, maxDepth);
+        break;
+      case SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES:
+        decodedSorobanCredentials.addressWithDelegates =
+            SorobanAddressCredentialsWithDelegates.decode(stream, maxDepth);
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);
@@ -99,6 +145,16 @@ public class SorobanCredentials implements XdrElement {
       jsonMap.put("address", address.toJsonObject());
       return jsonMap;
     }
+    if (discriminant == SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("address_v2", addressV2.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("address_with_delegates", addressWithDelegates.toJsonObject());
+      return jsonMap;
+    }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
   }
 
@@ -129,6 +185,20 @@ public class SorobanCredentials implements XdrElement {
       SorobanCredentials instance = new SorobanCredentials();
       instance.discriminant = discriminant;
       instance.address = SorobanAddressCredentials.fromJsonObject(jsonMap.get("address"));
+      return instance;
+    }
+    if (key.equals("address_v2")) {
+      SorobanCredentials instance = new SorobanCredentials();
+      instance.discriminant = discriminant;
+      instance.addressV2 = SorobanAddressCredentials.fromJsonObject(jsonMap.get("address_v2"));
+      return instance;
+    }
+    if (key.equals("address_with_delegates")) {
+      SorobanCredentials instance = new SorobanCredentials();
+      instance.discriminant = discriminant;
+      instance.addressWithDelegates =
+          SorobanAddressCredentialsWithDelegates.fromJsonObject(
+              jsonMap.get("address_with_delegates"));
       return instance;
     }
     throw new IllegalArgumentException("Unknown key '" + key + "' for SorobanCredentials");

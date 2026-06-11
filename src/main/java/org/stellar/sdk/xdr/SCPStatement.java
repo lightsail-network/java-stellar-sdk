@@ -61,8 +61,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCPStatement implements XdrElement {
+  /**
+   * Value of the {@code nodeID} field.
+   *
+   * @param nodeID the {@code nodeID} field value
+   * @return the {@code nodeID} field value
+   */
   private NodeID nodeID;
+
+  /**
+   * Value of the {@code slotIndex} field.
+   *
+   * @param slotIndex the {@code slotIndex} field value
+   * @return the {@code slotIndex} field value
+   */
   private Uint64 slotIndex;
+
+  /**
+   * Value of the {@code pledges} field.
+   *
+   * @param pledges the {@code pledges} field value
+   * @return the {@code pledges} field value
+   */
   private SCPStatementPledges pledges;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -168,10 +188,44 @@ public class SCPStatement implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class SCPStatementPledges implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private SCPStatementType discriminant;
+
+    /**
+     * Value of the {@code prepare} field.
+     *
+     * @param prepare the {@code prepare} field value
+     * @return the {@code prepare} field value
+     */
     private SCPStatementPrepare prepare;
+
+    /**
+     * Value of the {@code confirm} field.
+     *
+     * @param confirm the {@code confirm} field value
+     * @return the {@code confirm} field value
+     */
     private SCPStatementConfirm confirm;
+
+    /**
+     * Value of the {@code externalize} field.
+     *
+     * @param externalize the {@code externalize} field value
+     * @return the {@code externalize} field value
+     */
     private SCPStatementExternalize externalize;
+
+    /**
+     * Value of the {@code nominate} field.
+     *
+     * @param nominate the {@code nominate} field value
+     * @return the {@code nominate} field value
+     */
     private SCPNomination nominate;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -329,11 +383,52 @@ public class SCPStatement implements XdrElement {
     @AllArgsConstructor
     @Builder(toBuilder = true)
     public static class SCPStatementPrepare implements XdrElement {
+      /**
+       * Value of the {@code quorumSetHash} field.
+       *
+       * @param quorumSetHash the {@code quorumSetHash} field value
+       * @return the {@code quorumSetHash} field value
+       */
       private Hash quorumSetHash;
+
+      /**
+       * Value of the {@code ballot} field.
+       *
+       * @param ballot the {@code ballot} field value
+       * @return the {@code ballot} field value
+       */
       private SCPBallot ballot;
+
+      /**
+       * Value of the {@code prepared} field.
+       *
+       * @param prepared the {@code prepared} field value
+       * @return the {@code prepared} field value
+       */
       private SCPBallot prepared;
+
+      /**
+       * Value of the {@code preparedPrime} field.
+       *
+       * @param preparedPrime the {@code preparedPrime} field value
+       * @return the {@code preparedPrime} field value
+       */
       private SCPBallot preparedPrime;
+
+      /**
+       * Value of the {@code nC} field.
+       *
+       * @param nC the {@code nC} field value
+       * @return the {@code nC} field value
+       */
       private Uint32 nC;
+
+      /**
+       * Value of the {@code nH} field.
+       *
+       * @param nH the {@code nH} field value
+       * @return the {@code nH} field value
+       */
       private Uint32 nH;
 
       public void encode(XdrDataOutputStream stream) throws IOException {
@@ -452,10 +547,44 @@ public class SCPStatement implements XdrElement {
     @AllArgsConstructor
     @Builder(toBuilder = true)
     public static class SCPStatementConfirm implements XdrElement {
+      /**
+       * Value of the {@code ballot} field.
+       *
+       * @param ballot the {@code ballot} field value
+       * @return the {@code ballot} field value
+       */
       private SCPBallot ballot;
+
+      /**
+       * Value of the {@code nPrepared} field.
+       *
+       * @param nPrepared the {@code nPrepared} field value
+       * @return the {@code nPrepared} field value
+       */
       private Uint32 nPrepared;
+
+      /**
+       * Value of the {@code nCommit} field.
+       *
+       * @param nCommit the {@code nCommit} field value
+       * @return the {@code nCommit} field value
+       */
       private Uint32 nCommit;
+
+      /**
+       * Value of the {@code nH} field.
+       *
+       * @param nH the {@code nH} field value
+       * @return the {@code nH} field value
+       */
       private Uint32 nH;
+
+      /**
+       * Value of the {@code quorumSetHash} field.
+       *
+       * @param quorumSetHash the {@code quorumSetHash} field value
+       * @return the {@code quorumSetHash} field value
+       */
       private Hash quorumSetHash;
 
       public void encode(XdrDataOutputStream stream) throws IOException {
@@ -546,8 +675,28 @@ public class SCPStatement implements XdrElement {
     @AllArgsConstructor
     @Builder(toBuilder = true)
     public static class SCPStatementExternalize implements XdrElement {
+      /**
+       * Value of the {@code commit} field.
+       *
+       * @param commit the {@code commit} field value
+       * @return the {@code commit} field value
+       */
       private SCPBallot commit;
+
+      /**
+       * Value of the {@code nH} field.
+       *
+       * @param nH the {@code nH} field value
+       * @return the {@code nH} field value
+       */
       private Uint32 nH;
+
+      /**
+       * Value of the {@code commitQuorumSetHash} field.
+       *
+       * @param commitQuorumSetHash the {@code commitQuorumSetHash} field value
+       * @return the {@code commitQuorumSetHash} field value
+       */
       private Hash commitQuorumSetHash;
 
       public void encode(XdrDataOutputStream stream) throws IOException {

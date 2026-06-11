@@ -34,7 +34,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerEntryExtensionV1 implements XdrElement {
+  /**
+   * Value of the {@code sponsoringID} field.
+   *
+   * @param sponsoringID the {@code sponsoringID} field value
+   * @return the {@code sponsoringID} field value
+   */
   private SponsorshipDescriptor sponsoringID;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private LedgerEntryExtensionV1Ext ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -111,6 +124,12 @@ public class LedgerEntryExtensionV1 implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerEntryExtensionV1Ext implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

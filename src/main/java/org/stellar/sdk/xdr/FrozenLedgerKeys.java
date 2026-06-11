@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class FrozenLedgerKeys implements XdrElement {
+  /**
+   * Value of the {@code keys} field.
+   *
+   * @param keys the {@code keys} field value
+   * @return the {@code keys} field value
+   */
   private EncodedLedgerKey[] keys;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -47,15 +47,86 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class StateArchivalSettings implements XdrElement {
+  /**
+   * Value of the {@code maxEntryTTL} field.
+   *
+   * @param maxEntryTTL the {@code maxEntryTTL} field value
+   * @return the {@code maxEntryTTL} field value
+   */
   private Uint32 maxEntryTTL;
+
+  /**
+   * Value of the {@code minTemporaryTTL} field.
+   *
+   * @param minTemporaryTTL the {@code minTemporaryTTL} field value
+   * @return the {@code minTemporaryTTL} field value
+   */
   private Uint32 minTemporaryTTL;
+
+  /**
+   * Value of the {@code minPersistentTTL} field.
+   *
+   * @param minPersistentTTL the {@code minPersistentTTL} field value
+   * @return the {@code minPersistentTTL} field value
+   */
   private Uint32 minPersistentTTL;
+
+  /**
+   * Value of the {@code persistentRentRateDenominator} field.
+   *
+   * @param persistentRentRateDenominator the {@code persistentRentRateDenominator} field value
+   * @return the {@code persistentRentRateDenominator} field value
+   */
   private Int64 persistentRentRateDenominator;
+
+  /**
+   * Value of the {@code tempRentRateDenominator} field.
+   *
+   * @param tempRentRateDenominator the {@code tempRentRateDenominator} field value
+   * @return the {@code tempRentRateDenominator} field value
+   */
   private Int64 tempRentRateDenominator;
+
+  /**
+   * Value of the {@code maxEntriesToArchive} field.
+   *
+   * @param maxEntriesToArchive the {@code maxEntriesToArchive} field value
+   * @return the {@code maxEntriesToArchive} field value
+   */
   private Uint32 maxEntriesToArchive;
+
+  /**
+   * Value of the {@code liveSorobanStateSizeWindowSampleSize} field.
+   *
+   * @param liveSorobanStateSizeWindowSampleSize the {@code liveSorobanStateSizeWindowSampleSize}
+   *     field value
+   * @return the {@code liveSorobanStateSizeWindowSampleSize} field value
+   */
   private Uint32 liveSorobanStateSizeWindowSampleSize;
+
+  /**
+   * Value of the {@code liveSorobanStateSizeWindowSamplePeriod} field.
+   *
+   * @param liveSorobanStateSizeWindowSamplePeriod the {@code
+   *     liveSorobanStateSizeWindowSamplePeriod} field value
+   * @return the {@code liveSorobanStateSizeWindowSamplePeriod} field value
+   */
   private Uint32 liveSorobanStateSizeWindowSamplePeriod;
+
+  /**
+   * Value of the {@code evictionScanSize} field.
+   *
+   * @param evictionScanSize the {@code evictionScanSize} field value
+   * @return the {@code evictionScanSize} field value
+   */
   private Uint32 evictionScanSize;
+
+  /**
+   * Value of the {@code startingEvictionScanLevel} field.
+   *
+   * @param startingEvictionScanLevel the {@code startingEvictionScanLevel} field value
+   * @return the {@code startingEvictionScanLevel} field value
+   */
   private Uint32 startingEvictionScanLevel;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

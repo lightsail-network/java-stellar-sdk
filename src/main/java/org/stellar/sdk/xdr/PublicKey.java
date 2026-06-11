@@ -28,7 +28,20 @@ import org.stellar.sdk.StrKey;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class PublicKey implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private PublicKeyType discriminant;
+
+  /**
+   * Value of the {@code ed25519} field.
+   *
+   * @param ed25519 the {@code ed25519} field value
+   * @return the {@code ed25519} field value
+   */
   private Uint256 ed25519;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

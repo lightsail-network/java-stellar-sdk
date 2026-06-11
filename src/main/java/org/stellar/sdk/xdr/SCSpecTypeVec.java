@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecTypeVec implements XdrElement {
+  /**
+   * Value of the {@code elementType} field.
+   *
+   * @param elementType the {@code elementType} field value
+   * @return the {@code elementType} field value
+   */
   private SCSpecTypeDef elementType;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

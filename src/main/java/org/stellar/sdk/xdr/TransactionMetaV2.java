@@ -32,8 +32,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionMetaV2 implements XdrElement {
+  /**
+   * Value of the {@code txChangesBefore} field.
+   *
+   * @param txChangesBefore the {@code txChangesBefore} field value
+   * @return the {@code txChangesBefore} field value
+   */
   private LedgerEntryChanges txChangesBefore;
+
+  /**
+   * Value of the {@code operations} field.
+   *
+   * @param operations the {@code operations} field value
+   * @return the {@code operations} field value
+   */
   private OperationMeta[] operations;
+
+  /**
+   * Value of the {@code txChangesAfter} field.
+   *
+   * @param txChangesAfter the {@code txChangesAfter} field value
+   * @return the {@code txChangesAfter} field value
+   */
   private LedgerEntryChanges txChangesAfter;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

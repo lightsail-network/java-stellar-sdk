@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecTypeUDT implements XdrElement {
+  /**
+   * Value of the {@code name} field.
+   *
+   * @param name the {@code name} field value
+   * @return the {@code name} field value
+   */
   private XdrString name;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

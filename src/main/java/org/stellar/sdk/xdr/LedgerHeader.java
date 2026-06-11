@@ -63,20 +63,124 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerHeader implements XdrElement {
+  /**
+   * Value of the {@code ledgerVersion} field.
+   *
+   * @param ledgerVersion the {@code ledgerVersion} field value
+   * @return the {@code ledgerVersion} field value
+   */
   private Uint32 ledgerVersion;
+
+  /**
+   * Value of the {@code previousLedgerHash} field.
+   *
+   * @param previousLedgerHash the {@code previousLedgerHash} field value
+   * @return the {@code previousLedgerHash} field value
+   */
   private Hash previousLedgerHash;
+
+  /**
+   * Value of the {@code scpValue} field.
+   *
+   * @param scpValue the {@code scpValue} field value
+   * @return the {@code scpValue} field value
+   */
   private StellarValue scpValue;
+
+  /**
+   * Value of the {@code txSetResultHash} field.
+   *
+   * @param txSetResultHash the {@code txSetResultHash} field value
+   * @return the {@code txSetResultHash} field value
+   */
   private Hash txSetResultHash;
+
+  /**
+   * Value of the {@code bucketListHash} field.
+   *
+   * @param bucketListHash the {@code bucketListHash} field value
+   * @return the {@code bucketListHash} field value
+   */
   private Hash bucketListHash;
+
+  /**
+   * Value of the {@code ledgerSeq} field.
+   *
+   * @param ledgerSeq the {@code ledgerSeq} field value
+   * @return the {@code ledgerSeq} field value
+   */
   private Uint32 ledgerSeq;
+
+  /**
+   * Value of the {@code totalCoins} field.
+   *
+   * @param totalCoins the {@code totalCoins} field value
+   * @return the {@code totalCoins} field value
+   */
   private Int64 totalCoins;
+
+  /**
+   * Value of the {@code feePool} field.
+   *
+   * @param feePool the {@code feePool} field value
+   * @return the {@code feePool} field value
+   */
   private Int64 feePool;
+
+  /**
+   * Value of the {@code inflationSeq} field.
+   *
+   * @param inflationSeq the {@code inflationSeq} field value
+   * @return the {@code inflationSeq} field value
+   */
   private Uint32 inflationSeq;
+
+  /**
+   * Value of the {@code idPool} field.
+   *
+   * @param idPool the {@code idPool} field value
+   * @return the {@code idPool} field value
+   */
   private Uint64 idPool;
+
+  /**
+   * Value of the {@code baseFee} field.
+   *
+   * @param baseFee the {@code baseFee} field value
+   * @return the {@code baseFee} field value
+   */
   private Uint32 baseFee;
+
+  /**
+   * Value of the {@code baseReserve} field.
+   *
+   * @param baseReserve the {@code baseReserve} field value
+   * @return the {@code baseReserve} field value
+   */
   private Uint32 baseReserve;
+
+  /**
+   * Value of the {@code maxTxSetSize} field.
+   *
+   * @param maxTxSetSize the {@code maxTxSetSize} field value
+   * @return the {@code maxTxSetSize} field value
+   */
   private Uint32 maxTxSetSize;
+
+  /**
+   * Value of the {@code skipList} field.
+   *
+   * @param skipList the {@code skipList} field value
+   * @return the {@code skipList} field value
+   */
   private Hash[] skipList;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private LedgerHeaderExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -219,7 +323,20 @@ public class LedgerHeader implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class LedgerHeaderExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v1} field.
+     *
+     * @param v1 the {@code v1} field value
+     * @return the {@code v1} field value
+     */
     private LedgerHeaderExtensionV1 v1;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

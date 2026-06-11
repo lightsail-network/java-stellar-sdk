@@ -36,7 +36,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionSignaturePayload implements XdrElement {
+  /**
+   * Value of the {@code networkId} field.
+   *
+   * @param networkId the {@code networkId} field value
+   * @return the {@code networkId} field value
+   */
   private Hash networkId;
+
+  /**
+   * Value of the {@code taggedTransaction} field.
+   *
+   * @param taggedTransaction the {@code taggedTransaction} field value
+   * @return the {@code taggedTransaction} field value
+   */
   private TransactionSignaturePayloadTaggedTransaction taggedTransaction;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -120,8 +133,28 @@ public class TransactionSignaturePayload implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class TransactionSignaturePayloadTaggedTransaction implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private EnvelopeType discriminant;
+
+    /**
+     * Value of the {@code tx} field.
+     *
+     * @param tx the {@code tx} field value
+     * @return the {@code tx} field value
+     */
     private Transaction tx;
+
+    /**
+     * Value of the {@code feeBump} field.
+     *
+     * @param feeBump the {@code feeBump} field value
+     * @return the {@code feeBump} field value
+     */
     private FeeBumpTransaction feeBump;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

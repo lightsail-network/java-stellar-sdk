@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class InnerTransactionResultPair implements XdrElement {
+  /**
+   * Value of the {@code transactionHash} field.
+   *
+   * @param transactionHash the {@code transactionHash} field value
+   * @return the {@code transactionHash} field value
+   */
   private Hash transactionHash;
+
+  /**
+   * Value of the {@code result} field.
+   *
+   * @param result the {@code result} field value
+   * @return the {@code result} field value
+   */
   private InnerTransactionResult result;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

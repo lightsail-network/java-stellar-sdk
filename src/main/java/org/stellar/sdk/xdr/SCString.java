@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SCString implements XdrElement {
+  /**
+   * Value of the {@code SCString} field.
+   *
+   * @param SCString the {@code SCString} field value
+   * @return the {@code SCString} field value
+   */
   private XdrString SCString;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

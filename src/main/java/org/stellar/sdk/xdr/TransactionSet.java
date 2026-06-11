@@ -29,7 +29,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionSet implements XdrElement {
+  /**
+   * Value of the {@code previousLedgerHash} field.
+   *
+   * @param previousLedgerHash the {@code previousLedgerHash} field value
+   * @return the {@code previousLedgerHash} field value
+   */
   private Hash previousLedgerHash;
+
+  /**
+   * Value of the {@code txs} field.
+   *
+   * @param txs the {@code txs} field value
+   * @return the {@code txs} field value
+   */
   private TransactionEnvelope[] txs;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Uint256 implements XdrElement {
+  /**
+   * Value of the {@code uint256} field.
+   *
+   * @param uint256 the {@code uint256} field value
+   * @return the {@code uint256} field value
+   */
   private byte[] uint256;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

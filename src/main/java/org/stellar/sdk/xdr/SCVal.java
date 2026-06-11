@@ -83,26 +83,172 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCVal implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SCValType discriminant;
+
+  /**
+   * Value of the {@code b} field.
+   *
+   * @param b the {@code b} field value
+   * @return the {@code b} field value
+   */
   private Boolean b;
+
+  /**
+   * Value of the {@code error} field.
+   *
+   * @param error the {@code error} field value
+   * @return the {@code error} field value
+   */
   private SCError error;
+
+  /**
+   * Value of the {@code u32} field.
+   *
+   * @param u32 the {@code u32} field value
+   * @return the {@code u32} field value
+   */
   private Uint32 u32;
+
+  /**
+   * Value of the {@code i32} field.
+   *
+   * @param i32 the {@code i32} field value
+   * @return the {@code i32} field value
+   */
   private Int32 i32;
+
+  /**
+   * Value of the {@code u64} field.
+   *
+   * @param u64 the {@code u64} field value
+   * @return the {@code u64} field value
+   */
   private Uint64 u64;
+
+  /**
+   * Value of the {@code i64} field.
+   *
+   * @param i64 the {@code i64} field value
+   * @return the {@code i64} field value
+   */
   private Int64 i64;
+
+  /**
+   * Value of the {@code timepoint} field.
+   *
+   * @param timepoint the {@code timepoint} field value
+   * @return the {@code timepoint} field value
+   */
   private TimePoint timepoint;
+
+  /**
+   * Value of the {@code duration} field.
+   *
+   * @param duration the {@code duration} field value
+   * @return the {@code duration} field value
+   */
   private Duration duration;
+
+  /**
+   * Value of the {@code u128} field.
+   *
+   * @param u128 the {@code u128} field value
+   * @return the {@code u128} field value
+   */
   private UInt128Parts u128;
+
+  /**
+   * Value of the {@code i128} field.
+   *
+   * @param i128 the {@code i128} field value
+   * @return the {@code i128} field value
+   */
   private Int128Parts i128;
+
+  /**
+   * Value of the {@code u256} field.
+   *
+   * @param u256 the {@code u256} field value
+   * @return the {@code u256} field value
+   */
   private UInt256Parts u256;
+
+  /**
+   * Value of the {@code i256} field.
+   *
+   * @param i256 the {@code i256} field value
+   * @return the {@code i256} field value
+   */
   private Int256Parts i256;
+
+  /**
+   * Value of the {@code bytes} field.
+   *
+   * @param bytes the {@code bytes} field value
+   * @return the {@code bytes} field value
+   */
   private SCBytes bytes;
+
+  /**
+   * Value of the {@code str} field.
+   *
+   * @param str the {@code str} field value
+   * @return the {@code str} field value
+   */
   private SCString str;
+
+  /**
+   * Value of the {@code sym} field.
+   *
+   * @param sym the {@code sym} field value
+   * @return the {@code sym} field value
+   */
   private SCSymbol sym;
+
+  /**
+   * Value of the {@code vec} field.
+   *
+   * @param vec the {@code vec} field value
+   * @return the {@code vec} field value
+   */
   private SCVec vec;
+
+  /**
+   * Value of the {@code map} field.
+   *
+   * @param map the {@code map} field value
+   * @return the {@code map} field value
+   */
   private SCMap map;
+
+  /**
+   * Value of the {@code address} field.
+   *
+   * @param address the {@code address} field value
+   * @return the {@code address} field value
+   */
   private SCAddress address;
+
+  /**
+   * Value of the {@code instance} field.
+   *
+   * @param instance the {@code instance} field value
+   * @return the {@code instance} field value
+   */
   private SCContractInstance instance;
+
+  /**
+   * Value of the {@code nonce_key} field.
+   *
+   * @param nonce_key the {@code nonce_key} field value
+   * @return the {@code nonce_key} field value
+   */
   private SCNonceKey nonce_key;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

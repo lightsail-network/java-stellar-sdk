@@ -56,11 +56,52 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class PreconditionsV2 implements XdrElement {
+  /**
+   * Value of the {@code timeBounds} field.
+   *
+   * @param timeBounds the {@code timeBounds} field value
+   * @return the {@code timeBounds} field value
+   */
   private TimeBounds timeBounds;
+
+  /**
+   * Value of the {@code ledgerBounds} field.
+   *
+   * @param ledgerBounds the {@code ledgerBounds} field value
+   * @return the {@code ledgerBounds} field value
+   */
   private LedgerBounds ledgerBounds;
+
+  /**
+   * Value of the {@code minSeqNum} field.
+   *
+   * @param minSeqNum the {@code minSeqNum} field value
+   * @return the {@code minSeqNum} field value
+   */
   private SequenceNumber minSeqNum;
+
+  /**
+   * Value of the {@code minSeqAge} field.
+   *
+   * @param minSeqAge the {@code minSeqAge} field value
+   * @return the {@code minSeqAge} field value
+   */
   private Duration minSeqAge;
+
+  /**
+   * Value of the {@code minSeqLedgerGap} field.
+   *
+   * @param minSeqLedgerGap the {@code minSeqLedgerGap} field value
+   * @return the {@code minSeqLedgerGap} field value
+   */
   private Uint32 minSeqLedgerGap;
+
+  /**
+   * Value of the {@code extraSigners} field.
+   *
+   * @param extraSigners the {@code extraSigners} field value
+   * @return the {@code extraSigners} field value
+   */
   private SignerKey[] extraSigners;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

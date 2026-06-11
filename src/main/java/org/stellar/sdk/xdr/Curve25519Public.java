@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Curve25519Public implements XdrElement {
+  /**
+   * Value of the {@code key} field.
+   *
+   * @param key the {@code key} field value
+   * @return the {@code key} field value
+   */
   private byte[] key;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

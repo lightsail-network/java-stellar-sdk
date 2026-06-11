@@ -37,11 +37,52 @@ import org.stellar.sdk.StrKey;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCAddress implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SCAddressType discriminant;
+
+  /**
+   * Value of the {@code accountId} field.
+   *
+   * @param accountId the {@code accountId} field value
+   * @return the {@code accountId} field value
+   */
   private AccountID accountId;
+
+  /**
+   * Value of the {@code contractId} field.
+   *
+   * @param contractId the {@code contractId} field value
+   * @return the {@code contractId} field value
+   */
   private ContractID contractId;
+
+  /**
+   * Value of the {@code muxedAccount} field.
+   *
+   * @param muxedAccount the {@code muxedAccount} field value
+   * @return the {@code muxedAccount} field value
+   */
   private MuxedEd25519Account muxedAccount;
+
+  /**
+   * Value of the {@code claimableBalanceId} field.
+   *
+   * @param claimableBalanceId the {@code claimableBalanceId} field value
+   * @return the {@code claimableBalanceId} field value
+   */
   private ClaimableBalanceID claimableBalanceId;
+
+  /**
+   * Value of the {@code liquidityPoolId} field.
+   *
+   * @param liquidityPoolId the {@code liquidityPoolId} field value
+   * @return the {@code liquidityPoolId} field value
+   */
   private PoolID liquidityPoolId;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

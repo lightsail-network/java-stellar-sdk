@@ -34,6 +34,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ClaimClaimableBalanceResult implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private ClaimClaimableBalanceResultCode discriminant;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

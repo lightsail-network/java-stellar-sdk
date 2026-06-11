@@ -31,10 +31,44 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SurveyRequestMessage implements XdrElement {
+  /**
+   * Value of the {@code surveyorPeerID} field.
+   *
+   * @param surveyorPeerID the {@code surveyorPeerID} field value
+   * @return the {@code surveyorPeerID} field value
+   */
   private NodeID surveyorPeerID;
+
+  /**
+   * Value of the {@code surveyedPeerID} field.
+   *
+   * @param surveyedPeerID the {@code surveyedPeerID} field value
+   * @return the {@code surveyedPeerID} field value
+   */
   private NodeID surveyedPeerID;
+
+  /**
+   * Value of the {@code ledgerNum} field.
+   *
+   * @param ledgerNum the {@code ledgerNum} field value
+   * @return the {@code ledgerNum} field value
+   */
   private Uint32 ledgerNum;
+
+  /**
+   * Value of the {@code encryptionKey} field.
+   *
+   * @param encryptionKey the {@code encryptionKey} field value
+   * @return the {@code encryptionKey} field value
+   */
   private Curve25519Public encryptionKey;
+
+  /**
+   * Value of the {@code commandType} field.
+   *
+   * @param commandType the {@code commandType} field value
+   * @return the {@code commandType} field value
+   */
   private SurveyMessageCommandType commandType;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

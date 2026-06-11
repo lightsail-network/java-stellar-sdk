@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SponsorshipDescriptor implements XdrElement {
+  /**
+   * Value of the {@code SponsorshipDescriptor} field.
+   *
+   * @param SponsorshipDescriptor the {@code SponsorshipDescriptor} field value
+   * @return the {@code SponsorshipDescriptor} field value
+   */
   private AccountID SponsorshipDescriptor;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

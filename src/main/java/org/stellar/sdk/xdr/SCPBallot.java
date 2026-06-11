@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCPBallot implements XdrElement {
+  /**
+   * Value of the {@code counter} field.
+   *
+   * @param counter the {@code counter} field value
+   * @return the {@code counter} field value
+   */
   private Uint32 counter;
+
+  /**
+   * Value of the {@code value} field.
+   *
+   * @param value the {@code value} field value
+   * @return the {@code value} field value
+   */
   private Value value;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

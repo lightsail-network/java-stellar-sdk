@@ -50,13 +50,68 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerCloseMetaV2 implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private LedgerCloseMetaExt ext;
+
+  /**
+   * Value of the {@code ledgerHeader} field.
+   *
+   * @param ledgerHeader the {@code ledgerHeader} field value
+   * @return the {@code ledgerHeader} field value
+   */
   private LedgerHeaderHistoryEntry ledgerHeader;
+
+  /**
+   * Value of the {@code txSet} field.
+   *
+   * @param txSet the {@code txSet} field value
+   * @return the {@code txSet} field value
+   */
   private GeneralizedTransactionSet txSet;
+
+  /**
+   * Value of the {@code txProcessing} field.
+   *
+   * @param txProcessing the {@code txProcessing} field value
+   * @return the {@code txProcessing} field value
+   */
   private TransactionResultMetaV1[] txProcessing;
+
+  /**
+   * Value of the {@code upgradesProcessing} field.
+   *
+   * @param upgradesProcessing the {@code upgradesProcessing} field value
+   * @return the {@code upgradesProcessing} field value
+   */
   private UpgradeEntryMeta[] upgradesProcessing;
+
+  /**
+   * Value of the {@code scpInfo} field.
+   *
+   * @param scpInfo the {@code scpInfo} field value
+   * @return the {@code scpInfo} field value
+   */
   private SCPHistoryEntry[] scpInfo;
+
+  /**
+   * Value of the {@code totalByteSizeOfLiveSorobanState} field.
+   *
+   * @param totalByteSizeOfLiveSorobanState the {@code totalByteSizeOfLiveSorobanState} field value
+   * @return the {@code totalByteSizeOfLiveSorobanState} field value
+   */
   private Uint64 totalByteSizeOfLiveSorobanState;
+
+  /**
+   * Value of the {@code evictedKeys} field.
+   *
+   * @param evictedKeys the {@code evictedKeys} field value
+   * @return the {@code evictedKeys} field value
+   */
   private LedgerKey[] evictedKeys;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

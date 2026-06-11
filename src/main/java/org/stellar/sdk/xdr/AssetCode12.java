@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AssetCode12 implements XdrElement {
+  /**
+   * Value of the {@code AssetCode12} field.
+   *
+   * @param AssetCode12 the {@code AssetCode12} field value
+   * @return the {@code AssetCode12} field value
+   */
   private byte[] AssetCode12;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

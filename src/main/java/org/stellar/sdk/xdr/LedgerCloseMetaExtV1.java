@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerCloseMetaExtV1 implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code sorobanFeeWrite1KB} field.
+   *
+   * @param sorobanFeeWrite1KB the {@code sorobanFeeWrite1KB} field value
+   * @return the {@code sorobanFeeWrite1KB} field value
+   */
   private Int64 sorobanFeeWrite1KB;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

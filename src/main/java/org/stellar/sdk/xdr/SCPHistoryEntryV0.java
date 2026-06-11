@@ -29,7 +29,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCPHistoryEntryV0 implements XdrElement {
+  /**
+   * Value of the {@code quorumSets} field.
+   *
+   * @param quorumSets the {@code quorumSets} field value
+   * @return the {@code quorumSets} field value
+   */
   private SCPQuorumSet[] quorumSets;
+
+  /**
+   * Value of the {@code ledgerMessages} field.
+   *
+   * @param ledgerMessages the {@code ledgerMessages} field value
+   * @return the {@code ledgerMessages} field value
+   */
   private LedgerSCPMessages ledgerMessages;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

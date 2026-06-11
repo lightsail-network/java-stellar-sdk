@@ -31,8 +31,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionPhase implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private Integer discriminant;
+
+  /**
+   * Value of the {@code v0Components} field.
+   *
+   * @param v0Components the {@code v0Components} field value
+   * @return the {@code v0Components} field value
+   */
   private TxSetComponent[] v0Components;
+
+  /**
+   * Value of the {@code parallelTxsComponent} field.
+   *
+   * @param parallelTxsComponent the {@code parallelTxsComponent} field value
+   * @return the {@code parallelTxsComponent} field value
+   */
   private ParallelTxsComponent parallelTxsComponent;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

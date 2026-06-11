@@ -38,7 +38,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class BucketMetadata implements XdrElement {
+  /**
+   * Value of the {@code ledgerVersion} field.
+   *
+   * @param ledgerVersion the {@code ledgerVersion} field value
+   * @return the {@code ledgerVersion} field value
+   */
   private Uint32 ledgerVersion;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private BucketMetadataExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -116,7 +129,20 @@ public class BucketMetadata implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class BucketMetadataExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code bucketListType} field.
+     *
+     * @param bucketListType the {@code bucketListType} field value
+     * @return the {@code bucketListType} field value
+     */
     private BucketListType bucketListType;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

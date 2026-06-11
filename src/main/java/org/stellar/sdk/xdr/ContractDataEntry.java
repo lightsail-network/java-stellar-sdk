@@ -31,10 +31,44 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ContractDataEntry implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code contract} field.
+   *
+   * @param contract the {@code contract} field value
+   * @return the {@code contract} field value
+   */
   private SCAddress contract;
+
+  /**
+   * Value of the {@code key} field.
+   *
+   * @param key the {@code key} field value
+   * @return the {@code key} field value
+   */
   private SCVal key;
+
+  /**
+   * Value of the {@code durability} field.
+   *
+   * @param durability the {@code durability} field value
+   * @return the {@code durability} field value
+   */
   private ContractDataDurability durability;
+
+  /**
+   * Value of the {@code val} field.
+   *
+   * @param val the {@code val} field value
+   * @return the {@code val} field value
+   */
   private SCVal val;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

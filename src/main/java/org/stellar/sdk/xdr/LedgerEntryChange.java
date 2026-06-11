@@ -36,11 +36,52 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LedgerEntryChange implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private LedgerEntryChangeType discriminant;
+
+  /**
+   * Value of the {@code created} field.
+   *
+   * @param created the {@code created} field value
+   * @return the {@code created} field value
+   */
   private LedgerEntry created;
+
+  /**
+   * Value of the {@code updated} field.
+   *
+   * @param updated the {@code updated} field value
+   * @return the {@code updated} field value
+   */
   private LedgerEntry updated;
+
+  /**
+   * Value of the {@code removed} field.
+   *
+   * @param removed the {@code removed} field value
+   * @return the {@code removed} field value
+   */
   private LedgerKey removed;
+
+  /**
+   * Value of the {@code state} field.
+   *
+   * @param state the {@code state} field value
+   * @return the {@code state} field value
+   */
   private LedgerEntry state;
+
+  /**
+   * Value of the {@code restored} field.
+   *
+   * @param restored the {@code restored} field value
+   * @return the {@code restored} field value
+   */
   private LedgerEntry restored;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

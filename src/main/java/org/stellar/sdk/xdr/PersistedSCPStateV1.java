@@ -30,7 +30,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class PersistedSCPStateV1 implements XdrElement {
+  /**
+   * Value of the {@code scpEnvelopes} field.
+   *
+   * @param scpEnvelopes the {@code scpEnvelopes} field value
+   * @return the {@code scpEnvelopes} field value
+   */
   private SCPEnvelope[] scpEnvelopes;
+
+  /**
+   * Value of the {@code quorumSets} field.
+   *
+   * @param quorumSets the {@code quorumSets} field value
+   * @return the {@code quorumSets} field value
+   */
   private SCPQuorumSet[] quorumSets;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

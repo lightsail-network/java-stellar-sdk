@@ -29,7 +29,20 @@ import org.stellar.sdk.StrKey;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class MuxedEd25519Account implements XdrElement {
+  /**
+   * Value of the {@code id} field.
+   *
+   * @param id the {@code id} field value
+   * @return the {@code id} field value
+   */
   private Uint64 id;
+
+  /**
+   * Value of the {@code ed25519} field.
+   *
+   * @param ed25519 the {@code ed25519} field value
+   * @return the {@code ed25519} field value
+   */
   private Uint256 ed25519;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

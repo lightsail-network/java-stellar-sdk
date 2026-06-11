@@ -22,6 +22,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimeSlicedPeerDataList implements XdrElement {
+  /**
+   * Value of the {@code TimeSlicedPeerDataList} field.
+   *
+   * @param TimeSlicedPeerDataList the {@code TimeSlicedPeerDataList} field value
+   * @return the {@code TimeSlicedPeerDataList} field value
+   */
   private TimeSlicedPeerData[] TimeSlicedPeerDataList;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

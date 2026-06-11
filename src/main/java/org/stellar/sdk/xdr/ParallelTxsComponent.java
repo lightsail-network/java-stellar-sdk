@@ -32,7 +32,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ParallelTxsComponent implements XdrElement {
+  /**
+   * Value of the {@code baseFee} field.
+   *
+   * @param baseFee the {@code baseFee} field value
+   * @return the {@code baseFee} field value
+   */
   private Int64 baseFee;
+
+  /**
+   * Value of the {@code executionStages} field.
+   *
+   * @param executionStages the {@code executionStages} field value
+   * @return the {@code executionStages} field value
+   */
   private ParallelTxExecutionStage[] executionStages;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

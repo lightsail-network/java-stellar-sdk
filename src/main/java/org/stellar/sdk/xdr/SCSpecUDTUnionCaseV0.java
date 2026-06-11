@@ -30,8 +30,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecUDTUnionCaseV0 implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SCSpecUDTUnionCaseV0Kind discriminant;
+
+  /**
+   * Value of the {@code voidCase} field.
+   *
+   * @param voidCase the {@code voidCase} field value
+   * @return the {@code voidCase} field value
+   */
   private SCSpecUDTUnionCaseVoidV0 voidCase;
+
+  /**
+   * Value of the {@code tupleCase} field.
+   *
+   * @param tupleCase the {@code tupleCase} field value
+   * @return the {@code tupleCase} field value
+   */
   private SCSpecUDTUnionCaseTupleV0 tupleCase;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

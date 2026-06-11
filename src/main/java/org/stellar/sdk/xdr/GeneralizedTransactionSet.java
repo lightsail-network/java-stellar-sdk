@@ -29,7 +29,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class GeneralizedTransactionSet implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private Integer discriminant;
+
+  /**
+   * Value of the {@code v1TxSet} field.
+   *
+   * @param v1TxSet the {@code v1TxSet} field value
+   * @return the {@code v1TxSet} field value
+   */
   private TransactionSetV1 v1TxSet;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

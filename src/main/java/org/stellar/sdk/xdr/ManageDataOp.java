@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ManageDataOp implements XdrElement {
+  /**
+   * Value of the {@code dataName} field.
+   *
+   * @param dataName the {@code dataName} field value
+   * @return the {@code dataName} field value
+   */
   private String64 dataName;
+
+  /**
+   * Value of the {@code dataValue} field.
+   *
+   * @param dataValue the {@code dataValue} field value
+   * @return the {@code dataValue} field value
+   */
   private DataValue dataValue;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EncryptedBody implements XdrElement {
+  /**
+   * Value of the {@code EncryptedBody} field.
+   *
+   * @param EncryptedBody the {@code EncryptedBody} field value
+   * @return the {@code EncryptedBody} field value
+   */
   private byte[] EncryptedBody;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

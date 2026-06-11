@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpgradeType implements XdrElement {
+  /**
+   * Value of the {@code UpgradeType} field.
+   *
+   * @param UpgradeType the {@code UpgradeType} field value
+   * @return the {@code UpgradeType} field value
+   */
   private byte[] UpgradeType;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

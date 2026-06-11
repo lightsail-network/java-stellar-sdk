@@ -49,8 +49,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class PathPaymentStrictReceiveResult implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private PathPaymentStrictReceiveResultCode discriminant;
+
+  /**
+   * Value of the {@code success} field.
+   *
+   * @param success the {@code success} field value
+   * @return the {@code success} field value
+   */
   private PathPaymentStrictReceiveResultSuccess success;
+
+  /**
+   * Value of the {@code noIssuer} field.
+   *
+   * @param noIssuer the {@code noIssuer} field value
+   * @return the {@code noIssuer} field value
+   */
   private Asset noIssuer;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -264,7 +284,20 @@ public class PathPaymentStrictReceiveResult implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class PathPaymentStrictReceiveResultSuccess implements XdrElement {
+    /**
+     * Value of the {@code offers} field.
+     *
+     * @param offers the {@code offers} field value
+     * @return the {@code offers} field value
+     */
     private ClaimAtom[] offers;
+
+    /**
+     * Value of the {@code last} field.
+     *
+     * @param last the {@code last} field value
+     * @return the {@code last} field value
+     */
     private SimplePaymentResult last;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

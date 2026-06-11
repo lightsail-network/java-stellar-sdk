@@ -34,10 +34,44 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class HostFunction implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private HostFunctionType discriminant;
+
+  /**
+   * Value of the {@code invokeContract} field.
+   *
+   * @param invokeContract the {@code invokeContract} field value
+   * @return the {@code invokeContract} field value
+   */
   private InvokeContractArgs invokeContract;
+
+  /**
+   * Value of the {@code createContract} field.
+   *
+   * @param createContract the {@code createContract} field value
+   * @return the {@code createContract} field value
+   */
   private CreateContractArgs createContract;
+
+  /**
+   * Value of the {@code wasm} field.
+   *
+   * @param wasm the {@code wasm} field value
+   * @return the {@code wasm} field value
+   */
   private byte[] wasm;
+
+  /**
+   * Value of the {@code createContractV2} field.
+   *
+   * @param createContractV2 the {@code createContractV2} field value
+   * @return the {@code createContractV2} field value
+   */
   private CreateContractArgsV2 createContractV2;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

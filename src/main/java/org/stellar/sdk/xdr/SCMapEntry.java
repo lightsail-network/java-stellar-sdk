@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCMapEntry implements XdrElement {
+  /**
+   * Value of the {@code key} field.
+   *
+   * @param key the {@code key} field value
+   * @return the {@code key} field value
+   */
   private SCVal key;
+
+  /**
+   * Value of the {@code val} field.
+   *
+   * @param val the {@code val} field value
+   * @return the {@code val} field value
+   */
   private SCVal val;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

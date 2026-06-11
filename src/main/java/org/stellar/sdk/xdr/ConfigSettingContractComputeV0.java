@@ -36,9 +36,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ConfigSettingContractComputeV0 implements XdrElement {
+  /**
+   * Value of the {@code ledgerMaxInstructions} field.
+   *
+   * @param ledgerMaxInstructions the {@code ledgerMaxInstructions} field value
+   * @return the {@code ledgerMaxInstructions} field value
+   */
   private Int64 ledgerMaxInstructions;
+
+  /**
+   * Value of the {@code txMaxInstructions} field.
+   *
+   * @param txMaxInstructions the {@code txMaxInstructions} field value
+   * @return the {@code txMaxInstructions} field value
+   */
   private Int64 txMaxInstructions;
+
+  /**
+   * Value of the {@code feeRatePerInstructionsIncrement} field.
+   *
+   * @param feeRatePerInstructionsIncrement the {@code feeRatePerInstructionsIncrement} field value
+   * @return the {@code feeRatePerInstructionsIncrement} field value
+   */
   private Int64 feeRatePerInstructionsIncrement;
+
+  /**
+   * Value of the {@code txMemoryLimit} field.
+   *
+   * @param txMemoryLimit the {@code txMemoryLimit} field value
+   * @return the {@code txMemoryLimit} field value
+   */
   private Uint32 txMemoryLimit;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

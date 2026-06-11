@@ -39,12 +39,60 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionV0 implements XdrElement {
+  /**
+   * Value of the {@code sourceAccountEd25519} field.
+   *
+   * @param sourceAccountEd25519 the {@code sourceAccountEd25519} field value
+   * @return the {@code sourceAccountEd25519} field value
+   */
   private Uint256 sourceAccountEd25519;
+
+  /**
+   * Value of the {@code fee} field.
+   *
+   * @param fee the {@code fee} field value
+   * @return the {@code fee} field value
+   */
   private Uint32 fee;
+
+  /**
+   * Value of the {@code seqNum} field.
+   *
+   * @param seqNum the {@code seqNum} field value
+   * @return the {@code seqNum} field value
+   */
   private SequenceNumber seqNum;
+
+  /**
+   * Value of the {@code timeBounds} field.
+   *
+   * @param timeBounds the {@code timeBounds} field value
+   * @return the {@code timeBounds} field value
+   */
   private TimeBounds timeBounds;
+
+  /**
+   * Value of the {@code memo} field.
+   *
+   * @param memo the {@code memo} field value
+   * @return the {@code memo} field value
+   */
   private Memo memo;
+
+  /**
+   * Value of the {@code operations} field.
+   *
+   * @param operations the {@code operations} field value
+   * @return the {@code operations} field value
+   */
   private Operation[] operations;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private TransactionV0Ext ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -181,6 +229,12 @@ public class TransactionV0 implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class TransactionV0Ext implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

@@ -39,7 +39,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ManageOfferSuccessResult implements XdrElement {
+  /**
+   * Value of the {@code offersClaimed} field.
+   *
+   * @param offersClaimed the {@code offersClaimed} field value
+   * @return the {@code offersClaimed} field value
+   */
   private ClaimAtom[] offersClaimed;
+
+  /**
+   * Value of the {@code offer} field.
+   *
+   * @param offer the {@code offer} field value
+   * @return the {@code offer} field value
+   */
   private ManageOfferSuccessResultOffer offer;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -144,7 +157,20 @@ public class ManageOfferSuccessResult implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class ManageOfferSuccessResultOffer implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private ManageOfferEffect discriminant;
+
+    /**
+     * Value of the {@code offer} field.
+     *
+     * @param offer the {@code offer} field value
+     * @return the {@code offer} field value
+     */
     private OfferEntry offer;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

@@ -34,9 +34,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class BucketEntry implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private BucketEntryType discriminant;
+
+  /**
+   * Value of the {@code liveEntry} field.
+   *
+   * @param liveEntry the {@code liveEntry} field value
+   * @return the {@code liveEntry} field value
+   */
   private LedgerEntry liveEntry;
+
+  /**
+   * Value of the {@code deadEntry} field.
+   *
+   * @param deadEntry the {@code deadEntry} field value
+   * @return the {@code deadEntry} field value
+   */
   private LedgerKey deadEntry;
+
+  /**
+   * Value of the {@code metaEntry} field.
+   *
+   * @param metaEntry the {@code metaEntry} field value
+   * @return the {@code metaEntry} field value
+   */
   private BucketMetadata metaEntry;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

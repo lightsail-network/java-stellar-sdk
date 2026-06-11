@@ -22,6 +22,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TxDemandVector implements XdrElement {
+  /**
+   * Value of the {@code TxDemandVector} field.
+   *
+   * @param TxDemandVector the {@code TxDemandVector} field value
+   * @return the {@code TxDemandVector} field value
+   */
   private Hash[] TxDemandVector;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

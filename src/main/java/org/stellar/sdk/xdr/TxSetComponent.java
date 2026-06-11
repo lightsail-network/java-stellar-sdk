@@ -33,7 +33,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TxSetComponent implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private TxSetComponentType discriminant;
+
+  /**
+   * Value of the {@code txsMaybeDiscountedFee} field.
+   *
+   * @param txsMaybeDiscountedFee the {@code txsMaybeDiscountedFee} field value
+   * @return the {@code txsMaybeDiscountedFee} field value
+   */
   private TxSetComponentTxsMaybeDiscountedFee txsMaybeDiscountedFee;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -138,7 +151,20 @@ public class TxSetComponent implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class TxSetComponentTxsMaybeDiscountedFee implements XdrElement {
+    /**
+     * Value of the {@code baseFee} field.
+     *
+     * @param baseFee the {@code baseFee} field value
+     * @return the {@code baseFee} field value
+     */
     private Int64 baseFee;
+
+    /**
+     * Value of the {@code txs} field.
+     *
+     * @param txs the {@code txs} field value
+     * @return the {@code txs} field value
+     */
     private TransactionEnvelope[] txs;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

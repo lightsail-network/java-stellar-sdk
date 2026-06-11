@@ -32,9 +32,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class TransactionEnvelope implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private EnvelopeType discriminant;
+
+  /**
+   * Value of the {@code v0} field.
+   *
+   * @param v0 the {@code v0} field value
+   * @return the {@code v0} field value
+   */
   private TransactionV0Envelope v0;
+
+  /**
+   * Value of the {@code v1} field.
+   *
+   * @param v1 the {@code v1} field value
+   * @return the {@code v1} field value
+   */
   private TransactionV1Envelope v1;
+
+  /**
+   * Value of the {@code feeBump} field.
+   *
+   * @param feeBump the {@code feeBump} field value
+   * @return the {@code feeBump} field value
+   */
   private FeeBumpTransactionEnvelope feeBump;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

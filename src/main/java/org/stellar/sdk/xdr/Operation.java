@@ -89,7 +89,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Operation implements XdrElement {
+  /**
+   * Value of the {@code sourceAccount} field.
+   *
+   * @param sourceAccount the {@code sourceAccount} field value
+   * @return the {@code sourceAccount} field value
+   */
   private MuxedAccount sourceAccount;
+
+  /**
+   * Value of the {@code body} field.
+   *
+   * @param body the {@code body} field value
+   * @return the {@code body} field value
+   */
   private OperationBody body;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -228,31 +241,213 @@ public class Operation implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class OperationBody implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private OperationType discriminant;
+
+    /**
+     * Value of the {@code createAccountOp} field.
+     *
+     * @param createAccountOp the {@code createAccountOp} field value
+     * @return the {@code createAccountOp} field value
+     */
     private CreateAccountOp createAccountOp;
+
+    /**
+     * Value of the {@code paymentOp} field.
+     *
+     * @param paymentOp the {@code paymentOp} field value
+     * @return the {@code paymentOp} field value
+     */
     private PaymentOp paymentOp;
+
+    /**
+     * Value of the {@code pathPaymentStrictReceiveOp} field.
+     *
+     * @param pathPaymentStrictReceiveOp the {@code pathPaymentStrictReceiveOp} field value
+     * @return the {@code pathPaymentStrictReceiveOp} field value
+     */
     private PathPaymentStrictReceiveOp pathPaymentStrictReceiveOp;
+
+    /**
+     * Value of the {@code manageSellOfferOp} field.
+     *
+     * @param manageSellOfferOp the {@code manageSellOfferOp} field value
+     * @return the {@code manageSellOfferOp} field value
+     */
     private ManageSellOfferOp manageSellOfferOp;
+
+    /**
+     * Value of the {@code createPassiveSellOfferOp} field.
+     *
+     * @param createPassiveSellOfferOp the {@code createPassiveSellOfferOp} field value
+     * @return the {@code createPassiveSellOfferOp} field value
+     */
     private CreatePassiveSellOfferOp createPassiveSellOfferOp;
+
+    /**
+     * Value of the {@code setOptionsOp} field.
+     *
+     * @param setOptionsOp the {@code setOptionsOp} field value
+     * @return the {@code setOptionsOp} field value
+     */
     private SetOptionsOp setOptionsOp;
+
+    /**
+     * Value of the {@code changeTrustOp} field.
+     *
+     * @param changeTrustOp the {@code changeTrustOp} field value
+     * @return the {@code changeTrustOp} field value
+     */
     private ChangeTrustOp changeTrustOp;
+
+    /**
+     * Value of the {@code allowTrustOp} field.
+     *
+     * @param allowTrustOp the {@code allowTrustOp} field value
+     * @return the {@code allowTrustOp} field value
+     */
     private AllowTrustOp allowTrustOp;
+
+    /**
+     * Value of the {@code destination} field.
+     *
+     * @param destination the {@code destination} field value
+     * @return the {@code destination} field value
+     */
     private MuxedAccount destination;
+
+    /**
+     * Value of the {@code manageDataOp} field.
+     *
+     * @param manageDataOp the {@code manageDataOp} field value
+     * @return the {@code manageDataOp} field value
+     */
     private ManageDataOp manageDataOp;
+
+    /**
+     * Value of the {@code bumpSequenceOp} field.
+     *
+     * @param bumpSequenceOp the {@code bumpSequenceOp} field value
+     * @return the {@code bumpSequenceOp} field value
+     */
     private BumpSequenceOp bumpSequenceOp;
+
+    /**
+     * Value of the {@code manageBuyOfferOp} field.
+     *
+     * @param manageBuyOfferOp the {@code manageBuyOfferOp} field value
+     * @return the {@code manageBuyOfferOp} field value
+     */
     private ManageBuyOfferOp manageBuyOfferOp;
+
+    /**
+     * Value of the {@code pathPaymentStrictSendOp} field.
+     *
+     * @param pathPaymentStrictSendOp the {@code pathPaymentStrictSendOp} field value
+     * @return the {@code pathPaymentStrictSendOp} field value
+     */
     private PathPaymentStrictSendOp pathPaymentStrictSendOp;
+
+    /**
+     * Value of the {@code createClaimableBalanceOp} field.
+     *
+     * @param createClaimableBalanceOp the {@code createClaimableBalanceOp} field value
+     * @return the {@code createClaimableBalanceOp} field value
+     */
     private CreateClaimableBalanceOp createClaimableBalanceOp;
+
+    /**
+     * Value of the {@code claimClaimableBalanceOp} field.
+     *
+     * @param claimClaimableBalanceOp the {@code claimClaimableBalanceOp} field value
+     * @return the {@code claimClaimableBalanceOp} field value
+     */
     private ClaimClaimableBalanceOp claimClaimableBalanceOp;
+
+    /**
+     * Value of the {@code beginSponsoringFutureReservesOp} field.
+     *
+     * @param beginSponsoringFutureReservesOp the {@code beginSponsoringFutureReservesOp} field
+     *     value
+     * @return the {@code beginSponsoringFutureReservesOp} field value
+     */
     private BeginSponsoringFutureReservesOp beginSponsoringFutureReservesOp;
+
+    /**
+     * Value of the {@code revokeSponsorshipOp} field.
+     *
+     * @param revokeSponsorshipOp the {@code revokeSponsorshipOp} field value
+     * @return the {@code revokeSponsorshipOp} field value
+     */
     private RevokeSponsorshipOp revokeSponsorshipOp;
+
+    /**
+     * Value of the {@code clawbackOp} field.
+     *
+     * @param clawbackOp the {@code clawbackOp} field value
+     * @return the {@code clawbackOp} field value
+     */
     private ClawbackOp clawbackOp;
+
+    /**
+     * Value of the {@code clawbackClaimableBalanceOp} field.
+     *
+     * @param clawbackClaimableBalanceOp the {@code clawbackClaimableBalanceOp} field value
+     * @return the {@code clawbackClaimableBalanceOp} field value
+     */
     private ClawbackClaimableBalanceOp clawbackClaimableBalanceOp;
+
+    /**
+     * Value of the {@code setTrustLineFlagsOp} field.
+     *
+     * @param setTrustLineFlagsOp the {@code setTrustLineFlagsOp} field value
+     * @return the {@code setTrustLineFlagsOp} field value
+     */
     private SetTrustLineFlagsOp setTrustLineFlagsOp;
+
+    /**
+     * Value of the {@code liquidityPoolDepositOp} field.
+     *
+     * @param liquidityPoolDepositOp the {@code liquidityPoolDepositOp} field value
+     * @return the {@code liquidityPoolDepositOp} field value
+     */
     private LiquidityPoolDepositOp liquidityPoolDepositOp;
+
+    /**
+     * Value of the {@code liquidityPoolWithdrawOp} field.
+     *
+     * @param liquidityPoolWithdrawOp the {@code liquidityPoolWithdrawOp} field value
+     * @return the {@code liquidityPoolWithdrawOp} field value
+     */
     private LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
+
+    /**
+     * Value of the {@code invokeHostFunctionOp} field.
+     *
+     * @param invokeHostFunctionOp the {@code invokeHostFunctionOp} field value
+     * @return the {@code invokeHostFunctionOp} field value
+     */
     private InvokeHostFunctionOp invokeHostFunctionOp;
+
+    /**
+     * Value of the {@code extendFootprintTTLOp} field.
+     *
+     * @param extendFootprintTTLOp the {@code extendFootprintTTLOp} field value
+     * @return the {@code extendFootprintTTLOp} field value
+     */
     private ExtendFootprintTTLOp extendFootprintTTLOp;
+
+    /**
+     * Value of the {@code restoreFootprintOp} field.
+     *
+     * @param restoreFootprintOp the {@code restoreFootprintOp} field value
+     * @return the {@code restoreFootprintOp} field value
+     */
     private RestoreFootprintOp restoreFootprintOp;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

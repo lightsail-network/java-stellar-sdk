@@ -38,8 +38,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCError implements XdrElement {
+  /**
+   * Value of the {@code discriminant} field.
+   *
+   * @param discriminant the {@code discriminant} field value
+   * @return the {@code discriminant} field value
+   */
   private SCErrorType discriminant;
+
+  /**
+   * Value of the {@code contractCode} field.
+   *
+   * @param contractCode the {@code contractCode} field value
+   * @return the {@code contractCode} field value
+   */
   private Uint32 contractCode;
+
+  /**
+   * Value of the {@code code} field.
+   *
+   * @param code the {@code code} field value
+   * @return the {@code code} field value
+   */
   private SCErrorCode code;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SendMoreExtended implements XdrElement {
+  /**
+   * Value of the {@code numMessages} field.
+   *
+   * @param numMessages the {@code numMessages} field value
+   * @return the {@code numMessages} field value
+   */
   private Uint32 numMessages;
+
+  /**
+   * Value of the {@code numBytes} field.
+   *
+   * @param numBytes the {@code numBytes} field value
+   * @return the {@code numBytes} field value
+   */
   private Uint32 numBytes;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

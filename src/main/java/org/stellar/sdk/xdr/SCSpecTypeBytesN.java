@@ -27,6 +27,12 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCSpecTypeBytesN implements XdrElement {
+  /**
+   * Value of the {@code n} field.
+   *
+   * @param n the {@code n} field value
+   * @return the {@code n} field value
+   */
   private Uint32 n;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

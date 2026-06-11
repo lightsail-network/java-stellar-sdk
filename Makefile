@@ -14,7 +14,7 @@ xdr/Stellar-transaction.x \
 xdr/Stellar-types.x
 
 # stellar-xdr commit to use, see https://github.com/stellar/stellar-xdr
-XDR_COMMIT=cff714a5ebaaaf2dac343b3546c2df73f0b7a36e
+XDR_COMMIT=68fa1ac55692f68ad2a2ca549d0a283273554439
 
 .PHONY: xdr xdr-clean xdr-update xdr-generator-test xdr-generator-update-snapshots
 

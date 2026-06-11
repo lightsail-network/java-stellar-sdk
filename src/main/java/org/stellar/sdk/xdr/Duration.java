@@ -21,6 +21,12 @@ import org.stellar.sdk.Base64Factory;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Duration implements XdrElement {
+  /**
+   * Value of the {@code Duration} field.
+   *
+   * @param Duration the {@code Duration} field value
+   * @return the {@code Duration} field value
+   */
   private Uint64 Duration;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

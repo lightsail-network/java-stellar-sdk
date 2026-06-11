@@ -64,8 +64,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class InnerTransactionResult implements XdrElement {
+  /**
+   * Value of the {@code feeCharged} field.
+   *
+   * @param feeCharged the {@code feeCharged} field value
+   * @return the {@code feeCharged} field value
+   */
   private Int64 feeCharged;
+
+  /**
+   * Value of the {@code result} field.
+   *
+   * @param result the {@code result} field value
+   * @return the {@code result} field value
+   */
   private InnerTransactionResultResult result;
+
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private InnerTransactionResultExt ext;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -166,7 +186,20 @@ public class InnerTransactionResult implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class InnerTransactionResultResult implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private TransactionResultCode discriminant;
+
+    /**
+     * Value of the {@code results} field.
+     *
+     * @param results the {@code results} field value
+     * @return the {@code results} field value
+     */
     private OperationResult[] results;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -423,6 +456,12 @@ public class InnerTransactionResult implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class InnerTransactionResultExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
 
     public void encode(XdrDataOutputStream stream) throws IOException {

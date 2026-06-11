@@ -31,9 +31,36 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SetTrustLineFlagsOp implements XdrElement {
+  /**
+   * Value of the {@code trustor} field.
+   *
+   * @param trustor the {@code trustor} field value
+   * @return the {@code trustor} field value
+   */
   private AccountID trustor;
+
+  /**
+   * Value of the {@code asset} field.
+   *
+   * @param asset the {@code asset} field value
+   * @return the {@code asset} field value
+   */
   private Asset asset;
+
+  /**
+   * Value of the {@code clearFlags} field.
+   *
+   * @param clearFlags the {@code clearFlags} field value
+   * @return the {@code clearFlags} field value
+   */
   private Uint32 clearFlags;
+
+  /**
+   * Value of the {@code setFlags} field.
+   *
+   * @param setFlags the {@code setFlags} field value
+   * @return the {@code setFlags} field value
+   */
   private Uint32 setFlags;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

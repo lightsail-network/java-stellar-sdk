@@ -56,9 +56,38 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SorobanTransactionMetaExtV1 implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ExtensionPoint ext;
+
+  /**
+   * Value of the {@code totalNonRefundableResourceFeeCharged} field.
+   *
+   * @param totalNonRefundableResourceFeeCharged the {@code totalNonRefundableResourceFeeCharged}
+   *     field value
+   * @return the {@code totalNonRefundableResourceFeeCharged} field value
+   */
   private Int64 totalNonRefundableResourceFeeCharged;
+
+  /**
+   * Value of the {@code totalRefundableResourceFeeCharged} field.
+   *
+   * @param totalRefundableResourceFeeCharged the {@code totalRefundableResourceFeeCharged} field
+   *     value
+   * @return the {@code totalRefundableResourceFeeCharged} field value
+   */
   private Int64 totalRefundableResourceFeeCharged;
+
+  /**
+   * Value of the {@code rentFeeCharged} field.
+   *
+   * @param rentFeeCharged the {@code rentFeeCharged} field value
+   * @return the {@code rentFeeCharged} field value
+   */
   private Int64 rentFeeCharged;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

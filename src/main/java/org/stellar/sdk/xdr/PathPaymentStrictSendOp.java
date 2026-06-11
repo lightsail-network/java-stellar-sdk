@@ -37,11 +37,52 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class PathPaymentStrictSendOp implements XdrElement {
+  /**
+   * Value of the {@code sendAsset} field.
+   *
+   * @param sendAsset the {@code sendAsset} field value
+   * @return the {@code sendAsset} field value
+   */
   private Asset sendAsset;
+
+  /**
+   * Value of the {@code sendAmount} field.
+   *
+   * @param sendAmount the {@code sendAmount} field value
+   * @return the {@code sendAmount} field value
+   */
   private Int64 sendAmount;
+
+  /**
+   * Value of the {@code destination} field.
+   *
+   * @param destination the {@code destination} field value
+   * @return the {@code destination} field value
+   */
   private MuxedAccount destination;
+
+  /**
+   * Value of the {@code destAsset} field.
+   *
+   * @param destAsset the {@code destAsset} field value
+   * @return the {@code destAsset} field value
+   */
   private Asset destAsset;
+
+  /**
+   * Value of the {@code destMin} field.
+   *
+   * @param destMin the {@code destMin} field value
+   * @return the {@code destMin} field value
+   */
   private Int64 destMin;
+
+  /**
+   * Value of the {@code path} field.
+   *
+   * @param path the {@code path} field value
+   * @return the {@code path} field value
+   */
   private Asset[] path;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

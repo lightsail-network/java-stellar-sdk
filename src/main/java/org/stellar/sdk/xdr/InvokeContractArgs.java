@@ -29,8 +29,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class InvokeContractArgs implements XdrElement {
+  /**
+   * Value of the {@code contractAddress} field.
+   *
+   * @param contractAddress the {@code contractAddress} field value
+   * @return the {@code contractAddress} field value
+   */
   private SCAddress contractAddress;
+
+  /**
+   * Value of the {@code functionName} field.
+   *
+   * @param functionName the {@code functionName} field value
+   * @return the {@code functionName} field value
+   */
   private SCSymbol functionName;
+
+  /**
+   * Value of the {@code args} field.
+   *
+   * @param args the {@code args} field value
+   * @return the {@code args} field value
+   */
   private SCVal[] args;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

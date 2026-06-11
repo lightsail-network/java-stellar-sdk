@@ -39,8 +39,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ContractCodeEntry implements XdrElement {
+  /**
+   * Value of the {@code ext} field.
+   *
+   * @param ext the {@code ext} field value
+   * @return the {@code ext} field value
+   */
   private ContractCodeEntryExt ext;
+
+  /**
+   * Value of the {@code hash} field.
+   *
+   * @param hash the {@code hash} field value
+   * @return the {@code hash} field value
+   */
   private Hash hash;
+
+  /**
+   * Value of the {@code code} field.
+   *
+   * @param code the {@code code} field value
+   * @return the {@code code} field value
+   */
   private byte[] code;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
@@ -139,7 +159,20 @@ public class ContractCodeEntry implements XdrElement {
   @AllArgsConstructor
   @Builder(toBuilder = true)
   public static class ContractCodeEntryExt implements XdrElement {
+    /**
+     * Value of the {@code discriminant} field.
+     *
+     * @param discriminant the {@code discriminant} field value
+     * @return the {@code discriminant} field value
+     */
     private Integer discriminant;
+
+    /**
+     * Value of the {@code v1} field.
+     *
+     * @param v1 the {@code v1} field value
+     * @return the {@code v1} field value
+     */
     private ContractCodeEntryV1 v1;
 
     public void encode(XdrDataOutputStream stream) throws IOException {
@@ -259,7 +292,20 @@ public class ContractCodeEntry implements XdrElement {
     @AllArgsConstructor
     @Builder(toBuilder = true)
     public static class ContractCodeEntryV1 implements XdrElement {
+      /**
+       * Value of the {@code ext} field.
+       *
+       * @param ext the {@code ext} field value
+       * @return the {@code ext} field value
+       */
       private ExtensionPoint ext;
+
+      /**
+       * Value of the {@code costInputs} field.
+       *
+       * @param costInputs the {@code costInputs} field value
+       * @return the {@code costInputs} field value
+       */
       private ContractCodeCostInputs costInputs;
 
       public void encode(XdrDataOutputStream stream) throws IOException {

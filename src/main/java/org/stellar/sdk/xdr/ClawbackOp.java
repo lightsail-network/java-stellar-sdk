@@ -29,8 +29,28 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ClawbackOp implements XdrElement {
+  /**
+   * Value of the {@code asset} field.
+   *
+   * @param asset the {@code asset} field value
+   * @return the {@code asset} field value
+   */
   private Asset asset;
+
+  /**
+   * Value of the {@code from} field.
+   *
+   * @param from the {@code from} field value
+   * @return the {@code from} field value
+   */
   private MuxedAccount from;
+
+  /**
+   * Value of the {@code amount} field.
+   *
+   * @param amount the {@code amount} field value
+   * @return the {@code amount} field value
+   */
   private Int64 amount;
 
   public void encode(XdrDataOutputStream stream) throws IOException {

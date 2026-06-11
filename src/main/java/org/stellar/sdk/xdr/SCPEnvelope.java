@@ -28,7 +28,20 @@ import org.stellar.sdk.Base64Factory;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class SCPEnvelope implements XdrElement {
+  /**
+   * Value of the {@code statement} field.
+   *
+   * @param statement the {@code statement} field value
+   * @return the {@code statement} field value
+   */
   private SCPStatement statement;
+
+  /**
+   * Value of the {@code signature} field.
+   *
+   * @param signature the {@code signature} field value
+   * @return the {@code signature} field value
+   */
   private Signature signature;
 
   public void encode(XdrDataOutputStream stream) throws IOException {
