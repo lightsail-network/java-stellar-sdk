@@ -1,7 +1,27 @@
 # Changelog
 
 ## Pending
+
+### Update
 - chore: upgrade generated XDR definitions to Protocol 27.
+- feat: add CAP-0071 (Protocol 27) Soroban authorization support.
+  - New credential types (from the Protocol 27 XDR):
+    - `SOROBAN_CREDENTIALS_ADDRESS_V2` (CAP-71-02) — same fields as the legacy `ADDRESS`, but the signed payload is bound to the signer's address.
+    - `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES` (CAP-71-01) — delegated / multi-party signing via a (possibly nested) tree of delegate signatures.
+  - `Auth.authorizeEntry`:
+    - Signs all three address-based credential types, selecting the signature payload from the credential type: legacy `ADDRESS` keeps the non-address-bound preimage; `ADDRESS_V2` and `ADDRESS_WITH_DELEGATES` sign the new address-bound `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS` preimage.
+    - Gains an optional `forAddress` parameter that writes the signature into a specific (possibly nested) delegate node. All signers of one delegated entry sign the same payload, bound to the top-level address.
+  - `Auth.authorizeInvocation`:
+    - Still builds legacy `ADDRESS` entries by default, so its output stays valid on every network regardless of protocol 27 activation.
+    - New `credentialsType` overloads opt in to `ADDRESS_V2`. The default will flip to V2 once Protocol 28 makes it mandatory.
+  - New helpers in `Auth`:
+    - `buildAuthorizationEntryPreimage` — builds the exact payload a signer must sign for a given entry.
+    - `buildWithDelegatesEntry` / `Auth.DelegateSignature` — wrap an `ADDRESS`/`ADDRESS_V2` entry together with delegate signers, sorting each delegates level by address and rejecting duplicates, as the protocol requires.
+    - `getAddressCredentials` — extracts the inner `SorobanAddressCredentials` from any address-based credential type.
+  - `AssembledTransaction`: `signAuthEntries` and `needsNonInvokerSigningBy` handle all address-based credential types.
+  - SEP-45 (`Sep45Challenge`):
+    - Challenge parsing and building accept `ADDRESS_V2` entries in addition to the legacy type; delegated entries are rejected.
+    - Challenge building fails fast on unsupported credential types instead of passing the entries through unsigned.
 
 ## 3.1.0
 
