@@ -2,9 +2,11 @@
 
 ## Pending
 
+## 4.0.0-beta0
+
 ### Update
-- chore: upgrade generated XDR definitions to Protocol 27.
-- feat: add CAP-0071 (Protocol 27) Soroban authorization support.
+- chore: upgrade generated XDR definitions to Protocol 27. ([#800](https://github.com/lightsail-network/java-stellar-sdk/pull/800))
+- feat: add CAP-0071 (Protocol 27) Soroban authorization support. ([#804](https://github.com/lightsail-network/java-stellar-sdk/pull/804))
   - New credential types (from the Protocol 27 XDR):
     - `SOROBAN_CREDENTIALS_ADDRESS_V2` (CAP-71-02) — same fields as the legacy `ADDRESS`, but the signed payload is bound to the signer's address.
     - `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES` (CAP-71-01) — delegated / multi-party signing via a (possibly nested) tree of delegate signatures.
