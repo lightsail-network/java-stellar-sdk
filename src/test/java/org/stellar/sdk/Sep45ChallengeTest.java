@@ -24,7 +24,9 @@ import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.InvokeContractArgs;
 import org.stellar.sdk.xdr.SCSymbol;
 import org.stellar.sdk.xdr.SCVal;
+import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.SorobanAddressCredentials;
+import org.stellar.sdk.xdr.SorobanAddressCredentialsWithDelegates;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntries;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
 import org.stellar.sdk.xdr.SorobanAuthorizedFunction;
@@ -32,6 +34,7 @@ import org.stellar.sdk.xdr.SorobanAuthorizedFunctionType;
 import org.stellar.sdk.xdr.SorobanAuthorizedInvocation;
 import org.stellar.sdk.xdr.SorobanCredentials;
 import org.stellar.sdk.xdr.SorobanCredentialsType;
+import org.stellar.sdk.xdr.SorobanDelegateSignature;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrString;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
@@ -99,6 +102,14 @@ public class Sep45ChallengeTest {
    */
   private SorobanAuthorizationEntry buildAuthorizationEntry(
       String address, SorobanAuthorizedInvocation invocation) {
+    return buildAuthorizationEntry(
+        address, invocation, SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS);
+  }
+
+  private SorobanAuthorizationEntry buildAuthorizationEntry(
+      String address,
+      SorobanAuthorizedInvocation invocation,
+      SorobanCredentialsType credentialsType) {
     Address addr = new Address(address);
 
     SorobanAddressCredentials addressCredentials =
@@ -109,14 +120,25 @@ public class Sep45ChallengeTest {
             .signature(Scv.toVoid())
             .build();
 
-    SorobanCredentials credentials =
-        SorobanCredentials.builder()
-            .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
-            .address(addressCredentials)
-            .build();
+    SorobanCredentials.SorobanCredentialsBuilder credentialsBuilder =
+        SorobanCredentials.builder().discriminant(credentialsType);
+    if (credentialsType == SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
+      credentialsBuilder.address(addressCredentials);
+    } else if (credentialsType == SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2) {
+      credentialsBuilder.addressV2(addressCredentials);
+    } else if (credentialsType
+        == SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES) {
+      credentialsBuilder.addressWithDelegates(
+          SorobanAddressCredentialsWithDelegates.builder()
+              .addressCredentials(addressCredentials)
+              .delegates(new SorobanDelegateSignature[0])
+              .build());
+    } else {
+      throw new IllegalArgumentException("Unsupported credentials type: " + credentialsType);
+    }
 
     return SorobanAuthorizationEntry.builder()
-        .credentials(credentials)
+        .credentials(credentialsBuilder.build())
         .rootInvocation(invocation)
         .build();
   }
@@ -800,7 +822,62 @@ public class Sep45ChallengeTest {
     } catch (InvalidSep45ChallengeException e) {
       assertTrue(
           e.getMessage()
-              .contains("All authorization entries must have SOROBAN_CREDENTIALS_ADDRESS type"));
+              .contains(
+                  "All authorization entries must have SOROBAN_CREDENTIALS_ADDRESS or SOROBAN_CREDENTIALS_ADDRESS_V2 type"));
+    }
+  }
+
+  @Test
+  public void testReadChallengeSuccessWithAddressV2Credentials() {
+    // CAP-71 (protocol 27): SOROBAN_CREDENTIALS_ADDRESS_V2 entries are accepted in addition to
+    // the legacy SOROBAN_CREDENTIALS_ADDRESS.
+    SorobanAuthorizedInvocation invocation = buildValidInvocation(false);
+
+    List<SorobanAuthorizationEntry> entries = new ArrayList<>();
+    entries.add(
+        buildAuthorizationEntry(
+            CLIENT_CONTRACT, invocation, SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2));
+    entries.add(
+        buildAuthorizationEntry(
+            SERVER_ACCOUNT, invocation, SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2));
+
+    String xdr = authorizationEntriesToXdr(entries);
+
+    Sep45Challenge.ChallengeAuthorizationEntries result =
+        Sep45Challenge.readChallengeAuthorizationEntries(
+            xdr, SERVER_ACCOUNT, WEB_AUTH_CONTRACT, HOME_DOMAIN, WEB_AUTH_DOMAIN);
+
+    assertEquals(CLIENT_CONTRACT, result.getClientContractId());
+    assertEquals(SERVER_ACCOUNT, result.getServerAccountId());
+    assertEquals(NONCE, result.getNonce());
+    assertEquals(2, result.getAuthorizationEntries().size());
+  }
+
+  @Test
+  public void testReadChallengeRejectsWithDelegatesCredentials() {
+    // Delegated credentials (CAP-71-01) are rejected until the ecosystem defines how they
+    // interact with SEP-45.
+    SorobanAuthorizedInvocation invocation = buildValidInvocation(false);
+
+    List<SorobanAuthorizationEntry> entries = new ArrayList<>();
+    entries.add(
+        buildAuthorizationEntry(
+            CLIENT_CONTRACT,
+            invocation,
+            SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES));
+    entries.add(buildAuthorizationEntry(SERVER_ACCOUNT, invocation));
+
+    String xdr = authorizationEntriesToXdr(entries);
+
+    try {
+      Sep45Challenge.readChallengeAuthorizationEntries(
+          xdr, SERVER_ACCOUNT, WEB_AUTH_CONTRACT, HOME_DOMAIN, WEB_AUTH_DOMAIN);
+      fail("Expected InvalidSep45ChallengeException");
+    } catch (InvalidSep45ChallengeException e) {
+      assertTrue(
+          e.getMessage()
+              .contains(
+                  "All authorization entries must have SOROBAN_CREDENTIALS_ADDRESS or SOROBAN_CREDENTIALS_ADDRESS_V2 type"));
     }
   }
 
@@ -915,6 +992,95 @@ public class Sep45ChallengeTest {
 
     mockWebServer.close();
     server.close();
+  }
+
+  @Test
+  public void testBuildChallengeAuthorizationEntriesSignsAddressV2Entries() throws IOException {
+    // CAP-71 (protocol 27): a P27 RPC may return SOROBAN_CREDENTIALS_ADDRESS_V2 entries from
+    // simulation; the server entry must still get signed.
+    KeyPair serverSigner = KeyPair.random();
+    String serverAccountId = serverSigner.getAccountId();
+
+    String mockResponse =
+        buildMockSimulateResponse(
+            serverAccountId, false, SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
+
+    MockWebServer mockWebServer = new MockWebServer();
+    mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(mockResponse));
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+
+    SorobanAuthorizationEntries result =
+        Sep45Challenge.buildChallengeAuthorizationEntries(
+            server,
+            serverSigner,
+            CLIENT_CONTRACT,
+            HOME_DOMAIN,
+            WEB_AUTH_DOMAIN,
+            WEB_AUTH_CONTRACT,
+            Network.TESTNET,
+            null,
+            null);
+
+    // The server's V2 entry is signed, the client entry remains an unsigned placeholder.
+    boolean serverEntryChecked = false;
+    for (SorobanAuthorizationEntry entry : result.getSorobanAuthorizationEntries()) {
+      assertEquals(
+          SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2,
+          entry.getCredentials().getDiscriminant());
+      SorobanAddressCredentials addressCredentials =
+          Auth.getAddressCredentials(entry.getCredentials());
+      String entryAddress = Address.fromSCAddress(addressCredentials.getAddress()).toString();
+      if (entryAddress.equals(serverAccountId)) {
+        assertEquals(SCValType.SCV_VEC, addressCredentials.getSignature().getDiscriminant());
+        serverEntryChecked = true;
+      } else {
+        assertEquals(SCValType.SCV_VOID, addressCredentials.getSignature().getDiscriminant());
+      }
+    }
+    assertTrue(serverEntryChecked);
+
+    mockWebServer.close();
+    server.close();
+  }
+
+  @Test
+  public void testBuildChallengeAuthorizationEntriesRejectsUnsupportedCredentialsType()
+      throws IOException {
+    // Delegated credentials are not allowed in SEP-45 challenges; challenge building must fail
+    // fast instead of emitting an unsigned entry.
+    KeyPair serverSigner = KeyPair.random();
+    String serverAccountId = serverSigner.getAccountId();
+
+    String mockResponse =
+        buildMockSimulateResponse(
+            serverAccountId,
+            false,
+            SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES);
+
+    try (MockWebServer mockWebServer = new MockWebServer()) {
+      mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(mockResponse));
+      mockWebServer.start();
+
+      HttpUrl baseUrl = mockWebServer.url("");
+      try (SorobanServer server = new SorobanServer(baseUrl.toString())) {
+        Sep45Challenge.buildChallengeAuthorizationEntries(
+            server,
+            serverSigner,
+            CLIENT_CONTRACT,
+            HOME_DOMAIN,
+            WEB_AUTH_DOMAIN,
+            WEB_AUTH_CONTRACT,
+            Network.TESTNET,
+            null,
+            null);
+        fail("Expected InvalidSep45ChallengeException");
+      } catch (InvalidSep45ChallengeException e) {
+        assertTrue(e.getMessage().contains("Unsupported SorobanCredentialsType"));
+      }
+    }
   }
 
   @Test
@@ -1208,6 +1374,12 @@ public class Sep45ChallengeTest {
    * @return JSON string of the mock response
    */
   private String buildMockSimulateResponse(String serverAccountId, boolean includeClientDomain) {
+    return buildMockSimulateResponse(
+        serverAccountId, includeClientDomain, SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS);
+  }
+
+  private String buildMockSimulateResponse(
+      String serverAccountId, boolean includeClientDomain, SorobanCredentialsType credentialsType) {
     // Build mock authorization entries for the response
     List<SorobanAuthorizationEntry> mockEntries = new ArrayList<>();
 
@@ -1244,11 +1416,11 @@ public class Sep45ChallengeTest {
             .build();
 
     // Client entry
-    mockEntries.add(buildAuthorizationEntry(CLIENT_CONTRACT, invocation));
+    mockEntries.add(buildAuthorizationEntry(CLIENT_CONTRACT, invocation, credentialsType));
     // Server entry
-    mockEntries.add(buildAuthorizationEntry(serverAccountId, invocation));
+    mockEntries.add(buildAuthorizationEntry(serverAccountId, invocation, credentialsType));
     if (includeClientDomain) {
-      mockEntries.add(buildAuthorizationEntry(CLIENT_DOMAIN_ACCOUNT, invocation));
+      mockEntries.add(buildAuthorizationEntry(CLIENT_DOMAIN_ACCOUNT, invocation, credentialsType));
     }
 
     // Convert entries to XDR base64 strings

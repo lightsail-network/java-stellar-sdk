@@ -6,8 +6,10 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
@@ -48,6 +50,17 @@ public class Sep45Challenge {
    */
   public static final String NULL_ACCOUNT =
       "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";
+
+  // Credential types accepted in SEP-45 challenge entries. CAP-71 (protocol 27): simulation may
+  // return SOROBAN_CREDENTIALS_ADDRESS_V2 entries in addition to the legacy
+  // SOROBAN_CREDENTIALS_ADDRESS. Delegated credentials
+  // (SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES) are rejected until the ecosystem defines how
+  // they interact with SEP-45.
+  private static final Set<SorobanCredentialsType> ALLOWED_CREDENTIAL_TYPES =
+      Collections.unmodifiableSet(
+          EnumSet.of(
+              SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS,
+              SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2));
 
   private Sep45Challenge() {
     // no instance
@@ -230,15 +243,18 @@ public class Sep45Challenge {
             "Failed to parse authorization entry: " + authXdr, e);
       }
 
-      // Check if this entry needs to be signed by the server
-      if (entry.getCredentials().getDiscriminant()
-          == SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
-        Address address = Address.fromSCAddress(entry.getCredentials().getAddress().getAddress());
-        if (address.getAddressType() == Address.AddressType.ACCOUNT
-            && address.getEncodedAddress().equals(serverSigner.getAccountId())) {
-          // Sign this entry with the server signer
-          entry = Auth.authorizeEntry(entry, serverSigner, signatureExpirationLedger, network);
-        }
+      if (!ALLOWED_CREDENTIAL_TYPES.contains(entry.getCredentials().getDiscriminant())) {
+        throw new InvalidSep45ChallengeException(
+            "Unsupported SorobanCredentialsType: " + entry.getCredentials().getDiscriminant());
+      }
+
+      // Check if this entry needs to be signed by the server.
+      Address address =
+          Address.fromSCAddress(Auth.getAddressCredentials(entry.getCredentials()).getAddress());
+      if (address.getAddressType() == Address.AddressType.ACCOUNT
+          && address.getEncodedAddress().equals(serverSigner.getAccountId())) {
+        // Sign this entry with the server signer
+        entry = Auth.authorizeEntry(entry, serverSigner, signatureExpirationLedger, network);
       }
 
       signedEntries.add(entry);
@@ -472,12 +488,12 @@ public class Sep45Challenge {
 
     for (SorobanAuthorizationEntry entry : entries) {
       SorobanCredentials credentials = entry.getCredentials();
-      if (credentials.getDiscriminant() != SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
+      if (!ALLOWED_CREDENTIAL_TYPES.contains(credentials.getDiscriminant())) {
         throw new InvalidSep45ChallengeException(
-            "All authorization entries must have SOROBAN_CREDENTIALS_ADDRESS type");
+            "All authorization entries must have SOROBAN_CREDENTIALS_ADDRESS or SOROBAN_CREDENTIALS_ADDRESS_V2 type");
       }
 
-      SorobanAddressCredentials addressCredentials = credentials.getAddress();
+      SorobanAddressCredentials addressCredentials = Auth.getAddressCredentials(credentials);
       Address credentialAddress = Address.fromSCAddress(addressCredentials.getAddress());
       String encodedAddress = credentialAddress.getEncodedAddress();
 

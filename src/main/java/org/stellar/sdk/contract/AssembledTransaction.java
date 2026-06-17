@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.Value;
 import org.jetbrains.annotations.Nullable;
 import org.stellar.sdk.*;
+import org.stellar.sdk.Auth;
 import org.stellar.sdk.TimeBounds;
 import org.stellar.sdk.Transaction;
 import org.stellar.sdk.contract.exception.*;
@@ -149,6 +150,10 @@ public class AssembledTransaction<T> {
   /**
    * Signs the transaction.
    *
+   * <p>Entries whose credential address is a contract ({@code C...}) are excluded from the
+   * missing-signature check: contract-account authorization is evaluated on-chain by the account's
+   * {@code __check_auth} and cannot be verified client-side.
+   *
    * @param transactionSigner the keypair to sign the transaction with, or <code>null</code> to use
    *     the signer provided in the constructor
    * @param force whether to sign and submit even if the transaction is a read call
@@ -215,6 +220,13 @@ public class AssembledTransaction<T> {
   /**
    * Signs the transaction's authorization entries.
    *
+   * <p>Only entries whose top-level credential address matches the signer are signed. Delegate
+   * nodes of {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES} entries (CAP-71-01) are not
+   * traversed — which delegates must sign is the account contract's policy. Fill them with {@link
+   * Auth#authorizeEntry(SorobanAuthorizationEntry, Auth.Signer, Long, Network, String)}, passing
+   * the delegate's address as {@code forAddress} and the same expiration ledger for every signer of
+   * one entry (the shared signature payload commits to it).
+   *
    * @param authEntriesSigner the keypair to sign the authorization entries with
    * @param validUntilLedgerSequence the ledger sequence number until which the authorization
    *     entries are valid, or <code>null</code> to set it to the current ledger sequence + 100
@@ -239,14 +251,13 @@ public class AssembledTransaction<T> {
 
     for (int i = 0; i < invokeHostFunctionOp.getAuth().size(); i++) {
       SorobanAuthorizationEntry e = invokeHostFunctionOp.getAuth().get(i);
-      if (SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT.equals(
-          e.getCredentials().getDiscriminant())) {
+      SorobanAddressCredentials addressCredentials = Auth.getAddressCredentials(e.getCredentials());
+      if (addressCredentials == null) {
+        // source-account credentials don't need an explicit signature here, since the tx
+        // envelope is already signed by the source account
         continue;
       }
-      if (e.getCredentials().getAddress() == null) {
-        throw new IllegalStateException("Expected address in credentials");
-      }
-      if (!Address.fromSCAddress(e.getCredentials().getAddress().getAddress())
+      if (!Address.fromSCAddress(addressCredentials.getAddress())
           .toString()
           .equals(authEntriesSigner.getAccountId())) {
         continue;
@@ -263,6 +274,12 @@ public class AssembledTransaction<T> {
 
   /**
    * Get the addresses that need to sign the authorization entries.
+   *
+   * <p>Only the top-level address credentials of each entry are considered. Delegate signers of
+   * {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES} entries (CAP-71-01) are not reported: which
+   * delegates must sign is the account contract's policy, which the SDK cannot know — per CAP-71-01
+   * a listed delegate is only verified when the account's {@code __check_auth} consumes it, so a
+   * delegate left with a void signature may be perfectly valid.
    *
    * @param includeAlreadySigned whether to include addresses that have already signed the
    *     authorization entries
@@ -281,18 +298,17 @@ public class AssembledTransaction<T> {
     InvokeHostFunctionOperation invokeHostFunctionOp = (InvokeHostFunctionOperation) op;
 
     return invokeHostFunctionOp.getAuth().stream()
+        .map(entry -> Auth.getAddressCredentials(entry.getCredentials()))
         .filter(
-            entry ->
-                entry.getCredentials().getDiscriminant()
-                    == SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
-        .filter(
-            entry ->
-                includeAlreadySigned
-                    || entry.getCredentials().getAddress().getSignature().getDiscriminant()
-                        == SCValType.SCV_VOID)
+            addressCredentials ->
+                // skip source-account credentials (no address payload), which are covered by
+                // the envelope signature on the source account
+                addressCredentials != null
+                    && (includeAlreadySigned
+                        || addressCredentials.getSignature().getDiscriminant()
+                            == SCValType.SCV_VOID))
         .map(
-            entry ->
-                Address.fromSCAddress(entry.getCredentials().getAddress().getAddress()).toString())
+            addressCredentials -> Address.fromSCAddress(addressCredentials.getAddress()).toString())
         .collect(Collectors.toSet());
   }
 
