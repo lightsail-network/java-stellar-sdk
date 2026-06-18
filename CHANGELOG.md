@@ -2,6 +2,32 @@
 
 ## Pending
 
+### Breaking changes
+- refactor: redesign `Auth.Signer` to natively support custom account contracts (BLS, WebAuthn / secp256r1, threshold, policy contracts, ...).
+  - `Auth.Signer.sign` now returns the signature `SCVal` accepted by the account contract at the credential node being signed — the default Stellar Account shape for a `G...` account, or whatever a custom account contract's `__check_auth` expects — instead of an `Auth.Signature`. The returned value is attached verbatim. This also unlocks signing a custom-contract delegate node of a `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES` entry (CAP-71-01).
+  - `Auth.Signature` has been removed.
+  - Client-side ed25519 signature verification inside `authorizeEntry` is removed; the network performs the authoritative check via the account contract's `__check_auth` (a `null` return from a `Signer` is still rejected).
+  - `Auth.authorizeInvocation(Signer, ...)`: the `publicKey` parameter is renamed to `address` (it already accepted `C...` contract addresses).
+  - New `Auth.authorizationPayloadHash(HashIDPreimage)` returns the 32-byte payload an account contract receives in `__check_auth`.
+  - New `Auth.defaultAccountSignatureScVal` builds the default Stellar Account signature shape (`Vec<Map{public_key, signature}>`), the building block for ed25519 `Signer`s that sign via an HSM or remote service. Two overloads accept either the raw `byte[]` ed25519 public key or a `G...` `accountId`. The `KeyPair` overloads are unchanged and produce byte-identical output.
+
+  Migration for a custom (non-`KeyPair`) `Signer` targeting a classic `G...` account:
+
+  ```java
+  // before
+  Auth.Signer signer =
+      preimage -> {
+        byte[] payload = Util.hash(preimage.toXdrByteArray());
+        return new Auth.Signature(accountId, signRemotely(payload));
+      };
+
+  // after
+  Auth.Signer signer =
+      preimage ->
+          Auth.defaultAccountSignatureScVal(
+              accountId, signRemotely(Auth.authorizationPayloadHash(preimage)));
+  ```
+
 ## 4.0.0-beta0
 
 ### Update
