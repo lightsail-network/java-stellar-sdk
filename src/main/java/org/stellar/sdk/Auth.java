@@ -161,17 +161,9 @@ public class Auth {
       Network network,
       @Nullable String forAddress) {
     Signer entrySigner =
-        preimage -> {
-          byte[] data;
-          try {
-            data = preimage.toXdrByteArray();
-          } catch (IOException e) {
-            throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
-          }
-          byte[] payload = Util.hash(data);
-          byte[] signature = signer.sign(payload);
-          return new Signature(signer.getAccountId(), signature);
-        };
+        preimage ->
+            defaultAccountSignatureScVal(
+                signer.getPublicKey(), signer.sign(authorizationPayloadHash(preimage)));
 
     return authorizeEntry(entry, entrySigner, validUntilLedgerSeq, network, forAddress);
   }
@@ -192,8 +184,8 @@ public class Auth {
    * </ul>
    *
    * @param entry a base64 encoded unsigned Soroban authorization entry
-   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
-   *     signature of the hash of the raw payload bytes, see {@link Signer}
+   * @param signer a {@link Signer} that takes the authorization preimage (a {@link HashIDPreimage})
+   *     and returns the signature {@link SCVal} the account at the entry's address expects
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param network the network is incorprated into the signature
@@ -220,8 +212,8 @@ public class Auth {
    * </ul>
    *
    * @param entry a base64 encoded unsigned Soroban authorization entry
-   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
-   *     signature of the hash of the raw payload bytes, see {@link Signer}
+   * @param signer a {@link Signer} that takes the authorization preimage (a {@link HashIDPreimage})
+   *     and returns the signature {@link SCVal} the account at the entry's address expects
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param network the network is incorprated into the signature
@@ -260,8 +252,8 @@ public class Auth {
    * </ul>
    *
    * @param entry an unsigned Soroban authorization entry
-   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
-   *     signature of the hash of the raw payload bytes, see {@link Signer}
+   * @param signer a {@link Signer} that takes the authorization preimage (a {@link HashIDPreimage})
+   *     and returns the signature {@link SCVal} the account at the entry's address expects
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param network the network is incorprated into the signature
@@ -294,8 +286,8 @@ public class Auth {
    * credentials are returned unchanged (they are covered by the transaction envelope signature).
    *
    * @param entry an unsigned Soroban authorization entry
-   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
-   *     signature of the hash of the raw payload bytes, see {@link Signer}
+   * @param signer a {@link Signer} that takes the authorization preimage (a {@link HashIDPreimage})
+   *     and returns the signature {@link SCVal} the account at the entry's address expects
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param network the network is incorprated into the signature
@@ -344,32 +336,14 @@ public class Auth {
 
     HashIDPreimage preimage = buildAuthorizationEntryPreimage(clone, validUntilLedgerSeq, network);
 
-    Signature signature = signer.sign(preimage);
-
-    byte[] data;
-    try {
-      data = preimage.toXdrByteArray();
-    } catch (IOException e) {
-      throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
+    // The signer returns the final signature SCVal accepted by the account contract at this
+    // credential node — the default Stellar Account shape for a G... account, or whatever a custom
+    // account contract's __check_auth expects. It is attached verbatim: the network performs the
+    // authoritative check via __check_auth, so there is nothing to verify client-side.
+    SCVal signatureScVal = signer.sign(preimage);
+    if (signatureScVal == null) {
+      throw new IllegalArgumentException("signer returned a null signature");
     }
-    byte[] payload = Util.hash(data);
-    KeyPair kp = KeyPair.fromAccountId(signature.publicKey);
-    if (!kp.verify(payload, signature.signature)) {
-      throw new IllegalArgumentException("signature does not match payload");
-    }
-
-    // This structure is defined here:
-    // https://developers.stellar.org/docs/learn/encyclopedia/contract-development/contract-interactions/stellar-transaction#stellar-account-signatures
-    // https://github.com/stellar/rs-soroban-env/blob/99d8c92cdc7e5cd0f5311df8f88d04658ecde7d2/soroban-env-host/src/native_contract/account_contract.rs#L51
-    SCVal sigScVal =
-        Scv.toMap(
-            new LinkedHashMap<SCVal, SCVal>() {
-              {
-                put(Scv.toSymbol("public_key"), Scv.toBytes(kp.getPublicKey()));
-                put(Scv.toSymbol("signature"), Scv.toBytes(signature.getSignature()));
-              }
-            });
-    SCVal signatureScVal = Scv.toVec(Collections.singleton(sigScVal));
 
     // CAP-71-01: the signature payload is shared across the top-level address and every
     // (possibly nested) delegate, so this signer's signature is written to whichever credential
@@ -463,15 +437,9 @@ public class Auth {
       Network network,
       SorobanCredentialsType credentialsType) {
     Signer entrySigner =
-        preimage -> {
-          try {
-            byte[] payload = Util.hash(preimage.toXdrByteArray());
-            byte[] signature = signer.sign(payload);
-            return new Signature(signer.getAccountId(), signature);
-          } catch (IOException e) {
-            throw new UnexpectedException(e);
-          }
-        };
+        preimage ->
+            defaultAccountSignatureScVal(
+                signer.getPublicKey(), signer.sign(authorizationPayloadHash(preimage)));
     return authorizeInvocation(
         entrySigner,
         signer.getAccountId(),
@@ -501,9 +469,10 @@ public class Auth {
    * Auth#authorizeInvocation(Signer, String, Long, SorobanAuthorizedInvocation, Network,
    * SorobanCredentialsType)}. The default will flip to V2 once protocol 28 makes it mandatory.
    *
-   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
-   *     signature of the hash of the raw payload bytes, see {@link Signer}
-   * @param publicKey the public identity of the signer
+   * @param signer a {@link Signer} that takes the authorization preimage (a {@link HashIDPreimage})
+   *     and returns the signature {@link SCVal} the account at the entry's address expects
+   * @param address the address being authorized — a classic {@code G...} account or a {@code C...}
+   *     contract address (the typical custom-account case)
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
@@ -513,13 +482,13 @@ public class Auth {
    */
   public static SorobanAuthorizationEntry authorizeInvocation(
       Signer signer,
-      String publicKey,
+      String address,
       Long validUntilLedgerSeq,
       SorobanAuthorizedInvocation invocation,
       Network network) {
     return authorizeInvocation(
         signer,
-        publicKey,
+        address,
         validUntilLedgerSeq,
         invocation,
         network,
@@ -540,9 +509,10 @@ public class Auth {
    * <p>This is in contrast to {@link Auth#authorizeEntry}, which signs an existing entry "in
    * place".
    *
-   * @param signer A function which takes a payload (a {@link HashIDPreimage}) and returns the
-   *     signature of the hash of the raw payload bytes, see {@link Signer}
-   * @param publicKey the public identity of the signer
+   * @param signer a {@link Signer} that takes the authorization preimage (a {@link HashIDPreimage})
+   *     and returns the signature {@link SCVal} the account at the entry's address expects
+   * @param address the address being authorized — a classic {@code G...} account or a {@code C...}
+   *     contract address (the typical custom-account case)
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
@@ -557,7 +527,7 @@ public class Auth {
    */
   public static SorobanAuthorizationEntry authorizeInvocation(
       Signer signer,
-      String publicKey,
+      String address,
       Long validUntilLedgerSeq,
       SorobanAuthorizedInvocation invocation,
       Network network,
@@ -565,7 +535,7 @@ public class Auth {
     long nonce = new SecureRandom().nextLong();
     SorobanAddressCredentials addressCredentials =
         SorobanAddressCredentials.builder()
-            .address(new Address(publicKey).toSCAddress())
+            .address(new Address(address).toSCAddress())
             .nonce(new Int64(nonce))
             .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(validUntilLedgerSeq)))
             .signature(Scv.toVoid())
@@ -620,6 +590,70 @@ public class Auth {
       default:
         return null;
     }
+  }
+
+  /**
+   * Returns the 32-byte payload that account contracts receive in {@code __check_auth}: the SHA-256
+   * hash of the authorization preimage's XDR bytes.
+   *
+   * <p>Use this inside a custom {@link Signer} to obtain the exact bytes the host asks the account
+   * contract to verify, then return whatever signature {@link SCVal} the contract expects. It is
+   * the same payload the {@link KeyPair} signing path signs.
+   *
+   * @param preimage the Soroban authorization preimage, see {@link
+   *     Auth#buildAuthorizationEntryPreimage(SorobanAuthorizationEntry, long, Network)}
+   * @return the SHA-256 hash of the preimage XDR bytes
+   */
+  public static byte[] authorizationPayloadHash(HashIDPreimage preimage) {
+    try {
+      return Util.hash(preimage.toXdrByteArray());
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
+    }
+  }
+
+  /**
+   * Builds the signature {@link SCVal} shape expected by the default Stellar Account contract:
+   * {@code Vec<Map{public_key: Bytes, signature: Bytes}>}.
+   *
+   * <p>This is the building block for ed25519 {@link Signer} implementations that sign elsewhere (a
+   * hardware module or remote signing service) yet target a classic {@code G...} account — the same
+   * shape the {@link KeyPair} signing path produces. Use this {@code byte[]} overload when you
+   * already hold the raw public key (e.g. from an HSM); use {@link
+   * Auth#defaultAccountSignatureScVal(String, byte[])} to pass a {@code G...} address instead.
+   *
+   * @param publicKey the raw 32-byte ed25519 public key that produced {@code signature}
+   * @param signature the 64-byte ed25519 signature over {@link
+   *     Auth#authorizationPayloadHash(HashIDPreimage)}
+   * @return the default Stellar Account signature value
+   * @see <a
+   *     href="https://developers.stellar.org/docs/learn/fundamentals/contract-development/contract-interactions/stellar-transaction#stellar-account-signatures"
+   *     target="_blank">Stellar Account signatures</a>
+   */
+  public static SCVal defaultAccountSignatureScVal(byte[] publicKey, byte[] signature) {
+    SCVal signatureStruct =
+        Scv.toMap(
+            new LinkedHashMap<SCVal, SCVal>() {
+              {
+                put(Scv.toSymbol("public_key"), Scv.toBytes(publicKey));
+                put(Scv.toSymbol("signature"), Scv.toBytes(signature));
+              }
+            });
+    return Scv.toVec(Collections.singleton(signatureStruct));
+  }
+
+  /**
+   * Builds the default Stellar Account signature {@link SCVal} from a classic {@code G...} account
+   * address — a convenience wrapper over {@link Auth#defaultAccountSignatureScVal(byte[], byte[])}
+   * that decodes {@code accountId} to its raw ed25519 public key.
+   *
+   * @param accountId the {@code G...} account whose ed25519 public key produced {@code signature}
+   * @param signature the 64-byte ed25519 signature over {@link
+   *     Auth#authorizationPayloadHash(HashIDPreimage)}
+   * @return the default Stellar Account signature value
+   */
+  public static SCVal defaultAccountSignatureScVal(String accountId, byte[] signature) {
+    return defaultAccountSignatureScVal(KeyPair.fromAccountId(accountId).getPublicKey(), signature);
   }
 
   /**
@@ -787,11 +821,13 @@ public class Auth {
           new AbstractMap.SimpleImmutableEntry<>(scAddressXdrBytes(node.getAddress()), node));
     }
 
-    keyedNodes.sort((a, b) -> compareBytes(a.getKey(), b.getKey()));
+    keyedNodes.sort((a, b) -> Util.compareBytesUnsigned(a.getKey(), b.getKey()));
 
     SorobanDelegateSignature[] nodes = new SorobanDelegateSignature[keyedNodes.size()];
     for (int i = 0; i < keyedNodes.size(); i++) {
-      if (i > 0 && compareBytes(keyedNodes.get(i - 1).getKey(), keyedNodes.get(i).getKey()) == 0) {
+      if (i > 0
+          && Util.compareBytesUnsigned(keyedNodes.get(i - 1).getKey(), keyedNodes.get(i).getKey())
+              == 0) {
         throw new IllegalArgumentException(
             "duplicate delegate address "
                 + Address.fromSCAddress(keyedNodes.get(i).getValue().getAddress()).toString());
@@ -848,18 +884,6 @@ public class Auth {
     }
   }
 
-  /** Compares two byte arrays lexicographically, treating bytes as unsigned. */
-  private static int compareBytes(byte[] a, byte[] b) {
-    int minLength = Math.min(a.length, b.length);
-    for (int i = 0; i < minLength; i++) {
-      int cmp = Integer.compare(a[i] & 0xff, b[i] & 0xff);
-      if (cmp != 0) {
-        return cmp;
-      }
-    }
-    return Integer.compare(a.length, b.length);
-  }
-
   /**
    * A delegate signer to attach to a {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES} entry via
    * {@link Auth#buildWithDelegatesEntry(SorobanAuthorizationEntry, long, List, SCVal)} (CAP-71-01).
@@ -882,15 +906,18 @@ public class Auth {
     @Nullable List<DelegateSignature> nestedDelegates;
   }
 
-  /** A signature, consisting of a public key and a signature. */
-  @Value
-  public static class Signature {
-    String publicKey;
-    byte[] signature;
-  }
-
-  /** An interface for signing a {@link HashIDPreimage} to produce a signature. */
+  /**
+   * Signs a Soroban authorization preimage, returning the signature {@link SCVal} accepted by the
+   * account contract at the credential node being signed — the default Stellar Account shape for a
+   * classic {@code G...} account (see {@link Auth#defaultAccountSignatureScVal(String, byte[])}),
+   * or whatever the custom account contract's {@code __check_auth} expects (BLS, WebAuthn /
+   * secp256r1, threshold, policy contracts, ...).
+   *
+   * <p>Use {@link Auth#authorizationPayloadHash(HashIDPreimage)} to obtain the 32-byte payload the
+   * host hashes from the preimage and hands to {@code __check_auth}.
+   */
+  @FunctionalInterface
   public interface Signer {
-    Signature sign(HashIDPreimage preimage);
+    SCVal sign(HashIDPreimage preimage);
   }
 }

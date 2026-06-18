@@ -1,5 +1,6 @@
 package org.stellar.sdk;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
@@ -8,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -218,17 +220,9 @@ public class AuthTest {
     KeyPair signer =
         KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
     Auth.Signer entrySigner =
-        preimage -> {
-          byte[] data;
-          try {
-            data = preimage.toXdrByteArray();
-          } catch (IOException e) {
-            throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
-          }
-          byte[] payload = Util.hash(data);
-          byte[] signature = signer.sign(payload);
-          return new Auth.Signature(signer.getAccountId(), signature);
-        };
+        preimage ->
+            Auth.defaultAccountSignatureScVal(
+                signer.getAccountId(), signer.sign(Auth.authorizationPayloadHash(preimage)));
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
 
@@ -319,17 +313,9 @@ public class AuthTest {
     KeyPair signer =
         KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
     Auth.Signer entrySigner =
-        preimage -> {
-          byte[] data;
-          try {
-            data = preimage.toXdrByteArray();
-          } catch (IOException e) {
-            throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
-          }
-          byte[] payload = Util.hash(data);
-          byte[] signature = signer.sign(payload);
-          return new Auth.Signature(signer.getAccountId(), signature);
-        };
+        preimage ->
+            Auth.defaultAccountSignatureScVal(
+                signer.getAccountId(), signer.sign(Auth.authorizationPayloadHash(preimage)));
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
 
@@ -454,56 +440,25 @@ public class AuthTest {
   }
 
   @Test
-  public void testSignAuthorizeEntryWithSignatureMismatchThrows() throws IOException {
-    String contractId = "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK";
+  public void testSignAuthorizeEntryWithNullSignatureThrows() {
     KeyPair signer =
         KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
-    Auth.Signer entrySigner =
-        preimage -> {
-          byte[] invalidData = new byte[20];
-          byte[] signature = signer.sign(invalidData);
-          return new Auth.Signature(signer.getAccountId(), signature);
-        };
-    long validUntilLedgerSeq = 654656L;
-    Network network = Network.TESTNET;
-
-    SorobanCredentials credentials =
-        SorobanCredentials.builder()
-            .discriminant(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS)
-            .address(
-                SorobanAddressCredentials.builder()
-                    .address(new Address(KeyPair.random().getAccountId()).toSCAddress())
-                    .nonce(new Int64(123456789L))
-                    .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(0L)))
-                    .signature(Scv.toVoid())
-                    .build())
-            .build();
-    SorobanAuthorizedInvocation invocation =
-        SorobanAuthorizedInvocation.builder()
-            .function(
-                SorobanAuthorizedFunction.builder()
-                    .discriminant(
-                        SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN)
-                    .contractFn(
-                        InvokeContractArgs.builder()
-                            .contractAddress(new Address(contractId).toSCAddress())
-                            .functionName(Scv.toSymbol("increment").getSym())
-                            .args(new SCVal[0])
-                            .build())
-                    .build())
-            .subInvocations(new SorobanAuthorizedInvocation[0])
-            .build();
+    // A Signer may now return any signature SCVal, attached verbatim with no client-side
+    // verification (the network checks it via __check_auth). A null return is the one thing we
+    // can sanity-check.
+    Auth.Signer nullSigner = preimage -> null;
     SorobanAuthorizationEntry entry =
         SorobanAuthorizationEntry.builder()
-            .credentials(credentials)
-            .rootInvocation(invocation)
+            .credentials(
+                buildAddressCredentials(new Address(signer.getAccountId()).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
             .build();
 
     try {
-      Auth.authorizeEntry(entry.toXdrBase64(), entrySigner, validUntilLedgerSeq, network);
+      Auth.authorizeEntry(entry, nullSigner, 654656L, Network.TESTNET);
       fail();
     } catch (IllegalArgumentException e) {
-      assertEquals("signature does not match payload", e.getMessage());
+      assertEquals("signer returned a null signature", e.getMessage());
     }
   }
 
@@ -563,17 +518,9 @@ public class AuthTest {
     KeyPair signer =
         KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
     Auth.Signer entrySigner =
-        preimage -> {
-          byte[] data;
-          try {
-            data = preimage.toXdrByteArray();
-          } catch (IOException e) {
-            throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
-          }
-          byte[] payload = Util.hash(data);
-          byte[] signature = signer.sign(payload);
-          return new Auth.Signature(signer.getAccountId(), signature);
-        };
+        preimage ->
+            Auth.defaultAccountSignatureScVal(
+                signer.getAccountId(), signer.sign(Auth.authorizationPayloadHash(preimage)));
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
 
@@ -718,17 +665,9 @@ public class AuthTest {
     KeyPair signer =
         KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
     Auth.Signer entrySigner =
-        preimage -> {
-          byte[] data;
-          try {
-            data = preimage.toXdrByteArray();
-          } catch (IOException e) {
-            throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
-          }
-          byte[] payload = Util.hash(data);
-          byte[] signature = signer.sign(payload);
-          return new Auth.Signature(signer.getAccountId(), signature);
-        };
+        preimage ->
+            Auth.defaultAccountSignatureScVal(
+                signer.getAccountId(), signer.sign(Auth.authorizationPayloadHash(preimage)));
     long validUntilLedgerSeq = 654656L;
     Network network = Network.TESTNET;
     String credentialAddress = "GADBBY4WFXKKFJ7CMTG3J5YAUXMQDBILRQ6W3U5IWN5TQFZU4MWZ5T4K";
@@ -1000,13 +939,8 @@ public class AuthTest {
     Auth.Signer entrySigner =
         preimage -> {
           captured[0] = preimage;
-          byte[] data;
-          try {
-            data = preimage.toXdrByteArray();
-          } catch (IOException e) {
-            throw new IllegalArgumentException("Unable to convert preimage to bytes", e);
-          }
-          return new Auth.Signature(signer.getAccountId(), signer.sign(Util.hash(data)));
+          return Auth.defaultAccountSignatureScVal(
+              signer.getAccountId(), signer.sign(Auth.authorizationPayloadHash(preimage)));
         };
 
     Auth.authorizeEntry(entry, entrySigner, validUntilLedgerSeq, network);
@@ -1552,6 +1486,189 @@ public class AuthTest {
     } catch (IllegalArgumentException e) {
       assertTrue(e.getMessage().contains("credentialsType must be"));
     }
+  }
+
+  @Test
+  public void testSignAuthorizeEntryWithCustomContractSignature() {
+    // A custom account contract whose __check_auth expects an arbitrary structure. The signer
+    // returns that SCVal and it is attached verbatim — no ed25519 wrapping, no client-side
+    // verification.
+    String contractId = "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK";
+    long validUntilLedgerSeq = 654656L;
+    Network network = Network.TESTNET;
+
+    SCVal customSignature =
+        Scv.toMap(
+            new LinkedHashMap<SCVal, SCVal>() {
+              {
+                put(
+                    Scv.toSymbol("bls"),
+                    Scv.toBytes("bls-signature".getBytes(StandardCharsets.UTF_8)));
+                put(
+                    Scv.toSymbol("webauthn"),
+                    Scv.toMap(
+                        new LinkedHashMap<SCVal, SCVal>() {
+                          {
+                            put(
+                                Scv.toSymbol("authenticator_data"),
+                                Scv.toBytes("authenticator-data".getBytes(StandardCharsets.UTF_8)));
+                            put(
+                                Scv.toSymbol("client_data_json"),
+                                Scv.toBytes(
+                                    "{\"type\":\"webauthn.get\"}"
+                                        .getBytes(StandardCharsets.UTF_8)));
+                            put(
+                                Scv.toSymbol("signature"),
+                                Scv.toBytes("webauthn-signature".getBytes(StandardCharsets.UTF_8)));
+                          }
+                        }));
+              }
+            });
+
+    SorobanAuthorizationEntry entry =
+        SorobanAuthorizationEntry.builder()
+            .credentials(buildAddressCredentials(new Address(contractId).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
+            .build();
+
+    HashIDPreimage[] seen = new HashIDPreimage[1];
+    int[] calls = {0};
+    Auth.Signer signer =
+        preimage -> {
+          seen[0] = preimage;
+          calls[0]++;
+          return customSignature;
+        };
+
+    SorobanAuthorizationEntry signedEntry =
+        Auth.authorizeEntry(entry, signer, validUntilLedgerSeq, network);
+
+    SorobanAddressCredentials credentials = signedEntry.getCredentials().getAddress();
+    assertEquals(customSignature, credentials.getSignature());
+    assertEquals(
+        validUntilLedgerSeq,
+        credentials.getSignatureExpirationLedger().getUint32().getNumber().longValue());
+    // The signer is invoked exactly once, with the same preimage authorizeEntry builds.
+    assertEquals(1, calls[0]);
+    assertEquals(
+        Auth.buildAuthorizationEntryPreimage(signedEntry, validUntilLedgerSeq, network), seen[0]);
+  }
+
+  @Test
+  public void testSignAuthorizeInvocationWithContractAddressAndCustomSignature() {
+    // A custom (non-KeyPair) signer authorizing an invocation for a C... contract address.
+    String contractId = "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK";
+    long validUntilLedgerSeq = 654656L;
+    Network network = Network.TESTNET;
+
+    SCVal customSignature =
+        Scv.toVec(
+            Arrays.asList(
+                Scv.toSymbol("passkey"),
+                Scv.toBytes("webauthn-signature".getBytes(StandardCharsets.UTF_8))));
+
+    Auth.Signer signer = preimage -> customSignature;
+    SorobanAuthorizationEntry signedEntry =
+        Auth.authorizeInvocation(
+            signer, contractId, validUntilLedgerSeq, buildInvocation(), network);
+
+    SorobanAddressCredentials credentials = signedEntry.getCredentials().getAddress();
+    assertEquals(new Address(contractId).toSCAddress(), credentials.getAddress());
+    assertEquals(customSignature, credentials.getSignature());
+  }
+
+  @Test
+  public void testForAddressWritesCustomScValIntoDelegateNode() {
+    // CAP-71-01: a delegate that is itself a custom account contract. The custom signature SCVal is
+    // written verbatim into the delegate node selected by forAddress — the case that motivated
+    // returning SCVal from Signer.
+    KeyPair account =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    String delegateContract = "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK";
+    long validUntilLedgerSeq = 654656L;
+    Network network = Network.TESTNET;
+
+    SorobanAuthorizationEntry baseEntry =
+        SorobanAuthorizationEntry.builder()
+            .credentials(
+                buildAddressV2Credentials(new Address(account.getAccountId()).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
+            .build();
+    SorobanAuthorizationEntry wrapped =
+        Auth.buildWithDelegatesEntry(
+            baseEntry,
+            validUntilLedgerSeq,
+            Collections.singletonList(new Auth.DelegateSignature(delegateContract, null, null)),
+            null);
+
+    SCVal customSignature =
+        Scv.toBytes("delegate-contract-signature".getBytes(StandardCharsets.UTF_8));
+    Auth.Signer signer = preimage -> customSignature;
+
+    SorobanAuthorizationEntry signedEntry =
+        Auth.authorizeEntry(wrapped, signer, validUntilLedgerSeq, network, delegateContract);
+
+    SorobanAddressCredentialsWithDelegates withDelegates =
+        signedEntry.getCredentials().getAddressWithDelegates();
+    // Top-level node untouched (we targeted the delegate) ...
+    assertEquals(
+        SCValType.SCV_VOID, withDelegates.getAddressCredentials().getSignature().getDiscriminant());
+    // ... the delegate node carries the custom SCVal verbatim.
+    SorobanDelegateSignature[] delegates = withDelegates.getDelegates();
+    assertEquals(1, delegates.length);
+    assertEquals(new Address(delegateContract).toSCAddress(), delegates[0].getAddress());
+    assertEquals(customSignature, delegates[0].getSignature());
+  }
+
+  @Test
+  public void testDefaultAccountSignatureScVal() {
+    KeyPair signer =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    byte[] signature = new byte[64];
+    Arrays.fill(signature, (byte) 7);
+    // Byte-identical to the hand-built default Stellar Account shape used elsewhere in this suite,
+    // from both the accountId and the raw-publicKey overloads.
+    SCVal expected = buildSignatureScVal(signer, signature);
+    assertEquals(expected, Auth.defaultAccountSignatureScVal(signer.getAccountId(), signature));
+    assertEquals(expected, Auth.defaultAccountSignatureScVal(signer.getPublicKey(), signature));
+  }
+
+  @Test
+  public void testAuthorizationPayloadHash() throws IOException {
+    KeyPair signer =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    SorobanAuthorizationEntry entry =
+        SorobanAuthorizationEntry.builder()
+            .credentials(
+                buildAddressV2Credentials(new Address(signer.getAccountId()).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
+            .build();
+    HashIDPreimage preimage = Auth.buildAuthorizationEntryPreimage(entry, 654656L, Network.TESTNET);
+    assertArrayEquals(
+        Util.hash(preimage.toXdrByteArray()), Auth.authorizationPayloadHash(preimage));
+  }
+
+  @Test
+  public void testAuthorizeEntryWithCustomSignatureMatchesVector() throws IOException {
+    // A fixed vector pinning byte-stable output: with these inputs (contract address credentials,
+    // nonce 123456789, expiration 654656, TESTNET, "increment" invocation) and a deterministic
+    // custom signature SCVal, authorizeEntry attaches it to produce this exact signed entry. No
+    // crypto is involved — the SDK attaches, the host verifies.
+    String contractId = "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK";
+    String customSignatureVector =
+        "AAAAAQAAAAHFiyv7xPBU5zJPa/IMrT4CbkG7rRptIMPX1JGN7RZUEQAAAAAHW80VAAn9QAAAAA0AAAASd2ViYXV0aG4tc2lnbmF0dXJlAAAAAAAAAAAAAcWLK/vE8FTnMk9r8gytPgJuQbutGm0gw9fUkY3tFlQRAAAACWluY3JlbWVudAAAAAAAAAAAAAAA";
+
+    SorobanAuthorizationEntry entry =
+        SorobanAuthorizationEntry.builder()
+            .credentials(buildAddressCredentials(new Address(contractId).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
+            .build();
+    SCVal customSignature = Scv.toBytes("webauthn-signature".getBytes(StandardCharsets.UTF_8));
+
+    assertEquals(
+        customSignatureVector,
+        Auth.authorizeEntry(entry, preimage -> customSignature, 654656L, Network.TESTNET)
+            .toXdrBase64());
   }
 
   private static KeyPair deterministicKeyPair(byte fill) {

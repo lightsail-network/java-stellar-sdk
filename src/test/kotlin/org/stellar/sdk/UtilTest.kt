@@ -2,6 +2,8 @@ package org.stellar.sdk
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.ints.shouldBeNegative
+import io.kotest.matchers.ints.shouldBePositive
 import io.kotest.matchers.shouldBe
 
 class UtilTest :
@@ -94,6 +96,32 @@ class UtilTest :
         val hex = "deadbeef0123456789abcdef"
         val bytes = Util.hexToBytes(hex)
         Util.bytesToHex(bytes).lowercase() shouldBe hex
+      }
+    }
+
+    context("compareBytesUnsigned") {
+      test("equal arrays compare equal") {
+        Util.compareBytesUnsigned(byteArrayOf(1, 2, 3), byteArrayOf(1, 2, 3)) shouldBe 0
+        Util.compareBytesUnsigned(byteArrayOf(), byteArrayOf()) shouldBe 0
+      }
+
+      test("bytes are treated as unsigned") {
+        // 0x80 (128) sorts after 0x7F (127); a signed-byte comparison would invert this.
+        Util.compareBytesUnsigned(byteArrayOf(0x80.toByte()), byteArrayOf(0x7F)).shouldBePositive()
+        Util.compareBytesUnsigned(byteArrayOf(0x7F), byteArrayOf(0x80.toByte())).shouldBeNegative()
+        // 0xFF (255) is the largest single byte value.
+        Util.compareBytesUnsigned(byteArrayOf(0xFF.toByte()), byteArrayOf(0x00)).shouldBePositive()
+      }
+
+      test("shorter array is less when it is a prefix of the longer") {
+        Util.compareBytesUnsigned(byteArrayOf(1, 2), byteArrayOf(1, 2, 3)).shouldBeNegative()
+        Util.compareBytesUnsigned(byteArrayOf(1, 2, 3), byteArrayOf(1, 2)).shouldBePositive()
+        Util.compareBytesUnsigned(byteArrayOf(), byteArrayOf(1)).shouldBeNegative()
+      }
+
+      test("first differing byte decides regardless of length") {
+        Util.compareBytesUnsigned(byteArrayOf(1, 0xFF.toByte()), byteArrayOf(2)).shouldBeNegative()
+        Util.compareBytesUnsigned(byteArrayOf(2), byteArrayOf(1, 2, 3)).shouldBePositive()
       }
     }
   })

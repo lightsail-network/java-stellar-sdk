@@ -156,6 +156,27 @@ public class Util {
     return bytes;
   }
 
+  /**
+   * Compares two byte arrays lexicographically, treating each byte as unsigned. This matches the
+   * ordering the Soroban host applies to XDR-encoded keys and addresses (e.g. when sorting {@code
+   * SCMap} entries or delegate addresses).
+   *
+   * @param a the first byte array
+   * @param b the second byte array
+   * @return a negative integer, zero, or a positive integer as {@code a} is less than, equal to, or
+   *     greater than {@code b}
+   */
+  public static int compareBytesUnsigned(byte[] a, byte[] b) {
+    int minLength = Math.min(a.length, b.length);
+    for (int i = 0; i < minLength; i++) {
+      int cmp = Integer.compare(a[i] & 0xff, b[i] & 0xff);
+      if (cmp != 0) {
+        return cmp;
+      }
+    }
+    return Integer.compare(a.length, b.length);
+  }
+
   /** The function that converts XDR string to XDR object. */
   @FunctionalInterface
   public interface XdrDecodeFunction<T, R> {

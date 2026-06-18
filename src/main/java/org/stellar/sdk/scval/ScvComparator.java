@@ -1,6 +1,7 @@
 package org.stellar.sdk.scval;
 
 import java.util.Comparator;
+import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.SCAddress;
 import org.stellar.sdk.xdr.SCMap;
@@ -161,12 +162,12 @@ class ScvComparator implements Comparator<SCVal> {
               .compareTo(b.getI256().getLo_lo().getUint64().getNumber());
         }
       case SCV_BYTES:
-        return compareByteArrays(a.getBytes().getSCBytes(), b.getBytes().getSCBytes());
+        return Util.compareBytesUnsigned(a.getBytes().getSCBytes(), b.getBytes().getSCBytes());
       case SCV_STRING:
-        return compareByteArrays(
+        return Util.compareBytesUnsigned(
             a.getStr().getSCString().getBytes(), b.getStr().getSCString().getBytes());
       case SCV_SYMBOL:
-        return compareByteArrays(
+        return Util.compareBytesUnsigned(
             a.getSym().getSCSymbol().getBytes(), b.getSym().getSCSymbol().getBytes());
       case SCV_VEC:
         {
@@ -222,11 +223,11 @@ class ScvComparator implements Comparator<SCVal> {
 
     switch (a.getDiscriminant()) {
       case SC_ADDRESS_TYPE_ACCOUNT:
-        return compareByteArrays(
+        return Util.compareBytesUnsigned(
             a.getAccountId().getAccountID().getEd25519().getUint256(),
             b.getAccountId().getAccountID().getEd25519().getUint256());
       case SC_ADDRESS_TYPE_CONTRACT:
-        return compareByteArrays(
+        return Util.compareBytesUnsigned(
             a.getContractId().getContractID().getHash(),
             b.getContractId().getContractID().getHash());
       case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
@@ -238,7 +239,7 @@ class ScvComparator implements Comparator<SCVal> {
                   .getNumber()
                   .compareTo(b.getMuxedAccount().getId().getUint64().getNumber());
           if (cmp != 0) return cmp;
-          return compareByteArrays(
+          return Util.compareBytesUnsigned(
               a.getMuxedAccount().getEd25519().getUint256(),
               b.getMuxedAccount().getEd25519().getUint256());
         }
@@ -249,11 +250,11 @@ class ScvComparator implements Comparator<SCVal> {
               "Unsupported ClaimableBalanceID type: "
                   + a.getClaimableBalanceId().getDiscriminant());
         }
-        return compareByteArrays(
+        return Util.compareBytesUnsigned(
             a.getClaimableBalanceId().getV0().getHash(),
             b.getClaimableBalanceId().getV0().getHash());
       case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
-        return compareByteArrays(
+        return Util.compareBytesUnsigned(
             a.getLiquidityPoolId().getPoolID().getHash(),
             b.getLiquidityPoolId().getPoolID().getHash());
       default:
@@ -267,7 +268,7 @@ class ScvComparator implements Comparator<SCVal> {
 
     switch (a.getDiscriminant()) {
       case CONTRACT_EXECUTABLE_WASM:
-        return compareByteArrays(a.getWasm_hash().getHash(), b.getWasm_hash().getHash());
+        return Util.compareBytesUnsigned(a.getWasm_hash().getHash(), b.getWasm_hash().getHash());
       case CONTRACT_EXECUTABLE_STELLAR_ASSET:
         return 0;
       default:
@@ -292,15 +293,5 @@ class ScvComparator implements Comparator<SCVal> {
       if (cmp != 0) return cmp;
     }
     return Integer.compare(am.length, bm.length);
-  }
-
-  /** Lexicographic unsigned byte comparison. */
-  private static int compareByteArrays(byte[] a, byte[] b) {
-    int len = Math.min(a.length, b.length);
-    for (int i = 0; i < len; i++) {
-      int cmp = Integer.compare(a[i] & 0xFF, b[i] & 0xFF);
-      if (cmp != 0) return cmp;
-    }
-    return Integer.compare(a.length, b.length);
   }
 }
