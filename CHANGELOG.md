@@ -17,12 +17,7 @@
   // before
   Auth.Signer signer =
       preimage -> {
-        byte[] payload;
-        try {
-          payload = Util.hash(preimage.toXdrByteArray());
-        } catch (IOException e) {
-          throw new IllegalArgumentException(e);
-        }
+        byte[] payload = Util.hash(preimage.toXdrByteArray());
         return new Auth.Signature(accountId, signRemotely(payload));
       };
 
