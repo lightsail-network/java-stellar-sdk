@@ -56,7 +56,7 @@ public class Auth {
    * @param signer a {@link KeyPair} which should correspond to the address in the `entry`
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeEntry(
@@ -83,7 +83,7 @@ public class Auth {
    * @param signer a {@link KeyPair} which should correspond to the address in the `entry`
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @param forAddress which credential node the signature should be written to, see {@link
    *     Auth#authorizeEntry(SorobanAuthorizationEntry, Signer, Long, Network, String)}
    * @return a signed Soroban authorization entry
@@ -122,7 +122,7 @@ public class Auth {
    * @param signer a {@link KeyPair} which should correspond to the address in the `entry`
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeEntry(
@@ -149,7 +149,7 @@ public class Auth {
    * @param signer a {@link KeyPair} which should correspond to the address in the `entry`
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @param forAddress which credential node the signature should be written to, see {@link
    *     Auth#authorizeEntry(SorobanAuthorizationEntry, Signer, Long, Network, String)}
    * @return a signed Soroban authorization entry
@@ -188,7 +188,7 @@ public class Auth {
    *     and returns the signature {@link SCVal} the account at the entry's address expects
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeEntry(
@@ -216,7 +216,7 @@ public class Auth {
    *     and returns the signature {@link SCVal} the account at the entry's address expects
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @param forAddress which credential node the signature should be written to, see {@link
    *     Auth#authorizeEntry(SorobanAuthorizationEntry, Signer, Long, Network, String)}
    * @return a signed Soroban authorization entry
@@ -256,7 +256,7 @@ public class Auth {
    *     and returns the signature {@link SCVal} the account at the entry's address expects
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeEntry(
@@ -290,7 +290,7 @@ public class Auth {
    *     and returns the signature {@link SCVal} the account at the entry's address expects
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @param forAddress which credential node the signature should be written to. Only relevant for
    *     {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES}, where a single entry can be signed by
    *     the top-level account and/or any of its (possibly nested) delegates. Per CAP-71-01 every
@@ -387,7 +387,7 @@ public class Auth {
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
    *     from transaction simulation)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeInvocation(
@@ -422,7 +422,7 @@ public class Auth {
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
    *     from transaction simulation)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @param credentialsType the credential type for the new entry, either the legacy {@code
    *     SOROBAN_CREDENTIALS_ADDRESS} (the default of the shorter overloads, valid on every network)
    *     or the address-bound {@code SOROBAN_CREDENTIALS_ADDRESS_V2} (CAP-71-02, requires a protocol
@@ -477,7 +477,7 @@ public class Auth {
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
    *     from transaction simulation)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeInvocation(
@@ -517,7 +517,7 @@ public class Auth {
    *     authorization entry should be valid (if `currentLedgerSeq==validUntil`, this is expired)
    * @param invocation invocation the invocation tree that we're authorizing (likely, this comes
    *     from transaction simulation)
-   * @param network the network is incorprated into the signature
+   * @param network the network is incorporated into the signature
    * @param credentialsType the credential type for the new entry, either the legacy {@code
    *     SOROBAN_CREDENTIALS_ADDRESS} (the default of the shorter overloads, valid on every network)
    *     or the address-bound {@code SOROBAN_CREDENTIALS_ADDRESS_V2} (CAP-71-02, requires a protocol
