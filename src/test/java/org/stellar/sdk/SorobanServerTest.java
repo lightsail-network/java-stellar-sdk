@@ -1096,6 +1096,50 @@ public class SorobanServerTest {
   }
 
   @Test
+  public void testSimulateTransactionWithUseUpgradedAuth() throws IOException, SorobanRpcException {
+    String filePath =
+        "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    Transaction transaction = buildSorobanTransaction(null, null);
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())
+                && sorobanRpcRequest.getParams().getResourceConfig() == null
+                && sorobanRpcRequest.getParams().getAuthMode() == null
+                && sorobanRpcRequest.getParams().isUseUpgradedAuth()) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+
+    SimulateTransactionResponse resp = server.simulateTransaction(transaction, null, null, true);
+    assertEquals(resp.getLatestLedger().longValue(), 14245L);
+    assertEquals(resp.getResults().size(), 1);
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
   public void testPrepareTransaction()
       throws IOException, SorobanRpcException, PrepareTransactionException {
     String filePath =

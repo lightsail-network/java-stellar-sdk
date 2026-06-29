@@ -507,6 +507,10 @@ public class SorobanServer implements Closeable {
    *     ignored.
    * @param resourceConfig Additional resource include in the simulation.
    * @param authMode Explicitly allows users to opt-in to non-root authorization in recording mode.
+   * @param useUpgradedAuth Opt simulation into recording {@code ADDRESS_V2} ("upgraded")
+   *     authorization credentials (CAP-71) instead of the legacy {@code ADDRESS} credentials. Maps
+   *     to the {@code useUpgradedAuth} flag introduced in Stellar RPC v27.1.0. Best-effort and
+   *     transitional; older RPC servers silently ignore it.
    * @return A {@link SimulateTransactionResponse} object containing the cost, footprint,
    *     result/auth requirements (if applicable), and error of the transaction.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
@@ -522,14 +526,33 @@ public class SorobanServer implements Closeable {
   public SimulateTransactionResponse simulateTransaction(
       Transaction transaction,
       @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig,
-      @Nullable SimulateTransactionRequest.AuthMode authMode) {
+      @Nullable SimulateTransactionRequest.AuthMode authMode,
+      boolean useUpgradedAuth) {
     // TODO: In the future, it may be necessary to consider FeeBumpTransaction.
     SimulateTransactionRequest params =
-        new SimulateTransactionRequest(transaction.toEnvelopeXdrBase64(), resourceConfig, authMode);
+        new SimulateTransactionRequest(
+            transaction.toEnvelopeXdrBase64(), resourceConfig, authMode, useUpgradedAuth);
     return this.sendRequest(
         "simulateTransaction",
         params,
         new TypeToken<SorobanRpcResponse<SimulateTransactionResponse>>() {});
+  }
+
+  /**
+   * An alias for {@link #simulateTransaction(Transaction,
+   * SimulateTransactionRequest.ResourceConfig, SimulateTransactionRequest.AuthMode, boolean)} with
+   * {@code useUpgradedAuth} disabled.
+   *
+   * @param transaction The transaction to simulate.
+   * @param resourceConfig Additional resource include in the simulation.
+   * @param authMode Explicitly allows users to opt-in to non-root authorization in recording mode.
+   * @return A {@link SimulateTransactionResponse} object containing the simulation result.
+   */
+  public SimulateTransactionResponse simulateTransaction(
+      Transaction transaction,
+      @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig,
+      @Nullable SimulateTransactionRequest.AuthMode authMode) {
+    return simulateTransaction(transaction, resourceConfig, authMode, false);
   }
 
   /**
