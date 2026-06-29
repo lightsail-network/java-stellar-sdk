@@ -30,6 +30,7 @@
 
 ### Update
 - feat: add `useUpgradedAuth` to `SorobanServer.simulateTransaction`, mapping to the `useUpgradedAuth` flag from [Stellar RPC v27.1.0](https://github.com/stellar/stellar-rpc/releases/tag/v27.1.0) to opt simulation into recording `ADDRESS_V2` (CAP-71) auth credentials. Best-effort and transitional; older RPC servers ignore it.
+- chore: update dependencies and build tooling to the latest compatible versions (Gradle `9.6.1`, Kotlin `2.4.0`, Spotless plugin `8.7.0`, Lombok plugin `9.5.0`, NMCP plugin `1.6.0`, Gson `2.14.0`, Commons Codec `1.22.0`).
 
 ## 4.0.0-beta0
 

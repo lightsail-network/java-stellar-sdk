@@ -4,11 +4,11 @@ plugins {
     id("signing")
     id("maven-publish")
     id("project-report")
-    id("com.diffplug.spotless") version "8.4.0"
+    id("com.diffplug.spotless") version "8.7.0"
     id("com.github.ben-manes.versions") version "0.54.0"
-    id("io.freefair.lombok") version "9.4.0"
-    id("com.gradleup.nmcp").version("1.4.4")
-    kotlin("jvm") version "2.3.20"
+    id("io.freefair.lombok") version "9.5.0"
+    id("com.gradleup.nmcp").version("1.6.0")
+    kotlin("jvm") version "2.4.0"
 }
 
 group = "network.lightsail"
@@ -48,9 +48,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
     implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
-    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("com.google.code.gson:gson:2.14.0")
     implementation("org.bouncycastle:bcprov-jdk18on:1.84")
-    implementation("commons-codec:commons-codec:1.21.0")
+    implementation("commons-codec:commons-codec:1.22.0")
 
     testImplementation(kotlin("stdlib"))
     testImplementation("org.mockito:mockito-core:5.23.0")
