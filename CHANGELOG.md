@@ -2,8 +2,12 @@
 
 ## Pending
 
+## 4.0.0
+
+This release contains everything from 4.0.0-beta0, plus the changes made since. Below is the changelog since 3.1.0.
+
 ### Breaking changes
-- refactor: redesign `Auth.Signer` to natively support custom account contracts (BLS, WebAuthn / secp256r1, threshold, policy contracts, ...).
+- refactor: redesign `Auth.Signer` to natively support custom account contracts (BLS, WebAuthn / secp256r1, threshold, policy contracts, ...). ([#806](https://github.com/lightsail-network/java-stellar-sdk/pull/806))
   - `Auth.Signer.sign` now returns the signature `SCVal` accepted by the account contract at the credential node being signed — the default Stellar Account shape for a `G...` account, or whatever a custom account contract's `__check_auth` expects — instead of an `Auth.Signature`. The returned value is attached verbatim. This also unlocks signing a custom-contract delegate node of a `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES` entry (CAP-71-01).
   - `Auth.Signature` has been removed.
   - Client-side ed25519 signature verification inside `authorizeEntry` is removed; the network performs the authoritative check via the account contract's `__check_auth` (a `null` return from a `Signer` is still rejected).
@@ -29,8 +33,27 @@
   ```
 
 ### Update
-- feat: add `useUpgradedAuth` to `SorobanServer.simulateTransaction`, mapping to the `useUpgradedAuth` flag from [Stellar RPC v27.1.0](https://github.com/stellar/stellar-rpc/releases/tag/v27.1.0) to opt simulation into recording `ADDRESS_V2` (CAP-71) auth credentials. Best-effort and transitional; older RPC servers ignore it.
-- chore: update dependencies and build tooling to the latest compatible versions (Gradle `9.6.1`, Kotlin `2.4.0`, Spotless plugin `8.7.0`, Lombok plugin `9.5.0`, NMCP plugin `1.6.0`, Gson `2.14.0`, Commons Codec `1.22.0`).
+- feat: add CAP-0071 (Protocol 27) Soroban authorization support. ([#804](https://github.com/lightsail-network/java-stellar-sdk/pull/804))
+  - New credential types (from the Protocol 27 XDR):
+    - `SOROBAN_CREDENTIALS_ADDRESS_V2` (CAP-71-02) — same fields as the legacy `ADDRESS`, but the signed payload is bound to the signer's address.
+    - `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES` (CAP-71-01) — delegated / multi-party signing via a (possibly nested) tree of delegate signatures.
+  - `Auth.authorizeEntry`:
+    - Signs all three address-based credential types, selecting the signature payload from the credential type: legacy `ADDRESS` keeps the non-address-bound preimage; `ADDRESS_V2` and `ADDRESS_WITH_DELEGATES` sign the new address-bound `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS` preimage.
+    - Gains an optional `forAddress` parameter that writes the signature into a specific (possibly nested) delegate node. All signers of one delegated entry sign the same payload, bound to the top-level address.
+  - `Auth.authorizeInvocation`:
+    - Still builds legacy `ADDRESS` entries by default, so its output stays valid on every network regardless of protocol 27 activation.
+    - New `credentialsType` overloads opt in to `ADDRESS_V2`. The default will flip to V2 once Protocol 28 makes it mandatory.
+  - New helpers in `Auth`:
+    - `buildAuthorizationEntryPreimage` — builds the exact payload a signer must sign for a given entry.
+    - `buildWithDelegatesEntry` / `Auth.DelegateSignature` — wrap an `ADDRESS`/`ADDRESS_V2` entry together with delegate signers, sorting each delegates level by address and rejecting duplicates, as the protocol requires.
+    - `getAddressCredentials` — extracts the inner `SorobanAddressCredentials` from any address-based credential type.
+  - `AssembledTransaction`: `signAuthEntries` and `needsNonInvokerSigningBy` handle all address-based credential types.
+  - SEP-45 (`Sep45Challenge`):
+    - Challenge parsing and building accept `ADDRESS_V2` entries in addition to the legacy type; delegated entries are rejected.
+    - Challenge building fails fast on unsupported credential types instead of passing the entries through unsigned.
+- feat: add `useUpgradedAuth` to `SorobanServer.simulateTransaction`, mapping to the `useUpgradedAuth` flag from [Stellar RPC v27.1.0](https://github.com/stellar/stellar-rpc/releases/tag/v27.1.0) to opt simulation into recording `ADDRESS_V2` (CAP-71) auth credentials. Best-effort and transitional; older RPC servers ignore it. ([#807](https://github.com/lightsail-network/java-stellar-sdk/pull/807))
+- chore: upgrade generated XDR definitions to Protocol 27. ([#800](https://github.com/lightsail-network/java-stellar-sdk/pull/800))
+- chore: update dependencies and build tooling to the latest compatible versions (Gradle `9.6.1`, Kotlin `2.4.0`, Spotless plugin `8.7.0`, Lombok plugin `9.5.0`, NMCP plugin `1.6.0`, Gson `2.14.0`, Commons Codec `1.22.0`). ([#808](https://github.com/lightsail-network/java-stellar-sdk/pull/808))
 
 ## 4.0.0-beta0
 
