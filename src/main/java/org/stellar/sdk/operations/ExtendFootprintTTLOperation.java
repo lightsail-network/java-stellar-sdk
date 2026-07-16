@@ -62,7 +62,9 @@ public class ExtendFootprintTTLOperation extends Operation {
           C extends ExtendFootprintTTLOperation, B extends ExtendFootprintTTLOperationBuilder<C, B>>
       extends OperationBuilder<C, B> {
     public B extendTo(Long extendTo) {
-      if (extendTo <= 0 || extendTo > 0xFFFFFFFFL) {
+      // `extendTo` can be 0, see
+      // https://github.com/lightsail-network/java-stellar-sdk/issues/810
+      if (extendTo < 0 || extendTo > 0xFFFFFFFFL) {
         throw new IllegalArgumentException("extendTo isn't a ledger quantity (uint32)");
       }
       this.extendTo = extendTo;

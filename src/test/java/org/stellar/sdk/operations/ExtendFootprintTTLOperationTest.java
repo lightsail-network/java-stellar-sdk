@@ -69,6 +69,12 @@ public class ExtendFootprintTTLOperationTest {
   }
 
   @Test
+  public void testLedgersToExpireIsZero() {
+    ExtendFootprintTTLOperation op = ExtendFootprintTTLOperation.builder().extendTo(0L).build();
+    assertEquals(Long.valueOf(0), op.getExtendTo());
+  }
+
+  @Test
   public void testLedgersToExpireIsInvalidThrowsLessThanZero() {
     try {
       ExtendFootprintTTLOperation.builder().extendTo(-1L).build();
