@@ -2,6 +2,8 @@
 
 ## Pending
 
+## 4.0.1
+
 ### Update
 - fix: allow `extendTo` to be 0 in `ExtendFootprintTTLOperation`. ([#810](https://github.com/lightsail-network/java-stellar-sdk/issues/810))
 
