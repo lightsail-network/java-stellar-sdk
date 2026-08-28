@@ -2,6 +2,20 @@
 
 ## Pending
 
+### Breaking changes
+- feat!: CAP-71 `SOROBAN_CREDENTIALS_ADDRESS_V2` credentials are now the default on both ends of the authorization flow — the entries this SDK builds, and the entries it asks RPC to record during simulation. ([#814](https://github.com/lightsail-network/java-stellar-sdk/issues/814))
+  - `Auth.authorizeInvocation` builds `ADDRESS_V2` entries. The `credentialsType` overloads are the legacy opt-out: pass `SOROBAN_CREDENTIALS_ADDRESS` for the pre-CAP-71 format.
+  - `SorobanServer.simulateTransaction` sends `useUpgradedAuth: true`, so simulation records `ADDRESS_V2` entries. Pass `false` to the four-argument overload for the legacy format. The same default flows through `SorobanServer.prepareTransaction`, `ContractClient.invoke`, and `AssembledTransaction.simulate`, each of which has its own `useUpgradedAuth` opt-out.
+  - `Sep45Challenge.buildChallengeAuthorizationEntries` follows the new default too, so on a protocol 27 network the challenge it hands to the client carries `ADDRESS_V2` entries. This flip is felt by the client signing the challenge rather than by the anchor calling the SDK, and SEP-45 does not specify a credential format, so it has its own `useUpgradedAuth` opt-out for anchors serving clients whose SDK predates CAP-71. Challenge parsing and verification accept both credential arms either way.
+  - There is no need to migrate the moment protocol 27 activates. `ADDRESS_V2` entries are only valid on networks that have activated CAP-71 (protocol 27), and the legacy `SOROBAN_CREDENTIALS_ADDRESS` type stays valid until protocol 28 — use the opt-outs until the signing clients are ready.
+  - `useUpgradedAuth` is transitional: once RPC records `ADDRESS_V2` credentials by default (protocol 28) it becomes a no-op, so do not rely on passing `false` to keep receiving the legacy format.
+  - Code that reads the credential arm by hand must handle `getAddressV2()` and not just `getAddress()`, or use `Auth.getAddressCredentials`, which extracts the inner `SorobanAddressCredentials` from any address-based arm.
+  - A hand-rolled signer that hardcodes the legacy `ENVELOPE_TYPE_SOROBAN_AUTHORIZATION` preimage now produces signatures the network rejects — build the payload with `Auth.buildAuthorizationEntryPreimage`, which picks the address-bound preimage off the entry. SDK-driven signing (`Auth.authorizeEntry`, `AssembledTransaction.signAuthEntries`, `ContractClient`) needs no change.
+
+### Update
+- feat: add `useUpgradedAuth` opt-outs at every layer that simulates: `SorobanServer.prepareTransaction(Transaction, boolean)`, `AssembledTransaction.simulate(boolean, boolean)`, and the `ContractClient.invoke` overload taking `useUpgradedAuth`. Derived transactions inherit the choice — the restore transaction `AssembledTransaction` builds during automatic restoration simulates with the same flag rather than falling back to the default. ([#814](https://github.com/lightsail-network/java-stellar-sdk/issues/814))
+- feat: add a `useUpgradedAuth` opt-out to `Sep45Challenge.buildChallengeAuthorizationEntries`. SEP-45 does not specify a credential format, and the challenge entries are signed by a remote client rather than by the caller, so an anchor serving clients whose SDK cannot sign the address-bound payload can pass `false` to keep issuing legacy challenges. ([#814](https://github.com/lightsail-network/java-stellar-sdk/issues/814))
+
 ## 4.0.1
 
 ### Update

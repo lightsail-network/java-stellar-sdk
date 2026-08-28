@@ -376,11 +376,11 @@ public class Auth {
    * <p>This is in contrast to {@link Auth#authorizeEntry}, which signs an existing entry "in
    * place".
    *
-   * <p>The returned entry uses legacy {@code SOROBAN_CREDENTIALS_ADDRESS} credentials, which are
-   * valid on every network. To opt in to the address-bound {@code SOROBAN_CREDENTIALS_ADDRESS_V2}
-   * credentials (CAP-71-02, requires a protocol 27 network), use {@link
+   * <p>The returned entry uses address-bound {@code SOROBAN_CREDENTIALS_ADDRESS_V2} credentials
+   * (CAP-71-02), which require a protocol 27 network. For the legacy {@code
+   * SOROBAN_CREDENTIALS_ADDRESS} credentials, which are valid on every network, use {@link
    * Auth#authorizeInvocation(KeyPair, Long, SorobanAuthorizedInvocation, Network,
-   * SorobanCredentialsType)}. The default will flip to V2 once protocol 28 makes it mandatory.
+   * SorobanCredentialsType)} with {@code SOROBAN_CREDENTIALS_ADDRESS}.
    *
    * @param signer a {@link KeyPair} used to sign the entry
    * @param validUntilLedgerSeq the (exclusive) future ledger sequence number until which this
@@ -400,7 +400,7 @@ public class Auth {
         validUntilLedgerSeq,
         invocation,
         network,
-        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS);
+        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
   }
 
   /**
@@ -424,10 +424,11 @@ public class Auth {
    *     from transaction simulation)
    * @param network the network is incorporated into the signature
    * @param credentialsType the credential type for the new entry, either the legacy {@code
-   *     SOROBAN_CREDENTIALS_ADDRESS} (the default of the shorter overloads, valid on every network)
-   *     or the address-bound {@code SOROBAN_CREDENTIALS_ADDRESS_V2} (CAP-71-02, requires a protocol
-   *     27 network). To build a {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES} entry, use
-   *     {@link Auth#buildWithDelegatesEntry(SorobanAuthorizationEntry, long, List, SCVal)} instead
+   *     SOROBAN_CREDENTIALS_ADDRESS} (valid on every network) or the address-bound {@code
+   *     SOROBAN_CREDENTIALS_ADDRESS_V2} (CAP-71-02, the default of the shorter overloads, requires
+   *     a protocol 27 network). To build a {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES}
+   *     entry, use {@link Auth#buildWithDelegatesEntry(SorobanAuthorizationEntry, long, List,
+   *     SCVal)} instead
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeInvocation(
@@ -463,11 +464,11 @@ public class Auth {
    * <p>This is in contrast to {@link Auth#authorizeEntry}, which signs an existing entry "in
    * place".
    *
-   * <p>The returned entry uses legacy {@code SOROBAN_CREDENTIALS_ADDRESS} credentials, which are
-   * valid on every network. To opt in to the address-bound {@code SOROBAN_CREDENTIALS_ADDRESS_V2}
-   * credentials (CAP-71-02, requires a protocol 27 network), use {@link
+   * <p>The returned entry uses address-bound {@code SOROBAN_CREDENTIALS_ADDRESS_V2} credentials
+   * (CAP-71-02), which require a protocol 27 network. For the legacy {@code
+   * SOROBAN_CREDENTIALS_ADDRESS} credentials, which are valid on every network, use {@link
    * Auth#authorizeInvocation(Signer, String, Long, SorobanAuthorizedInvocation, Network,
-   * SorobanCredentialsType)}. The default will flip to V2 once protocol 28 makes it mandatory.
+   * SorobanCredentialsType)} with {@code SOROBAN_CREDENTIALS_ADDRESS}.
    *
    * @param signer a {@link Signer} that takes the authorization preimage (a {@link HashIDPreimage})
    *     and returns the signature {@link SCVal} the account at the entry's address expects
@@ -492,7 +493,7 @@ public class Auth {
         validUntilLedgerSeq,
         invocation,
         network,
-        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS);
+        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
   }
 
   /**
@@ -519,10 +520,11 @@ public class Auth {
    *     from transaction simulation)
    * @param network the network is incorporated into the signature
    * @param credentialsType the credential type for the new entry, either the legacy {@code
-   *     SOROBAN_CREDENTIALS_ADDRESS} (the default of the shorter overloads, valid on every network)
-   *     or the address-bound {@code SOROBAN_CREDENTIALS_ADDRESS_V2} (CAP-71-02, requires a protocol
-   *     27 network). To build a {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES} entry, use
-   *     {@link Auth#buildWithDelegatesEntry(SorobanAuthorizationEntry, long, List, SCVal)} instead
+   *     SOROBAN_CREDENTIALS_ADDRESS} (valid on every network) or the address-bound {@code
+   *     SOROBAN_CREDENTIALS_ADDRESS_V2} (CAP-71-02, the default of the shorter overloads, requires
+   *     a protocol 27 network). To build a {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES}
+   *     entry, use {@link Auth#buildWithDelegatesEntry(SorobanAuthorizationEntry, long, List,
+   *     SCVal)} instead
    * @return a signed Soroban authorization entry
    */
   public static SorobanAuthorizationEntry authorizeInvocation(

@@ -148,6 +148,65 @@ public class Sep45Challenge {
       @Nullable Long expireInLedgers,
       @Nullable String clientDomain,
       @Nullable String clientDomainAccountId) {
+    return buildChallengeAuthorizationEntries(
+        server,
+        serverSigner,
+        clientContractId,
+        homeDomain,
+        webAuthDomain,
+        webAuthContractId,
+        network,
+        nonce,
+        expireInLedgers,
+        clientDomain,
+        clientDomainAccountId,
+        true);
+  }
+
+  /**
+   * Builds a SEP-45 challenge authorization entries for a client contract account, choosing the
+   * credential format of the challenge.
+   *
+   * <p>Same as {@link #buildChallengeAuthorizationEntries(SorobanServer, KeyPair, String, String,
+   * String, String, Network, String, Long, String, String)}, but lets the server choose which
+   * authorization credentials the challenge carries.
+   *
+   * @param server The Stellar RPC server to use for simulating the transaction.
+   * @param serverSigner The server's signing keypair.
+   * @param clientContractId The client's contract account ID (C... address).
+   * @param homeDomain The home domain of the service requiring authentication.
+   * @param webAuthDomain The domain of the web authentication service.
+   * @param webAuthContractId The contract ID for the web authentication contract.
+   * @param network The Stellar network.
+   * @param nonce Optional nonce value. If null, a random 48-byte value will be generated and
+   *     base64-encoded.
+   * @param expireInLedgers Number of ledgers from current ledger until authorization expires. If
+   *     null, defaults to {@link #DEFAULT_EXPIRE_IN_LEDGERS} (~15 minutes).
+   * @param clientDomain Optional client domain for client domain verification.
+   * @param clientDomainAccountId Optional client domain account ID (G... address) for verification.
+   * @param useUpgradedAuth Whether the challenge carries address-bound {@code ADDRESS_V2} (CAP-71)
+   *     credentials instead of the legacy {@code ADDRESS} credentials, {@code true} in the shorter
+   *     overloads. Unlike the other simulating APIs, the entries are signed by a remote client
+   *     rather than by the caller, and SEP-45 does not specify a credential format: pass {@code
+   *     false} to keep issuing legacy challenges to clients whose SDK cannot sign the address-bound
+   *     payload. This flag is transitional: once the network returns {@code ADDRESS_V2} credentials
+   *     by default (protocol 28), it becomes a no-op.
+   * @return A SorobanAuthorizationEntries containing the authentication entries.
+   * @throws InvalidSep45ChallengeException If building the challenge fails.
+   */
+  public static SorobanAuthorizationEntries buildChallengeAuthorizationEntries(
+      @NonNull SorobanServer server,
+      @NonNull KeyPair serverSigner,
+      @NonNull String clientContractId,
+      @NonNull String homeDomain,
+      @NonNull String webAuthDomain,
+      @NonNull String webAuthContractId,
+      @NonNull Network network,
+      @Nullable String nonce,
+      @Nullable Long expireInLedgers,
+      @Nullable String clientDomain,
+      @Nullable String clientDomainAccountId,
+      boolean useUpgradedAuth) {
 
     // Use default expiration if not specified
     if (expireInLedgers == null) {
@@ -209,8 +268,12 @@ public class Sep45Challenge {
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(0, 0)).build())
             .build();
 
-    // Simulate the transaction
-    SimulateTransactionResponse simulateResponse = server.simulateTransaction(transaction);
+    // Simulate the transaction. By default this follows the SDK-wide CAP-71 default
+    // (useUpgradedAuth), so on a protocol 27 network the challenge carries
+    // SOROBAN_CREDENTIALS_ADDRESS_V2 entries, which the client signs like any other address
+    // credential. Challenge parsing accepts both arms, see ALLOWED_CREDENTIAL_TYPES.
+    SimulateTransactionResponse simulateResponse =
+        server.simulateTransaction(transaction, null, null, useUpgradedAuth);
 
     if (simulateResponse.getError() != null) {
       throw new InvalidSep45ChallengeException(
@@ -619,7 +682,9 @@ public class Sep45Challenge {
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(0, 0)).build())
             .build();
 
-    // Simulate the transaction to verify signatures
+    // Simulate the transaction to verify signatures. No useUpgradedAuth choice is needed here: the
+    // transaction already carries the client's signed auth entries, so RPC simulates in enforce
+    // mode, where the flag has no effect. Both credential arms verify the same way.
     SimulateTransactionResponse simulateResponse = server.simulateTransaction(transaction);
 
     if (simulateResponse.getError() != null) {
