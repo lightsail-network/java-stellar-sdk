@@ -199,14 +199,29 @@ public class ContractClientUseUpgradedAuthTest {
 
     RestoringDispatcher() throws IOException {
       accountJson = readFixture("get_account.json");
-      restorePreambleJson = readFixture("simulate_transaction_with_restore_preamble.json");
       simulateJson = readFixture("simulate_transaction.json");
+      restorePreambleJson = withRestorePreamble(simulateJson);
       sendTransactionJson = readFixture("send_transaction.json");
       getTransactionJson = readFixture("get_transaction.json");
     }
 
     private static String readFixture(String name) throws IOException {
       return new String(Files.readAllBytes(Paths.get("src/test/resources/soroban_server/" + name)));
+    }
+
+    /**
+     * Adds a {@code restorePreamble} to a simulation response, which is what makes {@link
+     * AssembledTransaction} treat the state as expired. The preamble only has to parse as {@link
+     * org.stellar.sdk.xdr.SorobanTransactionData}, so it reuses the response's own fields.
+     */
+    private static String withRestorePreamble(String simulateJson) {
+      JsonObject root = new Gson().fromJson(simulateJson, JsonObject.class);
+      JsonObject result = root.getAsJsonObject("result");
+      JsonObject preamble = new JsonObject();
+      preamble.add("transactionData", result.get("transactionData"));
+      preamble.add("minResourceFee", result.get("minResourceFee"));
+      result.add("restorePreamble", preamble);
+      return root.toString();
     }
 
     @NotNull
