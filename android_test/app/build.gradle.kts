@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "org.stellar.javastellarsdkdemoapp"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "org.stellar.javastellarsdkdemoapp"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
