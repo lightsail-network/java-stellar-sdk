@@ -1,11 +1,14 @@
 package org.stellar.sdk;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,6 +22,8 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Test;
 import org.stellar.sdk.exception.InvalidSep45ChallengeException;
+import org.stellar.sdk.requests.sorobanrpc.SimulateTransactionRequest;
+import org.stellar.sdk.requests.sorobanrpc.SorobanRpcRequest;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.InvokeContractArgs;
@@ -992,6 +997,79 @@ public class Sep45ChallengeTest {
 
     mockWebServer.close();
     server.close();
+  }
+
+  @Test
+  public void testBuildChallengeAuthorizationEntriesRequestsUpgradedCredentials()
+      throws IOException, InterruptedException {
+    // SEP-45 challenge building follows the SDK-wide CAP-71 default, so simulation is asked for
+    // ADDRESS_V2 credentials.
+    KeyPair serverSigner = KeyPair.random();
+    String mockResponse = buildMockSimulateResponse(serverSigner.getAccountId(), false);
+
+    try (MockWebServer mockWebServer = new MockWebServer()) {
+      mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(mockResponse));
+      mockWebServer.start();
+
+      SorobanServer server = new SorobanServer(mockWebServer.url("").toString());
+      Sep45Challenge.buildChallengeAuthorizationEntries(
+          server,
+          serverSigner,
+          CLIENT_CONTRACT,
+          HOME_DOMAIN,
+          WEB_AUTH_DOMAIN,
+          WEB_AUTH_CONTRACT,
+          Network.TESTNET,
+          null,
+          null);
+
+      SorobanRpcRequest<SimulateTransactionRequest> request =
+          new Gson()
+              .fromJson(
+                  mockWebServer.takeRequest().getBody().readUtf8(),
+                  new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+      assertEquals("simulateTransaction", request.getMethod());
+      assertTrue(request.getParams().isUseUpgradedAuth());
+      server.close();
+    }
+  }
+
+  @Test
+  public void testBuildChallengeAuthorizationEntriesWithUseUpgradedAuthDisabled()
+      throws IOException, InterruptedException {
+    // The legacy opt-out: an anchor serving clients that cannot sign the address-bound payload can
+    // keep issuing pre-CAP-71 challenges.
+    KeyPair serverSigner = KeyPair.random();
+    String mockResponse = buildMockSimulateResponse(serverSigner.getAccountId(), false);
+
+    try (MockWebServer mockWebServer = new MockWebServer()) {
+      mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(mockResponse));
+      mockWebServer.start();
+
+      SorobanServer server = new SorobanServer(mockWebServer.url("").toString());
+      Sep45Challenge.buildChallengeAuthorizationEntries(
+          server,
+          serverSigner,
+          CLIENT_CONTRACT,
+          HOME_DOMAIN,
+          WEB_AUTH_DOMAIN,
+          WEB_AUTH_CONTRACT,
+          Network.TESTNET,
+          null,
+          null,
+          null,
+          null,
+          false);
+
+      SorobanRpcRequest<SimulateTransactionRequest> request =
+          new Gson()
+              .fromJson(
+                  mockWebServer.takeRequest().getBody().readUtf8(),
+                  new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+      assertEquals("simulateTransaction", request.getMethod());
+      assertFalse(request.getParams().isUseUpgradedAuth());
+      server.close();
+    }
   }
 
   @Test

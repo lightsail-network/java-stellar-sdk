@@ -507,10 +507,13 @@ public class SorobanServer implements Closeable {
    *     ignored.
    * @param resourceConfig Additional resource include in the simulation.
    * @param authMode Explicitly allows users to opt-in to non-root authorization in recording mode.
-   * @param useUpgradedAuth Opt simulation into recording {@code ADDRESS_V2} ("upgraded")
-   *     authorization credentials (CAP-71) instead of the legacy {@code ADDRESS} credentials. Maps
-   *     to the {@code useUpgradedAuth} flag introduced in Stellar RPC v27.1.0. Best-effort and
-   *     transitional; older RPC servers silently ignore it.
+   * @param useUpgradedAuth Whether simulation records {@code ADDRESS_V2} ("upgraded") authorization
+   *     credentials (CAP-71) instead of the legacy {@code ADDRESS} credentials. Defaults to {@code
+   *     true} in the shorter overloads; pass {@code false} to ask for the legacy format. It only
+   *     affects the recording auth modes. Maps to the {@code useUpgradedAuth} flag introduced in
+   *     Stellar RPC v27.1.0; older RPC servers silently ignore it. This flag is transitional: once
+   *     the network returns {@code ADDRESS_V2} credentials by default (protocol 28), it becomes a
+   *     no-op — do not rely on passing {@code false} to keep receiving the legacy format.
    * @return A {@link SimulateTransactionResponse} object containing the cost, footprint,
    *     result/auth requirements (if applicable), and error of the transaction.
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
@@ -541,7 +544,7 @@ public class SorobanServer implements Closeable {
   /**
    * An alias for {@link #simulateTransaction(Transaction,
    * SimulateTransactionRequest.ResourceConfig, SimulateTransactionRequest.AuthMode, boolean)} with
-   * {@code useUpgradedAuth} disabled.
+   * {@code useUpgradedAuth} enabled, so simulation records {@code ADDRESS_V2} (CAP-71) credentials.
    *
    * @param transaction The transaction to simulate.
    * @param resourceConfig Additional resource include in the simulation.
@@ -552,7 +555,7 @@ public class SorobanServer implements Closeable {
       Transaction transaction,
       @Nullable SimulateTransactionRequest.ResourceConfig resourceConfig,
       @Nullable SimulateTransactionRequest.AuthMode authMode) {
-    return simulateTransaction(transaction, resourceConfig, authMode, false);
+    return simulateTransaction(transaction, resourceConfig, authMode, true);
   }
 
   /**
@@ -581,6 +584,10 @@ public class SorobanServer implements Closeable {
    * <p>You can call the {@link SorobanServer#simulateTransaction} method directly first if you want
    * to inspect estimated fees for a given transaction in detail first, if that is of importance.
    *
+   * <p>The underlying simulation records {@code ADDRESS_V2} (CAP-71) authorization credentials; use
+   * {@link #prepareTransaction(Transaction, boolean)} to ask for the legacy {@code ADDRESS}
+   * credentials.
+   *
    * @param transaction The transaction to prepare. It should include exactly one operation, which
    *     must be one of {@link InvokeHostFunctionOperation}, {@link
    *     org.stellar.sdk.operations.ExtendFootprintTTLOperation}, or {@link
@@ -602,7 +609,37 @@ public class SorobanServer implements Closeable {
    *     connectivity problems, etc.
    */
   public Transaction prepareTransaction(Transaction transaction) {
-    SimulateTransactionResponse simulateTransactionResponse = simulateTransaction(transaction);
+    return prepareTransaction(transaction, true);
+  }
+
+  /**
+   * Submit a trial contract invocation, first run a simulation of the contract invocation as
+   * defined on the incoming transaction, and apply the results to a new copy of the transaction
+   * which is then returned.
+   *
+   * <p>Same as {@link #prepareTransaction(Transaction)}, but lets you choose the authorization
+   * credential format recorded by the underlying simulation.
+   *
+   * @param transaction The transaction to prepare, see {@link #prepareTransaction(Transaction)}.
+   * @param useUpgradedAuth Whether the underlying simulation records {@code ADDRESS_V2}
+   *     ("upgraded") authorization credentials (CAP-71) instead of the legacy {@code ADDRESS}
+   *     credentials. Pass {@code false} to ask for the legacy format. It only affects the recording
+   *     auth modes. This flag is transitional: once the network returns {@code ADDRESS_V2}
+   *     credentials by default (protocol 28), it becomes a no-op.
+   * @return Returns a copy of the {@link Transaction}, with the expected authorizations (in the
+   *     case of invocation) and ledger footprint added. The transaction fee will also automatically
+   *     be padded with the contract's minimum resource fees discovered from the simulation.
+   * @throws PrepareTransactionException If preparing the transaction fails.
+   * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
+   *     NetworkException
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
+   * @throws RequestTimeoutException If the request timed out.
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   */
+  public Transaction prepareTransaction(Transaction transaction, boolean useUpgradedAuth) {
+    SimulateTransactionResponse simulateTransactionResponse =
+        simulateTransaction(transaction, null, null, useUpgradedAuth);
     return prepareTransaction(transaction, simulateTransactionResponse);
   }
 

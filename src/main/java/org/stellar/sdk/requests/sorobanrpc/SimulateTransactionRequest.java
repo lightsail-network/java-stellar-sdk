@@ -28,11 +28,12 @@ public class SimulateTransactionRequest {
   AuthMode authMode;
 
   /**
-   * Opt simulation into recording {@code ADDRESS_V2} ("upgraded") authorization credentials
-   * (CAP-71) instead of the legacy {@code ADDRESS} credentials. This maps to the {@code
-   * useUpgradedAuth} flag introduced in Stellar RPC v27.1.0. It is best-effort and transitional: it
-   * only affects the recording auth modes and is silently ignored by RPC servers (or protocol
-   * versions) that cannot emit {@code ADDRESS_V2}.
+   * Whether simulation records {@code ADDRESS_V2} ("upgraded") authorization credentials (CAP-71)
+   * instead of the legacy {@code ADDRESS} credentials. This maps to the {@code useUpgradedAuth}
+   * flag introduced in Stellar RPC v27.1.0, and is always sent in the request. It only affects the
+   * recording auth modes and is silently ignored by RPC servers (or protocol versions) that cannot
+   * emit {@code ADDRESS_V2}. Transitional: once the network returns {@code ADDRESS_V2} credentials
+   * by default (protocol 28), it becomes a no-op.
    */
   boolean useUpgradedAuth;
 

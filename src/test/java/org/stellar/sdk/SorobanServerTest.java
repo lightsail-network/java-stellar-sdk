@@ -915,7 +915,9 @@ public class SorobanServerTest {
                 && sorobanRpcRequest
                     .getParams()
                     .getTransaction()
-                    .equals(transaction.toEnvelopeXdrBase64())) {
+                    .equals(transaction.toEnvelopeXdrBase64())
+                // CAP-71: useUpgradedAuth is sent, and enabled by default.
+                && sorobanRpcRequest.getParams().isUseUpgradedAuth()) {
               return new MockResponse().setResponseCode(200).setBody(json);
             }
             return new MockResponse().setResponseCode(404);
@@ -1140,6 +1142,92 @@ public class SorobanServerTest {
   }
 
   @Test
+  public void testSimulateTransactionWithUseUpgradedAuthDisabled()
+      throws IOException, SorobanRpcException {
+    // The legacy opt-out: asks RPC for the pre-CAP-71 ADDRESS credentials.
+    String filePath =
+        "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    Transaction transaction = buildSorobanTransaction(null, null);
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())
+                && !sorobanRpcRequest.getParams().isUseUpgradedAuth()) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+
+    SimulateTransactionResponse resp = server.simulateTransaction(transaction, null, null, false);
+    assertEquals(resp.getLatestLedger().longValue(), 14245L);
+    assertEquals(resp.getResults().size(), 1);
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
+  public void testPrepareTransactionWithUseUpgradedAuthDisabled()
+      throws IOException, SorobanRpcException, PrepareTransactionException {
+    // prepareTransaction simulates with useUpgradedAuth enabled unless the opt-out is passed.
+    String filePath =
+        "src/test/resources/soroban_server/simulate_transaction_with_resource_leeway.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    Transaction transaction = buildSorobanTransaction(null, null);
+    MockWebServer mockWebServer = new MockWebServer();
+    Dispatcher dispatcher =
+        new Dispatcher() {
+          @NotNull
+          @Override
+          public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
+              throws InterruptedException {
+            SorobanRpcRequest<SimulateTransactionRequest> sorobanRpcRequest =
+                gson.fromJson(
+                    recordedRequest.getBody().readUtf8(),
+                    new TypeToken<SorobanRpcRequest<SimulateTransactionRequest>>() {}.getType());
+            if ("POST".equals(recordedRequest.getMethod())
+                && sorobanRpcRequest.getMethod().equals("simulateTransaction")
+                && sorobanRpcRequest
+                    .getParams()
+                    .getTransaction()
+                    .equals(transaction.toEnvelopeXdrBase64())
+                && !sorobanRpcRequest.getParams().isUseUpgradedAuth()) {
+              return new MockResponse().setResponseCode(200).setBody(json);
+            }
+            return new MockResponse().setResponseCode(404);
+          }
+        };
+    mockWebServer.setDispatcher(dispatcher);
+    mockWebServer.start();
+
+    HttpUrl baseUrl = mockWebServer.url("");
+    SorobanServer server = new SorobanServer(baseUrl.toString());
+    Transaction newTx = server.prepareTransaction(transaction, false);
+    assertEquals(transaction.getFee() + 58181L, newTx.getFee());
+    server.close();
+    mockWebServer.close();
+  }
+
+  @Test
   public void testPrepareTransaction()
       throws IOException, SorobanRpcException, PrepareTransactionException {
     String filePath =
@@ -1164,7 +1252,9 @@ public class SorobanServerTest {
                 && sorobanRpcRequest
                     .getParams()
                     .getTransaction()
-                    .equals(transaction.toEnvelopeXdrBase64())) {
+                    .equals(transaction.toEnvelopeXdrBase64())
+                // CAP-71: prepareTransaction simulates with useUpgradedAuth enabled by default.
+                && sorobanRpcRequest.getParams().isUseUpgradedAuth()) {
               return new MockResponse().setResponseCode(200).setBody(json);
             }
             return new MockResponse().setResponseCode(404);

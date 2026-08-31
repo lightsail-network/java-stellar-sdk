@@ -85,6 +85,52 @@ public class ContractClient implements Closeable {
       int submitTimeout,
       boolean simulate,
       boolean restore) {
+    return invoke(
+        functionName,
+        parameters,
+        source,
+        signer,
+        parseResultXdrFn,
+        baseFee,
+        transactionTimeout,
+        submitTimeout,
+        simulate,
+        restore,
+        true);
+  }
+
+  /**
+   * Build an {@link AssembledTransaction} to invoke a function on the contract.
+   *
+   * @param functionName The name of the function to invoke.
+   * @param parameters The parameters to pass to the function.
+   * @param source The source account to use for the transaction.
+   * @param signer The key pair to sign the transaction with.
+   * @param parseResultXdrFn A function to parse the result XDR of the transaction.
+   * @param baseFee The base fee for the transaction.
+   * @param transactionTimeout The timeout for the transaction.
+   * @param submitTimeout The timeout for submitting the transaction.
+   * @param simulate Whether to simulate the transaction.
+   * @param restore Whether to restore the transaction, only valid when <code>simulate</code> is
+   *     <code>true</code>, and the signer is provided.
+   * @param useUpgradedAuth Whether simulation records {@code ADDRESS_V2} ("upgraded") authorization
+   *     credentials (CAP-71) instead of the legacy {@code ADDRESS} credentials, only valid when
+   *     <code>simulate</code> is <code>true</code>. Defaults to <code>true</code> in the shorter
+   *     overloads. Transitional: once the network returns {@code ADDRESS_V2} credentials by default
+   *     (protocol 28), it becomes a no-op.
+   */
+  public <T> AssembledTransaction<T> invoke(
+      String functionName,
+      Collection<SCVal> parameters,
+      String source,
+      @Nullable KeyPair signer,
+      @Nullable Function<SCVal, T> parseResultXdrFn,
+      int baseFee,
+      int transactionTimeout,
+      int submitTimeout,
+      boolean simulate,
+      boolean restore,
+      boolean useUpgradedAuth) {
     TransactionBuilder builder =
         new TransactionBuilder(new Account(source, 0L), network)
             .addOperation(
@@ -96,7 +142,7 @@ public class ContractClient implements Closeable {
     AssembledTransaction<T> assembled =
         new AssembledTransaction<>(builder, server, signer, parseResultXdrFn, submitTimeout);
     if (simulate) {
-      assembled = assembled.simulate(restore);
+      assembled = assembled.simulate(restore, useUpgradedAuth);
     }
     return assembled;
   }

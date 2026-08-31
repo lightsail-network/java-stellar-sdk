@@ -490,26 +490,27 @@ public class AuthTest {
         Auth.authorizeInvocation(signer, validUntilLedgerSeq, invocation, network);
 
     assertEquals(signedEntry.getRootInvocation(), invocation);
+    // CAP-71: ADDRESS_V2 is the default credential type.
     assertEquals(
         signedEntry.getCredentials().getDiscriminant(),
-        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS);
+        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
     assertEquals(
-        signedEntry.getCredentials().getAddress().getAddress(),
+        signedEntry.getCredentials().getAddressV2().getAddress(),
         new Address(signer.getAccountId()).toSCAddress());
     assertEquals(
         signedEntry
             .getCredentials()
-            .getAddress()
+            .getAddressV2()
             .getSignatureExpirationLedger()
             .getUint32()
             .getNumber()
             .longValue(),
         validUntilLedgerSeq);
     assertEquals(
-        signedEntry.getCredentials().getAddress().getSignature().getDiscriminant(),
+        signedEntry.getCredentials().getAddressV2().getSignature().getDiscriminant(),
         SCValType.SCV_VEC);
     assertEquals(
-        signedEntry.getCredentials().getAddress().getSignature().getVec().getSCVec().length, 1);
+        signedEntry.getCredentials().getAddressV2().getSignature().getVec().getSCVec().length, 1);
   }
 
   @Test
@@ -545,26 +546,27 @@ public class AuthTest {
             entrySigner, signer.getAccountId(), validUntilLedgerSeq, invocation, network);
 
     assertEquals(signedEntry.getRootInvocation(), invocation);
+    // CAP-71: ADDRESS_V2 is the default credential type.
     assertEquals(
         signedEntry.getCredentials().getDiscriminant(),
-        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS);
+        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2);
     assertEquals(
-        signedEntry.getCredentials().getAddress().getAddress(),
+        signedEntry.getCredentials().getAddressV2().getAddress(),
         new Address(signer.getAccountId()).toSCAddress());
     assertEquals(
         signedEntry
             .getCredentials()
-            .getAddress()
+            .getAddressV2()
             .getSignatureExpirationLedger()
             .getUint32()
             .getNumber()
             .longValue(),
         validUntilLedgerSeq);
     assertEquals(
-        signedEntry.getCredentials().getAddress().getSignature().getDiscriminant(),
+        signedEntry.getCredentials().getAddressV2().getSignature().getDiscriminant(),
         SCValType.SCV_VEC);
     assertEquals(
-        signedEntry.getCredentials().getAddress().getSignature().getVec().getSCVec().length, 1);
+        signedEntry.getCredentials().getAddressV2().getSignature().getVec().getSCVec().length, 1);
   }
 
   @Test
@@ -1472,6 +1474,41 @@ public class AuthTest {
   }
 
   @Test
+  public void authorizeInvocationWithLegacyAddressCredentialsType() throws IOException {
+    // The legacy opt-out: passing SOROBAN_CREDENTIALS_ADDRESS explicitly keeps the pre-CAP-71
+    // credentials and the non-address-bound payload, which stay valid on every network.
+    KeyPair signer =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    long validUntilLedgerSeq = 654656L;
+    Network network = Network.TESTNET;
+    SorobanAuthorizedInvocation invocation = buildInvocation();
+
+    SorobanAuthorizationEntry signedEntry =
+        Auth.authorizeInvocation(
+            signer,
+            validUntilLedgerSeq,
+            invocation,
+            network,
+            SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS);
+
+    assertEquals(signedEntry.getRootInvocation(), invocation);
+    assertEquals(
+        SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS,
+        signedEntry.getCredentials().getDiscriminant());
+    SorobanAddressCredentials addressCredentials = signedEntry.getCredentials().getAddress();
+    assertEquals(new Address(signer.getAccountId()).toSCAddress(), addressCredentials.getAddress());
+
+    // The signature verifies against the legacy (non-address-bound) payload.
+    HashIDPreimage preimage =
+        Auth.buildAuthorizationEntryPreimage(signedEntry, validUntilLedgerSeq, network);
+    assertEquals(EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION, preimage.getDiscriminant());
+    byte[] payload = Util.hash(preimage.toXdrByteArray());
+    SCVal sigStruct = Scv.fromVec(addressCredentials.getSignature()).iterator().next();
+    byte[] signatureBytes = Scv.fromBytes(Scv.fromMap(sigStruct).get(Scv.toSymbol("signature")));
+    assertTrue(signer.verify(payload, signatureBytes));
+  }
+
+  @Test
   public void authorizeInvocationWithUnsupportedCredentialsTypeThrows() {
     KeyPair signer =
         KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
@@ -1572,7 +1609,7 @@ public class AuthTest {
         Auth.authorizeInvocation(
             signer, contractId, validUntilLedgerSeq, buildInvocation(), network);
 
-    SorobanAddressCredentials credentials = signedEntry.getCredentials().getAddress();
+    SorobanAddressCredentials credentials = signedEntry.getCredentials().getAddressV2();
     assertEquals(new Address(contractId).toSCAddress(), credentials.getAddress());
     assertEquals(customSignature, credentials.getSignature());
   }

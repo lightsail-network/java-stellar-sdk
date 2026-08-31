@@ -57,6 +57,13 @@ public class AssembledTransaction<T> {
   private SimulateTransactionResponse.SimulateHostFunctionResult simulationResult;
   private SorobanTransactionData simulationTransactionData;
 
+  /**
+   * The CAP-71 credential format the last {@link #simulate(boolean, boolean)} asked for, defaulting
+   * to the {@code ADDRESS_V2} default of the shorter overloads. Transactions derived from this one,
+   * such as the restore transaction built by {@link #restoreFootprint()}, inherit it.
+   */
+  private boolean useUpgradedAuth = true;
+
   @Getter private SendTransactionResponse sendTransactionResponse;
   @Getter private GetTransactionResponse getTransactionResponse;
 
@@ -87,12 +94,34 @@ public class AssembledTransaction<T> {
    * transaction. Will automatically restore required contract state if <code>restore</code> to
    * <code>true</code> and this is not a read call.
    *
+   * <p>Simulation records {@code ADDRESS_V2} (CAP-71) authorization credentials; use {@link
+   * #simulate(boolean, boolean)} to ask for the legacy {@code ADDRESS} credentials.
+   *
    * @param restore whether to automatically restore contract state if needed
    * @return this AssembledTransaction
    * @throws SimulationFailedException if the simulation failed
    * @throws RestorationFailureException if the contract state could not be restored
    */
   public AssembledTransaction<T> simulate(boolean restore) {
+    return simulate(restore, true);
+  }
+
+  /**
+   * Simulates the transaction on the network. Must be called before signing or submitting the
+   * transaction. Will automatically restore required contract state if <code>restore</code> to
+   * <code>true</code> and this is not a read call.
+   *
+   * @param restore whether to automatically restore contract state if needed
+   * @param useUpgradedAuth whether simulation records {@code ADDRESS_V2} ("upgraded") authorization
+   *     credentials (CAP-71) instead of the legacy {@code ADDRESS} credentials. It only affects the
+   *     recording auth modes. Transitional: once the network returns {@code ADDRESS_V2} credentials
+   *     by default (protocol 28), it becomes a no-op
+   * @return this AssembledTransaction
+   * @throws SimulationFailedException if the simulation failed
+   * @throws RestorationFailureException if the contract state could not be restored
+   */
+  public AssembledTransaction<T> simulate(boolean restore, boolean useUpgradedAuth) {
+    this.useUpgradedAuth = useUpgradedAuth;
     simulationResult = null;
     simulationTransactionData = null;
 
@@ -101,7 +130,7 @@ public class AssembledTransaction<T> {
     transactionBuilder.getSourceAccount().setSequenceNumber(source.getSequenceNumber());
 
     Transaction builtTx = transactionBuilder.build();
-    simulation = server.simulateTransaction(builtTx);
+    simulation = server.simulateTransaction(builtTx, null, null, useUpgradedAuth);
 
     if (restore && simulation.getRestorePreamble() != null && !isReadCall()) {
       try {
@@ -112,7 +141,7 @@ public class AssembledTransaction<T> {
           | TransactionFailedException e) {
         throw new RestorationFailureException("Failed to restore contract data.", this);
       }
-      return simulate(false);
+      return simulate(false, useUpgradedAuth);
     }
 
     if (simulation.getError() != null) {
@@ -361,6 +390,11 @@ public class AssembledTransaction<T> {
   /**
    * Restore the contract state.
    *
+   * <p>The restore transaction is simulated with the {@code useUpgradedAuth} choice of the last
+   * {@link #simulate(boolean, boolean)} call on this transaction. The choice does not change the
+   * restore itself — a {@link RestoreFootprintOperation} records no authorization entries — but
+   * keeps the derived transaction consistent with the one it restores state for.
+   *
    * @throws TransactionFailedException if the transaction failed
    * @throws TransactionStillPendingException if the transaction is still pending after the timeout
    * @throws SendTransactionFailedException if sending the transaction to the network failed
@@ -383,7 +417,10 @@ public class AssembledTransaction<T> {
                 TransactionPreconditions.builder().timeBounds(new TimeBounds(0, 0)).build());
     AssembledTransaction<SCVal> restoreAssembled =
         new AssembledTransaction<>(restoreTx, server, transactionSigner, null, submitTimeout);
-    restoreAssembled.simulate(false).sign(this.transactionSigner, true).submitInternal();
+    restoreAssembled
+        .simulate(false, useUpgradedAuth)
+        .sign(this.transactionSigner, true)
+        .submitInternal();
   }
 
   /**
