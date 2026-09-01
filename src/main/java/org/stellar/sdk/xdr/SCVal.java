@@ -75,6 +75,9 @@ import org.stellar.sdk.Base64Factory;
  *     void;
  * case SCV_LEDGER_KEY_NONCE:
  *     SCNonceKey nonce_key;
+ *
+ * case SCV_EXECUTABLE_TAG:
+ *     SCString executable_tag;
  * };
  * </pre>
  */
@@ -251,6 +254,14 @@ public class SCVal implements XdrElement {
    */
   private SCNonceKey nonce_key;
 
+  /**
+   * Value of the {@code executable_tag} field.
+   *
+   * @param executable_tag the {@code executable_tag} field value
+   * @return the {@code executable_tag} field value
+   */
+  private SCString executable_tag;
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
     switch (discriminant) {
@@ -327,6 +338,9 @@ public class SCVal implements XdrElement {
         break;
       case SCV_LEDGER_KEY_NONCE:
         nonce_key.encode(stream);
+        break;
+      case SCV_EXECUTABLE_TAG:
+        executable_tag.encode(stream);
         break;
     }
   }
@@ -409,6 +423,9 @@ public class SCVal implements XdrElement {
         break;
       case SCV_LEDGER_KEY_NONCE:
         decodedSCVal.nonce_key = SCNonceKey.decode(stream, maxDepth);
+        break;
+      case SCV_EXECUTABLE_TAG:
+        decodedSCVal.executable_tag = SCString.decode(stream, maxDepth);
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);
@@ -546,6 +563,11 @@ public class SCVal implements XdrElement {
     if (discriminant == SCValType.SCV_LEDGER_KEY_NONCE) {
       LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
       jsonMap.put("ledger_key_nonce", nonce_key.toJsonObject());
+      return jsonMap;
+    }
+    if (discriminant == SCValType.SCV_EXECUTABLE_TAG) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("executable_tag", executable_tag.toJsonObject());
       return jsonMap;
     }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
@@ -690,6 +712,12 @@ public class SCVal implements XdrElement {
       SCVal instance = new SCVal();
       instance.discriminant = discriminant;
       instance.nonce_key = SCNonceKey.fromJsonObject(jsonMap.get("ledger_key_nonce"));
+      return instance;
+    }
+    if (key.equals("executable_tag")) {
+      SCVal instance = new SCVal();
+      instance.discriminant = discriminant;
+      instance.executable_tag = SCString.fromJsonObject(jsonMap.get("executable_tag"));
       return instance;
     }
     throw new IllegalArgumentException("Unknown key '" + key + "' for SCVal");

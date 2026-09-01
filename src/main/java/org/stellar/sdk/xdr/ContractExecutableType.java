@@ -14,13 +14,15 @@ import org.stellar.sdk.Base64Factory;
  * enum ContractExecutableType
  * {
  *     CONTRACT_EXECUTABLE_WASM = 0,
- *     CONTRACT_EXECUTABLE_STELLAR_ASSET = 1
+ *     CONTRACT_EXECUTABLE_STELLAR_ASSET = 1,
+ *     CONTRACT_EXECUTABLE_EXTERNAL_REF = 2
  * };
  * </pre>
  */
 public enum ContractExecutableType implements XdrElement {
   CONTRACT_EXECUTABLE_WASM(0),
-  CONTRACT_EXECUTABLE_STELLAR_ASSET(1);
+  CONTRACT_EXECUTABLE_STELLAR_ASSET(1),
+  CONTRACT_EXECUTABLE_EXTERNAL_REF(2);
 
   private final int value;
 
@@ -41,6 +43,8 @@ public enum ContractExecutableType implements XdrElement {
         return CONTRACT_EXECUTABLE_WASM;
       case 1:
         return CONTRACT_EXECUTABLE_STELLAR_ASSET;
+      case 2:
+        return CONTRACT_EXECUTABLE_EXTERNAL_REF;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -81,6 +85,8 @@ public enum ContractExecutableType implements XdrElement {
         return "wasm";
       case CONTRACT_EXECUTABLE_STELLAR_ASSET:
         return "stellar_asset";
+      case CONTRACT_EXECUTABLE_EXTERNAL_REF:
+        return "external_ref";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -93,6 +99,8 @@ public enum ContractExecutableType implements XdrElement {
         return CONTRACT_EXECUTABLE_WASM;
       case "stellar_asset":
         return CONTRACT_EXECUTABLE_STELLAR_ASSET;
+      case "external_ref":
+        return CONTRACT_EXECUTABLE_EXTERNAL_REF;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

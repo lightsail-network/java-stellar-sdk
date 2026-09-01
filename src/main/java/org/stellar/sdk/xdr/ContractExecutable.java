@@ -22,6 +22,8 @@ import org.stellar.sdk.Base64Factory;
  *     Hash wasm_hash;
  * case CONTRACT_EXECUTABLE_STELLAR_ASSET:
  *     void;
+ * case CONTRACT_EXECUTABLE_EXTERNAL_REF:
+ *     ContractExecutableExternalRef external_ref;
  * };
  * </pre>
  */
@@ -46,6 +48,14 @@ public class ContractExecutable implements XdrElement {
    */
   private Hash wasm_hash;
 
+  /**
+   * Value of the {@code external_ref} field.
+   *
+   * @param external_ref the {@code external_ref} field value
+   * @return the {@code external_ref} field value
+   */
+  private ContractExecutableExternalRef external_ref;
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
     switch (discriminant) {
@@ -53,6 +63,9 @@ public class ContractExecutable implements XdrElement {
         wasm_hash.encode(stream);
         break;
       case CONTRACT_EXECUTABLE_STELLAR_ASSET:
+        break;
+      case CONTRACT_EXECUTABLE_EXTERNAL_REF:
+        external_ref.encode(stream);
         break;
     }
   }
@@ -71,6 +84,10 @@ public class ContractExecutable implements XdrElement {
         decodedContractExecutable.wasm_hash = Hash.decode(stream, maxDepth);
         break;
       case CONTRACT_EXECUTABLE_STELLAR_ASSET:
+        break;
+      case CONTRACT_EXECUTABLE_EXTERNAL_REF:
+        decodedContractExecutable.external_ref =
+            ContractExecutableExternalRef.decode(stream, maxDepth);
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);
@@ -112,6 +129,11 @@ public class ContractExecutable implements XdrElement {
     if (discriminant == ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET) {
       return "stellar_asset";
     }
+    if (discriminant == ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF) {
+      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("external_ref", external_ref.toJsonObject());
+      return jsonMap;
+    }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
   }
 
@@ -142,6 +164,13 @@ public class ContractExecutable implements XdrElement {
       ContractExecutable instance = new ContractExecutable();
       instance.discriminant = discriminant;
       instance.wasm_hash = Hash.fromJsonObject(jsonMap.get("wasm"));
+      return instance;
+    }
+    if (key.equals("external_ref")) {
+      ContractExecutable instance = new ContractExecutable();
+      instance.discriminant = discriminant;
+      instance.external_ref =
+          ContractExecutableExternalRef.fromJsonObject(jsonMap.get("external_ref"));
       return instance;
     }
     throw new IllegalArgumentException("Unknown key '" + key + "' for ContractExecutable");

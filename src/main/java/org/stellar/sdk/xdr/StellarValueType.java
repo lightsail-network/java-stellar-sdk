@@ -14,13 +14,15 @@ import org.stellar.sdk.Base64Factory;
  * enum StellarValueType
  * {
  *     STELLAR_VALUE_BASIC = 0,
- *     STELLAR_VALUE_SIGNED = 1
+ *     STELLAR_VALUE_SIGNED = 1,
+ *     STELLAR_VALUE_EMPTY_TX_SET = 2
  * };
  * </pre>
  */
 public enum StellarValueType implements XdrElement {
   STELLAR_VALUE_BASIC(0),
-  STELLAR_VALUE_SIGNED(1);
+  STELLAR_VALUE_SIGNED(1),
+  STELLAR_VALUE_EMPTY_TX_SET(2);
 
   private final int value;
 
@@ -41,6 +43,8 @@ public enum StellarValueType implements XdrElement {
         return STELLAR_VALUE_BASIC;
       case 1:
         return STELLAR_VALUE_SIGNED;
+      case 2:
+        return STELLAR_VALUE_EMPTY_TX_SET;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -81,6 +85,8 @@ public enum StellarValueType implements XdrElement {
         return "basic";
       case STELLAR_VALUE_SIGNED:
         return "signed";
+      case STELLAR_VALUE_EMPTY_TX_SET:
+        return "empty_tx_set";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -93,6 +99,8 @@ public enum StellarValueType implements XdrElement {
         return STELLAR_VALUE_BASIC;
       case "signed":
         return STELLAR_VALUE_SIGNED;
+      case "empty_tx_set":
+        return STELLAR_VALUE_EMPTY_TX_SET;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

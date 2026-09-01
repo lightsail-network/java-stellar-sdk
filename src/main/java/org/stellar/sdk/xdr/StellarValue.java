@@ -36,6 +36,14 @@ import org.stellar.sdk.Base64Factory;
  *         void;
  *     case STELLAR_VALUE_SIGNED:
  *         LedgerCloseValueSignature lcValueSignature;
+ *     case STELLAR_VALUE_EMPTY_TX_SET:
+ *         struct
+ *         {
+ *             Hash txSetHash;
+ *             Hash previousLedgerHash;
+ *             uint32 previousLedgerVersion;
+ *             LedgerCloseValueSignature lcValueSignature;
+ *         } proposedValue;
  *     }
  *     ext;
  * };
@@ -182,6 +190,14 @@ public class StellarValue implements XdrElement {
    *         void;
    *     case STELLAR_VALUE_SIGNED:
    *         LedgerCloseValueSignature lcValueSignature;
+   *     case STELLAR_VALUE_EMPTY_TX_SET:
+   *         struct
+   *         {
+   *             Hash txSetHash;
+   *             Hash previousLedgerHash;
+   *             uint32 previousLedgerVersion;
+   *             LedgerCloseValueSignature lcValueSignature;
+   *         } proposedValue;
    *     }
    * </pre>
    */
@@ -206,6 +222,14 @@ public class StellarValue implements XdrElement {
      */
     private LedgerCloseValueSignature lcValueSignature;
 
+    /**
+     * Value of the {@code proposedValue} field.
+     *
+     * @param proposedValue the {@code proposedValue} field value
+     * @return the {@code proposedValue} field value
+     */
+    private StellarValueProposedValue proposedValue;
+
     public void encode(XdrDataOutputStream stream) throws IOException {
       stream.writeInt(discriminant.getValue());
       switch (discriminant) {
@@ -213,6 +237,9 @@ public class StellarValue implements XdrElement {
           break;
         case STELLAR_VALUE_SIGNED:
           lcValueSignature.encode(stream);
+          break;
+        case STELLAR_VALUE_EMPTY_TX_SET:
+          proposedValue.encode(stream);
           break;
       }
     }
@@ -232,6 +259,9 @@ public class StellarValue implements XdrElement {
         case STELLAR_VALUE_SIGNED:
           decodedStellarValueExt.lcValueSignature =
               LedgerCloseValueSignature.decode(stream, maxDepth);
+          break;
+        case STELLAR_VALUE_EMPTY_TX_SET:
+          decodedStellarValueExt.proposedValue = StellarValueProposedValue.decode(stream, maxDepth);
           break;
         default:
           throw new IOException("Unknown discriminant value: " + discriminant);
@@ -273,6 +303,11 @@ public class StellarValue implements XdrElement {
         jsonMap.put("signed", lcValueSignature.toJsonObject());
         return jsonMap;
       }
+      if (discriminant == StellarValueType.STELLAR_VALUE_EMPTY_TX_SET) {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("empty_tx_set", proposedValue.toJsonObject());
+        return jsonMap;
+      }
       throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
     }
 
@@ -305,7 +340,135 @@ public class StellarValue implements XdrElement {
         instance.lcValueSignature = LedgerCloseValueSignature.fromJsonObject(jsonMap.get("signed"));
         return instance;
       }
+      if (key.equals("empty_tx_set")) {
+        StellarValueExt instance = new StellarValueExt();
+        instance.discriminant = discriminant;
+        instance.proposedValue =
+            StellarValueProposedValue.fromJsonObject(jsonMap.get("empty_tx_set"));
+        return instance;
+      }
       throw new IllegalArgumentException("Unknown key '" + key + "' for StellarValueExt");
+    }
+
+    /**
+     * StellarValueProposedValue's original definition in the XDR file is:
+     *
+     * <pre>
+     * struct
+     *         {
+     *             Hash txSetHash;
+     *             Hash previousLedgerHash;
+     *             uint32 previousLedgerVersion;
+     *             LedgerCloseValueSignature lcValueSignature;
+     *         }
+     * </pre>
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder(toBuilder = true)
+    public static class StellarValueProposedValue implements XdrElement {
+      /**
+       * Value of the {@code txSetHash} field.
+       *
+       * @param txSetHash the {@code txSetHash} field value
+       * @return the {@code txSetHash} field value
+       */
+      private Hash txSetHash;
+
+      /**
+       * Value of the {@code previousLedgerHash} field.
+       *
+       * @param previousLedgerHash the {@code previousLedgerHash} field value
+       * @return the {@code previousLedgerHash} field value
+       */
+      private Hash previousLedgerHash;
+
+      /**
+       * Value of the {@code previousLedgerVersion} field.
+       *
+       * @param previousLedgerVersion the {@code previousLedgerVersion} field value
+       * @return the {@code previousLedgerVersion} field value
+       */
+      private Uint32 previousLedgerVersion;
+
+      /**
+       * Value of the {@code lcValueSignature} field.
+       *
+       * @param lcValueSignature the {@code lcValueSignature} field value
+       * @return the {@code lcValueSignature} field value
+       */
+      private LedgerCloseValueSignature lcValueSignature;
+
+      public void encode(XdrDataOutputStream stream) throws IOException {
+        txSetHash.encode(stream);
+        previousLedgerHash.encode(stream);
+        previousLedgerVersion.encode(stream);
+        lcValueSignature.encode(stream);
+      }
+
+      public static StellarValueProposedValue decode(XdrDataInputStream stream, int maxDepth)
+          throws IOException {
+        if (maxDepth <= 0) {
+          throw new IOException("Maximum decoding depth reached");
+        }
+        maxDepth -= 1;
+        StellarValueProposedValue decodedStellarValueProposedValue =
+            new StellarValueProposedValue();
+        decodedStellarValueProposedValue.txSetHash = Hash.decode(stream, maxDepth);
+        decodedStellarValueProposedValue.previousLedgerHash = Hash.decode(stream, maxDepth);
+        decodedStellarValueProposedValue.previousLedgerVersion = Uint32.decode(stream, maxDepth);
+        decodedStellarValueProposedValue.lcValueSignature =
+            LedgerCloseValueSignature.decode(stream, maxDepth);
+        return decodedStellarValueProposedValue;
+      }
+
+      public static StellarValueProposedValue decode(XdrDataInputStream stream) throws IOException {
+        return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
+      }
+
+      public static StellarValueProposedValue fromXdrBase64(String xdr) throws IOException {
+        byte[] bytes = Base64Factory.getInstance().decode(xdr);
+        return fromXdrByteArray(bytes);
+      }
+
+      public static StellarValueProposedValue fromXdrByteArray(byte[] xdr) throws IOException {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+        XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+        xdrDataInputStream.setMaxInputLen(xdr.length);
+        return decode(xdrDataInputStream);
+      }
+
+      @Override
+      public String toJson() {
+        return XdrElement.gson.toJson(toJsonObject());
+      }
+
+      public static StellarValueProposedValue fromJson(String json) {
+        return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+      }
+
+      Object toJsonObject() {
+        LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+        jsonMap.put("tx_set_hash", txSetHash.toJsonObject());
+        jsonMap.put("previous_ledger_hash", previousLedgerHash.toJsonObject());
+        jsonMap.put("previous_ledger_version", previousLedgerVersion.toJsonObject());
+        jsonMap.put("lc_value_signature", lcValueSignature.toJsonObject());
+        return jsonMap;
+      }
+
+      @SuppressWarnings("unchecked")
+      static StellarValueProposedValue fromJsonObject(Object json) {
+        java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
+        StellarValueProposedValue instance = new StellarValueProposedValue();
+        instance.txSetHash = Hash.fromJsonObject(jsonMap.get("tx_set_hash"));
+        instance.previousLedgerHash = Hash.fromJsonObject(jsonMap.get("previous_ledger_hash"));
+        instance.previousLedgerVersion =
+            Uint32.fromJsonObject(jsonMap.get("previous_ledger_version"));
+        instance.lcValueSignature =
+            LedgerCloseValueSignature.fromJsonObject(jsonMap.get("lc_value_signature"));
+        return instance;
+      }
     }
   }
 }
