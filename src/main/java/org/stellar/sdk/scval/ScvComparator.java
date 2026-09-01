@@ -19,7 +19,7 @@ import org.stellar.sdk.xdr.SCValType;
  *
  * <ol>
  *   <li><b>Cross-type</b>: compare by {@link SCValType} discriminant value ({@code SCV_BOOL=0 <
- *       SCV_VOID=1 < ... < SCV_LEDGER_KEY_NONCE=21}).
+ *       SCV_VOID=1 < ... < SCV_EXECUTABLE_TAG=22}).
  *   <li><b>Same-type</b> (by variant):
  *       <ul>
  *         <li>{@code SCV_BOOL}: {@code False (0) < True (1)}
@@ -32,12 +32,13 @@ import org.stellar.sdk.xdr.SCValType;
  *             unsigned)
  *         <li>{@code SCV_I256}: tuple comparison {@code (hi_hi, hi_lo, lo_hi, lo_lo)} (hi_hi
  *             signed)
- *         <li>{@code SCV_BYTES / STRING / SYMBOL}: lexicographic byte comparison
+ *         <li>{@code SCV_BYTES / STRING / SYMBOL / EXECUTABLE_TAG}: lexicographic byte comparison
  *         <li>{@code SCV_VEC}: element-by-element, shorter &lt; longer
  *         <li>{@code SCV_MAP}: entry-by-entry (key first, then val), shorter &lt; longer
  *         <li>{@code SCV_ADDRESS}: by address type discriminant, then structurally per variant
  *         <li>{@code SCV_ERROR}: by error type discriminant, then contract_code or error code
- *         <li>{@code SCV_CONTRACT_INSTANCE}: by executable type, then wasm_hash, then storage
+ *         <li>{@code SCV_CONTRACT_INSTANCE}: by executable type, then wasm_hash or external ref
+ *             (owner, then tag), then storage
  *         <li>{@code SCV_LEDGER_KEY_NONCE}: signed numeric comparison of nonce
  *       </ul>
  * </ol>
@@ -212,6 +213,10 @@ class ScvComparator implements Comparator<SCVal> {
       case SCV_LEDGER_KEY_NONCE:
         return Long.compare(
             a.getNonce_key().getNonce().getInt64(), b.getNonce_key().getNonce().getInt64());
+      case SCV_EXECUTABLE_TAG:
+        return Util.compareBytesUnsigned(
+            a.getExecutable_tag().getSCString().getBytes(),
+            b.getExecutable_tag().getSCString().getBytes());
       default:
         throw new IllegalArgumentException("Unsupported SCVal type: " + t);
     }
@@ -271,6 +276,17 @@ class ScvComparator implements Comparator<SCVal> {
         return Util.compareBytesUnsigned(a.getWasm_hash().getHash(), b.getWasm_hash().getHash());
       case CONTRACT_EXECUTABLE_STELLAR_ASSET:
         return 0;
+      case CONTRACT_EXECUTABLE_EXTERNAL_REF:
+        {
+          cmp =
+              compareScAddress(
+                  a.getExternal_ref().getExecutable_owner(),
+                  b.getExternal_ref().getExecutable_owner());
+          if (cmp != 0) return cmp;
+          return Util.compareBytesUnsigned(
+              a.getExternal_ref().getTag().getSCString().getBytes(),
+              b.getExternal_ref().getTag().getSCString().getBytes());
+        }
       default:
         throw new IllegalArgumentException(
             "Unsupported ContractExecutable type: " + a.getDiscriminant());

@@ -1,6 +1,7 @@
 package org.stellar.sdk.scval;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -145,6 +146,52 @@ public class Scv {
    */
   public static SCError fromError(SCVal scVal) {
     return ScvError.fromSCVal(scVal);
+  }
+
+  /**
+   * Build a {@link SCVal} with the type of {@link SCValType#SCV_EXECUTABLE_TAG}.
+   *
+   * <p>A <a href="https://stellar.org/protocol/cap-85" target="_blank">CAP-85</a> executable tag is
+   * the owner-scoped name of an executable. Wrapped in an {@link SCValType#SCV_EXECUTABLE_TAG}
+   * {@link SCVal}, it is the key of the persistent contract data entry on the owner contract that
+   * holds the Wasm hash the tag currently names.
+   *
+   * @param tag tag to convert, encoded as UTF-8
+   * @return {@link SCVal} with the type of {@link SCValType#SCV_EXECUTABLE_TAG}
+   * @see org.stellar.sdk.SorobanServer#getExternalRefWasmHash(
+   *     org.stellar.sdk.xdr.ContractExecutableExternalRef)
+   */
+  public static SCVal toExecutableTag(String tag) {
+    return ScvExecutableTag.toSCVal(tag.getBytes(StandardCharsets.UTF_8));
+  }
+
+  /**
+   * Build a {@link SCVal} with the type of {@link SCValType#SCV_EXECUTABLE_TAG}.
+   *
+   * <p>A tag is an unbounded {@code SCString} and need not be valid UTF-8, so a binary tag is
+   * passed through here undecoded. See {@link #toExecutableTag(String)} for what the tag names.
+   *
+   * @param tag tag to convert
+   * @return {@link SCVal} with the type of {@link SCValType#SCV_EXECUTABLE_TAG}
+   */
+  public static SCVal toExecutableTag(byte[] tag) {
+    return ScvExecutableTag.toSCVal(tag);
+  }
+
+  /**
+   * Convert from {@link SCVal} with the type of {@link SCValType#SCV_EXECUTABLE_TAG} to byte[].
+   *
+   * <p>The raw bytes are returned rather than a decoded string: a tag is an unbounded {@code
+   * SCString} that need not be valid UTF-8, and it is half of what identifies the code being
+   * deployed, so a lenient decode would render two distinct tags identically. To display a tag,
+   * pass these bytes to {@link org.stellar.sdk.Util#decodeUtf8(byte[])} and fall back to the raw
+   * bytes when it returns empty.
+   *
+   * @param scVal {@link SCVal} to convert
+   * @return the tag value in bytes
+   */
+  public static byte[] fromExecutableTag(SCVal scVal) {
+    return ScvExecutableTag.fromSCVal(scVal);
   }
 
   /**

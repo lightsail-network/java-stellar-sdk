@@ -1,11 +1,15 @@
 package org.stellar.sdk.operations;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +20,7 @@ import org.stellar.sdk.AssetTypeCreditAlphaNum4;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractExecutable;
+import org.stellar.sdk.xdr.ContractExecutableExternalRef;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
 import org.stellar.sdk.xdr.ContractIDPreimageType;
@@ -27,6 +32,7 @@ import org.stellar.sdk.xdr.HostFunctionType;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.InvokeContractArgs;
 import org.stellar.sdk.xdr.SCAddress;
+import org.stellar.sdk.xdr.SCString;
 import org.stellar.sdk.xdr.SCSymbol;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SorobanAddressCredentials;
@@ -42,6 +48,16 @@ import org.stellar.sdk.xdr.XdrString;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
 
 public class InvokeHostFunctionOperationTest {
+  private static final String OWNER_CONTRACT_ID =
+      "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
+
+  private static final byte[] SALT =
+      new byte[] {
+        0x11, 0x33, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e,
+        0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d,
+        0x1e, 0x1f
+      };
+
   CreateContractArgs createContractArgs =
       CreateContractArgs.builder()
           .contractIDPreimage(
@@ -467,6 +483,177 @@ public class InvokeHostFunctionOperationTest {
     String expectedXdr =
         "AAAAAAAAABgAAAADAAAAAAAAAAAAAAAADpSlTHKwTkavyS2ZqP0tUceDdV/MrSytoGRg185L/zgRMwIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAAAAAAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHwAAAAIAAAASAAAAAAAAAAA0qEyTRGJF+8/3DV8oVUCfRax1PZI8yQlQ1oAYN6CRnwAAAAUAAAAAB1vNFQAAAAA=";
     assertEquals(expectedXdr, operation.toXdrBase64());
+  }
+
+  @Test
+  public void createContractFromExternalRefOperationBuilderWithTextTag() {
+    Address owner = new Address(OWNER_CONTRACT_ID);
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(
+                owner, "my-executable", address, null, SALT)
+            .build();
+
+    HostFunction expectedFunction =
+        externalRefHostFunction(
+            owner, "my-executable".getBytes(StandardCharsets.UTF_8), address, SALT, new SCVal[0]);
+    assertEquals(expectedFunction, operation.getHostFunction());
+    assertTrue(operation.getAuth().isEmpty());
+    assertNull(operation.getSourceAccount());
+    assertEquals(operation, Operation.fromXdr(operation.toXdr()));
+  }
+
+  @Test
+  public void createContractFromExternalRefOperationBuilderPassesBinaryTagThroughUndecoded() {
+    // A tag is an unbounded SCString and need not be UTF-8; a lenient decode would name different
+    // code.
+    byte[] tag = new byte[] {(byte) 0xff, (byte) 0xfe, 0x00, 0x41};
+    Address owner = new Address(OWNER_CONTRACT_ID);
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(
+                owner, tag, address, null, SALT)
+            .build();
+
+    assertEquals(
+        externalRefHostFunction(owner, tag, address, SALT, new SCVal[0]),
+        operation.getHostFunction());
+    assertArrayEquals(
+        tag,
+        operation
+            .getHostFunction()
+            .getCreateContractV2()
+            .getExecutable()
+            .getExternal_ref()
+            .getTag()
+            .getSCString()
+            .getBytes());
+    assertEquals(operation, Operation.fromXdr(operation.toXdr()));
+  }
+
+  @Test
+  public void createContractFromExternalRefOperationBuilderWithConstructorArgs() {
+    Address owner = new Address(OWNER_CONTRACT_ID);
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    List<SCVal> constructorArgs =
+        Arrays.asList(
+            Scv.toAddress("GA2KQTETIRREL66P64GV6KCVICPULLDVHWJDZSIJKDLIAGBXUCIZ6P6E"),
+            Scv.toUint64(BigInteger.valueOf(123456789L)));
+    InvokeHostFunctionOperation operation =
+        InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(
+                owner, "v1", address, constructorArgs, SALT)
+            .build();
+
+    assertEquals(
+        externalRefHostFunction(
+            owner,
+            "v1".getBytes(StandardCharsets.UTF_8),
+            address,
+            SALT,
+            constructorArgs.toArray(new SCVal[0])),
+        operation.getHostFunction());
+    assertEquals(operation, Operation.fromXdr(operation.toXdr()));
+  }
+
+  @Test
+  public void createContractFromExternalRefOperationBuilderGeneratesRandomSaltWhenNull() {
+    Address owner = new Address(OWNER_CONTRACT_ID);
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    byte[] first =
+        InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(
+                owner, "v1", address, null, null)
+            .build()
+            .getHostFunction()
+            .getCreateContractV2()
+            .getContractIDPreimage()
+            .getFromAddress()
+            .getSalt()
+            .getUint256();
+    byte[] second =
+        InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(
+                owner, "v1", address, null, null)
+            .build()
+            .getHostFunction()
+            .getCreateContractV2()
+            .getContractIDPreimage()
+            .getFromAddress()
+            .getSalt()
+            .getUint256();
+
+    assertEquals(32, first.length);
+    assertFalse(Arrays.equals(first, second));
+  }
+
+  @Test
+  public void createContractFromExternalRefOperationBuilderRejectsInvalidSalt() {
+    Address owner = new Address(OWNER_CONTRACT_ID);
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    IllegalArgumentException e =
+        assertThrows(
+            IllegalArgumentException.class,
+            () ->
+                InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(
+                    owner, "v1", address, null, new byte[31]));
+    assertEquals("\"salt\" must be 32 bytes long", e.getMessage());
+  }
+
+  @Test
+  public void createContractFromExternalRefOperationBuilderRejectsNullTag() {
+    // Caught at the builder rather than deferred to XDR serialization.
+    Address owner = new Address(OWNER_CONTRACT_ID);
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    IllegalArgumentException e =
+        assertThrows(
+            IllegalArgumentException.class,
+            () ->
+                InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(
+                    owner, (byte[]) null, address, null, SALT));
+    assertEquals("\"tag\" must not be null", e.getMessage());
+  }
+
+  @Test
+  public void createContractFromExternalRefOperationBuilderRejectsNonContractOwner() {
+    // Only a contract can hold the persistent tag entry that names the Wasm, so this fails here
+    // rather than on-chain.
+    Address owner = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    Address address = new Address("GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX");
+    IllegalArgumentException e =
+        assertThrows(
+            IllegalArgumentException.class,
+            () ->
+                InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(
+                    owner, "v1", address, null, SALT));
+    assertEquals("\"owner\" must be a contract address", e.getMessage());
+  }
+
+  private static HostFunction externalRefHostFunction(
+      Address owner, byte[] tag, Address address, byte[] salt, SCVal[] constructorArgs) {
+    CreateContractArgsV2 createContractArgs =
+        CreateContractArgsV2.builder()
+            .contractIDPreimage(
+                ContractIDPreimage.builder()
+                    .discriminant(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS)
+                    .fromAddress(
+                        ContractIDPreimage.ContractIDPreimageFromAddress.builder()
+                            .address(address.toSCAddress())
+                            .salt(new Uint256(salt))
+                            .build())
+                    .build())
+            .executable(
+                ContractExecutable.builder()
+                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF)
+                    .external_ref(
+                        ContractExecutableExternalRef.builder()
+                            .executable_owner(owner.toSCAddress())
+                            .tag(new SCString(new XdrString(tag)))
+                            .build())
+                    .build())
+            .constructorArgs(constructorArgs)
+            .build();
+    return HostFunction.builder()
+        .discriminant(HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2)
+        .createContractV2(createContractArgs)
+        .build();
   }
 
   @Test

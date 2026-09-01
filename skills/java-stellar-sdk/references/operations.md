@@ -97,6 +97,7 @@ factories for every host function:
 | `InvokeHostFunctionOperation.invokeContractFunctionOperationBuilder(contractId, functionName, parameters)` | Call a contract function |
 | `InvokeHostFunctionOperation.uploadContractWasmOperationBuilder(wasmBytes)` | Upload Wasm bytecode |
 | `InvokeHostFunctionOperation.createContractOperationBuilder(wasmId, address, constructorArgs, salt)` | Instantiate a contract |
+| `InvokeHostFunctionOperation.createContractFromExternalRefOperationBuilder(owner, tag, address, constructorArgs, salt)` | Instantiate a contract from a CAP-85 external executable reference (owner contract + tag) instead of a Wasm hash |
 | `InvokeHostFunctionOperation.createStellarAssetContractOperationBuilder(asset)` | Deploy the SAC for a classic asset |
 | `ExtendFootprintTTLOperation` | Extend ledger entry TTL |
 | `RestoreFootprintOperation` | Restore archived state |

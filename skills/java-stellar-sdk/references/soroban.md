@@ -30,8 +30,40 @@ try (SorobanServer server = new SorobanServer("https://soroban-testnet.stellar.o
     server.getContractInfo(contractId);       // SEP-48 (interface spec + meta)
     server.getContractMeta(contractId);       // SEP-46
     server.getContractSpec(contractId);       // SEP-48
+    server.getContractWasm(contractId);       // raw Wasm; follows a CAP-85 external ref
+    server.getContractWasmByHash(wasmHash);
+    server.getExternalRefWasmHash(ref);       // CAP-85: resolve a reference to a Wasm hash
 }
 ```
+
+### CAP-85 external executable references
+
+A contract's instance can hold a `CONTRACT_EXECUTABLE_EXTERNAL_REF` executable instead of its own
+Wasm hash: an owner contract plus an owner-scoped tag. The owner publishes the Wasm hash in a
+*persistent* contract data entry keyed by `SCV_EXECUTABLE_TAG(tag)`, so it can upgrade every
+contract referencing that tag at once.
+
+Every Wasm-reading method above resolves the reference for you (one extra `getLedgerEntries`
+call). To resolve one by hand:
+
+```java
+ContractExecutable executable = instance.getExecutable();
+if (executable.getDiscriminant() == ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF) {
+    byte[] wasmHash = server.getExternalRefWasmHash(executable.getExternal_ref());
+    byte[] wasm = server.getContractWasmByHash(wasmHash);
+}
+```
+
+A tag is an unbounded `SCString` and need not be valid UTF-8. Keep it as `byte[]`; only show it as
+text when `Util.decodeUtf8(tag)` returns a value, and show the raw bytes otherwise. Never decode it
+leniently — the tag is half of what identifies the code, so two distinct tags would render alike.
+The owner must be a contract address; the SDK rejects anything else before making a request.
+`ExternalRefNotFoundException` means the tag entry is missing or archived. An unresolvable reference
+surfaces differently depending on where it came from: `getExternalRefWasmHash` throws
+`IllegalArgumentException`, since the reference is your own argument, while `getContractWasm` (and
+so `getContractMeta` / `getContractSpec` / `getContractInfo`) reports `ContractWasmRetrievalException`,
+since there it came off the ledger — so every failure of those stays catchable as
+`ContractIntrospectionException`.
 
 ### Manual submit loop
 
@@ -181,6 +213,7 @@ assembled.signAndSubmit(submitter, false);
 `ContractClient` only invokes functions. To upload Wasm or create a contract, build an
 `InvokeHostFunctionOperation` with `SorobanServer` directly (see `operations.md`):
 `uploadContractWasmOperationBuilder(wasmBytes)`, `createContractOperationBuilder(...)`,
+`createContractFromExternalRefOperationBuilder(owner, tag, address, ctorArgs, salt)` (CAP-85),
 `createStellarAssetContractOperationBuilder(asset)`. Prepare, sign, send, then read the Wasm ID
 / contract ID from the transaction meta.
 

@@ -1,8 +1,11 @@
 package org.stellar.sdk.contract
 
+import com.google.gson.JsonParser
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.types.shouldBeInstanceOf
 import java.io.ByteArrayOutputStream
 import java.security.MessageDigest
 import java.util.Optional
@@ -15,23 +18,29 @@ import org.stellar.sdk.SorobanServer
 import org.stellar.sdk.contract.exception.ContractCodeNotFoundException
 import org.stellar.sdk.contract.exception.ContractInstanceNotFoundException
 import org.stellar.sdk.contract.exception.ContractWasmRetrievalException
+import org.stellar.sdk.contract.exception.ExternalRefNotFoundException
 import org.stellar.sdk.contract.exception.StellarAssetContractHasNoWasmException
 import org.stellar.sdk.scval.Scv
 import org.stellar.sdk.xdr.ContractCodeEntry
 import org.stellar.sdk.xdr.ContractDataDurability
 import org.stellar.sdk.xdr.ContractDataEntry
 import org.stellar.sdk.xdr.ContractExecutable
+import org.stellar.sdk.xdr.ContractExecutableExternalRef
 import org.stellar.sdk.xdr.ContractExecutableType
 import org.stellar.sdk.xdr.ExtensionPoint
 import org.stellar.sdk.xdr.Hash
 import org.stellar.sdk.xdr.LedgerEntry
 import org.stellar.sdk.xdr.LedgerEntryType
+import org.stellar.sdk.xdr.LedgerKey
+import org.stellar.sdk.xdr.SCAddress
+import org.stellar.sdk.xdr.SCAddressType
 import org.stellar.sdk.xdr.SCContractInstance
 import org.stellar.sdk.xdr.SCMap
 import org.stellar.sdk.xdr.SCMapEntry
 import org.stellar.sdk.xdr.SCMetaEntry
 import org.stellar.sdk.xdr.SCMetaKind
 import org.stellar.sdk.xdr.SCMetaV0
+import org.stellar.sdk.xdr.SCString
 import org.stellar.sdk.xdr.SCVal
 import org.stellar.sdk.xdr.SCValType
 import org.stellar.sdk.xdr.XdrString
@@ -134,6 +143,59 @@ private fun emptyEntriesJson(): String =
     }
   """
     .trimIndent()
+
+private const val OWNER_ID = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA"
+
+private const val ACCOUNT_ID = "GAHJJJKMOKYE4RVPZEWZTKH5FVI4PA3VL7GK2LFNUBSGBV6OJP7TQSLX"
+
+private fun externalRef(owner: String, tag: ByteArray): ContractExecutableExternalRef =
+  ContractExecutableExternalRef.builder()
+    .executable_owner(Address(owner).toSCAddress())
+    .tag(SCString(XdrString(tag)))
+    .build()
+
+private fun externalRefExecutable(owner: String, tag: ByteArray): ContractExecutable =
+  ContractExecutable.builder()
+    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF)
+    .external_ref(externalRef(owner, tag))
+    .build()
+
+/** The persistent entry on the owner contract that names the Wasm, keyed by the raw tag bytes. */
+private fun tagLedgerKeyXdr(owner: String, tag: ByteArray): String =
+  LedgerKey.builder()
+    .discriminant(LedgerEntryType.CONTRACT_DATA)
+    .contractData(
+      LedgerKey.LedgerKeyContractData.builder()
+        .contract(Address(owner).toSCAddress())
+        .key(Scv.toExecutableTag(tag))
+        .durability(ContractDataDurability.PERSISTENT)
+        .build()
+    )
+    .build()
+    .toXdrBase64()
+
+private fun tagLedgerEntryXdr(owner: String, tag: ByteArray, value: SCVal): String {
+  val contractData =
+    ContractDataEntry.builder()
+      .ext(ExtensionPoint.builder().discriminant(0).build())
+      .contract(Address(owner).toSCAddress())
+      .key(Scv.toExecutableTag(tag))
+      .durability(ContractDataDurability.PERSISTENT)
+      .`val`(value)
+      .build()
+  return LedgerEntry.LedgerEntryData.builder()
+    .discriminant(LedgerEntryType.CONTRACT_DATA)
+    .contractData(contractData)
+    .build()
+    .toXdrBase64()
+}
+
+private fun requestedKeys(request: RecordedRequest): List<String> =
+  JsonParser.parseString(request.body.readUtf8())
+    .asJsonObject
+    .getAsJsonObject("params")
+    .getAsJsonArray("keys")
+    .map { it.asString }
 
 private fun sequentialDispatcher(instanceJson: String, codeJson: String): Dispatcher =
   object : Dispatcher() {
@@ -307,6 +369,253 @@ class SorobanServerContractIntrospectionTest :
       newServer().use { server ->
         val hash = ByteArray(32).apply { this[0] = 1 }
         shouldThrow<ContractWasmRetrievalException> { server.getContractWasmByHash(hash) }
+      }
+    }
+
+    test("getExternalRefWasmHash resolves the tag entry on the owner contract") {
+      val tag = "my-executable".toByteArray(Charsets.UTF_8)
+      val wasmHash = sha256("wasm".toByteArray())
+      mockWebServer.enqueue(
+        MockResponse()
+          .setBody(singleEntryJson(tagLedgerEntryXdr(OWNER_ID, tag, Scv.toBytes(wasmHash))))
+      )
+      mockWebServer.start()
+
+      newServer().use { server ->
+        server.getExternalRefWasmHash(externalRef(OWNER_ID, tag)) shouldBe wasmHash
+      }
+
+      // The owner contract is not invoked; a single getLedgerEntries call reads its tag entry.
+      mockWebServer.requestCount shouldBe 1
+      requestedKeys(mockWebServer.takeRequest()) shouldBe listOf(tagLedgerKeyXdr(OWNER_ID, tag))
+    }
+
+    test("getExternalRefWasmHash rejects a null reference") {
+      mockWebServer.start()
+      newServer().use { server ->
+        shouldThrow<IllegalArgumentException> { server.getExternalRefWasmHash(null) }
+      }
+    }
+
+    test("getContractWasm follows an external reference: instance, then tag entry, then code") {
+      val tag = "my-executable".toByteArray(Charsets.UTF_8)
+      val wasm = buildMinimalWasmWithMeta("rsver", "1.78.0")
+      val wasmHash = sha256(wasm)
+      mockWebServer.enqueue(
+        MockResponse()
+          .setBody(
+            singleEntryJson(contractInstanceLedgerEntryXdr(externalRefExecutable(OWNER_ID, tag)))
+          )
+      )
+      mockWebServer.enqueue(
+        MockResponse()
+          .setBody(singleEntryJson(tagLedgerEntryXdr(OWNER_ID, tag, Scv.toBytes(wasmHash))))
+      )
+      mockWebServer.enqueue(
+        MockResponse().setBody(singleEntryJson(contractCodeLedgerEntryXdr(wasm)))
+      )
+      mockWebServer.start()
+
+      newServer().use { server -> server.getContractWasm(CONTRACT_ID) shouldBe wasm }
+
+      mockWebServer.requestCount shouldBe 3
+      mockWebServer.takeRequest() // the contract instance
+      requestedKeys(mockWebServer.takeRequest()) shouldBe listOf(tagLedgerKeyXdr(OWNER_ID, tag))
+    }
+
+    test("getContractSpec follows an external reference") {
+      val tag = "my-executable".toByteArray(Charsets.UTF_8)
+      val wasm = buildMinimalWasmWithMeta("sep", "41,40")
+      mockWebServer.enqueue(
+        MockResponse()
+          .setBody(
+            singleEntryJson(contractInstanceLedgerEntryXdr(externalRefExecutable(OWNER_ID, tag)))
+          )
+      )
+      mockWebServer.enqueue(
+        MockResponse()
+          .setBody(singleEntryJson(tagLedgerEntryXdr(OWNER_ID, tag, Scv.toBytes(sha256(wasm)))))
+      )
+      mockWebServer.enqueue(
+        MockResponse().setBody(singleEntryJson(contractCodeLedgerEntryXdr(wasm)))
+      )
+      mockWebServer.start()
+
+      newServer().use { server ->
+        server.getContractInfo(CONTRACT_ID).meta.supportedSeps() shouldBe setOf(41, 40)
+      }
+    }
+
+    test("keys the lookup on a binary tag without decoding it") {
+      // A tag is an unbounded SCString and need not be UTF-8. A lenient decode would build the key
+      // of a different entry.
+      val binaryTag = byteArrayOf(0xff.toByte(), 0xfe.toByte(), 0x00, 0x41)
+      mockWebServer.enqueue(
+        MockResponse()
+          .setBody(
+            singleEntryJson(
+              contractInstanceLedgerEntryXdr(externalRefExecutable(OWNER_ID, binaryTag))
+            )
+          )
+      )
+      mockWebServer.enqueue(MockResponse().setBody(emptyEntriesJson()))
+      mockWebServer.start()
+
+      newServer().use { server ->
+        shouldThrow<ExternalRefNotFoundException> { server.getContractWasm(CONTRACT_ID) }
+      }
+
+      mockWebServer.takeRequest() // the contract instance
+      requestedKeys(mockWebServer.takeRequest()) shouldBe
+        listOf(tagLedgerKeyXdr(OWNER_ID, binaryTag))
+    }
+
+    test("missing tag entry throws ExternalRefNotFoundException naming the owner and tag") {
+      val tag = "my-executable".toByteArray(Charsets.UTF_8)
+      mockWebServer.enqueue(MockResponse().setBody(emptyEntriesJson()))
+      mockWebServer.start()
+
+      newServer().use { server ->
+        val e =
+          shouldThrow<ExternalRefNotFoundException> {
+            server.getExternalRefWasmHash(externalRef(OWNER_ID, tag))
+          }
+        e.owner shouldBe OWNER_ID
+        e.tag shouldBe tag
+        e.message shouldContain OWNER_ID
+        e.message shouldContain "my-executable"
+      }
+    }
+
+    test("a binary tag is rendered as hex rather than lenient-decoded in the error message") {
+      val binaryTag = byteArrayOf(0xff.toByte(), 0xfe.toByte())
+      mockWebServer.enqueue(MockResponse().setBody(emptyEntriesJson()))
+      mockWebServer.start()
+
+      newServer().use { server ->
+        val e =
+          shouldThrow<ExternalRefNotFoundException> {
+            server.getExternalRefWasmHash(externalRef(OWNER_ID, binaryTag))
+          }
+        e.tag shouldBe binaryTag
+        e.message shouldContain "0xFFFE"
+      }
+    }
+
+    test("a non-contract owner is rejected before any lookup") {
+      // Only a contract can hold the persistent tag entry that names the Wasm.
+      mockWebServer.enqueue(
+        MockResponse()
+          .setBody(
+            singleEntryJson(
+              contractInstanceLedgerEntryXdr(
+                externalRefExecutable(ACCOUNT_ID, "v1".toByteArray(Charsets.UTF_8))
+              )
+            )
+          )
+      )
+      mockWebServer.start()
+
+      newServer().use { server ->
+        // The reference came off the ledger, not from the caller, so it is reported as unexpected
+        // response data rather than as a bad argument -- callers catching
+        // ContractIntrospectionException must not have this escape as IllegalArgumentException.
+        val e = shouldThrow<ContractWasmRetrievalException> { server.getContractWasm(CONTRACT_ID) }
+        e.message shouldContain "unusable external executable reference"
+        e.cause.shouldBeInstanceOf<IllegalArgumentException>()
+        e.cause!!.message shouldContain "is not a contract"
+        e.cause!!.message shouldContain ACCOUNT_ID
+      }
+      mockWebServer.requestCount shouldBe 1
+    }
+
+    test("a structurally broken reference is an invalid argument, not a NullPointerException") {
+      mockWebServer.start()
+      newServer().use { server ->
+        // Every arm of a hand-built reference may be missing. None of these may surface as an NPE.
+        val ownerlessRef =
+          ContractExecutableExternalRef.builder().tag(SCString(XdrString("v1"))).build()
+        shouldThrow<IllegalArgumentException> { server.getExternalRefWasmHash(ownerlessRef) }
+          .message shouldContain "missing its owner"
+
+        val ownerWithoutType =
+          ContractExecutableExternalRef.builder()
+            .executable_owner(SCAddress())
+            .tag(SCString(XdrString("v1")))
+            .build()
+        shouldThrow<IllegalArgumentException> { server.getExternalRefWasmHash(ownerWithoutType) }
+          .message shouldContain "missing its address type"
+
+        val contractOwnerWithoutId =
+          ContractExecutableExternalRef.builder()
+            .executable_owner(
+              SCAddress.builder().discriminant(SCAddressType.SC_ADDRESS_TYPE_CONTRACT).build()
+            )
+            .tag(SCString(XdrString("v1")))
+            .build()
+        shouldThrow<IllegalArgumentException> {
+            server.getExternalRefWasmHash(contractOwnerWithoutId)
+          }
+          .message shouldContain "missing its contract ID"
+
+        val tagless =
+          ContractExecutableExternalRef.builder()
+            .executable_owner(Address(OWNER_ID).toSCAddress())
+            .build()
+        shouldThrow<IllegalArgumentException> { server.getExternalRefWasmHash(tagless) }
+
+        val nullTagBytes =
+          ContractExecutableExternalRef.builder()
+            .executable_owner(Address(OWNER_ID).toSCAddress())
+            .tag(SCString(XdrString(null as ByteArray?)))
+            .build()
+        shouldThrow<IllegalArgumentException> { server.getExternalRefWasmHash(nullTagBytes) }
+      }
+      mockWebServer.requestCount shouldBe 0
+    }
+
+    test("tag entry that does not hold a 32-byte hash throws") {
+      val tag = "v1".toByteArray(Charsets.UTF_8)
+      mockWebServer.enqueue(
+        MockResponse().setBody(singleEntryJson(tagLedgerEntryXdr(OWNER_ID, tag, Scv.toUint32(7))))
+      )
+      mockWebServer.enqueue(
+        MockResponse()
+          .setBody(singleEntryJson(tagLedgerEntryXdr(OWNER_ID, tag, Scv.toBytes(ByteArray(31)))))
+      )
+      mockWebServer.start()
+
+      newServer().use { server ->
+        val ref = externalRef(OWNER_ID, tag)
+        val wrongType =
+          shouldThrow<ContractWasmRetrievalException> { server.getExternalRefWasmHash(ref) }
+        wrongType.message shouldContain "32-byte Wasm hash"
+        // Bytes of the wrong length are rejected too.
+        shouldThrow<ContractWasmRetrievalException> { server.getExternalRefWasmHash(ref) }
+      }
+    }
+
+    test("tag entry that is not contract data throws") {
+      mockWebServer.enqueue(
+        MockResponse().setBody(singleEntryJson(contractCodeLedgerEntryXdr(byteArrayOf(0, 1, 2))))
+      )
+      mockWebServer.start()
+
+      newServer().use { server ->
+        shouldThrow<ContractWasmRetrievalException> {
+          server.getExternalRefWasmHash(externalRef(OWNER_ID, "v1".toByteArray(Charsets.UTF_8)))
+        }
+      }
+    }
+
+    test("malformed tag entry XDR throws ContractWasmRetrievalException") {
+      mockWebServer.enqueue(MockResponse().setBody(singleEntryJson("not-valid-base64!@#")))
+      mockWebServer.start()
+
+      newServer().use { server ->
+        shouldThrow<ContractWasmRetrievalException> {
+          server.getExternalRefWasmHash(externalRef(OWNER_ID, "v1".toByteArray(Charsets.UTF_8)))
+        }
       }
     }
 

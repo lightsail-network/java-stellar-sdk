@@ -9,6 +9,7 @@ import org.stellar.sdk.xdr.AccountID
 import org.stellar.sdk.xdr.ClaimableBalanceID
 import org.stellar.sdk.xdr.ClaimableBalanceIDType
 import org.stellar.sdk.xdr.ContractExecutable
+import org.stellar.sdk.xdr.ContractExecutableExternalRef
 import org.stellar.sdk.xdr.ContractExecutableType
 import org.stellar.sdk.xdr.ContractID
 import org.stellar.sdk.xdr.Hash
@@ -26,11 +27,13 @@ import org.stellar.sdk.xdr.SCErrorType
 import org.stellar.sdk.xdr.SCMap
 import org.stellar.sdk.xdr.SCMapEntry
 import org.stellar.sdk.xdr.SCNonceKey
+import org.stellar.sdk.xdr.SCString
 import org.stellar.sdk.xdr.SCVal
 import org.stellar.sdk.xdr.SCValType
 import org.stellar.sdk.xdr.Uint256
 import org.stellar.sdk.xdr.Uint32
 import org.stellar.sdk.xdr.Uint64
+import org.stellar.sdk.xdr.XdrString
 import org.stellar.sdk.xdr.XdrUnsignedHyperInteger
 import org.stellar.sdk.xdr.XdrUnsignedInteger
 
@@ -341,6 +344,24 @@ class ScvComparatorTest :
         ) shouldBeLessThan 0
       }
 
+      test("external ref instance sorts after wasm and stellar asset instances") {
+        val wasm = makeWasmInstance(bytes32(0x00), null)
+        val asset = makeStellarAssetInstance(null)
+        val external = makeExternalRefInstance(contractAddress(bytes32(0x00)), "v1", null)
+        ScvComparator.compareScVal(wasm, external) shouldBeLessThan 0
+        ScvComparator.compareScVal(asset, external) shouldBeLessThan 0
+        ScvComparator.compareScVal(external, external) shouldBe 0
+      }
+
+      test("external ref instances fall back to storage when the ref matches") {
+        val owner = contractAddress(bytes32(0x00))
+        val storage = SCMap(arrayOf(entry(Scv.toUint32(1), Scv.toVoid())))
+        ScvComparator.compareScVal(
+          makeExternalRefInstance(owner, "v1", null),
+          makeExternalRefInstance(owner, "v1", storage),
+        ) shouldBeLessThan 0
+      }
+
       test("null storage < non-null storage") {
         val asset = makeStellarAssetInstance(null)
         val storage = SCMap(arrayOf(entry(Scv.toUint32(1), Scv.toVoid())))
@@ -360,6 +381,38 @@ class ScvComparatorTest :
         val a = SCVal.builder().discriminant(SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE).build()
         val b = SCVal.builder().discriminant(SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE).build()
         ScvComparator.compareScVal(a, b) shouldBe 0
+      }
+    }
+
+    context("SCV_EXECUTABLE_TAG") {
+      test("lexicographic byte ordering, shorter < longer") {
+        ScvComparator.compareScVal(
+          Scv.toExecutableTag("v1"),
+          Scv.toExecutableTag("v2"),
+        ) shouldBeLessThan 0
+        ScvComparator.compareScVal(
+          Scv.toExecutableTag("v2"),
+          Scv.toExecutableTag("v1"),
+        ) shouldBeGreaterThan 0
+        ScvComparator.compareScVal(Scv.toExecutableTag("v1"), Scv.toExecutableTag("v1")) shouldBe 0
+        ScvComparator.compareScVal(
+          Scv.toExecutableTag("v"),
+          Scv.toExecutableTag("v1"),
+        ) shouldBeLessThan 0
+      }
+
+      test("bytes compare unsigned, so a high byte is greater than an ASCII one") {
+        ScvComparator.compareScVal(
+          Scv.toExecutableTag(byteArrayOf(0x41)),
+          Scv.toExecutableTag(byteArrayOf(0xff.toByte())),
+        ) shouldBeLessThan 0
+      }
+
+      test("sorts after every other type") {
+        ScvComparator.compareScVal(
+          Scv.toLedgerKeyNonce(0),
+          Scv.toExecutableTag("v1"),
+        ) shouldBeLessThan 0
       }
     }
 
@@ -443,6 +496,44 @@ class ScvComparatorTest :
             .build()
         ScvComparator.compareContractExecutable(wasm, asset) shouldBeLessThan 0
         ScvComparator.compareContractExecutable(asset, asset) shouldBe 0
+      }
+
+      test("STELLAR_ASSET < EXTERNAL_REF") {
+        val asset =
+          ContractExecutable.builder()
+            .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET)
+            .build()
+        ScvComparator.compareContractExecutable(
+          asset,
+          externalRef(contractAddress(bytes32(0x00)), "v1"),
+        ) shouldBeLessThan 0
+      }
+
+      test("EXTERNAL_REF compares by owner first, then tag") {
+        val lowOwner = contractAddress(bytes32(0x00))
+        val highOwner = contractAddress(bytes32Last(0x01))
+
+        // A greater tag never outweighs a lesser owner.
+        ScvComparator.compareContractExecutable(
+          externalRef(lowOwner, "v9"),
+          externalRef(highOwner, "v1"),
+        ) shouldBeLessThan 0
+        ScvComparator.compareContractExecutable(
+          externalRef(lowOwner, "v1"),
+          externalRef(lowOwner, "v2"),
+        ) shouldBeLessThan 0
+        ScvComparator.compareContractExecutable(
+          externalRef(lowOwner, "v1"),
+          externalRef(lowOwner, "v1"),
+        ) shouldBe 0
+      }
+
+      test("EXTERNAL_REF compares a binary tag by unsigned bytes") {
+        val owner = contractAddress(bytes32(0x00))
+        ScvComparator.compareContractExecutable(
+          externalRef(owner, byteArrayOf(0x41)),
+          externalRef(owner, byteArrayOf(0xff.toByte())),
+        ) shouldBeLessThan 0
       }
     }
 
@@ -545,6 +636,28 @@ class ScvComparatorTest :
             )
             .storage(storage)
             .build()
+        )
+        .build()
+
+    private fun externalRef(owner: SCAddress, tag: String): ContractExecutable =
+      externalRef(owner, tag.toByteArray(Charsets.UTF_8))
+
+    private fun externalRef(owner: SCAddress, tag: ByteArray): ContractExecutable =
+      ContractExecutable.builder()
+        .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF)
+        .external_ref(
+          ContractExecutableExternalRef.builder()
+            .executable_owner(owner)
+            .tag(SCString(XdrString(tag)))
+            .build()
+        )
+        .build()
+
+    private fun makeExternalRefInstance(owner: SCAddress, tag: String, storage: SCMap?): SCVal =
+      SCVal.builder()
+        .discriminant(SCValType.SCV_CONTRACT_INSTANCE)
+        .instance(
+          SCContractInstance.builder().executable(externalRef(owner, tag)).storage(storage).build()
         )
         .build()
 

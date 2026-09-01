@@ -30,6 +30,18 @@ Contract client lifecycle (in `org.stellar.sdk.contract.exception`, all extend
   `SendTransactionFailedException`, `TransactionStillPendingException`,
   `TransactionFailedException`, `NeedsMoreSignaturesException`, `NoSignatureNeededException`.
 
+Contract introspection (in `org.stellar.sdk.contract.exception`, all extend
+`ContractIntrospectionException` → `SdkException`) — raised by `ContractMeta`, `ContractSpec`,
+`ContractInfo` and the `SorobanServer` methods that read a contract's Wasm:
+- `ContractInstanceNotFoundException` — the contract instance ledger entry does not exist.
+- `ContractCodeNotFoundException` — the contract code entry is missing or archived.
+- `StellarAssetContractHasNoWasmException` — the contract is a SAC, which has no Wasm on-chain.
+- `ExternalRefNotFoundException` — the CAP-85 tag entry that an external executable reference points
+  at is missing or archived.
+- `ContractWasmRetrievalException` — the RPC response held unexpected ledger entry data, including
+  an external executable reference that cannot be resolved.
+- `InvalidWasmException` — the Wasm was fetched but could not be parsed.
+
 Other:
 - `AccountRequiresMemoException` — destination requires a memo (SEP-29).
 - `InvalidSep10ChallengeException`, `InvalidSep45ChallengeException` — challenge validation.
