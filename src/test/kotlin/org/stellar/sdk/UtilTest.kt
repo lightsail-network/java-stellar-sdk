@@ -5,6 +5,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.ints.shouldBeNegative
 import io.kotest.matchers.ints.shouldBePositive
 import io.kotest.matchers.shouldBe
+import java.util.Optional
 
 class UtilTest :
   FunSpec({
@@ -122,6 +123,28 @@ class UtilTest :
       test("first differing byte decides regardless of length") {
         Util.compareBytesUnsigned(byteArrayOf(1, 0xFF.toByte()), byteArrayOf(2)).shouldBeNegative()
         Util.compareBytesUnsigned(byteArrayOf(2), byteArrayOf(1, 2, 3)).shouldBePositive()
+      }
+    }
+
+    context("decodeUtf8") {
+      test("decodes valid UTF-8, including empty and multi-byte input") {
+        Util.decodeUtf8(byteArrayOf()) shouldBe Optional.of("")
+        Util.decodeUtf8("my-executable".toByteArray(Charsets.UTF_8)) shouldBe
+          Optional.of("my-executable")
+        Util.decodeUtf8("标签".toByteArray(Charsets.UTF_8)) shouldBe Optional.of("标签")
+      }
+
+      test("returns empty for bytes that are not valid UTF-8") {
+        // A lenient decode would turn each of these into U+FFFD and make two distinct byte
+        // strings indistinguishable.
+        Util.decodeUtf8(byteArrayOf(0xFF.toByte(), 0xFE.toByte())) shouldBe Optional.empty()
+        Util.decodeUtf8(byteArrayOf(0xC3.toByte())) shouldBe Optional.empty() // truncated sequence
+        Util.decodeUtf8(byteArrayOf(0xED.toByte(), 0xA0.toByte(), 0x80.toByte())) shouldBe
+          Optional.empty() // surrogate half
+      }
+
+      test("keeps embedded NUL and control bytes, which are valid UTF-8") {
+        Util.decodeUtf8(byteArrayOf(0x00, 0x41)) shouldBe Optional.of("\u0000A")
       }
     }
   })

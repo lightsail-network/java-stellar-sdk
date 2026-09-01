@@ -21,6 +21,7 @@ Scv.toUint256(BigInteger.valueOf(7));  Scv.toInt256(BigInteger.valueOf(-7));
 Scv.toTimePoint(BigInteger.valueOf(1700000000)); Scv.toDuration(BigInteger.valueOf(3600));
 Scv.toBytes(new byte[] {1, 2});
 Scv.toString("hello");  Scv.toSymbol("increment");
+Scv.toExecutableTag("v1");             // CAP-85 tag; byte[] overload for a binary tag
 Scv.toAddress("G...");                 // account or contract ("C...") address
 Scv.toVec(List.of(Scv.toUint32(1L), Scv.toUint32(2L)));
 Scv.toMap(Map.of(Scv.toSymbol("k"), Scv.toUint32(1L)));
@@ -31,6 +32,7 @@ Scv.toMap(Map.of(Scv.toSymbol("k"), Scv.toUint32(1L)));
 Scv.fromUint32(v);      // -> long
 Scv.fromInt128(v);      // -> BigInteger
 Scv.fromString(v);      // -> byte[]; new String(bytes, StandardCharsets.UTF_8) for text
+Scv.fromExecutableTag(v); // -> byte[]; Util.decodeUtf8(bytes) for text, raw bytes if not UTF-8
 Scv.fromSymbol(v);      // -> String
 Scv.fromAddress(v);     // -> Address
 Scv.fromVec(v);         // -> Collection<SCVal>

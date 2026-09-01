@@ -2,10 +2,14 @@ package org.stellar.sdk;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Optional;
 import org.stellar.sdk.exception.UnexpectedException;
 
 /**
@@ -175,6 +179,33 @@ public class Util {
       }
     }
     return Integer.compare(a.length, b.length);
+  }
+
+  /**
+   * Decodes {@code bytes} as UTF-8 text, returning empty when they are not valid UTF-8.
+   *
+   * <p>Unlike {@code new String(bytes, UTF_8)} (and {@link
+   * org.stellar.sdk.xdr.XdrString#toString()}), this never substitutes {@code U+FFFD} for malformed
+   * input, so distinct byte strings never decode to the same text. Use it for values that are byte
+   * strings carrying a hint of text rather than text proper — an {@code SCV_STRING} payload, or a
+   * <a href="https://stellar.org/protocol/cap-85" target="_blank">CAP-85</a> executable tag — and
+   * show the raw bytes when it returns empty.
+   *
+   * @param bytes the bytes to decode
+   * @return the decoded text, or {@link Optional#empty()} if {@code bytes} are not valid UTF-8
+   */
+  public static Optional<String> decodeUtf8(byte[] bytes) {
+    try {
+      return Optional.of(
+          StandardCharsets.UTF_8
+              .newDecoder()
+              .onMalformedInput(CodingErrorAction.REPORT)
+              .onUnmappableCharacter(CodingErrorAction.REPORT)
+              .decode(ByteBuffer.wrap(bytes))
+              .toString());
+    } catch (CharacterCodingException e) {
+      return Optional.empty();
+    }
   }
 
   /** The function that converts XDR string to XDR object. */

@@ -1,5 +1,6 @@
 package org.stellar.sdk.operations;
 
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import org.stellar.sdk.Address;
 import org.stellar.sdk.Asset;
 import org.stellar.sdk.Util;
 import org.stellar.sdk.xdr.ContractExecutable;
+import org.stellar.sdk.xdr.ContractExecutableExternalRef;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
 import org.stellar.sdk.xdr.ContractIDPreimageType;
@@ -28,6 +30,7 @@ import org.stellar.sdk.xdr.HostFunctionType;
 import org.stellar.sdk.xdr.InvokeContractArgs;
 import org.stellar.sdk.xdr.InvokeHostFunctionOp;
 import org.stellar.sdk.xdr.OperationType;
+import org.stellar.sdk.xdr.SCString;
 import org.stellar.sdk.xdr.SCSymbol;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
@@ -123,15 +126,113 @@ public class InvokeHostFunctionOperation extends Operation {
       Address address,
       @Nullable Collection<SCVal> constructorArgs,
       @Nullable byte[] salt) {
+    if (wasmId.length != 32) {
+      throw new IllegalArgumentException("\"wasmId\" must be 32 bytes long");
+    }
+
+    ContractExecutable executable =
+        ContractExecutable.builder()
+            .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_WASM)
+            .wasm_hash(new Hash(wasmId))
+            .build();
+    return createContractOperationBuilder(executable, address, constructorArgs, salt);
+  }
+
+  /**
+   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
+   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
+   * create a contract from a <a href="https://stellar.org/protocol/cap-85"
+   * target="_blank">CAP-85</a> external executable reference instead of from an uploaded Wasm hash.
+   *
+   * <p>The reference names an owner contract and a tag; the owner publishes the Wasm hash under
+   * that tag, and the created contract follows it, so the owner can upgrade every contract that
+   * references the tag at once.
+   *
+   * @param owner The contract that owns the executable. Only a contract can hold the persistent tag
+   *     entry that names the Wasm, so this must be a contract address.
+   * @param tag The owner-scoped tag naming the executable, encoded as UTF-8. Use {@link
+   *     #createContractFromExternalRefOperationBuilder(Address, byte[], Address, Collection,
+   *     byte[])} for a tag that is not text.
+   * @param address The address to use to derive the contract ID.
+   * @param constructorArgs The optional parameters to pass to the constructor of this contract.
+   * @param salt The 32-byte salt to use to derive the contract ID, if null, a random salt will be
+   *     generated.
+   * @return {@link InvokeHostFunctionOperationBuilder}
+   */
+  public static InvokeHostFunctionOperationBuilder<?, ?>
+      createContractFromExternalRefOperationBuilder(
+          Address owner,
+          String tag,
+          Address address,
+          @Nullable Collection<SCVal> constructorArgs,
+          @Nullable byte[] salt) {
+    return createContractFromExternalRefOperationBuilder(
+        owner, tag.getBytes(StandardCharsets.UTF_8), address, constructorArgs, salt);
+  }
+
+  /**
+   * This function will create an {@link InvokeHostFunctionOperationBuilder} with the "hostFunction"
+   * parameter preset, so that you can conveniently build an {@link InvokeHostFunctionOperation} to
+   * create a contract from a <a href="https://stellar.org/protocol/cap-85"
+   * target="_blank">CAP-85</a> external executable reference instead of from an uploaded Wasm hash.
+   *
+   * <p>See {@link #createContractFromExternalRefOperationBuilder(Address, String, Address,
+   * Collection, byte[])} for what the reference names. A tag is an unbounded {@code SCString} and
+   * need not be valid UTF-8, so binary tags are passed through here undecoded.
+   *
+   * @param owner The contract that owns the executable. Only a contract can hold the persistent tag
+   *     entry that names the Wasm, so this must be a contract address.
+   * @param tag The owner-scoped tag naming the executable.
+   * @param address The address to use to derive the contract ID.
+   * @param constructorArgs The optional parameters to pass to the constructor of this contract.
+   * @param salt The 32-byte salt to use to derive the contract ID, if null, a random salt will be
+   *     generated.
+   * @return {@link InvokeHostFunctionOperationBuilder}
+   */
+  public static InvokeHostFunctionOperationBuilder<?, ?>
+      createContractFromExternalRefOperationBuilder(
+          Address owner,
+          byte[] tag,
+          Address address,
+          @Nullable Collection<SCVal> constructorArgs,
+          @Nullable byte[] salt) {
+    // Only a contract can hold the persistent tag entry that names the Wasm, so any other owner is
+    // unresolvable and the deploy would fail on-chain.
+    if (owner.getAddressType() != Address.AddressType.CONTRACT) {
+      throw new IllegalArgumentException("\"owner\" must be a contract address");
+    }
+    // Caught here rather than at encode time, where it would surface as a NullPointerException
+    // from deep inside XDR serialization.
+    if (tag == null) {
+      throw new IllegalArgumentException("\"tag\" must not be null");
+    }
+
+    ContractExecutable executable =
+        ContractExecutable.builder()
+            .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF)
+            .external_ref(
+                ContractExecutableExternalRef.builder()
+                    .executable_owner(owner.toSCAddress())
+                    .tag(new SCString(new XdrString(tag)))
+                    .build())
+            .build();
+    return createContractOperationBuilder(executable, address, constructorArgs, salt);
+  }
+
+  /**
+   * Builds a {@code CREATE_CONTRACT_V2} host function that deploys {@code executable} to the
+   * contract ID derived from {@code address} and {@code salt}.
+   */
+  private static InvokeHostFunctionOperationBuilder<?, ?> createContractOperationBuilder(
+      ContractExecutable executable,
+      Address address,
+      @Nullable Collection<SCVal> constructorArgs,
+      @Nullable byte[] salt) {
     if (salt == null) {
       salt = new byte[32];
       new SecureRandom().nextBytes(salt);
     } else if (salt.length != 32) {
       throw new IllegalArgumentException("\"salt\" must be 32 bytes long");
-    }
-
-    if (wasmId.length != 32) {
-      throw new IllegalArgumentException("\"wasmId\" must be 32 bytes long");
     }
 
     CreateContractArgsV2 createContractArgs =
@@ -145,11 +246,7 @@ public class InvokeHostFunctionOperation extends Operation {
                             .salt(new Uint256(salt))
                             .build())
                     .build())
-            .executable(
-                ContractExecutable.builder()
-                    .discriminant(ContractExecutableType.CONTRACT_EXECUTABLE_WASM)
-                    .wasm_hash(new Hash(wasmId))
-                    .build())
+            .executable(executable)
             .constructorArgs(
                 constructorArgs != null ? constructorArgs.toArray(new SCVal[0]) : new SCVal[0])
             .build();

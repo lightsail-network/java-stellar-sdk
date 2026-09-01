@@ -28,6 +28,7 @@ import org.stellar.sdk.contract.ContractSpec;
 import org.stellar.sdk.contract.exception.ContractCodeNotFoundException;
 import org.stellar.sdk.contract.exception.ContractInstanceNotFoundException;
 import org.stellar.sdk.contract.exception.ContractWasmRetrievalException;
+import org.stellar.sdk.contract.exception.ExternalRefNotFoundException;
 import org.stellar.sdk.contract.exception.StellarAssetContractHasNoWasmException;
 import org.stellar.sdk.exception.AccountNotFoundException;
 import org.stellar.sdk.exception.ConnectionErrorException;
@@ -64,11 +65,14 @@ import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractCodeEntry;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.ContractExecutable;
+import org.stellar.sdk.xdr.ContractExecutableExternalRef;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.LedgerEntry;
 import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerKey;
+import org.stellar.sdk.xdr.SCAddress;
+import org.stellar.sdk.xdr.SCAddressType;
 import org.stellar.sdk.xdr.SCContractInstance;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
@@ -766,10 +770,110 @@ public class SorobanServer implements Closeable {
   }
 
   /**
+   * Resolves a <a href="https://stellar.org/protocol/cap-85" target="_blank">CAP-85</a> external
+   * executable reference to the Wasm hash it names.
+   *
+   * <p>A contract created from an external reference does not carry its own Wasm hash. Instead the
+   * reference names an owner contract and a tag, and the owner holds a <em>persistent</em> contract
+   * data entry keyed by that tag whose value is the 32-byte hash of an existing Wasm. This performs
+   * exactly that lookup; the owner contract is not invoked.
+   *
+   * <p>Example:
+   *
+   * <pre>{@code
+   * ContractExecutable executable = instance.getExecutable();
+   * if (executable.getDiscriminant() == ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF) {
+   *   byte[] wasmHash = server.getExternalRefWasmHash(executable.getExternal_ref());
+   *   byte[] wasm = server.getContractWasmByHash(wasmHash);
+   * }
+   * }</pre>
+   *
+   * @param externalRef The external executable reference, for example the {@code external_ref} arm
+   *     of a contract instance's executable.
+   * @return The 32-byte Wasm hash the reference resolves to.
+   * @throws IllegalArgumentException If {@code externalRef} is null or structurally incomplete, or
+   *     its owner is not a contract and so cannot hold the tag entry that names the Wasm.
+   * @throws ExternalRefNotFoundException If the tag entry does not exist or has been archived.
+   * @throws ContractWasmRetrievalException If the tag entry does not hold a 32-byte Wasm hash, or
+   *     the RPC response contains unexpected ledger entry data.
+   * @throws org.stellar.sdk.exception.NetworkException The following three exceptions are
+   *     subclasses of NetworkException, thrown on RPC or transport failures.
+   * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
+   * @throws RequestTimeoutException If the request timed out.
+   * @throws ConnectionErrorException When the request cannot be executed due to cancellation or
+   *     connectivity problems, etc.
+   */
+  public byte[] getExternalRefWasmHash(ContractExecutableExternalRef externalRef) {
+    if (externalRef == null) {
+      throw new IllegalArgumentException("externalRef must not be null");
+    }
+
+    SCAddress ownerAddress = externalRef.getExecutable_owner();
+    if (ownerAddress == null) {
+      throw new IllegalArgumentException("externalRef is missing its owner");
+    }
+    if (ownerAddress.getDiscriminant() == null) {
+      throw new IllegalArgumentException("externalRef owner is missing its address type");
+    }
+    if (ownerAddress.getDiscriminant() != SCAddressType.SC_ADDRESS_TYPE_CONTRACT) {
+      // Only a contract can hold the persistent tag entry that names the Wasm, so any other owner
+      // is unresolvable; fail before spending a request on it.
+      throw new IllegalArgumentException(
+          "External executable owner "
+              + describeExternalRefOwner(ownerAddress)
+              + " is not a contract, so it cannot hold the tag entry that names the Wasm");
+    }
+    if (ownerAddress.getContractId() == null) {
+      throw new IllegalArgumentException("externalRef owner is missing its contract ID");
+    }
+    if (externalRef.getTag() == null
+        || externalRef.getTag().getSCString() == null
+        || externalRef.getTag().getSCString().getBytes() == null) {
+      throw new IllegalArgumentException("externalRef is missing its tag");
+    }
+    String owner = Address.fromSCAddress(ownerAddress).toString();
+    byte[] tag = externalRef.getTag().getSCString().getBytes();
+
+    // The tag is an unbounded SCString and may be binary, so it is reused as-is rather than
+    // decoded; a lenient decode would build the key of a different entry.
+    Optional<GetLedgerEntriesResponse.LedgerEntryResult> entry =
+        getContractData(owner, Scv.toExecutableTag(tag), Durability.PERSISTENT);
+    if (!entry.isPresent()) {
+      throw new ExternalRefNotFoundException(owner, tag);
+    }
+
+    LedgerEntry.LedgerEntryData ledgerEntryData =
+        parseLedgerEntryData(
+            entry.get().getXdr(),
+            "Failed to parse external executable tag ledger entry, owner: " + owner);
+    if (ledgerEntryData.getDiscriminant() != LedgerEntryType.CONTRACT_DATA
+        || ledgerEntryData.getContractData() == null) {
+      throw new ContractWasmRetrievalException(
+          "Unexpected ledger entry type for external executable tag entry, owner: " + owner);
+    }
+
+    SCVal value = ledgerEntryData.getContractData().getVal();
+    if (value == null
+        || value.getDiscriminant() != SCValType.SCV_BYTES
+        || value.getBytes() == null
+        || value.getBytes().getSCBytes() == null
+        || value.getBytes().getSCBytes().length != 32) {
+      throw new ContractWasmRetrievalException(
+          "External executable tag entry on " + owner + " does not hold a 32-byte Wasm hash");
+    }
+    return value.getBytes().getSCBytes();
+  }
+
+  /**
    * Fetches the Wasm bytecode of a deployed contract by its contract ID.
    *
    * <p>This first reads the contract instance ledger entry to discover the executable, then fetches
    * the {@code CONTRACT_CODE} ledger entry referenced by the instance.
+   *
+   * <p>A contract created from a <a href="https://stellar.org/protocol/cap-85"
+   * target="_blank">CAP-85</a> external executable reference carries no Wasm hash of its own, so
+   * its reference is resolved to one first (see {@link #getExternalRefWasmHash(
+   * ContractExecutableExternalRef)}) at the cost of one extra request.
    *
    * @param contractId The contract ID. Encoded as a Stellar Contract Address.
    * @return The contract Wasm bytecode.
@@ -777,10 +881,13 @@ public class SorobanServer implements Closeable {
    * @throws ContractInstanceNotFoundException If the contract instance ledger entry does not exist.
    * @throws StellarAssetContractHasNoWasmException If the contract is a Stellar Asset Contract,
    *     which has no Wasm.
+   * @throws ExternalRefNotFoundException If the contract follows an external executable reference
+   *     whose tag entry does not exist or has been archived.
    * @throws ContractCodeNotFoundException If the contract code ledger entry does not exist or has
    *     been archived.
    * @throws ContractWasmRetrievalException If the RPC response contains unexpected ledger entry
-   *     data.
+   *     data, including an external executable reference the instance holds that cannot be
+   *     resolved, such as one whose owner is not a contract.
    * @throws org.stellar.sdk.exception.NetworkException The following three exceptions are
    *     subclasses of NetworkException, thrown on RPC or transport failures.
    * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
@@ -839,6 +946,28 @@ public class SorobanServer implements Closeable {
     ContractExecutableType type = executable.getDiscriminant();
     if (type == ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET) {
       throw new StellarAssetContractHasNoWasmException(contractId);
+    }
+    if (type == ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF) {
+      // A CAP-85 reference names its code indirectly; resolve the tag entry on the owner contract
+      // to get the hash it currently points at, then proceed as for CONTRACT_EXECUTABLE_WASM.
+      ContractExecutableExternalRef externalRef = executable.getExternal_ref();
+      if (externalRef == null) {
+        throw new ContractWasmRetrievalException(
+            "Contract instance is missing its external executable reference, contractId: "
+                + contractId);
+      }
+      byte[] wasmHash;
+      try {
+        wasmHash = getExternalRefWasmHash(externalRef);
+      } catch (IllegalArgumentException e) {
+        // The reference came off the ledger rather than from the caller, so an unusable one is
+        // unexpected response data and belongs in the introspection exception hierarchy.
+        throw new ContractWasmRetrievalException(
+            "Contract instance holds an unusable external executable reference, contractId: "
+                + contractId,
+            e);
+      }
+      return getContractWasmByHash(wasmHash);
     }
     if (type != ContractExecutableType.CONTRACT_EXECUTABLE_WASM) {
       throw new ContractWasmRetrievalException(
@@ -953,6 +1082,21 @@ public class SorobanServer implements Closeable {
    */
   public ContractInfo getContractInfo(String contractId) {
     return ContractInfo.fromWasm(getContractWasm(contractId));
+  }
+
+  /**
+   * Renders an external executable owner for an error message, without assuming the address is
+   * well-formed -- the reference may have been built by hand.
+   */
+  private static String describeExternalRefOwner(SCAddress ownerAddress) {
+    if (ownerAddress == null || ownerAddress.getDiscriminant() == null) {
+      return "(missing)";
+    }
+    try {
+      return Address.fromSCAddress(ownerAddress).toString();
+    } catch (RuntimeException e) {
+      return "(" + ownerAddress.getDiscriminant() + ")";
+    }
   }
 
   private static LedgerEntry.LedgerEntryData parseLedgerEntryData(String xdr, String errorContext) {
