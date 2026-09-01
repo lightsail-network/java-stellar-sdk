@@ -63,7 +63,9 @@ import org.stellar.sdk.Base64Factory;
  *     // symbolic SCVals used as the key for ledger entries for a contract's
  *     // instance and an address' nonce, respectively.
  *     SCV_LEDGER_KEY_CONTRACT_INSTANCE = 20,
- *     SCV_LEDGER_KEY_NONCE = 21
+ *     SCV_LEDGER_KEY_NONCE = 21,
+ *
+ *     SCV_EXECUTABLE_TAG = 22
  * };
  * </pre>
  */
@@ -89,7 +91,8 @@ public enum SCValType implements XdrElement {
   SCV_ADDRESS(18),
   SCV_CONTRACT_INSTANCE(19),
   SCV_LEDGER_KEY_CONTRACT_INSTANCE(20),
-  SCV_LEDGER_KEY_NONCE(21);
+  SCV_LEDGER_KEY_NONCE(21),
+  SCV_EXECUTABLE_TAG(22);
 
   private final int value;
 
@@ -149,6 +152,8 @@ public enum SCValType implements XdrElement {
         return SCV_LEDGER_KEY_CONTRACT_INSTANCE;
       case 21:
         return SCV_LEDGER_KEY_NONCE;
+      case 22:
+        return SCV_EXECUTABLE_TAG;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -229,6 +234,8 @@ public enum SCValType implements XdrElement {
         return "ledger_key_contract_instance";
       case SCV_LEDGER_KEY_NONCE:
         return "ledger_key_nonce";
+      case SCV_EXECUTABLE_TAG:
+        return "executable_tag";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -281,6 +288,8 @@ public enum SCValType implements XdrElement {
         return SCV_LEDGER_KEY_CONTRACT_INSTANCE;
       case "ledger_key_nonce":
         return SCV_LEDGER_KEY_NONCE;
+      case "executable_tag":
+        return SCV_EXECUTABLE_TAG;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }
