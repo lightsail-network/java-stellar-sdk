@@ -2,6 +2,13 @@
 
 ## Pending
 
+### Update
+- fix: `AssembledTransaction` now backs off between `getTransaction` polls while waiting for a submitted transaction. It used to poll again immediately on every `NOT_FOUND`, hammering the RPC server for the whole `submitTimeout`.
+  - The first poll is made right after `sendTransaction`; each further poll waits 1s, then 1.5× longer each time, capped at 6s (about one ledger), until `submitTimeout` seconds have passed, with one final poll at the deadline.
+  - A network error raised while polling is no longer swallowed and retried. It now propagates as a `NetworkException`.
+  - `submitTimeout` bounds the polling loop only. Each individual request is still bounded by the `SorobanServer` HTTP timeouts.
+  - This applies to `submit`, `signAndSubmit`, `restoreFootprint`, and therefore to `ContractClient.invoke` when it submits.
+
 ## 5.0.0
 
 ### Breaking changes

@@ -4,14 +4,13 @@ import static org.stellar.sdk.Auth.authorizeEntry;
 import static org.stellar.sdk.SorobanServer.assembleTransaction;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.LongConsumer;
+import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Value;
@@ -44,11 +43,33 @@ import org.stellar.sdk.xdr.*;
  * @see org.stellar.sdk.SorobanServer
  */
 public class AssembledTransaction<T> {
+  /** Delay before the second {@code getTransaction} poll; grows by half after every poll. */
+  private static final long INITIAL_POLL_DELAY_MILLIS = 1_000L;
+
+  /**
+   * Upper bound on the delay between two {@code getTransaction} polls: about one ledger. A
+   * transaction's status only changes when a ledger closes (roughly every 5 seconds), so a longer
+   * gap would only delay the result without saving a meaningful number of requests.
+   */
+  private static final long MAX_POLL_DELAY_MILLIS = 6_000L;
+
   private final SorobanServer server;
   private final int submitTimeout;
 
   private final KeyPair transactionSigner;
   private final Function<SCVal, T> parseResultXdrFn;
+
+  /**
+   * Sleeps for the given number of milliseconds between two {@code getTransaction} polls.
+   * Package-private so tests can replace it with a recording no-op.
+   */
+  LongConsumer sleeper = AssembledTransaction::sleep;
+
+  /**
+   * Monotonic clock, in nanoseconds, used to enforce {@code submitTimeout}. Package-private so
+   * tests can drive it deterministically together with {@link #sleeper}.
+   */
+  LongSupplier nanoClock = System::nanoTime;
 
   private final TransactionBuilder transactionBuilder;
   @Getter private Transaction builtTransaction;
@@ -74,7 +95,9 @@ public class AssembledTransaction<T> {
    * @param server the Soroban server
    * @param transactionSigner the keypair to sign the transaction with
    * @param parseResultXdrFn the function to parse the result XDR
-   * @param submitTimeout the timeout for submitting the transaction
+   * @param submitTimeout how many seconds to keep polling for the result after the transaction has
+   *     been sent. It bounds the polling loop only: a single RPC request is bounded by the HTTP
+   *     timeouts of the {@link SorobanServer}, not by this value
    */
   public AssembledTransaction(
       TransactionBuilder transactionBuilder,
@@ -170,6 +193,8 @@ public class AssembledTransaction<T> {
    * @throws TransactionStillPendingException if the transaction is still pending after the timeout
    * @throws ExpiredStateException if the transaction requires restoring contract state
    * @throws TransactionFailedException if the transaction failed
+   * @throws org.stellar.sdk.exception.NetworkException if a request to the RPC server fails while
+   *     sending the transaction or polling for its result
    */
   public T signAndSubmit(@Nullable KeyPair transactionSigner, boolean force) {
     sign(transactionSigner, force);
@@ -398,6 +423,8 @@ public class AssembledTransaction<T> {
    * @throws TransactionFailedException if the transaction failed
    * @throws TransactionStillPendingException if the transaction is still pending after the timeout
    * @throws SendTransactionFailedException if sending the transaction to the network failed
+   * @throws org.stellar.sdk.exception.NetworkException if a request to the RPC server fails while
+   *     sending the transaction or polling for its result
    */
   public void restoreFootprint() {
     if (transactionSigner == null) {
@@ -434,6 +461,8 @@ public class AssembledTransaction<T> {
    * @throws SendTransactionFailedException if sending the transaction to the network failed
    * @throws TransactionStillPendingException if the transaction is still pending after the timeout
    * @throws TransactionFailedException if the transaction failed
+   * @throws org.stellar.sdk.exception.NetworkException if a request to the RPC server fails while
+   *     sending the transaction or polling for its result
    */
   @SuppressWarnings("unchecked")
   public T submit() {
@@ -488,13 +517,7 @@ public class AssembledTransaction<T> {
       }
     }
 
-    String txHash = sendTransactionResponse.getHash();
-    List<GetTransactionResponse> attempts =
-        withExponentialBackoff(
-            () -> server.getTransaction(txHash),
-            resp -> resp.getStatus() == GetTransactionResponse.GetTransactionStatus.NOT_FOUND,
-            submitTimeout);
-    getTransactionResponse = attempts.get(attempts.size() - 1);
+    getTransactionResponse = waitForTransaction(sendTransactionResponse.getHash());
 
     if (getTransactionResponse.getStatus() == GetTransactionResponse.GetTransactionStatus.SUCCESS) {
       return getTransactionResponse;
@@ -516,41 +539,48 @@ public class AssembledTransaction<T> {
     }
   }
 
-  private static <T> List<T> withExponentialBackoff(
-      Supplier<T> fn, Predicate<T> keepWaitingIf, long timeout) {
-    List<T> attempts = new ArrayList<>();
-    attempts.add(fn.get());
-    if (!keepWaitingIf.test(attempts.get(0))) {
-      return attempts;
+  /**
+   * Polls {@code getTransaction} until the transaction leaves {@code NOT_FOUND} or {@code
+   * submitTimeout} seconds have elapsed, sleeping between polls with a gentle exponential backoff
+   * (1s, 1.5s, 2.25s, ... growing by half each time, capped at 6s and at the time left before the
+   * deadline).
+   *
+   * <p>The first poll is made immediately. The last sleep is cut short at the deadline and is
+   * followed by one final poll, so a transaction that lands during that sleep is still picked up;
+   * no new sleep is started once the deadline has passed. {@code submitTimeout} therefore bounds
+   * the polling loop, not the duration of an individual request, which is bounded by the server's
+   * HTTP timeouts.
+   *
+   * <p>Network errors raised by {@code getTransaction} are not swallowed; they propagate to the
+   * caller.
+   *
+   * @return the last response received, which is still {@code NOT_FOUND} if the deadline passed
+   */
+  private GetTransactionResponse waitForTransaction(String txHash) {
+    // Monotonic clock: a wall-clock adjustment must not stretch or cut the wait short.
+    long deadlineNanos = nanoClock.getAsLong() + TimeUnit.SECONDS.toNanos(submitTimeout);
+    long delayMillis = INITIAL_POLL_DELAY_MILLIS;
+
+    GetTransactionResponse response = server.getTransaction(txHash);
+    while (response.getStatus() == GetTransactionResponse.GetTransactionStatus.NOT_FOUND) {
+      long remainingMillis = TimeUnit.NANOSECONDS.toMillis(deadlineNanos - nanoClock.getAsLong());
+      if (remainingMillis <= 0) {
+        break;
+      }
+      sleeper.accept(Math.min(delayMillis, remainingMillis));
+      response = server.getTransaction(txHash);
+      delayMillis = Math.min(delayMillis * 3 / 2, MAX_POLL_DELAY_MILLIS);
     }
+    return response;
+  }
 
-    long waitUntil = System.currentTimeMillis() + timeout * 1000;
-    long waitTime = 1000;
-    long maxWaitTime = 60000;
-
-    while (System.currentTimeMillis() < waitUntil
-        && keepWaitingIf.test(attempts.get(attempts.size() - 1))) {
-      try {
-        CompletableFuture<T> future = CompletableFuture.supplyAsync(fn);
-        future.get(waitTime, TimeUnit.MILLISECONDS);
-        attempts.add(future.getNow(null));
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        throw new UnexpectedException("Exponential backoff interrupted", e);
-      } catch (ExecutionException | TimeoutException e) {
-        // Ignore the exception and continue with the next iteration
-      }
-
-      waitTime *= 2;
-      if (waitTime > maxWaitTime) {
-        waitTime = maxWaitTime;
-      }
-
-      if (waitUntil - System.currentTimeMillis() < waitTime) {
-        waitTime = waitUntil - System.currentTimeMillis();
-      }
+  private static void sleep(long millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new UnexpectedException("Interrupted while waiting for the transaction", e);
     }
-    return attempts;
   }
 
   @Value
