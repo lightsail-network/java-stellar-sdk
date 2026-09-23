@@ -147,4 +147,14 @@ class UtilTest :
         Util.decodeUtf8(byteArrayOf(0x00, 0x41)) shouldBe Optional.of("\u0000A")
       }
     }
+
+    context("paddedByteArray") {
+      test("pads ASCII text with zeros") {
+        Util.paddedByteArray("USD", 4) shouldBe byteArrayOf(0x55, 0x53, 0x44, 0x00)
+      }
+
+      test("encodes text as UTF-8 whatever the JVM default charset is") {
+        Util.paddedByteArray("é", 4) shouldBe byteArrayOf(0xC3.toByte(), 0xA9.toByte(), 0, 0)
+      }
+    }
   })

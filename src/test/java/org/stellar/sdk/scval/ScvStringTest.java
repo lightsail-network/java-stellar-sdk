@@ -3,6 +3,7 @@ package org.stellar.sdk.scval;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import org.stellar.sdk.xdr.SCString;
 import org.stellar.sdk.xdr.SCVal;
@@ -23,6 +24,22 @@ public class ScvStringTest {
     SCVal actualScVal = Scv.toString(value);
     assertEquals(expectedScVal, actualScVal);
     assertArrayEquals(value.getBytes(), Scv.fromString(actualScVal));
+  }
+
+  @Test
+  public void testScvStringFromNonAsciiString() {
+    // Encoded as UTF-8 whatever the JVM default charset is.
+    String value = "héllo 世界";
+
+    SCVal expectedScVal =
+        SCVal.builder()
+            .discriminant(SCValType.SCV_STRING)
+            .str(new SCString(new XdrString(value)))
+            .build();
+
+    SCVal actualScVal = Scv.toString(value);
+    assertEquals(expectedScVal, actualScVal);
+    assertArrayEquals(value.getBytes(StandardCharsets.UTF_8), Scv.fromString(actualScVal));
   }
 
   @Test

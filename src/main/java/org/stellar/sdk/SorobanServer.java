@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -86,6 +87,7 @@ import org.stellar.sdk.xdr.SorobanTransactionData;
 public class SorobanServer implements Closeable {
   private static final int SUBMIT_TRANSACTION_TIMEOUT = 60; // seconds
   private static final int CONNECT_TIMEOUT = 10; // seconds
+  private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
   private final HttpUrl serverURI;
   private final OkHttpClient httpClient;
   private final Gson gson = new Gson();
@@ -1205,9 +1207,9 @@ public class SorobanServer implements Closeable {
     String requestId = generateRequestId();
     ResponseHandler<SorobanRpcResponse<R>> responseHandler = new ResponseHandler<>(responseType);
     SorobanRpcRequest<T> sorobanRpcRequest = new SorobanRpcRequest<>(requestId, method, params);
-    MediaType mediaType = MediaType.parse("application/json");
     RequestBody requestBody =
-        RequestBody.create(gson.toJson(sorobanRpcRequest).getBytes(), mediaType);
+        RequestBody.create(
+            gson.toJson(sorobanRpcRequest).getBytes(StandardCharsets.UTF_8), JSON_MEDIA_TYPE);
 
     Request request = new Request.Builder().url(this.serverURI).post(requestBody).build();
     try (Response response = this.httpClient.newCall(request).execute()) {

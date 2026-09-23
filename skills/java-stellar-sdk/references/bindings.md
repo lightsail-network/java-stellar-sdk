@@ -32,6 +32,7 @@ Each contract function becomes a typed method that returns an
 `ContractClient.invoke`: `source` account id, `signer` (nullable for read-only), and `baseFee`.
 
 ```java
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.Network;
@@ -48,7 +49,7 @@ try (Client client =
 
     // Read-only: signer can be null; read the simulated result.
     AssembledTransaction<List<byte[]>> readTx =
-        client.hello("World".getBytes(), kp.getAccountId(), null, 100);
+        client.hello("World".getBytes(StandardCharsets.UTF_8), kp.getAccountId(), null, 100);
     List<byte[]> value = readTx.result();
 
     // State-changing: pass a signer, then submit. The exact method name, argument

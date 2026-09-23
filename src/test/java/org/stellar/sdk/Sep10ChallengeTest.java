@@ -1660,6 +1660,75 @@ public class Sep10ChallengeTest {
   }
 
   @Test
+  public void testChallengeEncodesNonAsciiDomainsAsUtf8() {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    KeyPair clientDomainSigner = KeyPair.random();
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+    // Encoded as UTF-8 whatever the JVM default charset is, as the other Stellar SDKs do.
+    String webAuthDomain = "auth.bücher.example";
+    String clientDomain = "client.例子.example";
+
+    Transaction transaction =
+        Sep10Challenge.newChallenge(
+            server,
+            Network.TESTNET,
+            client.getAccountId(),
+            domainName,
+            webAuthDomain,
+            timeBounds,
+            clientDomain,
+            clientDomainSigner.getAccountId());
+
+    assertEquals(3, transaction.getOperations().length);
+    ManageDataOperation webAuthDomainOp = (ManageDataOperation) transaction.getOperations()[1];
+    assertEquals("web_auth_domain", webAuthDomainOp.getName());
+    assertArrayEquals(webAuthDomain.getBytes(StandardCharsets.UTF_8), webAuthDomainOp.getValue());
+
+    ManageDataOperation clientAuthDomainOp = (ManageDataOperation) transaction.getOperations()[2];
+    assertEquals("client_domain", clientAuthDomainOp.getName());
+    assertArrayEquals(clientDomain.getBytes(StandardCharsets.UTF_8), clientAuthDomainOp.getValue());
+  }
+
+  @Test
+  public void testReadChallengeTransactionNonAsciiWebAuthDomain() {
+    KeyPair server = KeyPair.random();
+    KeyPair client = KeyPair.random();
+    Network network = Network.TESTNET;
+
+    long now = System.currentTimeMillis() / 1000L;
+    long end = now + 300;
+    TimeBounds timeBounds = new TimeBounds(now, end);
+    String domainName = "example.com";
+    String webAuthDomain = "auth.bücher.example";
+
+    Transaction transaction =
+        Sep10Challenge.newChallenge(
+            server, network, client.getAccountId(), domainName, webAuthDomain, timeBounds);
+    String challenge = transaction.toEnvelopeXdrBase64();
+
+    Sep10Challenge.ChallengeTransaction challengeTransaction =
+        Sep10Challenge.readChallengeTransaction(
+            challenge, server.getAccountId(), network, domainName, webAuthDomain);
+    assertEquals(
+        new Sep10Challenge.ChallengeTransaction(transaction, client.getAccountId(), domainName),
+        challengeTransaction);
+
+    try {
+      Sep10Challenge.readChallengeTransaction(
+          challenge, server.getAccountId(), network, domainName, "auth.bucher.example");
+      fail();
+    } catch (InvalidSep10ChallengeException e) {
+      assertEquals(
+          "'web_auth_domain' operation value does not match auth.bucher.example.", e.getMessage());
+    }
+  }
+
+  @Test
   public void testChallengeWithClientDomainButWithoutClientDomainSigner() {
     KeyPair server = KeyPair.random();
     KeyPair client = KeyPair.random();

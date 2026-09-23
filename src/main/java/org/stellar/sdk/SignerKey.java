@@ -33,7 +33,7 @@ import org.stellar.sdk.xdr.Uint256;
  * SignerKey ed25519Signer = SignerKey.fromEd25519PublicKey("GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ");
  *
  * // Create a signed payload signer
- * byte[] payload = "transaction_hash".getBytes();
+ * byte[] payload = "transaction_hash".getBytes(StandardCharsets.UTF_8);
  * Ed25519SignedPayload signedPayload = new Ed25519SignedPayload(publicKeyBytes, payload);
  * SignerKey payloadSigner = SignerKey.fromEd25519SignedPayload(signedPayload);
  * }</pre>
