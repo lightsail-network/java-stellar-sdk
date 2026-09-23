@@ -8,6 +8,7 @@
   - A network error raised while polling is no longer swallowed and retried. It now propagates as a `NetworkException`.
   - `submitTimeout` bounds the polling loop only. Each individual request is still bounded by the `SorobanServer` HTTP timeouts.
   - This applies to `submit`, `signAndSubmit`, `restoreFootprint`, and therefore to `ContractClient.invoke` when it submits.
+- fix: always encode text as UTF-8 in `Scv.toString(String)`, `Sep10Challenge` (`web_auth_domain` / `client_domain`), `Util.paddedByteArray(String, int)`, and the `SorobanServer` request body. They used the JVM default charset, so non-ASCII text produced different bytes on JVMs where that is not UTF-8.
 
 ## 5.0.0
 

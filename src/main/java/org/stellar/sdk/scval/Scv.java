@@ -358,7 +358,7 @@ public class Scv {
    * @return {@link SCVal} with the type of {@link SCValType#SCV_STRING}
    */
   public static SCVal toString(String string) {
-    return ScvString.toSCVal(string.getBytes());
+    return ScvString.toSCVal(string.getBytes(StandardCharsets.UTF_8));
   }
 
   /**

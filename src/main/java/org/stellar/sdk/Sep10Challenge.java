@@ -113,7 +113,7 @@ public class Sep10Challenge {
     ManageDataOperation webAuthDomainOperation =
         ManageDataOperation.builder()
             .name(WEB_AUTH_DOMAIN_MANAGER_DATA_NAME)
-            .value(webAuthDomain.getBytes())
+            .value(webAuthDomain.getBytes(StandardCharsets.UTF_8))
             .sourceAccount(sourceAccount.getAccountId())
             .build();
 
@@ -138,7 +138,7 @@ public class Sep10Challenge {
       builder.addOperation(
           ManageDataOperation.builder()
               .name(CLIENT_DOMAIN_DATA_NAME)
-              .value(clientDomain.getBytes())
+              .value(clientDomain.getBytes(StandardCharsets.UTF_8))
               .sourceAccount(clientSigningKey)
               .build());
     }
@@ -352,7 +352,8 @@ public class Sep10Challenge {
           throw new InvalidSep10ChallengeException(
               "'web_auth_domain' operation value should not be null.");
         }
-        if (!Arrays.equals(webAuthDomain.getBytes(), manageDataOp.getValue())) {
+        if (!Arrays.equals(
+            webAuthDomain.getBytes(StandardCharsets.UTF_8), manageDataOp.getValue())) {
           throw new InvalidSep10ChallengeException(
               String.format("'web_auth_domain' operation value does not match %s.", webAuthDomain));
         }

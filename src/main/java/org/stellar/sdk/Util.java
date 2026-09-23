@@ -98,7 +98,7 @@ public class Util {
    * @return padded byte array
    */
   public static byte[] paddedByteArray(String string, int length) {
-    return Util.paddedByteArray(string.getBytes(), length);
+    return Util.paddedByteArray(string.getBytes(StandardCharsets.UTF_8), length);
   }
 
   /**
