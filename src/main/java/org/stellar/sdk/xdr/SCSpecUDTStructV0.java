@@ -21,7 +21,7 @@ import org.stellar.sdk.Base64Factory;
  * {
  *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
  *     string lib&lt;80&gt;;
- *     string name&lt;60&gt;;
+ *     string name&lt;SC_SPEC_TYPE_NAME_LIMIT&gt;;
  *     SCSpecUDTStructFieldV0 fields&lt;&gt;;
  * };
  * </pre>
@@ -75,8 +75,8 @@ public class SCSpecUDTStructV0 implements XdrElement {
     }
     lib.encode(stream);
     int nameSize = name.getBytes().length;
-    if (nameSize > 60) {
-      throw new IOException("name size " + nameSize + " exceeds max size 60");
+    if (nameSize > 1024) {
+      throw new IOException("name size " + nameSize + " exceeds max size 1024");
     }
     name.encode(stream);
     int fieldsSize = getFields().length;
@@ -95,7 +95,8 @@ public class SCSpecUDTStructV0 implements XdrElement {
     SCSpecUDTStructV0 decodedSCSpecUDTStructV0 = new SCSpecUDTStructV0();
     decodedSCSpecUDTStructV0.doc = XdrString.decode(stream, maxDepth, Constants.SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTStructV0.lib = XdrString.decode(stream, maxDepth, 80);
-    decodedSCSpecUDTStructV0.name = XdrString.decode(stream, maxDepth, 60);
+    decodedSCSpecUDTStructV0.name =
+        XdrString.decode(stream, maxDepth, Constants.SC_SPEC_TYPE_NAME_LIMIT);
     int fieldsSize = stream.readInt();
     if (fieldsSize < 0) {
       throw new IOException("fields size " + fieldsSize + " is negative");

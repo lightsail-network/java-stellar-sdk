@@ -21,7 +21,7 @@ import org.stellar.sdk.Base64Factory;
  * {
  *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
  *     string lib&lt;80&gt;;
- *     string name&lt;60&gt;;
+ *     string name&lt;SC_SPEC_TYPE_NAME_LIMIT&gt;;
  *     SCSpecUDTErrorEnumCaseV0 cases&lt;&gt;;
  * };
  * </pre>
@@ -75,8 +75,8 @@ public class SCSpecUDTErrorEnumV0 implements XdrElement {
     }
     lib.encode(stream);
     int nameSize = name.getBytes().length;
-    if (nameSize > 60) {
-      throw new IOException("name size " + nameSize + " exceeds max size 60");
+    if (nameSize > 1024) {
+      throw new IOException("name size " + nameSize + " exceeds max size 1024");
     }
     name.encode(stream);
     int casesSize = getCases().length;
@@ -96,7 +96,8 @@ public class SCSpecUDTErrorEnumV0 implements XdrElement {
     decodedSCSpecUDTErrorEnumV0.doc =
         XdrString.decode(stream, maxDepth, Constants.SC_SPEC_DOC_LIMIT);
     decodedSCSpecUDTErrorEnumV0.lib = XdrString.decode(stream, maxDepth, 80);
-    decodedSCSpecUDTErrorEnumV0.name = XdrString.decode(stream, maxDepth, 60);
+    decodedSCSpecUDTErrorEnumV0.name =
+        XdrString.decode(stream, maxDepth, Constants.SC_SPEC_TYPE_NAME_LIMIT);
     int casesSize = stream.readInt();
     if (casesSize < 0) {
       throw new IOException("cases size " + casesSize + " is negative");

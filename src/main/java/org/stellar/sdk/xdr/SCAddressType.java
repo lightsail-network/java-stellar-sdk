@@ -17,7 +17,8 @@ import org.stellar.sdk.Base64Factory;
  *     SC_ADDRESS_TYPE_CONTRACT = 1,
  *     SC_ADDRESS_TYPE_MUXED_ACCOUNT = 2,
  *     SC_ADDRESS_TYPE_CLAIMABLE_BALANCE = 3,
- *     SC_ADDRESS_TYPE_LIQUIDITY_POOL = 4
+ *     SC_ADDRESS_TYPE_LIQUIDITY_POOL = 4,
+ *     SC_ADDRESS_TYPE_MUXED_CONTRACT = 5
  * };
  * </pre>
  */
@@ -26,7 +27,8 @@ public enum SCAddressType implements XdrElement {
   SC_ADDRESS_TYPE_CONTRACT(1),
   SC_ADDRESS_TYPE_MUXED_ACCOUNT(2),
   SC_ADDRESS_TYPE_CLAIMABLE_BALANCE(3),
-  SC_ADDRESS_TYPE_LIQUIDITY_POOL(4);
+  SC_ADDRESS_TYPE_LIQUIDITY_POOL(4),
+  SC_ADDRESS_TYPE_MUXED_CONTRACT(5);
 
   private final int value;
 
@@ -52,6 +54,8 @@ public enum SCAddressType implements XdrElement {
         return SC_ADDRESS_TYPE_CLAIMABLE_BALANCE;
       case 4:
         return SC_ADDRESS_TYPE_LIQUIDITY_POOL;
+      case 5:
+        return SC_ADDRESS_TYPE_MUXED_CONTRACT;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -98,6 +102,8 @@ public enum SCAddressType implements XdrElement {
         return "claimable_balance";
       case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
         return "liquidity_pool";
+      case SC_ADDRESS_TYPE_MUXED_CONTRACT:
+        return "muxed_contract";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -116,6 +122,8 @@ public enum SCAddressType implements XdrElement {
         return SC_ADDRESS_TYPE_CLAIMABLE_BALANCE;
       case "liquidity_pool":
         return SC_ADDRESS_TYPE_LIQUIDITY_POOL;
+      case "muxed_contract":
+        return SC_ADDRESS_TYPE_MUXED_CONTRACT;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

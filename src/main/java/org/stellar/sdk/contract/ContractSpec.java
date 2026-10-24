@@ -183,7 +183,7 @@ public final class ContractSpec {
       return Optional.empty();
     }
     for (SCSpecEventV0 event : getEvents()) {
-      if (name.equals(decodeSymbol(event.getName()))) {
+      if (name.equals(decodeString(event.getName()))) {
         return Optional.of(event);
       }
     }
