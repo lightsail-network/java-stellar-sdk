@@ -18,7 +18,7 @@ import org.stellar.sdk.Base64Factory;
  * <pre>
  * struct SCSpecTypeUDT
  * {
- *     string name&lt;60&gt;;
+ *     string name&lt;SC_SPEC_TYPE_NAME_LIMIT&gt;;
  * };
  * </pre>
  */
@@ -37,8 +37,8 @@ public class SCSpecTypeUDT implements XdrElement {
 
   public void encode(XdrDataOutputStream stream) throws IOException {
     int nameSize = name.getBytes().length;
-    if (nameSize > 60) {
-      throw new IOException("name size " + nameSize + " exceeds max size 60");
+    if (nameSize > 1024) {
+      throw new IOException("name size " + nameSize + " exceeds max size 1024");
     }
     name.encode(stream);
   }
@@ -49,7 +49,8 @@ public class SCSpecTypeUDT implements XdrElement {
     }
     maxDepth -= 1;
     SCSpecTypeUDT decodedSCSpecTypeUDT = new SCSpecTypeUDT();
-    decodedSCSpecTypeUDT.name = XdrString.decode(stream, maxDepth, 60);
+    decodedSCSpecTypeUDT.name =
+        XdrString.decode(stream, maxDepth, Constants.SC_SPEC_TYPE_NAME_LIMIT);
     return decodedSCSpecTypeUDT;
   }
 

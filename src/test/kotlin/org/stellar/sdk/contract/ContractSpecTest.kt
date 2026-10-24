@@ -49,7 +49,7 @@ private fun eventEntry(name: String): SCSpecEntry {
     SCSpecEventV0().apply {
       doc = XdrString(ByteArray(0))
       lib = XdrString(ByteArray(0))
-      this.name = symbol(name)
+      this.name = XdrString(name.toByteArray(Charsets.UTF_8))
       prefixTopics = arrayOf<SCSymbol>()
       params = arrayOf<SCSpecEventParamV0>()
       dataFormat = SCSpecEventDataFormat.values().first()
