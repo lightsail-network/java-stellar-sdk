@@ -194,7 +194,25 @@ import org.stellar.sdk.Base64Factory;
  *      // Cost of performing BN254 scalar element inversion
  *     Bn254FrInv = 84,
  *     // Cost of performing BN254 G1 multi-scalar multiplication (MSM)
- *     Bn254G1Msm = 85
+ *     Bn254G1Msm = 85,
+ *     // Cost of decoding and expanding an ML-DSA-44 verifying key
+ *     MlDsa44DecodeVerifyingKey = 86,
+ *     // Cost of decoding and expanding an ML-DSA-65 verifying key
+ *     MlDsa65DecodeVerifyingKey = 87,
+ *     // Cost of decoding and expanding an ML-DSA-87 verifying key
+ *     MlDsa87DecodeVerifyingKey = 88,
+ *     // Cost of decoding an ML-DSA-44 signature
+ *     MlDsa44DecodeSignature = 89,
+ *     // Cost of decoding an ML-DSA-65 signature
+ *     MlDsa65DecodeSignature = 90,
+ *     // Cost of decoding an ML-DSA-87 signature
+ *     MlDsa87DecodeSignature = 91,
+ *     // Cost of verifying an ML-DSA-44 signature, linear in message + context length
+ *     VerifyMlDsa44Sig = 92,
+ *     // Cost of verifying an ML-DSA-65 signature, linear in message + context length
+ *     VerifyMlDsa65Sig = 93,
+ *     // Cost of verifying an ML-DSA-87 signature, linear in message + context length
+ *     VerifyMlDsa87Sig = 94
  * };
  * </pre>
  */
@@ -284,7 +302,16 @@ public enum ContractCostType implements XdrElement {
   Bn254FrMul(82),
   Bn254FrPow(83),
   Bn254FrInv(84),
-  Bn254G1Msm(85);
+  Bn254G1Msm(85),
+  MlDsa44DecodeVerifyingKey(86),
+  MlDsa65DecodeVerifyingKey(87),
+  MlDsa87DecodeVerifyingKey(88),
+  MlDsa44DecodeSignature(89),
+  MlDsa65DecodeSignature(90),
+  MlDsa87DecodeSignature(91),
+  VerifyMlDsa44Sig(92),
+  VerifyMlDsa65Sig(93),
+  VerifyMlDsa87Sig(94);
 
   private final int value;
 
@@ -473,6 +500,24 @@ public enum ContractCostType implements XdrElement {
         return Bn254FrInv;
       case 85:
         return Bn254G1Msm;
+      case 86:
+        return MlDsa44DecodeVerifyingKey;
+      case 87:
+        return MlDsa65DecodeVerifyingKey;
+      case 88:
+        return MlDsa87DecodeVerifyingKey;
+      case 89:
+        return MlDsa44DecodeSignature;
+      case 90:
+        return MlDsa65DecodeSignature;
+      case 91:
+        return MlDsa87DecodeSignature;
+      case 92:
+        return VerifyMlDsa44Sig;
+      case 93:
+        return VerifyMlDsa65Sig;
+      case 94:
+        return VerifyMlDsa87Sig;
       default:
         throw new IllegalArgumentException("Unknown enum value: " + value);
     }
@@ -681,6 +726,24 @@ public enum ContractCostType implements XdrElement {
         return "bn254frinv";
       case Bn254G1Msm:
         return "bn254g1msm";
+      case MlDsa44DecodeVerifyingKey:
+        return "mldsa44decodeverifyingkey";
+      case MlDsa65DecodeVerifyingKey:
+        return "mldsa65decodeverifyingkey";
+      case MlDsa87DecodeVerifyingKey:
+        return "mldsa87decodeverifyingkey";
+      case MlDsa44DecodeSignature:
+        return "mldsa44decodesignature";
+      case MlDsa65DecodeSignature:
+        return "mldsa65decodesignature";
+      case MlDsa87DecodeSignature:
+        return "mldsa87decodesignature";
+      case VerifyMlDsa44Sig:
+        return "verifymldsa44sig";
+      case VerifyMlDsa65Sig:
+        return "verifymldsa65sig";
+      case VerifyMlDsa87Sig:
+        return "verifymldsa87sig";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -861,6 +924,24 @@ public enum ContractCostType implements XdrElement {
         return Bn254FrInv;
       case "bn254g1msm":
         return Bn254G1Msm;
+      case "mldsa44decodeverifyingkey":
+        return MlDsa44DecodeVerifyingKey;
+      case "mldsa65decodeverifyingkey":
+        return MlDsa65DecodeVerifyingKey;
+      case "mldsa87decodeverifyingkey":
+        return MlDsa87DecodeVerifyingKey;
+      case "mldsa44decodesignature":
+        return MlDsa44DecodeSignature;
+      case "mldsa65decodesignature":
+        return MlDsa65DecodeSignature;
+      case "mldsa87decodesignature":
+        return MlDsa87DecodeSignature;
+      case "verifymldsa44sig":
+        return VerifyMlDsa44Sig;
+      case "verifymldsa65sig":
+        return VerifyMlDsa65Sig;
+      case "verifymldsa87sig":
+        return VerifyMlDsa87Sig;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
     }

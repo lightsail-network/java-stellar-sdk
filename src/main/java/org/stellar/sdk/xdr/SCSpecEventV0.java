@@ -21,7 +21,7 @@ import org.stellar.sdk.Base64Factory;
  * {
  *     string doc&lt;SC_SPEC_DOC_LIMIT&gt;;
  *     string lib&lt;80&gt;;
- *     SCSymbol name;
+ *     string name&lt;SC_SPEC_TYPE_NAME_LIMIT&gt;;
  *     SCSymbol prefixTopics&lt;2&gt;;
  *     SCSpecEventParamV0 params&lt;&gt;;
  *     SCSpecEventDataFormat dataFormat;
@@ -55,7 +55,7 @@ public class SCSpecEventV0 implements XdrElement {
    * @param name the {@code name} field value
    * @return the {@code name} field value
    */
-  private SCSymbol name;
+  private XdrString name;
 
   /**
    * Value of the {@code prefixTopics} field.
@@ -92,6 +92,10 @@ public class SCSpecEventV0 implements XdrElement {
       throw new IOException("lib size " + libSize + " exceeds max size 80");
     }
     lib.encode(stream);
+    int nameSize = name.getBytes().length;
+    if (nameSize > 1024) {
+      throw new IOException("name size " + nameSize + " exceeds max size 1024");
+    }
     name.encode(stream);
     int prefixTopicsSize = getPrefixTopics().length;
     if (prefixTopicsSize > 2) {
@@ -117,7 +121,8 @@ public class SCSpecEventV0 implements XdrElement {
     SCSpecEventV0 decodedSCSpecEventV0 = new SCSpecEventV0();
     decodedSCSpecEventV0.doc = XdrString.decode(stream, maxDepth, Constants.SC_SPEC_DOC_LIMIT);
     decodedSCSpecEventV0.lib = XdrString.decode(stream, maxDepth, 80);
-    decodedSCSpecEventV0.name = SCSymbol.decode(stream, maxDepth);
+    decodedSCSpecEventV0.name =
+        XdrString.decode(stream, maxDepth, Constants.SC_SPEC_TYPE_NAME_LIMIT);
     int prefixTopicsSize = stream.readInt();
     if (prefixTopicsSize < 0) {
       throw new IOException("prefixTopics size " + prefixTopicsSize + " is negative");
@@ -201,7 +206,7 @@ public class SCSpecEventV0 implements XdrElement {
     SCSpecEventV0 instance = new SCSpecEventV0();
     instance.doc = XdrString.fromJsonObject(jsonMap.get("doc"));
     instance.lib = XdrString.fromJsonObject(jsonMap.get("lib"));
-    instance.name = SCSymbol.fromJsonObject(jsonMap.get("name"));
+    instance.name = XdrString.fromJsonObject(jsonMap.get("name"));
     instance.prefixTopics =
         XdrElement.jsonArrayToArray(
             (List<Object>) jsonMap.get("prefix_topics"),

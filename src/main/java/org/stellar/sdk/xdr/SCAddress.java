@@ -29,6 +29,8 @@ import org.stellar.sdk.StrKey;
  *     ClaimableBalanceID claimableBalanceId;
  * case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
  *     PoolID liquidityPoolId;
+ * case SC_ADDRESS_TYPE_MUXED_CONTRACT:
+ *     MuxedContract muxedContract;
  * };
  * </pre>
  */
@@ -85,6 +87,14 @@ public class SCAddress implements XdrElement {
    */
   private PoolID liquidityPoolId;
 
+  /**
+   * Value of the {@code muxedContract} field.
+   *
+   * @param muxedContract the {@code muxedContract} field value
+   * @return the {@code muxedContract} field value
+   */
+  private MuxedContract muxedContract;
+
   public void encode(XdrDataOutputStream stream) throws IOException {
     stream.writeInt(discriminant.getValue());
     switch (discriminant) {
@@ -102,6 +112,9 @@ public class SCAddress implements XdrElement {
         break;
       case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
         liquidityPoolId.encode(stream);
+        break;
+      case SC_ADDRESS_TYPE_MUXED_CONTRACT:
+        muxedContract.encode(stream);
         break;
     }
   }
@@ -129,6 +142,9 @@ public class SCAddress implements XdrElement {
         break;
       case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
         decodedSCAddress.liquidityPoolId = PoolID.decode(stream, maxDepth);
+        break;
+      case SC_ADDRESS_TYPE_MUXED_CONTRACT:
+        decodedSCAddress.muxedContract = MuxedContract.decode(stream, maxDepth);
         break;
       default:
         throw new IOException("Unknown discriminant value: " + discriminant);

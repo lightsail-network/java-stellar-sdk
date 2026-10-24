@@ -21,6 +21,7 @@ public final class Constants {
   public static final int MAX_SIGNERS = 20;
   public static final int SCSYMBOL_LIMIT = 32;
   public static final int SC_SPEC_DOC_LIMIT = 1024;
+  public static final int SC_SPEC_TYPE_NAME_LIMIT = 1024;
   public static final int TX_ADVERT_VECTOR_MAX_SIZE = 1000;
   public static final int TX_DEMAND_VECTOR_MAX_SIZE = 1000;
 }
