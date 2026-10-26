@@ -4,11 +4,11 @@ plugins {
     id("signing")
     id("maven-publish")
     id("project-report")
-    id("com.diffplug.spotless") version "8.7.0"
-    id("com.github.ben-manes.versions") version "0.54.0"
-    id("io.freefair.lombok") version "9.5.0"
-    id("com.gradleup.nmcp").version("1.6.0")
-    kotlin("jvm") version "2.4.0"
+    id("com.diffplug.spotless") version "8.10.4"
+    id("io.github.ben-manes.versions") version "0.66.0"
+    id("io.freefair.lombok") version "9.8.2"
+    id("com.gradleup.nmcp").version("1.6.2")
+    kotlin("jvm") version "2.4.21"
 }
 
 group = "network.lightsail"
@@ -38,7 +38,7 @@ spotless {
     }
     kotlin {
         target("src/test/kotlin/**/*.kt")
-        ktfmt("0.56").googleStyle()
+        ktfmt("0.64").googleStyle()
     }
 }
 
