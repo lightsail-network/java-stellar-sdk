@@ -30,7 +30,7 @@ public class SorobanInvokeContractFunction {
 
       // The invoke host function operation
       // https://github.com/stellar/soroban-examples/tree/main/hello_world
-      String contractId = "CDZJVZWCY4NFGHCCZMX6QW5AK3ET5L3UUAYBVNDYOXDLQXW7PHXGYOBJ";
+      String contractId = "CDSMG6PNJYIPIWFIDQVLCOXMQPZU73FSBCTMBDGBGFLF7WPLJMASODYX";
       String functionName = "hello";
       List<SCVal> parameters =
           List.of(Scv.toString("World!")); // Scv is a helper class to create SCVal objects
@@ -98,7 +98,7 @@ public class SorobanInvokeContractFunction {
         System.out.println("Transaction succeeded: " + getTransactionResponse);
         // parse the function return value
         TransactionMeta transactionMeta = getTransactionResponse.parseResultMetaXdr();
-        SCVal rawReturnValue = transactionMeta.getV3().getSorobanMeta().getReturnValue();
+        SCVal rawReturnValue = transactionMeta.getV4().getSorobanMeta().getReturnValue();
         System.out.println("Raw return value: " + rawReturnValue);
         List<SCVal> vec = Scv.fromVec(rawReturnValue).stream().toList();
         String returnValue0 = new String(Scv.fromString(vec.get(0)), StandardCharsets.UTF_8);

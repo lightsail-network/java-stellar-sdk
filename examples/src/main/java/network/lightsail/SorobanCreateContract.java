@@ -56,15 +56,8 @@ public class SorobanCreateContract {
         System.out.println("Transaction succeeded: " + getTransactionResponse);
         // parse the function return value
         TransactionMeta transactionMeta = getTransactionResponse.parseResultMetaXdr();
-        byte[] hash =
-            transactionMeta
-                .getV3()
-                .getSorobanMeta()
-                .getReturnValue()
-                .getAddress()
-                .getContractId()
-                .getHash();
-        String contractId = StrKey.encodeContract(hash);
+        String contractId =
+            Address.fromSCVal(transactionMeta.getV4().getSorobanMeta().getReturnValue()).toString();
         System.out.println("Contract ID: " + contractId);
       } else {
         System.out.println("Transaction failed: " + getTransactionResponse);

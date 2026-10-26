@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.diffplug.spotless") version "6.24.0"
+    id("com.diffplug.spotless") version "8.10.4"
 
 }
 
@@ -23,7 +23,7 @@ spotless {
 dependencies {
     // Use https://central.sonatype.com/artifact/network.lightsail/stellar-sdk in prod.
     implementation("network.lightsail:stellar-sdk:5.0.0")
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
