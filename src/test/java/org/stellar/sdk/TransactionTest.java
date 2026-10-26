@@ -515,8 +515,8 @@ public class TransactionTest {
     IntegrationUtils.fundAccount(kp.getAccountId());
     IntegrationUtils.createAssetContract(asset, kp);
     String destination = IntegrationUtils.getRandomContractId(kp);
-    Server server = new Server(IntegrationUtils.HORIZON_URL);
-    TransactionBuilderAccount sourceAccount = server.loadAccount(kp.getAccountId());
+    SorobanServer server = new SorobanServer(IntegrationUtils.RPC_URL);
+    TransactionBuilderAccount sourceAccount = server.getAccount(kp.getAccountId());
 
     Transaction transaction1 =
         new TransactionBuilder(sourceAccount, IntegrationUtils.NETWORK)
@@ -524,7 +524,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildPaymentToContractTransaction(destination, asset, amount1, null);
     transaction1.sign(kp);
-    server.submitTransaction(transaction1);
+    IntegrationUtils.submitTransaction(transaction1);
     BigInteger balance1 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(1001250000L, balance1.longValue());
 
@@ -534,7 +534,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildPaymentToContractTransaction(destination, asset, amount2, null);
     transaction2.sign(kp);
-    server.submitTransaction(transaction2);
+    IntegrationUtils.submitTransaction(transaction2);
     BigInteger balance2 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(2209141000L, balance2.longValue());
 
@@ -544,7 +544,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildRestoreAssetBalanceEntryTransaction(destination, asset, null);
     transaction3.sign(kp);
-    server.submitTransaction(transaction3);
+    IntegrationUtils.submitTransaction(transaction3);
 
     server.close();
   }
@@ -562,8 +562,8 @@ public class TransactionTest {
     IntegrationUtils.issueAsset("CAT", issuerKp, kp, new BigDecimal("1000"));
     IntegrationUtils.createAssetContract(asset, kp);
     String destination = IntegrationUtils.getRandomContractId(kp);
-    Server server = new Server(IntegrationUtils.HORIZON_URL);
-    TransactionBuilderAccount sourceAccount = server.loadAccount(kp.getAccountId());
+    SorobanServer server = new SorobanServer(IntegrationUtils.RPC_URL);
+    TransactionBuilderAccount sourceAccount = server.getAccount(kp.getAccountId());
 
     Transaction transaction1 =
         new TransactionBuilder(sourceAccount, IntegrationUtils.NETWORK)
@@ -571,7 +571,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildPaymentToContractTransaction(destination, asset, amount1, null);
     transaction1.sign(kp);
-    server.submitTransaction(transaction1);
+    IntegrationUtils.submitTransaction(transaction1);
     BigInteger balance1 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(1001250000L, balance1.longValue());
 
@@ -581,7 +581,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildPaymentToContractTransaction(destination, asset, amount2, null);
     transaction2.sign(kp);
-    server.submitTransaction(transaction2);
+    IntegrationUtils.submitTransaction(transaction2);
     BigInteger balance2 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(2209141000L, balance2.longValue());
 
@@ -591,7 +591,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildRestoreAssetBalanceEntryTransaction(destination, asset, null);
     transaction3.sign(kp);
-    server.submitTransaction(transaction3);
+    IntegrationUtils.submitTransaction(transaction3);
 
     server.close();
   }
@@ -609,8 +609,8 @@ public class TransactionTest {
     IntegrationUtils.issueAsset("BANANA", issuerKp, kp, new BigDecimal("1000"));
     IntegrationUtils.createAssetContract(asset, kp);
     String destination = IntegrationUtils.getRandomContractId(kp);
-    Server server = new Server(IntegrationUtils.HORIZON_URL);
-    TransactionBuilderAccount sourceAccount = server.loadAccount(kp.getAccountId());
+    SorobanServer server = new SorobanServer(IntegrationUtils.RPC_URL);
+    TransactionBuilderAccount sourceAccount = server.getAccount(kp.getAccountId());
 
     Transaction transaction1 =
         new TransactionBuilder(sourceAccount, IntegrationUtils.NETWORK)
@@ -618,7 +618,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildPaymentToContractTransaction(destination, asset, amount1, null);
     transaction1.sign(kp);
-    server.submitTransaction(transaction1);
+    IntegrationUtils.submitTransaction(transaction1);
     BigInteger balance1 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(1001250000L, balance1.longValue());
 
@@ -628,7 +628,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildPaymentToContractTransaction(destination, asset, amount2, null);
     transaction2.sign(kp);
-    server.submitTransaction(transaction2);
+    IntegrationUtils.submitTransaction(transaction2);
     BigInteger balance2 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(2209141000L, balance2.longValue());
 
@@ -638,7 +638,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildRestoreAssetBalanceEntryTransaction(destination, asset, null);
     transaction3.sign(kp);
-    server.submitTransaction(transaction3);
+    IntegrationUtils.submitTransaction(transaction3);
 
     server.close();
   }
@@ -654,8 +654,8 @@ public class TransactionTest {
     Asset asset = Asset.createNonNativeAsset("CAT", kp.getAccountId());
     IntegrationUtils.createAssetContract(asset, kp);
     String destination = IntegrationUtils.getRandomContractId(kp);
-    Server server = new Server(IntegrationUtils.HORIZON_URL);
-    TransactionBuilderAccount sourceAccount = server.loadAccount(kp.getAccountId());
+    SorobanServer server = new SorobanServer(IntegrationUtils.RPC_URL);
+    TransactionBuilderAccount sourceAccount = server.getAccount(kp.getAccountId());
 
     Transaction transaction1 =
         new TransactionBuilder(sourceAccount, IntegrationUtils.NETWORK)
@@ -663,7 +663,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildPaymentToContractTransaction(destination, asset, amount1, null);
     transaction1.sign(kp);
-    server.submitTransaction(transaction1);
+    IntegrationUtils.submitTransaction(transaction1);
     BigInteger balance1 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(1001250000L, balance1.longValue());
 
@@ -673,7 +673,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildPaymentToContractTransaction(destination, asset, amount2, null);
     transaction2.sign(kp);
-    server.submitTransaction(transaction2);
+    IntegrationUtils.submitTransaction(transaction2);
     BigInteger balance2 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(2209141000L, balance2.longValue());
 
@@ -683,7 +683,7 @@ public class TransactionTest {
             .setTimeout(300)
             .buildRestoreAssetBalanceEntryTransaction(destination, asset, null);
     transaction3.sign(kp);
-    server.submitTransaction(transaction3);
+    IntegrationUtils.submitTransaction(transaction3);
 
     server.close();
   }
@@ -700,8 +700,8 @@ public class TransactionTest {
     IntegrationUtils.fundAccount(opSource.getAccountId());
     IntegrationUtils.createAssetContract(asset, kp);
     String destination = IntegrationUtils.getRandomContractId(kp);
-    Server server = new Server(IntegrationUtils.HORIZON_URL);
-    TransactionBuilderAccount sourceAccount = server.loadAccount(kp.getAccountId());
+    SorobanServer server = new SorobanServer(IntegrationUtils.RPC_URL);
+    TransactionBuilderAccount sourceAccount = server.getAccount(kp.getAccountId());
 
     Transaction transaction1 =
         new TransactionBuilder(sourceAccount, IntegrationUtils.NETWORK)
@@ -711,7 +711,7 @@ public class TransactionTest {
                 destination, asset, amount1, opSource.getAccountId());
     transaction1.sign(kp);
     transaction1.sign(opSource);
-    server.submitTransaction(transaction1);
+    IntegrationUtils.submitTransaction(transaction1);
     BigInteger balance1 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(1001250000L, balance1.longValue());
 
@@ -723,7 +723,7 @@ public class TransactionTest {
                 destination, asset, amount2, opSource.getAccountId());
     transaction2.sign(kp);
     transaction2.sign(opSource);
-    server.submitTransaction(transaction2);
+    IntegrationUtils.submitTransaction(transaction2);
     BigInteger balance2 = IntegrationUtils.getBalanceForContract(destination, asset, kp);
     assertEquals(2209141000L, balance2.longValue());
 
@@ -734,7 +734,7 @@ public class TransactionTest {
             .buildRestoreAssetBalanceEntryTransaction(destination, asset, opSource.getAccountId());
     transaction3.sign(kp);
     transaction3.sign(opSource);
-    server.submitTransaction(transaction3);
+    IntegrationUtils.submitTransaction(transaction3);
 
     server.close();
   }
