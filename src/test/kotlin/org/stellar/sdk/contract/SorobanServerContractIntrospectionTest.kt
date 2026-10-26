@@ -133,14 +133,14 @@ private fun singleEntryJson(xdr: String): String =
 
 private fun emptyEntriesJson(): String =
   """
-    {
-      "jsonrpc": "2.0",
-      "id": "id",
-      "result": {
-        "entries": [],
-        "latestLedger": "100"
-      }
+  {
+    "jsonrpc": "2.0",
+    "id": "id",
+    "result": {
+      "entries": [],
+      "latestLedger": "100"
     }
+  }
   """
     .trimIndent()
 
