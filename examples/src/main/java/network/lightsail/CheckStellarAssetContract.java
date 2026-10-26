@@ -6,7 +6,6 @@ import org.stellar.sdk.*;
 import org.stellar.sdk.responses.sorobanrpc.GetLedgerEntriesResponse;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
-import org.stellar.sdk.xdr.LedgerEntry.LedgerEntryData;
 import org.stellar.sdk.xdr.LedgerEntryType;
 import org.stellar.sdk.xdr.LedgerKey;
 import org.stellar.sdk.xdr.LedgerKey.LedgerKeyContractData;

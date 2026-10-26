@@ -61,7 +61,7 @@ public class SorobanUploadWasm {
         // parse the function return value
         TransactionMeta transactionMeta = getTransactionResponse.parseResultMetaXdr();
         byte[] wasmId =
-            transactionMeta.getV3().getSorobanMeta().getReturnValue().getBytes().getSCBytes();
+            transactionMeta.getV4().getSorobanMeta().getReturnValue().getBytes().getSCBytes();
         System.out.println("Wasm ID: " + Util.bytesToHex(wasmId).toLowerCase());
       } else {
         System.out.println("Transaction failed: " + getTransactionResponse);
