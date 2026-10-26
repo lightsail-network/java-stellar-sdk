@@ -177,4 +177,4 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
       - name: Publish to Maven Central
-        run: ./gradlew publishAllPublicationsToCentralPortal
+        run: ./gradlew publishAggregationToCentralPortal
