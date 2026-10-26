@@ -7,7 +7,6 @@ plugins {
     id("com.diffplug.spotless") version "8.10.4"
     id("io.github.ben-manes.versions") version "0.66.0"
     id("io.freefair.lombok") version "9.8.2"
-    id("com.gradleup.nmcp").version("1.6.2")
     kotlin("jvm") version "2.4.21"
 }
 
@@ -196,7 +195,7 @@ publishing {
 
 
 signing {
-    val publishCommand = "publishAllPublicationsToCentralPortal"
+    val publishCommand = "publishAggregationToCentralPortal"
     isRequired = gradle.startParameter.taskNames.contains(publishCommand)
     println("Need to sign? $isRequired")
     // https://docs.gradle.org/current/userguide/signing_plugin.html#using_in_memory_ascii_armored_openpgp_subkeys
@@ -210,15 +209,4 @@ signing {
     println("Signing Key ID: $signingKeyId")
     useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
     sign(publishing.publications["mavenJava"])
-}
-
-nmcp {
-    publishAllPublicationsToCentralPortal {
-        username = System.getenv("SONATYPE_USERNAME")
-        password = System.getenv("SONATYPE_PASSWORD")
-        // publish manually from the portal
-        publishingType = "USER_MANAGED"
-        // or if you want to publish automatically
-        // publishingType = "AUTOMATIC"
-    }
 }
