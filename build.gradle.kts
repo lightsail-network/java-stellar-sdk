@@ -43,25 +43,25 @@ spotless {
 }
 
 dependencies {
-    val okhttpVersion = "4.12.0"
+    val okhttpVersion = "4.12.1"
 
     implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
     implementation("com.squareup.okhttp3:okhttp-sse:${okhttpVersion}")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
-    implementation("com.google.code.gson:gson:2.14.0")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.84")
-    implementation("commons-codec:commons-codec:1.22.0")
+    implementation("com.google.code.gson:gson:2.15.0")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.86")
+    implementation("commons-codec:commons-codec:1.23.0")
 
     testImplementation(kotlin("stdlib"))
-    testImplementation("org.mockito:mockito-core:5.23.0")
+    testImplementation("org.mockito:mockito-core:5.24.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okhttpVersion}")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.84")  // mock https
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.11.3")
+    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.86")  // mock https
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.1.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    testImplementation("io.kotest:kotest-runner-junit5:6.1.11")
-    testImplementation("io.kotest:kotest-assertions-core:6.1.11")
+    testImplementation("io.kotest:kotest-runner-junit5:6.2.6")
+    testImplementation("io.kotest:kotest-assertions-core:6.2.6")
 }
 
 tasks {
