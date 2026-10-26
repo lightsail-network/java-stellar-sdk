@@ -14,13 +14,13 @@ import org.stellar.sdk.contract.exception.SimulationFailedException;
 import org.stellar.sdk.operations.ChangeTrustOperation;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.PaymentOperation;
-import org.stellar.sdk.responses.AccountResponse;
+import org.stellar.sdk.responses.sorobanrpc.GetTransactionResponse;
+import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.SCVal;
 
 public class IntegrationUtils {
   public static final String RPC_URL = "http://127.0.0.1:8000/rpc";
-  public static final String HORIZON_URL = "http://127.0.0.1:8000";
   public static final String FRIEND_BOT_URL = "http://127.0.0.1:8000/friendbot";
   public static final Network NETWORK = Network.STANDALONE;
 
@@ -140,8 +140,8 @@ public class IntegrationUtils {
   public static void issueAsset(
       String assetCode, KeyPair issuer, KeyPair receiver, BigDecimal amount) {
     Asset asset = Asset.createNonNativeAsset(assetCode, issuer.getAccountId());
-    try (Server server = new Server(HORIZON_URL)) {
-      AccountResponse issuerAccount = server.accounts().account(issuer.getAccountId());
+    try (SorobanServer server = new SorobanServer(RPC_URL)) {
+      TransactionBuilderAccount issuerAccount = server.getAccount(issuer.getAccountId());
 
       Transaction transaction =
           new TransactionBuilder(issuerAccount, NETWORK)
@@ -164,7 +164,29 @@ public class IntegrationUtils {
 
       transaction.sign(issuer);
       transaction.sign(receiver);
-      server.submitTransaction(transaction);
+      submitTransaction(transaction);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /** Submits the transaction via RPC and waits until it succeeds, throwing otherwise. */
+  public static GetTransactionResponse submitTransaction(Transaction transaction) {
+    try (SorobanServer server = new SorobanServer(RPC_URL)) {
+      SendTransactionResponse sendResponse = server.sendTransaction(transaction);
+      if (sendResponse.getStatus() != SendTransactionResponse.SendTransactionStatus.PENDING) {
+        throw new RuntimeException("Transaction submission failed: " + sendResponse);
+      }
+      GetTransactionResponse getResponse = server.pollTransaction(sendResponse.getHash());
+      if (getResponse.getStatus() != GetTransactionResponse.GetTransactionStatus.SUCCESS) {
+        throw new RuntimeException("Transaction failed: " + getResponse);
+      }
+      return getResponse;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new RuntimeException(e);
     }
   }
 }
