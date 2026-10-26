@@ -79,12 +79,12 @@ tasks {
         dependsOn(testClasses)
     }
 
-    val sourcesJar by registering(Jar::class) {
+    val sourcesJar = register<Jar>("sourcesJar") {
         archiveClassifier = "sources"
         from(sourceSets.main.get().allSource)
     }
 
-    val uberJar by registering(Jar::class) {
+    val uberJar = register<Jar>("uberJar") {
         // https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_exampl
         archiveClassifier = "uber"
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -108,7 +108,7 @@ tasks {
         }
     }
 
-    val javadocJar by registering(Jar::class) {
+    val javadocJar = register<Jar>("javadocJar") {
         archiveClassifier = "javadoc"
         dependsOn(javadoc)
         from(javadoc.get().destinationDir) // It needs to be placed after the javadoc task, otherwise it cannot read the path we set.
