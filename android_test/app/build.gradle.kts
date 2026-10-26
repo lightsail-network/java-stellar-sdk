@@ -69,12 +69,12 @@ dependencies {
     // Since we are adding local jar(libs/stellar-sdk.jar) as dependency,
     // gradle cannot automatically download the required third-party dependencies.
     implementation(files("libs/stellar-sdk-5.0.0.jar"))
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation("com.squareup.okhttp3:okhttp-sse:4.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.1")
+    implementation("com.squareup.okhttp3:okhttp-sse:4.12.1")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
-    implementation("com.google.code.gson:gson:2.11.0")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
-    implementation("commons-codec:commons-codec:1.17.1")
+    implementation("com.google.code.gson:gson:2.15.0")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.86")
+    implementation("commons-codec:commons-codec:1.23.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0-alpha03")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
