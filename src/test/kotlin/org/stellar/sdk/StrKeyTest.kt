@@ -191,6 +191,21 @@ class StrKeyTest :
         StrKey.isValidClaimableBalance(
           "BAT7RRVQBTQ3TEDLDICV7GNX6GE3KVQFJCNOESUI4QNA4TYYR44P2FS5PZYQ"
         ) shouldBe false
+        // SEP-23: invalid claimable balance type (first byte of binary key is not 0)
+        StrKey.isValidClaimableBalance(
+          "BAAT6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGXACA"
+        ) shouldBe false
+      }
+
+      test("decode rejects a non-zero claimable balance type") {
+        val exception =
+          shouldThrow<IllegalArgumentException> {
+            StrKey.decodeClaimableBalance(
+              "BAAT6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGXACA"
+            )
+          }
+        exception.message shouldBe
+          "Invalid claimable balance type, expected 0 (CLAIMABLE_BALANCE_ID_TYPE_V0), got 1"
       }
     }
 
@@ -355,9 +370,8 @@ class StrKeyTest :
         "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4Z2PQ",
         "PA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAOQCAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DXFH6",
         "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TV",
-        // We should consider this valid
-        // Invalid claimablebalance type (first byte of binary key is not 0),
-        // "BAAT6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGXACA"
+        // Invalid claimable balance type (first byte of binary key is not 0)
+        "BAAT6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGXACA",
         "",
       ) { key ->
         shouldThrow<IllegalArgumentException> { StrKey.decodeEd25519PublicKey(key) }
