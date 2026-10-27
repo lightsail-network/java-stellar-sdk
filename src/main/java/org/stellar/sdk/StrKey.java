@@ -454,6 +454,13 @@ public class StrKey {
           throw new IllegalArgumentException(
               "Invalid data length, expected 33 bytes, got " + data.length);
         }
+        // SEP-23: the first byte is the claimable balance type, and CLAIMABLE_BALANCE_ID_TYPE_V0
+        // is the only one.
+        if (data[0] != 0) {
+          throw new IllegalArgumentException(
+              "Invalid claimable balance type, expected 0 (CLAIMABLE_BALANCE_ID_TYPE_V0), got "
+                  + data[0]);
+        }
         break;
       default:
         if (data.length != 32) {
