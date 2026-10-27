@@ -51,8 +51,14 @@ public class GetEventsResponse {
     /** The field can be parsed as {@link org.stellar.sdk.xdr.SCVal} object. */
     String value;
 
-    /** The field will be removed in the next version. */
-    Boolean inSuccessfulContractCall;
+    /**
+     * Whether the event was emitted during a successful contract call.
+     *
+     * @deprecated Stellar RPC no longer returns this field from {@code getEvents} (<a
+     *     href="https://github.com/stellar/stellar-rpc/pull/1050">stellar-rpc#1050</a>), so it is
+     *     {@code null} with newer servers. It will be removed in the next major release.
+     */
+    @Deprecated Boolean inSuccessfulContractCall;
 
     /**
      * Parses the {@code topic} field from a list of strings to a list of {@link

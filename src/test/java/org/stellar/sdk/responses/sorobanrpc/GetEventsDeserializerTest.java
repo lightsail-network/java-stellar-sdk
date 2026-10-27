@@ -2,6 +2,7 @@ package org.stellar.sdk.responses.sorobanrpc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -55,5 +56,25 @@ public class GetEventsDeserializerTest {
 
     GetEventsResponse.EventInfo eventInfo2 = getEventsResponse.getResult().getEvents().get(2);
     assertEquals(eventInfo2.getType(), EventFilterType.DIAGNOSTIC);
+  }
+
+  @Test
+  public void testDeserializeWithoutInSuccessfulContractCall() {
+    // Stellar RPC no longer returns inSuccessfulContractCall (stellar-rpc#1050).
+    String json =
+        "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"result\":{\"latestLedger\":100,"
+            + "\"cursor\":\"0000000463856472064-0000000000\",\"events\":[{\"type\":\"contract\","
+            + "\"ledger\":108,\"ledgerClosedAt\":\"2023-07-23T14:47:01Z\","
+            + "\"contractId\":\"CBQHNAXSI55GX2GN6D67GK7BHVPSLJUGZQEU7WJ5LKR5PNUCGLIMAO4K\","
+            + "\"id\":\"0000000463856472064-0000000000\",\"topic\":[\"AAAADwAAAAdDT1VOVEVSAA==\"],"
+            + "\"value\":\"AAAAAwAAAAE=\",\"txHash\":"
+            + "\"db86e94aa98b7d38213c041ebbb727fbaabf0b7c435de594f36c2d51fc61926d\"}]}}";
+
+    SorobanRpcResponse<GetEventsResponse> getEventsResponse =
+        GsonSingleton.getInstance()
+            .fromJson(json, new TypeToken<SorobanRpcResponse<GetEventsResponse>>() {}.getType());
+    GetEventsResponse.EventInfo eventInfo = getEventsResponse.getResult().getEvents().get(0);
+    assertEquals(eventInfo.getValue(), "AAAAAwAAAAE=");
+    assertNull(eventInfo.getInSuccessfulContractCall());
   }
 }
