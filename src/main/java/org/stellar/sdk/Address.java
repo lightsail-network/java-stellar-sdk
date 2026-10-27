@@ -1,12 +1,15 @@
 package org.stellar.sdk;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import lombok.EqualsAndHashCode;
 import org.stellar.sdk.xdr.ClaimableBalanceID;
 import org.stellar.sdk.xdr.ClaimableBalanceIDType;
 import org.stellar.sdk.xdr.ContractID;
 import org.stellar.sdk.xdr.Hash;
+import org.stellar.sdk.xdr.MuxedContract;
 import org.stellar.sdk.xdr.MuxedEd25519Account;
 import org.stellar.sdk.xdr.PoolID;
 import org.stellar.sdk.xdr.SCAddress;
@@ -18,7 +21,7 @@ import org.stellar.sdk.xdr.XdrUnsignedHyperInteger;
 
 /**
  * Represents a single address in the Stellar network. An address can represent an account,
- * contract, muxed account, claimable balance, or liquidity pool.
+ * contract, muxed account, claimable balance, liquidity pool, or muxed contract.
  */
 @EqualsAndHashCode
 public class Address {
@@ -29,7 +32,8 @@ public class Address {
 
   /**
    * Creates a new {@link Address} from a Stellar public key (G...), contract ID (C...), med25519
-   * public key (M...), liquidity pool ID (L...), or claimable balance ID (B...).
+   * public key (M...), liquidity pool ID (L...), claimable balance ID (B...), or muxed contract
+   * address (W...).
    *
    * @param address the StrKey encoded format of Stellar address.
    */
@@ -49,6 +53,9 @@ public class Address {
     } else if (StrKey.isValidLiquidityPool(address)) {
       this.type = AddressType.LIQUIDITY_POOL;
       this.key = StrKey.decodeLiquidityPool(address);
+    } else if (StrKey.isValidMuxedContract(address)) {
+      this.type = AddressType.MUXED_CONTRACT;
+      this.key = StrKey.decodeMuxedContract(address);
     } else {
       throw new IllegalArgumentException("Unsupported address type");
     }
@@ -105,6 +112,17 @@ public class Address {
   }
 
   /**
+   * Creates a new {@link Address} from a Stellar muxed contract address.
+   *
+   * @param muxedContract the byte array of the Stellar muxed contract address (W...), the 32-byte
+   *     contract ID followed by the 8-byte big-endian ID.
+   * @return a new {@link Address} object from the given Stellar muxed contract address.
+   */
+  public static Address fromMuxedContract(byte[] muxedContract) {
+    return new Address(StrKey.encodeMuxedContract(muxedContract));
+  }
+
+  /**
    * Creates a new {@link Address} from a {@link SCAddress} XDR object.
    *
    * @param scAddress the {@link SCAddress} object to convert
@@ -135,6 +153,14 @@ public class Address {
         return fromClaimableBalance(withZeroPrefix);
       case SC_ADDRESS_TYPE_LIQUIDITY_POOL:
         return fromLiquidityPool(scAddress.getLiquidityPoolId().getPoolID().getHash());
+      case SC_ADDRESS_TYPE_MUXED_CONTRACT:
+        MuxedContract muxedContract = scAddress.getMuxedContract();
+        return fromMuxedContract(
+            ByteBuffer.allocate(40)
+                .put(muxedContract.getContractId().getContractID().getHash())
+                // See StrKey#toRawMuxedAccountStrKey for why longValue() is safe for a uint64.
+                .putLong(muxedContract.getId().getUint64().getNumber().longValue())
+                .array());
       default:
         throw new IllegalArgumentException("Unsupported address type");
     }
@@ -206,6 +232,17 @@ public class Address {
           throw new IllegalArgumentException("Invalid liquidity pool ID", e);
         }
         break;
+      case MUXED_CONTRACT:
+        scAddress.setDiscriminant(org.stellar.sdk.xdr.SCAddressType.SC_ADDRESS_TYPE_MUXED_CONTRACT);
+        scAddress.setMuxedContract(
+            MuxedContract.builder()
+                .id(
+                    new Uint64(
+                        new XdrUnsignedHyperInteger(
+                            new BigInteger(1, Arrays.copyOfRange(this.key, 32, 40)))))
+                .contractId(new ContractID(new Hash(Arrays.copyOfRange(this.key, 0, 32))))
+                .build());
+        break;
       default:
         throw new IllegalArgumentException("Unsupported address type");
     }
@@ -260,6 +297,8 @@ public class Address {
         return StrKey.encodeClaimableBalance(this.key);
       case LIQUIDITY_POOL:
         return StrKey.encodeLiquidityPool(this.key);
+      case MUXED_CONTRACT:
+        return StrKey.encodeMuxedContract(this.key);
       default:
         throw new IllegalArgumentException("Unsupported address type");
     }
@@ -276,6 +315,7 @@ public class Address {
     CONTRACT,
     MUXED_ACCOUNT,
     CLAIMABLE_BALANCE,
-    LIQUIDITY_POOL
+    LIQUIDITY_POOL,
+    MUXED_CONTRACT
   }
 }

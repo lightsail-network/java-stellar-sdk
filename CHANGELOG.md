@@ -12,6 +12,14 @@
 - chore: upgrade generated XDR definitions to Protocol 30.
 - fix: `StrKey.decodeClaimableBalance` and `StrKey.isValidClaimableBalance` now reject a claimable balance strkey (`B...`) whose type byte is not 0, as SEP-23 requires; `CLAIMABLE_BALANCE_ID_TYPE_V0` is the only type. Such a key used to be accepted, so `new Address(...)` took it and the error only surfaced in `Address.toSCAddress`. `new Address(...)` now throws `IllegalArgumentException` up front.
 - refactor: deprecate `GetEventsResponse.EventInfo.inSuccessfulContractCall`. Stellar RPC no longer returns it from `getEvents` ([stellar-rpc#1050](https://github.com/stellar/stellar-rpc/pull/1050)), so it is `null` with newer servers. It will be removed in the next major release.
+- feat: add CAP-84 muxed contract address (`W...`) support.
+  - New `StrKey.encodeMuxedContract`, `StrKey.decodeMuxedContract`, and `StrKey.isValidMuxedContract`. The raw form is the 32-byte contract ID followed by the 8-byte big-endian ID, as specified by SEP-23.
+  - `Address` accepts `W...` addresses and converts `SC_ADDRESS_TYPE_MUXED_CONTRACT` to and from `SCAddress` and `SCVal`, with the new `Address.AddressType.MUXED_CONTRACT` and `Address.fromMuxedContract(byte[])`. Contract return values and events that hold a muxed contract address no longer fail to decode.
+  - Map keys holding muxed contract addresses are now sorted correctly when building an `SCV_MAP`.
+  - A muxed contract address is only valid where a muxed account (`M...`) is, such as the `to` parameter of the SAC `transfer`. The SDK now applies the Soroban host's rules up front instead of building transactions that fail at simulation or submission:
+    - Authorization addresses must be an account (`G...`) or a contract (`C...`), as the host requires. `Auth.authorizeInvocation`, the `forAddress` of `Auth.authorizeEntry`, `Auth.DelegateSignature`, and the credentials of an entry passed to `Auth.authorizeEntry`, `Auth.buildAuthorizationEntryPreimage`, or `Auth.buildWithDelegatesEntry` reject any other address type, including muxed accounts (`M...`), which were accepted before.
+    - `SorobanServer.getContractData` requires a contract address (`C...`) and rejects a `key` that contains a muxed address (`M...` or `W...`) anywhere, since the host never stores such keys.
+    - `TransactionBuilder.buildRestoreAssetBalanceEntryTransaction` requires `balanceOwner` to be a contract address (`C...`). Only contracts hold SAC balances in contract data; an account's balance lives in its trustline.
 
 ## 5.0.0
 

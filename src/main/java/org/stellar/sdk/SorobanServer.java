@@ -75,6 +75,7 @@ import org.stellar.sdk.xdr.LedgerKey;
 import org.stellar.sdk.xdr.SCAddress;
 import org.stellar.sdk.xdr.SCAddressType;
 import org.stellar.sdk.xdr.SCContractInstance;
+import org.stellar.sdk.xdr.SCMapEntry;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SCValType;
 import org.stellar.sdk.xdr.SorobanAuthorizationEntry;
@@ -208,6 +209,8 @@ public class SorobanServer implements Closeable {
    *     {@link Durability#TEMPORARY} or {@link Durability#PERSISTENT}.
    * @return A {@link GetLedgerEntriesResponse.LedgerEntryResult} object containing the ledger entry
    *     result.
+   * @throws IllegalArgumentException If {@code contractId} is not a contract address ({@code
+   *     C...}), or {@code key} contains a muxed address ({@code M...} or {@code W...}).
    * @throws org.stellar.sdk.exception.NetworkException All the exceptions below are subclasses of
    *     NetworkException
    * @throws SorobanRpcException If the Stellar RPC instance returns an error response.
@@ -217,6 +220,14 @@ public class SorobanServer implements Closeable {
    */
   public Optional<GetLedgerEntriesResponse.LedgerEntryResult> getContractData(
       String contractId, SCVal key, Durability durability) {
+    if (!StrKey.isValidContract(contractId)) {
+      throw new IllegalArgumentException("Invalid contract ID: " + contractId);
+    }
+    if (containsMuxedAddress(key)) {
+      // The host rejects muxed addresses anywhere in a storage key, so no such entry can exist.
+      throw new IllegalArgumentException(
+          "Contract data keys cannot contain muxed addresses (M... or W...)");
+    }
 
     ContractDataDurability contractDataDurability;
     switch (durability) {
@@ -1223,6 +1234,33 @@ public class SorobanServer implements Closeable {
       throw new RequestTimeoutException(e);
     } catch (IOException e) {
       throw new ConnectionErrorException(e);
+    }
+  }
+
+  private static boolean containsMuxedAddress(SCVal val) {
+    switch (val.getDiscriminant()) {
+      case SCV_ADDRESS:
+        SCAddressType type = val.getAddress().getDiscriminant();
+        return type == SCAddressType.SC_ADDRESS_TYPE_MUXED_ACCOUNT
+            || type == SCAddressType.SC_ADDRESS_TYPE_MUXED_CONTRACT;
+      case SCV_VEC:
+        if (val.getVec() != null) {
+          for (SCVal element : val.getVec().getSCVec()) {
+            if (containsMuxedAddress(element)) return true;
+          }
+        }
+        return false;
+      case SCV_MAP:
+        if (val.getMap() != null) {
+          for (SCMapEntry entry : val.getMap().getSCMap()) {
+            if (containsMuxedAddress(entry.getKey()) || containsMuxedAddress(entry.getVal())) {
+              return true;
+            }
+          }
+        }
+        return false;
+      default:
+        return false;
     }
   }
 

@@ -236,6 +236,41 @@ class StrKeyTest :
       }
     }
 
+    context("MUXED_CONTRACT") {
+      // https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md
+      test("encode and decode") {
+        val rawKey =
+          Util.hexToBytes(
+            "3f0c34bf93ad0d9971d04ccc90f705511c838aad9734a4a2fb0d7a03fc7fe89a0000000000000000"
+          )
+        val encoded = "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWC"
+        StrKey.encodeMuxedContract(rawKey) shouldBe encoded
+        StrKey.decodeMuxedContract(encoded) shouldBe rawKey
+      }
+
+      test("encode and decode with id exceeding max signed 64-bit integer") {
+        val rawKey =
+          Util.hexToBytes(
+            "3f0c34bf93ad0d9971d04ccc90f705511c838aad9734a4a2fb0d7a03fc7fe89a8000000000000000"
+          )
+        val encoded = "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAACWJY"
+        StrKey.encodeMuxedContract(rawKey) shouldBe encoded
+        StrKey.decodeMuxedContract(encoded) shouldBe rawKey
+      }
+
+      test("is valid") {
+        StrKey.isValidMuxedContract(
+          "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWC"
+        ) shouldBe true
+        StrKey.isValidMuxedContract(
+          "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA"
+        ) shouldBe false
+        StrKey.isValidMuxedContract(
+          "MA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAAAJLK"
+        ) shouldBe false
+      }
+    }
+
     context("SIGNED_PAYLOAD") {
       test("encode and decode with 64-byte payload") {
         val rawKey =
@@ -372,6 +407,11 @@ class StrKeyTest :
         "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TV",
         // Invalid claimable balance type (first byte of binary key is not 0)
         "BAAT6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGXACA",
+        "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWD",
+        "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWCA",
+        "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAAIOUI",
+        "W47QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAADXHW",
+        "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWA",
         "",
       ) { key ->
         shouldThrow<IllegalArgumentException> { StrKey.decodeEd25519PublicKey(key) }
@@ -383,6 +423,7 @@ class StrKeyTest :
         shouldThrow<IllegalArgumentException> { StrKey.decodeContract(key) }
         shouldThrow<IllegalArgumentException> { StrKey.decodeLiquidityPool(key) }
         shouldThrow<IllegalArgumentException> { StrKey.decodeClaimableBalance(key) }
+        shouldThrow<IllegalArgumentException> { StrKey.decodeMuxedContract(key) }
       }
     }
 
@@ -408,6 +449,9 @@ class StrKeyTest :
       StrKey.decodeVersionByte(
         "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU"
       ) shouldBe StrKey.VersionByte.CLAIMABLE_BALANCE
+      StrKey.decodeVersionByte(
+        "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWC"
+      ) shouldBe StrKey.VersionByte.MUXED_CONTRACT
     }
 
     test("decode version byte throws exception for invalid input") {
