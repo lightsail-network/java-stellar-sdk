@@ -50,6 +50,14 @@ class AddressTest :
         address.addressType shouldBe Address.AddressType.LIQUIDITY_POOL
       }
 
+      test("should throw exception for claimable balance ID with a non-zero type") {
+        val exception =
+          shouldThrow<IllegalArgumentException> {
+            Address("BAAT6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGXACA")
+          }
+        exception.message shouldBe "Unsupported address type"
+      }
+
       test("should throw exception for invalid address") {
         val exception = shouldThrow<IllegalArgumentException> { Address(invalidAddress) }
         exception.message shouldBe "Unsupported address type"
