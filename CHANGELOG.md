@@ -10,6 +10,7 @@
   - This applies to `submit`, `signAndSubmit`, `restoreFootprint`, and therefore to `ContractClient.invoke` when it submits.
 - fix: always encode text as UTF-8 in `Scv.toString(String)`, `Sep10Challenge` (`web_auth_domain` / `client_domain`), `Util.paddedByteArray(String, int)`, and the `SorobanServer` request body. They used the JVM default charset, so non-ASCII text produced different bytes on JVMs where that is not UTF-8.
 - chore: upgrade generated XDR definitions to Protocol 30.
+- refactor: deprecate `GetEventsResponse.EventInfo.inSuccessfulContractCall`. Stellar RPC no longer returns it from `getEvents` ([stellar-rpc#1050](https://github.com/stellar/stellar-rpc/pull/1050)), so it is `null` with newer servers. It will be removed in the next major release.
 
 ## 5.0.0
 
