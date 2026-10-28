@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import okhttp3.HttpUrl;
@@ -53,6 +54,7 @@ import org.stellar.sdk.responses.sorobanrpc.GetTransactionsResponse;
 import org.stellar.sdk.responses.sorobanrpc.GetVersionInfoResponse;
 import org.stellar.sdk.responses.sorobanrpc.SendTransactionResponse;
 import org.stellar.sdk.responses.sorobanrpc.SimulateTransactionResponse;
+import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
@@ -1697,6 +1699,45 @@ public class SorobanServerTest {
 
     server.close();
     mockWebServer.close();
+  }
+
+  @Test
+  public void testGetContractDataRejectsKeyContainingMuxedAddress() throws IOException {
+    String contractId = "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA";
+    SCVal muxedContract =
+        Scv.toAddress("WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWC");
+    SCVal muxedAccount =
+        Scv.toAddress("MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26");
+    LinkedHashMap<SCVal, SCVal> nestedMap = new LinkedHashMap<>();
+    nestedMap.put(Scv.toSymbol("owner"), Scv.toVec(singletonList(muxedAccount)));
+    List<SCVal> keys =
+        Arrays.asList(
+            muxedContract,
+            Scv.toVec(Arrays.asList(Scv.toSymbol("Balance"), muxedContract)),
+            Scv.toMap(nestedMap));
+    try (SorobanServer server = new SorobanServer("http://localhost:8000/rpc")) {
+      for (SCVal key : keys) {
+        try {
+          server.getContractData(contractId, key, SorobanServer.Durability.PERSISTENT);
+          fail();
+        } catch (IllegalArgumentException e) {
+          assertTrue(e.getMessage().contains("cannot contain muxed addresses"));
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testGetContractDataRejectsMuxedContract() throws IOException {
+    try (SorobanServer server = new SorobanServer("http://localhost:8000/rpc")) {
+      server.getContractData(
+          "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWC",
+          Scv.toSymbol("COUNTER"),
+          SorobanServer.Durability.PERSISTENT);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("Invalid contract ID"));
+    }
   }
 
   private Transaction buildSorobanTransaction(

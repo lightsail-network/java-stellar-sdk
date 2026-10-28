@@ -344,6 +344,43 @@ public class StrKey {
     }
   }
 
+  /**
+   * Encodes raw data to strkey Stellar muxed contract address (W...)
+   *
+   * @param data data to encode, the 32-byte contract ID followed by the 8-byte big-endian ID
+   * @return "W..." representation of the muxed contract address
+   */
+  public static String encodeMuxedContract(byte[] data) {
+    char[] encoded = encodeCheck(VersionByte.MUXED_CONTRACT, data);
+    return String.valueOf(encoded);
+  }
+
+  /**
+   * Decodes strkey Stellar muxed contract address (W...) to raw bytes
+   *
+   * @param data data to decode
+   * @return raw bytes, the 32-byte contract ID followed by the 8-byte big-endian ID
+   */
+  public static byte[] decodeMuxedContract(String data) {
+    return decodeCheck(VersionByte.MUXED_CONTRACT, data.toCharArray());
+  }
+
+  /**
+   * Checks validity of muxed contract address (W...).
+   *
+   * @param muxedContract the muxed contract address to check
+   * @return true if the given muxed contract address is a valid muxed contract address, false
+   *     otherwise
+   */
+  public static boolean isValidMuxedContract(String muxedContract) {
+    try {
+      decodeMuxedContract(muxedContract);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   static VersionByte decodeVersionByte(String data) {
     byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
     byte[] decoded = base32decode(dataBytes);
@@ -440,6 +477,7 @@ public class StrKey {
         }
         break;
       case MED25519_PUBLIC_KEY:
+      case MUXED_CONTRACT:
         if (data.length != 32 + 8) {
           throw new IllegalArgumentException(
               "Invalid data length, expected 40 bytes, got " + data.length);
@@ -675,7 +713,8 @@ public class StrKey {
     SIGNED_PAYLOAD((byte) (15 << 3)), // P
     CONTRACT((byte) (2 << 3)), // C
     LIQUIDITY_POOL((byte) (11 << 3)), // L
-    CLAIMABLE_BALANCE((byte) (1 << 3)); // B
+    CLAIMABLE_BALANCE((byte) (1 << 3)), // B
+    MUXED_CONTRACT((byte) (22 << 3)); // W
 
     private final byte value;
 

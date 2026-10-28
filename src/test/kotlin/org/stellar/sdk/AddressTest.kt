@@ -4,8 +4,10 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import java.io.ByteArrayInputStream
+import java.math.BigInteger
 import java.util.Base64
 import org.stellar.sdk.xdr.SCAddress
+import org.stellar.sdk.xdr.SCAddressType
 import org.stellar.sdk.xdr.SCVal
 import org.stellar.sdk.xdr.XdrDataInputStream
 
@@ -16,6 +18,10 @@ class AddressTest :
     val muxedAccountId = "MAQAA5L65LSYH7CQ3VTJ7F3HHLGCL3DSLAR2Y47263D56MNNGHSQSAAAAAAAAAAE2LP26"
     val claimableBalanceId = "BAAD6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGR4TU"
     val liquidityPoolId = "LA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUPJN"
+    // https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md
+    val muxedContractId = "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWC"
+    val muxedContractIdWithLargeId =
+      "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAACWJY"
     val secretKey = "SB65MHFA2Z342DX4FNKHH2KCNR5JRM7GIVTWQLKG5Z6L3AAH4UZLZV4E"
     val invalidAddress = "GINVALID"
 
@@ -56,6 +62,12 @@ class AddressTest :
             Address("BAAT6DBUX6J22DMZOHIEZTEQ64CVCHEDRKWZONFEUL5Q26QD7R76RGXACA")
           }
         exception.message shouldBe "Unsupported address type"
+      }
+
+      test("should create address from muxed contract address") {
+        val address = Address(muxedContractId)
+        address.toString() shouldBe muxedContractId
+        address.addressType shouldBe Address.AddressType.MUXED_CONTRACT
       }
 
       test("should throw exception for invalid address") {
@@ -217,6 +229,44 @@ class AddressTest :
         val address = Address.fromSCAddress(scAddress)
         address.toString() shouldBe liquidityPoolId
         address.addressType shouldBe Address.AddressType.LIQUIDITY_POOL
+      }
+    }
+
+    context("muxed contract") {
+      test("should create address from muxed contract bytes") {
+        val bytes = StrKey.decodeMuxedContract(muxedContractId)
+        val address = Address.fromMuxedContract(bytes)
+        address.toString() shouldBe muxedContractId
+        address.addressType shouldBe Address.AddressType.MUXED_CONTRACT
+        address.bytes shouldBe bytes
+      }
+
+      test("should convert muxed contract to SCAddress") {
+        val scAddress = Address(muxedContractIdWithLargeId).toSCAddress()
+        scAddress.discriminant shouldBe SCAddressType.SC_ADDRESS_TYPE_MUXED_CONTRACT
+        scAddress.muxedContract.id.uint64.number shouldBe BigInteger("9223372036854775808")
+        scAddress.muxedContract.contractId.contractID.hash shouldBe
+          StrKey.decodeContract(contractId)
+      }
+
+      test("should round trip through SCAddress XDR") {
+        for (strKey in listOf(muxedContractId, muxedContractIdWithLargeId)) {
+          val xdr = Address(strKey).toSCAddress().toXdrBase64()
+          val address = Address.fromSCAddress(SCAddress.fromXdrBase64(xdr))
+          address.toString() shouldBe strKey
+          address.addressType shouldBe Address.AddressType.MUXED_CONTRACT
+        }
+      }
+
+      test("should round trip through SCVal") {
+        val address = Address.fromSCVal(Address(muxedContractId).toSCVal())
+        address.toString() shouldBe muxedContractId
+      }
+
+      test("should be equal by value and differ from the base contract") {
+        Address(muxedContractId) shouldBe Address(muxedContractId)
+        (Address(muxedContractId) == Address(muxedContractIdWithLargeId)) shouldBe false
+        (Address(muxedContractId) == Address(contractId)) shouldBe false
       }
     }
 

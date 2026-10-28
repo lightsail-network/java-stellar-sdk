@@ -10,12 +10,16 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.junit.Test;
+import org.stellar.sdk.contract.AssembledTransaction;
+import org.stellar.sdk.contract.ContractClient;
 import org.stellar.sdk.operations.BumpSequenceOperation;
 import org.stellar.sdk.operations.CreateAccountOperation;
 import org.stellar.sdk.operations.ExtendFootprintTTLOperation;
@@ -24,6 +28,7 @@ import org.stellar.sdk.operations.PaymentOperation;
 import org.stellar.sdk.operations.RestoreFootprintOperation;
 import org.stellar.sdk.scval.Scv;
 import org.stellar.sdk.xdr.ContractDataDurability;
+import org.stellar.sdk.xdr.ContractEvent;
 import org.stellar.sdk.xdr.ContractExecutable;
 import org.stellar.sdk.xdr.ContractExecutableType;
 import org.stellar.sdk.xdr.ContractIDPreimage;
@@ -737,6 +742,66 @@ public class TransactionTest {
     IntegrationUtils.submitTransaction(transaction3);
 
     server.close();
+  }
+
+  @Test
+  public void testIntegrationTransferToMuxedContract() throws IOException {
+    Asset asset = Asset.createNativeAsset();
+    KeyPair kp = KeyPair.random();
+    IntegrationUtils.fundAccount(kp.getAccountId());
+    IntegrationUtils.createAssetContract(asset, kp);
+    String contractId = IntegrationUtils.getRandomContractId(kp);
+    String muxedContractId =
+        Address.fromMuxedContract(
+                ByteBuffer.allocate(40)
+                    .put(StrKey.decodeContract(contractId))
+                    .putLong(Long.MIN_VALUE) // 2^63, exceeds the max signed 64-bit integer
+                    .array())
+            .toString();
+    assertTrue(muxedContractId.startsWith("W"));
+
+    // SAC `transfer` takes a MuxedAddress `to`; the balance is credited to the base contract.
+    AssembledTransaction<SCVal> transfer;
+    try (ContractClient client =
+        new ContractClient(
+            asset.getContractId(IntegrationUtils.NETWORK),
+            IntegrationUtils.RPC_URL,
+            IntegrationUtils.NETWORK)) {
+      transfer =
+          client.invoke(
+              "transfer",
+              Arrays.asList(
+                  Scv.toAddress(kp.getAccountId()),
+                  Scv.toAddress(muxedContractId),
+                  Scv.toInt128(BigInteger.valueOf(1001250000L))),
+              kp.getAccountId(),
+              kp,
+              null,
+              100);
+      transfer.signAndSubmit(kp, false);
+    }
+
+    // CAP-67 event format: the `to` topic is the base contract, and the data carries the mux ID.
+    List<ContractEvent> transferEvents = new ArrayList<>();
+    for (ContractEvent event :
+        transfer.getGetTransactionResponse().getEvents().parseContractEventsXdr().get(0)) {
+      SCVal[] topics = event.getBody().getV0().getTopics();
+      if (Scv.toSymbol("transfer").equals(topics[0])) {
+        transferEvents.add(event);
+      }
+    }
+    assertEquals(1, transferEvents.size());
+    ContractEvent.ContractEventBody.ContractEventV0 transferEvent =
+        transferEvents.get(0).getBody().getV0();
+    assertEquals(Scv.toAddress(contractId), transferEvent.getTopics()[2]);
+    LinkedHashMap<SCVal, SCVal> data = Scv.fromMap(transferEvent.getData());
+    assertEquals(BigInteger.valueOf(1001250000L), Scv.fromInt128(data.get(Scv.toSymbol("amount"))));
+    assertEquals(
+        new BigInteger("9223372036854775808"),
+        Scv.fromUint64(data.get(Scv.toSymbol("to_muxed_id"))));
+
+    BigInteger balance = IntegrationUtils.getBalanceForContract(contractId, asset, kp);
+    assertEquals(1001250000L, balance.longValue());
   }
 
   @Test

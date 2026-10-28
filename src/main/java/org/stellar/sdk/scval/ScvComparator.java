@@ -262,6 +262,19 @@ class ScvComparator implements Comparator<SCVal> {
         return Util.compareBytesUnsigned(
             a.getLiquidityPoolId().getPoolID().getHash(),
             b.getLiquidityPoolId().getPoolID().getHash());
+      case SC_ADDRESS_TYPE_MUXED_CONTRACT:
+        {
+          cmp =
+              a.getMuxedContract()
+                  .getId()
+                  .getUint64()
+                  .getNumber()
+                  .compareTo(b.getMuxedContract().getId().getUint64().getNumber());
+          if (cmp != 0) return cmp;
+          return Util.compareBytesUnsigned(
+              a.getMuxedContract().getContractId().getContractID().getHash(),
+              b.getMuxedContract().getContractId().getContractID().getHash());
+        }
       default:
         throw new IllegalArgumentException("Unsupported SCAddress type: " + a.getDiscriminant());
     }

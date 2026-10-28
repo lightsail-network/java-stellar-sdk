@@ -18,6 +18,7 @@ import org.stellar.sdk.xdr.Hash;
 import org.stellar.sdk.xdr.HashIDPreimage;
 import org.stellar.sdk.xdr.Int64;
 import org.stellar.sdk.xdr.SCAddress;
+import org.stellar.sdk.xdr.SCAddressType;
 import org.stellar.sdk.xdr.SCVal;
 import org.stellar.sdk.xdr.SorobanAddressCredentials;
 import org.stellar.sdk.xdr.SorobanAddressCredentialsWithDelegates;
@@ -352,7 +353,7 @@ public class Auth {
     if (forAddress == null) {
       addressCredentials.setSignature(signatureScVal);
     } else {
-      SCAddress forScAddress = new Address(forAddress).toSCAddress();
+      SCAddress forScAddress = toAuthScAddress(forAddress);
       int filled = fillMatchingSignatureNodes(clone.getCredentials(), forScAddress, signatureScVal);
       if (filled == 0) {
         throw new IllegalArgumentException(
@@ -537,7 +538,7 @@ public class Auth {
     long nonce = new SecureRandom().nextLong();
     SorobanAddressCredentials addressCredentials =
         SorobanAddressCredentials.builder()
-            .address(new Address(address).toSCAddress())
+            .address(toAuthScAddress(address))
             .nonce(new Int64(nonce))
             .signatureExpirationLedger(new Uint32(new XdrUnsignedInteger(validUntilLedgerSeq)))
             .signature(Scv.toVoid())
@@ -680,7 +681,8 @@ public class Auth {
    * @param network the network whose id is mixed into the payload
    * @return the preimage to hash and sign
    * @throws IllegalArgumentException if {@code entry} carries source-account or otherwise
-   *     non-address credentials
+   *     non-address credentials, or if its credential address is not an account ({@code G...}) or
+   *     contract ({@code C...})
    */
   public static HashIDPreimage buildAuthorizationEntryPreimage(
       SorobanAuthorizationEntry entry, long validUntilLedgerSeq, Network network) {
@@ -691,6 +693,7 @@ public class Auth {
           "cannot build a signature payload for credentials type: "
               + credentials.getDiscriminant());
     }
+    ensureAuthorizationScAddress(addressCredentials.getAddress());
 
     Uint32 signatureExpirationLedger = new Uint32(new XdrUnsignedInteger(validUntilLedgerSeq));
     switch (credentials.getDiscriminant()) {
@@ -760,7 +763,9 @@ public class Auth {
    *     placeholder, which is valid for accounts that authorize purely via delegated signers
    * @return a new {@code SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES} authorization entry
    * @throws IllegalArgumentException if {@code entry} does not carry {@code ADDRESS} / {@code
-   *     ADDRESS_V2} credentials, or if any delegates list contains a duplicate address
+   *     ADDRESS_V2} credentials, if any delegates list contains a duplicate address, or if the
+   *     entry's address or any delegate address is not an account ({@code G...}) or contract
+   *     ({@code C...})
    */
   public static SorobanAuthorizationEntry buildWithDelegatesEntry(
       SorobanAuthorizationEntry entry,
@@ -775,6 +780,7 @@ public class Auth {
               + credentials.getDiscriminant());
     }
     SorobanAddressCredentials addressCredentials = getAddressCredentials(credentials);
+    ensureAuthorizationScAddress(addressCredentials.getAddress());
 
     return SorobanAuthorizationEntry.builder()
         .credentials(
@@ -815,7 +821,7 @@ public class Auth {
     for (DelegateSignature delegate : delegates) {
       SorobanDelegateSignature node =
           SorobanDelegateSignature.builder()
-              .address(new Address(delegate.getAddress()).toSCAddress())
+              .address(toAuthScAddress(delegate.getAddress()))
               .signature(delegate.getSignature() != null ? delegate.getSignature() : Scv.toVoid())
               .nestedDelegates(buildDelegateNodes(delegate.getNestedDelegates()))
               .build();
@@ -876,6 +882,31 @@ public class Auth {
       }
     }
     return filled;
+  }
+
+  private static final String AUTHORIZATION_ADDRESS_ERROR =
+      "Authorization address must be a classic account (G...) or contract (C...) address";
+
+  /**
+   * Converts an address that takes part in authorization to its {@link SCAddress}. Only accounts
+   * ({@code G...}) and contracts ({@code C...}) can authorize; the host rejects any other address
+   * type in credentials and delegate signers.
+   */
+  private static SCAddress toAuthScAddress(String address) {
+    Address parsed = new Address(address);
+    if (parsed.getAddressType() != Address.AddressType.ACCOUNT
+        && parsed.getAddressType() != Address.AddressType.CONTRACT) {
+      throw new IllegalArgumentException(AUTHORIZATION_ADDRESS_ERROR + ", got " + address);
+    }
+    return parsed.toSCAddress();
+  }
+
+  private static void ensureAuthorizationScAddress(SCAddress address) {
+    if (address.getDiscriminant() != SCAddressType.SC_ADDRESS_TYPE_ACCOUNT
+        && address.getDiscriminant() != SCAddressType.SC_ADDRESS_TYPE_CONTRACT) {
+      throw new IllegalArgumentException(
+          AUTHORIZATION_ADDRESS_ERROR + ", got " + address.getDiscriminant());
+    }
   }
 
   private static byte[] scAddressXdrBytes(SCAddress address) {
