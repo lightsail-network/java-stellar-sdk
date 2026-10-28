@@ -2,25 +2,22 @@
 
 ## Pending
 
+## 6.0.0
+
+**This release adds support for Protocol 30.**
+
 ### Update
-- fix: `AssembledTransaction` now backs off between `getTransaction` polls while waiting for a submitted transaction. It used to poll again immediately on every `NOT_FOUND`, hammering the RPC server for the whole `submitTimeout`.
-  - The first poll is made right after `sendTransaction`; each further poll waits 1s, then 1.5× longer each time, capped at 6s (about one ledger), until `submitTimeout` seconds have passed, with one final poll at the deadline.
-  - A network error raised while polling is no longer swallowed and retried. It now propagates as a `NetworkException`.
-  - `submitTimeout` bounds the polling loop only. Each individual request is still bounded by the `SorobanServer` HTTP timeouts.
-  - This applies to `submit`, `signAndSubmit`, `restoreFootprint`, and therefore to `ContractClient.invoke` when it submits.
-- fix: always encode text as UTF-8 in `Scv.toString(String)`, `Sep10Challenge` (`web_auth_domain` / `client_domain`), `Util.paddedByteArray(String, int)`, and the `SorobanServer` request body. They used the JVM default charset, so non-ASCII text produced different bytes on JVMs where that is not UTF-8.
-- chore: upgrade generated XDR definitions to Protocol 30.
-- fix: `StrKey.decodeClaimableBalance` and `StrKey.isValidClaimableBalance` now reject a claimable balance strkey (`B...`) whose type byte is not 0, as SEP-23 requires; `CLAIMABLE_BALANCE_ID_TYPE_V0` is the only type. Such a key used to be accepted, so `new Address(...)` took it and the error only surfaced in `Address.toSCAddress`. `new Address(...)` now throws `IllegalArgumentException` up front.
-- refactor: deprecate `GetEventsResponse.EventInfo.inSuccessfulContractCall`. Stellar RPC no longer returns it from `getEvents` ([stellar-rpc#1050](https://github.com/stellar/stellar-rpc/pull/1050)), so it is `null` with newer servers. It will be removed in the next major release.
-- feat: add CAP-84 muxed contract address (`W...`) support.
-  - New `StrKey.encodeMuxedContract`, `StrKey.decodeMuxedContract`, and `StrKey.isValidMuxedContract`. The raw form is the 32-byte contract ID followed by the 8-byte big-endian ID, as specified by SEP-23.
-  - `Address` accepts `W...` addresses and converts `SC_ADDRESS_TYPE_MUXED_CONTRACT` to and from `SCAddress` and `SCVal`, with the new `Address.AddressType.MUXED_CONTRACT` and `Address.fromMuxedContract(byte[])`. Contract return values and events that hold a muxed contract address no longer fail to decode.
-  - Map keys holding muxed contract addresses are now sorted correctly when building an `SCV_MAP`.
-  - A muxed contract address is only valid where a muxed account (`M...`) is, such as the `to` parameter of the SAC `transfer`. The SDK now applies the Soroban host's rules up front instead of building transactions that fail at simulation or submission:
-    - Authorization addresses must be an account (`G...`) or a contract (`C...`), as the host requires. `Auth.authorizeInvocation`, the `forAddress` of `Auth.authorizeEntry`, `Auth.DelegateSignature`, and the credentials of an entry passed to `Auth.authorizeEntry`, `Auth.buildAuthorizationEntryPreimage`, or `Auth.buildWithDelegatesEntry` reject any other address type, including muxed accounts (`M...`), which were accepted before.
-    - `SorobanServer.getContractData` requires a contract address (`C...`) and rejects a `key` that contains a muxed address (`M...` or `W...`) anywhere, since the host never stores such keys.
-    - `TransactionBuilder.buildRestoreAssetBalanceEntryTransaction` requires `balanceOwner` to be a contract address (`C...`). Only contracts hold SAC balances in contract data; an account's balance lives in its trustline.
-- feat: add `contractMuxed` and `contractMuxedId` to `ContractCreditedEffectResponse`. Horizon sets them when a Stellar Asset Contract `transfer` or `mint` goes to a muxed contract address (`W...`); `contract` is then its base contract address (`C...`). ([stellar-horizon#237](https://github.com/stellar/stellar-horizon/pull/237))
+- feat: support CAP-84 muxed contract addresses (`W...`). Like a muxed account (`M...`), one is only valid as a destination, such as the `to` of a SAC `transfer`. ([#827](https://github.com/lightsail-network/java-stellar-sdk/pull/827))
+  - New `StrKey.encodeMuxedContract`, `StrKey.decodeMuxedContract`, and `StrKey.isValidMuxedContract`. The raw form is the 32-byte contract ID followed by the 8-byte big-endian ID (SEP-23).
+  - `Address` parses `W...` and converts it to and from `SCAddress` and `SCVal` (`Address.AddressType.MUXED_CONTRACT`, `Address.fromMuxedContract(byte[])`), so return values and events holding one now decode. `Scv.toMap` sorts them as keys.
+- feat: add `contractMuxed` and `contractMuxedId` to `ContractCreditedEffectResponse`, set when a SAC `transfer` or `mint` goes to a `W...` address. ([#828](https://github.com/lightsail-network/java-stellar-sdk/pull/828))
+- feat: check addresses the Soroban network would reject before building anything: `Auth` signs only for `G...`/`C...` addresses, `SorobanServer.getContractData` takes a `C...` and no muxed address in the key, and `TransactionBuilder.buildRestoreAssetBalanceEntryTransaction` takes a `C...` `balanceOwner`. These now throw `IllegalArgumentException` instead of failing at simulation or submission. ([#827](https://github.com/lightsail-network/java-stellar-sdk/pull/827))
+- fix: `AssembledTransaction` waits between `getTransaction` polls (1s, then 1.5× longer each time up to 6s, until `submitTimeout`) instead of polling continuously, and a network error while polling now propagates as `NetworkException` instead of being retried. This covers `submit`, `signAndSubmit`, `restoreFootprint`, and `ContractClient.invoke`. ([#819](https://github.com/lightsail-network/java-stellar-sdk/pull/819))
+- fix: always encode text as UTF-8 instead of the JVM default charset in `Scv.toString(String)`, `Sep10Challenge`, `Util.paddedByteArray(String, int)`, and `SorobanServer` requests. ([#820](https://github.com/lightsail-network/java-stellar-sdk/pull/820))
+- fix: `StrKey.decodeClaimableBalance` and `StrKey.isValidClaimableBalance` reject a claimable balance ID whose type byte is not 0, as SEP-23 requires, so `new Address(...)` now fails up front for one. ([#826](https://github.com/lightsail-network/java-stellar-sdk/pull/826))
+- refactor: deprecate `GetEventsResponse.EventInfo.inSuccessfulContractCall`. Stellar RPC no longer returns it ([stellar-rpc#1050](https://github.com/stellar/stellar-rpc/pull/1050)), so it is `null`; it will be removed in 7.0.0. ([#825](https://github.com/lightsail-network/java-stellar-sdk/pull/825))
+- chore: upgrade generated XDR definitions to Protocol 30 (CAP-84, CAP-87, CAP-88). ([#822](https://github.com/lightsail-network/java-stellar-sdk/pull/822))
+- chore: update dependencies and build tooling (OkHttp `4.12.1`, Gson `2.15.0`, Bouncy Castle `1.86`, Commons Codec `1.23.0`, Gradle `9.8.2`, Kotlin `2.4.21`, Spotless plugin `8.10.4`, Lombok plugin `9.8.2`, NMCP plugin `1.6.2`). Bouncy Castle `1.86` fixes [CVE-2026-8763](https://github.com/advisories/GHSA-9pwp-9qqc-pr26) (critical) and [CVE-2026-13506](https://github.com/advisories/GHSA-qp49-qgx5-5m26) (high) in the `1.84` shipped with 5.0.0. ([#824](https://github.com/lightsail-network/java-stellar-sdk/pull/824))
 
 ## 5.0.0
 
