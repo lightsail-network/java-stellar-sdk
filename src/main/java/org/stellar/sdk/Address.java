@@ -262,9 +262,20 @@ public class Address {
   }
 
   /**
-   * Returns the byte array of the Stellar public key or contract ID.
+   * Returns the raw bytes of this address, as encoded in its StrKey:
    *
-   * @return the byte array of the Stellar public key or contract ID.
+   * <ul>
+   *   <li>{@code ACCOUNT}: the 32-byte ed25519 public key
+   *   <li>{@code CONTRACT}: the 32-byte contract ID
+   *   <li>{@code MUXED_ACCOUNT}: the 32-byte ed25519 public key followed by the 8-byte big-endian
+   *       ID
+   *   <li>{@code CLAIMABLE_BALANCE}: the 1-byte claimable balance type (0) followed by the 32-byte
+   *       hash
+   *   <li>{@code LIQUIDITY_POOL}: the 32-byte liquidity pool ID
+   *   <li>{@code MUXED_CONTRACT}: the 32-byte contract ID followed by the 8-byte big-endian ID
+   * </ul>
+   *
+   * @return the raw bytes of this address
    */
   public byte[] getBytes() {
     return key;
