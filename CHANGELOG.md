@@ -20,6 +20,7 @@
     - Authorization addresses must be an account (`G...`) or a contract (`C...`), as the host requires. `Auth.authorizeInvocation`, the `forAddress` of `Auth.authorizeEntry`, `Auth.DelegateSignature`, and the credentials of an entry passed to `Auth.authorizeEntry`, `Auth.buildAuthorizationEntryPreimage`, or `Auth.buildWithDelegatesEntry` reject any other address type, including muxed accounts (`M...`), which were accepted before.
     - `SorobanServer.getContractData` requires a contract address (`C...`) and rejects a `key` that contains a muxed address (`M...` or `W...`) anywhere, since the host never stores such keys.
     - `TransactionBuilder.buildRestoreAssetBalanceEntryTransaction` requires `balanceOwner` to be a contract address (`C...`). Only contracts hold SAC balances in contract data; an account's balance lives in its trustline.
+- feat: add `contractMuxed` and `contractMuxedId` to `ContractCreditedEffectResponse`. Horizon sets them when a Stellar Asset Contract `transfer` or `mint` goes to a muxed contract address (`W...`); `contract` is then its base contract address (`C...`). ([stellar-horizon#237](https://github.com/stellar/stellar-horizon/pull/237))
 
 ## 5.0.0
 

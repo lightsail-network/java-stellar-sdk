@@ -3,9 +3,11 @@ package org.stellar.sdk.responses;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -373,6 +375,27 @@ public class EffectResponseTest {
     assertEquals("100.0000000", response.getAmount());
     assertEquals(
         "CDCYWK73YTYFJZZSJ5V7EDFNHYBG4QN3VUNG2IGD27KJDDPNCZKBCBXK", response.getContract());
+    assertNull(response.getContractMuxed());
+    assertNull(response.getContractMuxedId());
+  }
+
+  @Test
+  public void testContractCreditedToMuxedContract() throws IOException {
+    String filePath = "src/test/resources/responses/effects/contract_credited_muxed.json";
+    String json = new String(Files.readAllBytes(Paths.get(filePath)));
+    ContractCreditedEffectResponse response =
+        (ContractCreditedEffectResponse)
+            GsonSingleton.getInstance().fromJson(json, EffectResponse.class);
+
+    assertEquals("contract_credited", response.getType());
+    assertEquals(new AssetTypeNative(), response.getAsset());
+    assertEquals("100.0000000", response.getAmount());
+    assertEquals(
+        "CA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUWDA", response.getContract());
+    assertEquals(
+        "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJVAAAAAAAAAAAACWJY",
+        response.getContractMuxed());
+    assertEquals(new BigInteger("9223372036854775808"), response.getContractMuxedId());
   }
 
   @Test

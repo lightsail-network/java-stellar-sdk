@@ -3,6 +3,7 @@ package org.stellar.sdk.responses.effects;
 import static org.stellar.sdk.Asset.create;
 
 import com.google.gson.annotations.SerializedName;
+import java.math.BigInteger;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.stellar.sdk.Asset;
@@ -29,6 +30,17 @@ public class ContractCreditedEffectResponse extends EffectResponse {
   String assetIssuer;
 
   String contract;
+
+  /**
+   * The muxed contract address ({@code W...}) the asset was credited to, or {@code null} if the
+   * destination was not muxed. {@link #getContract()} is then its base contract address (CAP-84).
+   */
+  @SerializedName("contract_muxed")
+  String contractMuxed;
+
+  /** The ID of {@link #getContractMuxed()}, or {@code null} if the destination was not muxed. */
+  @SerializedName("contract_muxed_id")
+  BigInteger contractMuxedId;
 
   String amount;
 
