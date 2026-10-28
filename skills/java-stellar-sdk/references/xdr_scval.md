@@ -22,7 +22,7 @@ Scv.toTimePoint(BigInteger.valueOf(1700000000)); Scv.toDuration(BigInteger.value
 Scv.toBytes(new byte[] {1, 2});
 Scv.toString("hello");  Scv.toSymbol("increment");
 Scv.toExecutableTag("v1");             // CAP-85 tag; byte[] overload for a binary tag
-Scv.toAddress("G...");                 // account or contract ("C...") address
+Scv.toAddress("G...");                 // G/C/M/W... address, see "Addresses"
 Scv.toVec(List.of(Scv.toUint32(1L), Scv.toUint32(2L)));
 Scv.toMap(Map.of(Scv.toSymbol("k"), Scv.toUint32(1L)));
 ```
@@ -50,7 +50,19 @@ import org.stellar.sdk.xdr.SCVal;
 Address addr = new Address("G...");      // account or "C..." contract
 SCVal scVal = addr.toSCVal();            // SCVal for contract args
 Address back = Address.fromSCVal(scVal);
+back.getAddressType();                   // ACCOUNT, CONTRACT, MUXED_ACCOUNT, ...
+
+new Address("M...");                     // muxed account (SEP-23)
+new Address("W...");                     // muxed contract (CAP-84, Protocol 30)
+Address.fromMuxedContract(raw);          // raw: 32-byte contract ID + 8-byte big-endian ID
+new Address("B...");                     // claimable balance, e.g. in events
+new Address("L...");                     // liquidity pool, e.g. in events
 ```
+
+`M...` and `W...` are payment destinations only, such as the `to` of a Stellar Asset Contract
+`transfer`; the balance goes to the base `G...`/`C...`. They cannot authorize or key contract
+storage, and the SDK rejects them there (`Auth`, `SorobanServer.getContractData`, the balance
+helpers), so use the base address.
 
 ## Transaction XDR
 

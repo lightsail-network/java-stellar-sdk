@@ -93,3 +93,9 @@ Operation-level codes you'll hit often:
   `assembled.signAuthEntries(theirKeyPair)` before `signAndSubmit(...)`.
 - **Transaction still pending** → `getTransaction` returns status `NOT_FOUND` until it is in a
   ledger; poll with `pollTransaction` or a loop. See `soroban.md`.
+- **Address cannot authorize** → `IllegalArgumentException` from `Auth`; only `G...` and `C...`
+  addresses sign Soroban authorization entries, never a muxed (`M...`/`W...`), claimable balance
+  or liquidity pool address. Sign for the base address.
+- **Muxed address in contract storage** → `IllegalArgumentException` from `getContractData`; the
+  owner must be a `C...` and the key cannot contain an `M...`/`W...`. Use the base address (see
+  "Addresses" in `xdr_scval.md`).

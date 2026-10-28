@@ -72,7 +72,9 @@ These are the things that most often trip people up with *this* SDK:
 - **Amounts and balances are `BigDecimal`.** `new BigDecimal("10.5")`, never `double`/`float`.
 - **`G...` and `M...` both work as a destination.** Address strings accept plain ed25519
   accounts and SEP-23 muxed accounts; use `MuxedAccount` to build/parse `M...` (see
-  `references/sep.md`).
+  `references/sep.md`). Contracts have a muxed form too, `W...` (CAP-84, Protocol 30): a valid
+  SAC `transfer`/`mint` destination, but never a signer or storage owner (see
+  `references/xdr_scval.md`).
 - **Clients are `Closeable`.** `Server.close()`; wrap `SorobanServer`/`ContractClient` in
   try-with-resources. `SSEStream` from `.stream(...)` must also be closed to stop it.
 - **SDK exceptions are unchecked.** Everything extends `RuntimeException`
