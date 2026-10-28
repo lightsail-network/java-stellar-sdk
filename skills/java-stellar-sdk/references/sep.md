@@ -8,7 +8,7 @@ across top-level classes rather than a single `sep` package.
 | SEP-02 | Federation | `org.stellar.sdk.federation.Federation` |
 | SEP-05 | Key derivation (BIP-39 seed) | `KeyPair.fromBip39Seed(byte[], int)` |
 | SEP-10 | Web authentication | `org.stellar.sdk.Sep10Challenge` |
-| SEP-23 | Muxed accounts | `org.stellar.sdk.MuxedAccount` |
+| SEP-23 | Muxed addresses (`M...`, `W...`) | `org.stellar.sdk.MuxedAccount`; `Address` |
 | SEP-29 | Memo-required check | submission helpers / `AccountRequiresMemoException` |
 | SEP-35 | Operation IDs (TOID) | `org.stellar.sdk.TOID` |
 | SEP-45 | Soroban web auth | `org.stellar.sdk.Sep45Challenge` |
@@ -80,6 +80,9 @@ MuxedAccount muxed = new MuxedAccount("G...", BigInteger.valueOf(12345));
 String mAddress = muxed.getAddress();           // M...
 MuxedAccount parsed = new MuxedAccount("M...");  // parse an existing M-address
 ```
+
+SEP-23 also defines the muxed contract strkey (`W...`, CAP-84), a contract plus a 64-bit ID.
+It has no `MuxedAccount` counterpart; see "Addresses" in `xdr_scval.md`.
 
 ## SEP-35: TOID (total order ID)
 
