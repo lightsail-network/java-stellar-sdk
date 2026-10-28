@@ -14,6 +14,7 @@ import org.stellar.sdk.xdr.ContractExecutableType
 import org.stellar.sdk.xdr.ContractID
 import org.stellar.sdk.xdr.Hash
 import org.stellar.sdk.xdr.Int64
+import org.stellar.sdk.xdr.MuxedContract
 import org.stellar.sdk.xdr.MuxedEd25519Account
 import org.stellar.sdk.xdr.PoolID
 import org.stellar.sdk.xdr.PublicKey
@@ -417,7 +418,9 @@ class ScvComparatorTest :
     }
 
     context("compareScAddress") {
-      test("address type ordering: account < contract < muxed < claimable < pool") {
+      test(
+        "address type ordering: account < contract < muxed < claimable < pool < muxed contract"
+      ) {
         val addrs =
           arrayOf(
             accountAddress(bytes32(0x00)),
@@ -425,6 +428,7 @@ class ScvComparatorTest :
             muxedAddress(0, bytes32(0x00)),
             claimableBalanceAddress(bytes32(0x00)),
             liquidityPoolAddress(bytes32(0x00)),
+            muxedContractAddress(0, bytes32(0x00)),
           )
         for (i in 0 until addrs.size - 1) {
           ScvComparator.compareScAddress(addrs[i], addrs[i + 1]) shouldBeLessThan 0
@@ -479,6 +483,21 @@ class ScvComparatorTest :
         ScvComparator.compareScAddress(
           muxedAddress(5, bytes32(0xAB)),
           muxedAddress(5, bytes32(0xAB)),
+        ) shouldBe 0
+      }
+
+      test("muxed contract: id first, then contract ID") {
+        ScvComparator.compareScAddress(
+          muxedContractAddress(1, bytes32(0xFF)),
+          muxedContractAddress(2, bytes32(0x00)),
+        ) shouldBeLessThan 0
+        ScvComparator.compareScAddress(
+          muxedContractAddress(1, bytes32(0x00)),
+          muxedContractAddress(1, bytes32Last(0x01)),
+        ) shouldBeLessThan 0
+        ScvComparator.compareScAddress(
+          muxedContractAddress(5, bytes32(0xAB)),
+          muxedContractAddress(5, bytes32(0xAB)),
         ) shouldBe 0
       }
     }
@@ -727,6 +746,17 @@ class ScvComparatorTest :
       SCAddress.builder()
         .discriminant(SCAddressType.SC_ADDRESS_TYPE_LIQUIDITY_POOL)
         .liquidityPoolId(PoolID(Hash(hash)))
+        .build()
+
+    private fun muxedContractAddress(id: Long, hash: ByteArray): SCAddress =
+      SCAddress.builder()
+        .discriminant(SCAddressType.SC_ADDRESS_TYPE_MUXED_CONTRACT)
+        .muxedContract(
+          MuxedContract.builder()
+            .id(Uint64(XdrUnsignedHyperInteger(BigInteger.valueOf(id))))
+            .contractId(ContractID(Hash(hash)))
+            .build()
+        )
         .build()
   }
 }

@@ -1236,6 +1236,119 @@ public class AuthTest {
     assertEquals(new Address(gHigh).toSCAddress(), nested[1].getAddress());
   }
 
+  private static final String MUXED_CONTRACT_ADDRESS =
+      "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWC";
+
+  @Test
+  public void testAuthorizeInvocationRejectsMuxedContractAddress() {
+    KeyPair signer =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    Auth.Signer entrySigner =
+        preimage ->
+            Auth.defaultAccountSignatureScVal(
+                signer.getAccountId(), signer.sign(Auth.authorizationPayloadHash(preimage)));
+    try {
+      Auth.authorizeInvocation(
+          entrySigner, MUXED_CONTRACT_ADDRESS, 654656L, buildInvocation(), Network.TESTNET);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("Authorization address must be a classic account"));
+    }
+  }
+
+  @Test
+  public void testAuthorizeInvocationRejectsMuxedAccountAddress() {
+    KeyPair signer =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    Auth.Signer entrySigner =
+        preimage ->
+            Auth.defaultAccountSignatureScVal(
+                signer.getAccountId(), signer.sign(Auth.authorizationPayloadHash(preimage)));
+    String muxedAccount =
+        new MuxedAccount(signer.getAccountId(), java.math.BigInteger.valueOf(42)).getAddress();
+    try {
+      Auth.authorizeInvocation(
+          entrySigner, muxedAccount, 654656L, buildInvocation(), Network.TESTNET);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("Authorization address must be a classic account"));
+    }
+  }
+
+  @Test
+  public void testSignAuthorizeEntryWithMuxedContractCredentialsThrows() {
+    KeyPair signer =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    SorobanAuthorizationEntry entry =
+        SorobanAuthorizationEntry.builder()
+            .credentials(
+                buildAddressV2Credentials(new Address(MUXED_CONTRACT_ADDRESS).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
+            .build();
+    try {
+      Auth.authorizeEntry(entry, signer, 654656L, Network.TESTNET);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("Authorization address must be a classic account"));
+    }
+  }
+
+  @Test
+  public void testBuildWithDelegatesEntryRejectsMuxedContractCredentials() {
+    SorobanAuthorizationEntry entry =
+        SorobanAuthorizationEntry.builder()
+            .credentials(
+                buildAddressV2Credentials(new Address(MUXED_CONTRACT_ADDRESS).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
+            .build();
+    try {
+      Auth.buildWithDelegatesEntry(entry, 654656L, Collections.emptyList(), null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("Authorization address must be a classic account"));
+    }
+  }
+
+  @Test
+  public void testSignAuthorizeEntryWithMuxedContractForAddressThrows() {
+    KeyPair signer =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    SorobanAuthorizationEntry entry =
+        SorobanAuthorizationEntry.builder()
+            .credentials(
+                buildAddressV2Credentials(new Address(signer.getAccountId()).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
+            .build();
+    try {
+      Auth.authorizeEntry(entry, signer, 654656L, Network.TESTNET, MUXED_CONTRACT_ADDRESS);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("Authorization address must be a classic account"));
+    }
+  }
+
+  @Test
+  public void testBuildWithDelegatesEntryRejectsMuxedContractDelegate() {
+    KeyPair signer =
+        KeyPair.fromSecretSeed("SAEZSI6DY7AXJFIYA4PM6SIBNEYYXIEM2MSOTHFGKHDW32MBQ7KVO6EN");
+    SorobanAuthorizationEntry entry =
+        SorobanAuthorizationEntry.builder()
+            .credentials(
+                buildAddressV2Credentials(new Address(signer.getAccountId()).toSCAddress(), 0L))
+            .rootInvocation(buildInvocation())
+            .build();
+    try {
+      Auth.buildWithDelegatesEntry(
+          entry,
+          654656L,
+          Collections.singletonList(new Auth.DelegateSignature(MUXED_CONTRACT_ADDRESS, null, null)),
+          null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("Authorization address must be a classic account"));
+    }
+  }
+
   @Test
   public void testBuildWithDelegatesEntryWithDuplicateDelegateAddressThrows() {
     KeyPair signer =

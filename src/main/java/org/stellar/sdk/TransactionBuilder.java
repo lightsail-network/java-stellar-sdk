@@ -446,9 +446,9 @@ public class TransactionBuilder {
    * SorobanDataBuilder.Resources(0L, 500L, 500L)} and {@code resourceFee} set to {@code
    * 4_000_000L}.
    *
-   * @param balanceOwner The owner of the asset, it should be the same as the `destination` address
-   *     in the {@link #buildPaymentToContractTransaction(String, Asset, BigDecimal,
-   *     SorobanDataBuilder.Resources, Long, String)} method.
+   * @param balanceOwner The contract address ({@code C...}) that owns the balance, it should be the
+   *     same as the `destination` address in the {@link #buildPaymentToContractTransaction(String,
+   *     Asset, BigDecimal, SorobanDataBuilder.Resources, Long, String)} method.
    * @param asset The asset
    * @param source The source account for the transaction.
    * @return The transaction.
@@ -470,9 +470,9 @@ public class TransactionBuilder {
    * <p>Under Protocol 22, if the entry really needs to be restored, then this method will consume
    * about 0.25 XLM in resource fees.
    *
-   * @param balanceOwner The owner of the asset, it should be the same as the `destination` address
-   *     in the {@link #buildPaymentToContractTransaction(String, Asset, BigDecimal,
-   *     SorobanDataBuilder.Resources, Long, String)} method.
+   * @param balanceOwner The contract address ({@code C...}) that owns the balance, it should be the
+   *     same as the `destination` address in the {@link #buildPaymentToContractTransaction(String,
+   *     Asset, BigDecimal, SorobanDataBuilder.Resources, Long, String)} method.
    * @param asset The asset
    * @param resources The resources required for the transaction.
    * @param resourceFee The maximum fee (in stroops) that can be paid for the transaction.
@@ -485,6 +485,11 @@ public class TransactionBuilder {
       SorobanDataBuilder.Resources resources,
       Long resourceFee,
       @Nullable String source) {
+    // Only contracts hold SAC balances in contract data; an account's balance is its trustline.
+    if (!StrKey.isValidContract(balanceOwner)) {
+      throw new IllegalArgumentException(
+          "balanceOwner is not a valid contract address: " + balanceOwner);
+    }
     String contractId = asset.getContractId(this.network);
     LedgerKey balanceLedgerKey =
         LedgerKey.builder()

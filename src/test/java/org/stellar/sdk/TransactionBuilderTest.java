@@ -1069,4 +1069,32 @@ public class TransactionBuilderTest {
         .maxTime(new TimePoint(new Uint64(new XdrUnsignedHyperInteger(maxTime))))
         .build();
   }
+
+  @Test
+  public void testBuildRestoreAssetBalanceEntryTransactionRejectsAccount() {
+    Account account = new Account("GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2", 1L);
+    TransactionBuilder builder = new TransactionBuilder(account, Network.TESTNET);
+    try {
+      builder.buildRestoreAssetBalanceEntryTransaction(
+          account.getAccountId(), Asset.createNativeAsset(), null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("balanceOwner is not a valid contract address"));
+    }
+  }
+
+  @Test
+  public void testBuildRestoreAssetBalanceEntryTransactionRejectsMuxedContract() {
+    Account account = new Account("GDJJRRMBK4IWLEPJGIE6SXD2LP7REGZODU7WDC3I2D6MR37F4XSHBKX2", 1L);
+    TransactionBuilder builder = new TransactionBuilder(account, Network.TESTNET);
+    try {
+      builder.buildRestoreAssetBalanceEntryTransaction(
+          "WA7QYNF7SOWQ3GLR2BGMZEHXAVIRZA4KVWLTJJFC7MGXUA74P7UJUAAAAAAAAAAAAAWWC",
+          Asset.createNativeAsset(),
+          null);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("balanceOwner is not a valid contract address"));
+    }
+  }
 }
