@@ -66,6 +66,8 @@ public final class AssetTypeCreditAlphaNum4 extends AssetTypeCreditAlphaNum {
       return this.getCode().compareTo(o.getCode());
     }
 
-    return this.getIssuer().compareTo(o.getIssuer());
+    return Util.compareBytesUnsigned(
+        StrKey.decodeEd25519PublicKey(this.getIssuer()),
+        StrKey.decodeEd25519PublicKey(o.getIssuer()));
   }
 }

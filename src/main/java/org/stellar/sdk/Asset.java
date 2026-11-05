@@ -100,7 +100,8 @@ public abstract class Asset implements Comparable<Asset> {
    * <ol>
    *   <li>First compare the type (eg. native before alphanum4 before alphanum12).
    *   <li>If the types are equal, compare the assets codes.
-   *   <li>If the asset codes are equal, compare the issuers.
+   *   <li>If the asset codes are equal, compare the issuers by their raw Ed25519 public key bytes,
+   *       as the network requires, not by their strkey text.
    * </ol>
    *
    * @param other the object to be compared.
