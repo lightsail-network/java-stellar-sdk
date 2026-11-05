@@ -2,6 +2,9 @@
 
 ## Pending
 
+### Update
+- fix: `Asset.compareTo` orders same-code assets by the issuers' raw Ed25519 key bytes instead of their strkey text, matching the order the network requires.
+
 ## 6.0.0
 
 **This release adds support for Protocol 30.**

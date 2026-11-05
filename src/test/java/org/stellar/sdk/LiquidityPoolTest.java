@@ -1,6 +1,8 @@
 package org.stellar.sdk;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -128,6 +130,43 @@ public class LiquidityPoolTest {
         }
       }
     }
+  }
+
+  @Test
+  public void testIssuersAreOrderedByRawKeyBytes() {
+    // Issuers of testnet pool c2a730127d006897b021d6fcb279da68b4f65f9b6a408c74eb2cdd85ea862d5e.
+    // GDRQ sorts after GD32 as strkey text, but before it as raw key bytes (e305... < f7a4...).
+    for (String code : new String[] {"USD", "BANANA"}) {
+      Asset assetA =
+          Asset.create(code + ":GDRQL6EF772CANMYX55HXMU463OLAX46ZRCPCWS4KVL66ZS4BYA7OYDL");
+      Asset assetB =
+          Asset.create(code + ":GD32JQHFWLIROCNQ564GLCB2M7T4GMQAP5UKHMVT64OQISWL2LHYK2HO");
+      assertTrue(assetA.compareTo(assetB) < 0);
+      assertTrue(assetB.compareTo(assetA) > 0);
+      new LiquidityPool(assetA, assetB);
+      assertThrows(IllegalArgumentException.class, () -> new LiquidityPool(assetB, assetA));
+    }
+  }
+
+  @Test
+  public void testLiquidityPoolIdWithIssuersOrderedByRawKeyBytes() {
+    Asset assetA = Asset.create("USD:GDRQL6EF772CANMYX55HXMU463OLAX46ZRCPCWS4KVL66ZS4BYA7OYDL");
+    Asset assetB = Asset.create("USD:GD32JQHFWLIROCNQ564GLCB2M7T4GMQAP5UKHMVT64OQISWL2LHYK2HO");
+    assertEquals(
+        "c2a730127d006897b021d6fcb279da68b4f65f9b6a408c74eb2cdd85ea862d5e",
+        new LiquidityPool(assetA, assetB).getLiquidityPoolId());
+  }
+
+  @Test
+  public void testDecodeTransactionWithIssuersOrderedByRawKeyBytes() throws IOException {
+    // Testnet transaction 0126748091930959a3aefac9296e1773b947f964a9b73f37ce856c4df32d346f
+    String envelopeXdr =
+        "AAAAAgAAAAADeR2SwEvKvthWOdthGC/c1Bxym7fafJmtjj5EyvmvxAAAASwAVEAXAAAAAQAAAAAAAAAAAAAAAwAAAAAAAAAGAAAAAVVTRAAAAAAA4wX4hf/0IDWYv3p7spz23LBfnsxE8VpcVVfvZlwOAfd//////////wAAAAAAAAAGAAAAAVVTRAAAAAAA96TA5bLRFwmw77hliDpn58MyAH9oo7Kz9x0ESsvSz4V//////////wAAAAAAAAAGAAAAAwAAAAAAAAABVVNEAAAAAADjBfiF//QgNZi/enuynPbcsF+ezETxWlxVV+9mXA4B9wAAAAFVU0QAAAAAAPekwOWy0RcJsO+4ZYg6Z+fDMgB/aKOys/cdBErL0s+FAAAAHn//////////AAAAAAAAAAHK+a/EAAAAQMtA5QpAy6I3ILVmPZcRA3SJhGo4CiMT7K7dXQt7Qo1Prip/OedNocMY2QloSRle4hYvhJilIiOyoD85l3+WrQM=";
+    AbstractTransaction transaction =
+        AbstractTransaction.fromEnvelopeXdr(envelopeXdr, Network.TESTNET);
+    assertEquals(envelopeXdr, transaction.toEnvelopeXdrBase64());
+    assertEquals(
+        "0126748091930959a3aefac9296e1773b947f964a9b73f37ce856c4df32d346f", transaction.hashHex());
   }
 
   @Value
