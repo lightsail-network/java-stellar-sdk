@@ -144,6 +144,9 @@ public class XdrUnsignedInteger implements XdrElement {
   public static XdrUnsignedInteger fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
-    return decode(xdrDataInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
+    XdrUnsignedInteger decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 }

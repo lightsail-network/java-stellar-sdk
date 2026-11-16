@@ -159,7 +159,9 @@ public class StellarValue implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    StellarValue decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override
@@ -341,7 +343,9 @@ public class StellarValue implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      StellarValueExt decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -518,7 +522,9 @@ public class StellarValue implements XdrElement {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
-        return decode(xdrDataInputStream);
+        StellarValueProposedValue decoded = decode(xdrDataInputStream);
+        xdrDataInputStream.requireEndOfInput();
+        return decoded;
       }
 
       @Override
@@ -617,7 +623,9 @@ public class StellarValue implements XdrElement {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
-        return decode(xdrDataInputStream);
+        StellarValueSignedMsValue decoded = decode(xdrDataInputStream);
+        xdrDataInputStream.requireEndOfInput();
+        return decoded;
       }
 
       @Override
@@ -745,7 +753,9 @@ public class StellarValue implements XdrElement {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
-        return decode(xdrDataInputStream);
+        StellarValueProposedMsValue decoded = decode(xdrDataInputStream);
+        xdrDataInputStream.requireEndOfInput();
+        return decoded;
       }
 
       @Override

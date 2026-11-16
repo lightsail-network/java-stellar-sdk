@@ -117,7 +117,9 @@ public class ContractEvent implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    ContractEvent decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override
@@ -229,7 +231,9 @@ public class ContractEvent implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      ContractEventBody decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -353,7 +357,9 @@ public class ContractEvent implements XdrElement {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
-        return decode(xdrDataInputStream);
+        ContractEventV0 decoded = decode(xdrDataInputStream);
+        xdrDataInputStream.requireEndOfInput();
+        return decoded;
       }
 
       @Override

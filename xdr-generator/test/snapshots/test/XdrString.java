@@ -121,7 +121,9 @@ public class XdrString implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream, maxSize);
+    XdrString decoded = decode(xdrDataInputStream, maxSize);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   /**
@@ -132,10 +134,7 @@ public class XdrString implements XdrElement {
    * @throws IOException if the input is invalid or cannot be decoded
    */
   public static XdrString fromXdrByteArray(byte[] xdr) throws IOException {
-    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
-    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
-    xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream, Integer.MAX_VALUE);
+    return fromXdrByteArray(xdr, Integer.MAX_VALUE);
   }
 
   /**

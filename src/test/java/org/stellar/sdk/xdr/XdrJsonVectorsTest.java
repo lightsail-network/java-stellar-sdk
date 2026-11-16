@@ -65,7 +65,7 @@ public class XdrJsonVectorsTest {
    */
   private static Map<String, Class<?>> classes;
 
-  private static synchronized Class<?> xdrClass(String name) throws Exception {
+  static synchronized Class<?> xdrClass(String name) throws Exception {
     if (classes == null) {
       Map<String, Class<?>> found = new LinkedHashMap<>();
       java.net.URL location = Hash.class.getProtectionDomain().getCodeSource().getLocation();
