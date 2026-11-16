@@ -317,62 +317,62 @@ public class InnerTransactionResult implements XdrElement {
       if (discriminant == TransactionResultCode.txSUCCESS) {
         LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
         jsonMap.put(
-            "txsuccess", XdrElement.arrayToJsonArray(results, i -> results[i].toJsonObject()));
+            "tx_success", XdrElement.arrayToJsonArray(results, i -> results[i].toJsonObject()));
         return jsonMap;
       }
       if (discriminant == TransactionResultCode.txFAILED) {
         LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
         jsonMap.put(
-            "txfailed", XdrElement.arrayToJsonArray(results, i -> results[i].toJsonObject()));
+            "tx_failed", XdrElement.arrayToJsonArray(results, i -> results[i].toJsonObject()));
         return jsonMap;
       }
       if (discriminant == TransactionResultCode.txTOO_EARLY) {
-        return "txtoo_early";
+        return "tx_too_early";
       }
       if (discriminant == TransactionResultCode.txTOO_LATE) {
-        return "txtoo_late";
+        return "tx_too_late";
       }
       if (discriminant == TransactionResultCode.txMISSING_OPERATION) {
-        return "txmissing_operation";
+        return "tx_missing_operation";
       }
       if (discriminant == TransactionResultCode.txBAD_SEQ) {
-        return "txbad_seq";
+        return "tx_bad_seq";
       }
       if (discriminant == TransactionResultCode.txBAD_AUTH) {
-        return "txbad_auth";
+        return "tx_bad_auth";
       }
       if (discriminant == TransactionResultCode.txINSUFFICIENT_BALANCE) {
-        return "txinsufficient_balance";
+        return "tx_insufficient_balance";
       }
       if (discriminant == TransactionResultCode.txNO_ACCOUNT) {
-        return "txno_account";
+        return "tx_no_account";
       }
       if (discriminant == TransactionResultCode.txINSUFFICIENT_FEE) {
-        return "txinsufficient_fee";
+        return "tx_insufficient_fee";
       }
       if (discriminant == TransactionResultCode.txBAD_AUTH_EXTRA) {
-        return "txbad_auth_extra";
+        return "tx_bad_auth_extra";
       }
       if (discriminant == TransactionResultCode.txINTERNAL_ERROR) {
-        return "txinternal_error";
+        return "tx_internal_error";
       }
       if (discriminant == TransactionResultCode.txNOT_SUPPORTED) {
-        return "txnot_supported";
+        return "tx_not_supported";
       }
       if (discriminant == TransactionResultCode.txBAD_SPONSORSHIP) {
-        return "txbad_sponsorship";
+        return "tx_bad_sponsorship";
       }
       if (discriminant == TransactionResultCode.txBAD_MIN_SEQ_AGE_OR_GAP) {
-        return "txbad_min_seq_age_or_gap";
+        return "tx_bad_min_seq_age_or_gap";
       }
       if (discriminant == TransactionResultCode.txMALFORMED) {
-        return "txmalformed";
+        return "tx_malformed";
       }
       if (discriminant == TransactionResultCode.txSOROBAN_INVALID) {
-        return "txsoroban_invalid";
+        return "tx_soroban_invalid";
       }
       if (discriminant == TransactionResultCode.txFROZEN_KEY_ACCESSED) {
-        return "txfrozen_key_accessed";
+        return "tx_frozen_key_accessed";
       }
       throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
     }
@@ -381,22 +381,22 @@ public class InnerTransactionResult implements XdrElement {
     static InnerTransactionResultResult fromJsonObject(Object json) {
       if (json instanceof String) {
         String strVal = (String) json;
-        if (!(strVal.equals("txtoo_early")
-            || strVal.equals("txtoo_late")
-            || strVal.equals("txmissing_operation")
-            || strVal.equals("txbad_seq")
-            || strVal.equals("txbad_auth")
-            || strVal.equals("txinsufficient_balance")
-            || strVal.equals("txno_account")
-            || strVal.equals("txinsufficient_fee")
-            || strVal.equals("txbad_auth_extra")
-            || strVal.equals("txinternal_error")
-            || strVal.equals("txnot_supported")
-            || strVal.equals("txbad_sponsorship")
-            || strVal.equals("txbad_min_seq_age_or_gap")
-            || strVal.equals("txmalformed")
-            || strVal.equals("txsoroban_invalid")
-            || strVal.equals("txfrozen_key_accessed"))) {
+        if (!(strVal.equals("tx_too_early")
+            || strVal.equals("tx_too_late")
+            || strVal.equals("tx_missing_operation")
+            || strVal.equals("tx_bad_seq")
+            || strVal.equals("tx_bad_auth")
+            || strVal.equals("tx_insufficient_balance")
+            || strVal.equals("tx_no_account")
+            || strVal.equals("tx_insufficient_fee")
+            || strVal.equals("tx_bad_auth_extra")
+            || strVal.equals("tx_internal_error")
+            || strVal.equals("tx_not_supported")
+            || strVal.equals("tx_bad_sponsorship")
+            || strVal.equals("tx_bad_min_seq_age_or_gap")
+            || strVal.equals("tx_malformed")
+            || strVal.equals("tx_soroban_invalid")
+            || strVal.equals("tx_frozen_key_accessed"))) {
           throw new IllegalArgumentException(
               "Unexpected string '" + strVal + "' for InnerTransactionResultResult");
         }
@@ -415,22 +415,22 @@ public class InnerTransactionResult implements XdrElement {
       }
       String key = jsonMap.keySet().iterator().next();
       TransactionResultCode discriminant = TransactionResultCode.fromJsonObject(key);
-      if (key.equals("txsuccess")) {
+      if (key.equals("tx_success")) {
         InnerTransactionResultResult instance = new InnerTransactionResultResult();
         instance.discriminant = discriminant;
         instance.results =
             XdrElement.jsonArrayToArray(
-                (List<Object>) jsonMap.get("txsuccess"),
+                (List<Object>) jsonMap.get("tx_success"),
                 OperationResult.class,
                 item -> OperationResult.fromJsonObject(item));
         return instance;
       }
-      if (key.equals("txfailed")) {
+      if (key.equals("tx_failed")) {
         InnerTransactionResultResult instance = new InnerTransactionResultResult();
         instance.discriminant = discriminant;
         instance.results =
             XdrElement.jsonArrayToArray(
-                (List<Object>) jsonMap.get("txfailed"),
+                (List<Object>) jsonMap.get("tx_failed"),
                 OperationResult.class,
                 item -> OperationResult.fromJsonObject(item));
         return instance;

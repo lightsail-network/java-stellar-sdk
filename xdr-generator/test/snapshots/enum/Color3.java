@@ -78,18 +78,18 @@ public enum Color3 implements XdrElement {
   }
   Object toJsonObject() {
     switch (this) {
-    case RED_1: return "1";
-    case RED_2_TWO: return "2_two";
-    case RED_3: return "3";
+    case RED_1: return "r1";
+    case RED_2_TWO: return "r2_two";
+    case RED_3: return "r3";
     default: throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
   }
   static Color3 fromJsonObject(Object json) {
     String value = (String) json;
     switch (value) {
-    case "1": return RED_1;
-    case "2_two": return RED_2_TWO;
-    case "3": return RED_3;
+    case "r1": return RED_1;
+    case "r2_two": return RED_2_TWO;
+    case "r3": return RED_3;
     default: throw new IllegalArgumentException("Unknown JSON value: " + value);
     }
   }

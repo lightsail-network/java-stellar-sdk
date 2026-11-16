@@ -185,16 +185,16 @@ public class Nester implements XdrElement {
     }
     Object toJsonObject() {
       switch (this) {
-      case BLAH_1: return "1";
-      case BLAH_2: return "2";
+      case BLAH_1: return "b1";
+      case BLAH_2: return "b2";
       default: throw new IllegalArgumentException("Unknown enum value: " + this.value);
       }
     }
     static NestedEnum fromJsonObject(Object json) {
       String value = (String) json;
       switch (value) {
-      case "1": return BLAH_1;
-      case "2": return BLAH_2;
+      case "b1": return BLAH_1;
+      case "b2": return BLAH_2;
       default: throw new IllegalArgumentException("Unknown JSON value: " + value);
       }
     }

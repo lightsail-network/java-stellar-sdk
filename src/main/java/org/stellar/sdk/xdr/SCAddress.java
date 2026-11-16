@@ -201,6 +201,9 @@ public class SCAddress implements XdrElement {
     if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_LIQUIDITY_POOL) {
       return this.liquidityPoolId.toJsonObject();
     }
+    if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_MUXED_CONTRACT) {
+      return this.muxedContract.toJsonObject();
+    }
     throw new IllegalArgumentException("Unknown SCAddress type: " + this.discriminant);
   }
 
@@ -247,6 +250,11 @@ public class SCAddress implements XdrElement {
     if (strKey.startsWith("L")) {
       instance.discriminant = SCAddressType.SC_ADDRESS_TYPE_LIQUIDITY_POOL;
       instance.liquidityPoolId = PoolID.fromJsonObject(strKey);
+      return instance;
+    }
+    if (strKey.startsWith("W")) {
+      instance.discriminant = SCAddressType.SC_ADDRESS_TYPE_MUXED_CONTRACT;
+      instance.muxedContract = MuxedContract.fromJsonObject(strKey);
       return instance;
     }
     throw new IllegalArgumentException("Invalid SCAddress strkey: " + strKey);

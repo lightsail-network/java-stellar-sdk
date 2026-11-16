@@ -77,9 +77,9 @@ public enum IPAddrType implements XdrElement {
   Object toJsonObject() {
     switch (this) {
       case IPv4:
-        return "ipv4";
+        return "i_pv4";
       case IPv6:
-        return "ipv6";
+        return "i_pv6";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -88,9 +88,9 @@ public enum IPAddrType implements XdrElement {
   static IPAddrType fromJsonObject(Object json) {
     String value = (String) json;
     switch (value) {
-      case "ipv4":
+      case "i_pv4":
         return IPv4;
-      case "ipv6":
+      case "i_pv6":
         return IPv6;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);

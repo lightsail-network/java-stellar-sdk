@@ -3,18 +3,20 @@ require 'set'
 class Generator < Xdrgen::Generators::Base
   AST = Xdrgen::AST
 
+  # Types that SEP-51 writes in a form of their own (a strkey, a string, or one integer
+  # string) instead of as the struct, union or typedef they are.
   STELLAR_SPECIFIC_TYPES = %w[
     AccountID PublicKey NodeID ContractID
-    MuxedAccount MuxedEd25519Account SCAddress
+    MuxedAccount MuxedAccountMed25519 MuxedEd25519Account MuxedContract SCAddress
     SignerKey SignerKeyEd25519SignedPayload
     PoolID ClaimableBalanceID
-    AssetCode4 AssetCode12
+    AssetCode AssetCode4 AssetCode12
     UInt128Parts Int128Parts UInt256Parts Int256Parts
   ].freeze
 
   STELLAR_STRKEY_TYPES = %w[
     AccountID PublicKey NodeID ContractID
-    MuxedAccount MuxedEd25519Account SCAddress
+    MuxedAccount MuxedAccountMed25519 MuxedEd25519Account MuxedContract SCAddress
     SignerKey SignerKeyEd25519SignedPayload
     PoolID ClaimableBalanceID
   ].freeze
@@ -1165,7 +1167,12 @@ class Generator < Xdrgen::Generators::Base
     when AST::Declarations::String
       "#{arm.name}.toJsonObject()"
     else
-      encode_type_to_json(arm.declaration, arm.name)
+      # An optional arm (`SCVec *vec`) without a value is null.
+      if arm.type.sub_type == :optional
+        "#{arm.name} != null ? #{encode_type_to_json(arm.declaration, arm.name)} : null"
+      else
+        encode_type_to_json(arm.declaration, arm.name)
+      end
     end
   end
 
@@ -1181,7 +1188,11 @@ class Generator < Xdrgen::Generators::Base
     when AST::Declarations::String
       "XdrString.fromJsonObject(#{json_expr})"
     else
-      decode_type_from_json(arm.declaration, json_expr)
+      if arm.type.sub_type == :optional
+        "#{json_expr} != null ? #{decode_type_from_json(arm.declaration, json_expr)} : null"
+      else
+        decode_type_from_json(arm.declaration, json_expr)
+      end
     end
   end
 
@@ -1208,8 +1219,50 @@ class Generator < Xdrgen::Generators::Base
     last_underscore + 1
   end
 
+  # The SEP-51 name of an enum member, which is also the JSON key of a union arm.
+  #
+  # The common prefix is stripped, the rest is split into words and joined again in
+  # snake case, as rs-stellar-xdr does: `txSUCCESS` -> `tx_success`, `WasmInsnExec` ->
+  # `wasm_insn_exec`, `IPv4` -> `i_pv4`.
   def enum_json_name(member_name, prefix_len)
-    member_name[prefix_len..].downcase
+    stripped = member_name[prefix_len..]
+    # A member that starts with a digit once the prefix is stripped keeps the first
+    # letter of the prefix: BINARY_FUSE_FILTER_8_BIT is `b8_bit`, not `8_bit`. SEP-51
+    # doesn't say this. rs-stellar-xdr makes each member a Rust enum variant and takes
+    # the JSON name from the variant, and a Rust identifier can't start with a digit,
+    # so it keeps the letter (`B8Bit` -> `b8_bit`). The letter means nothing; it is
+    # kept so that JSON written here reads in rs-stellar-xdr, js-stellar-sdk and
+    # py-stellar-xdr, and theirs reads here. BinaryFuseFilterType is the only such
+    # enum in the Stellar XDR today.
+    stripped = member_name[0] + stripped if prefix_len > 0 && stripped.match?(/\A[0-9]/)
+    camel = sep51_words(stripped).map { |w| w[0].upcase + w[1..].downcase }.join
+    camel.each_char.with_index.map { |c, i| (i > 0 && c.match?(/[A-Z]/) ? "_" : "") + c.downcase }.join
+  end
+
+  # Splits an identifier into words, the way SEP-51 names are built: at anything that is
+  # not a letter or a digit, at a lower-case-to-upper-case boundary (`quorumSet`), and
+  # before the last capital of a run of capitals followed by a lower-case letter
+  # (`SCPBallot`). Digits never start a word (`Ed25519`, `fee1KB`).
+  def sep51_words(name)
+    result = []
+    name.split(/[^A-Za-z0-9]+/).each do |chunk|
+      next if chunk.empty?
+      current = +""
+      chunk.each_char.with_index do |c, i|
+        if i > 0
+          previous = chunk[i - 1]
+          following = i + 1 < chunk.length ? chunk[i + 1] : ""
+          upper = c.match?(/[A-Z]/)
+          if (upper && previous.match?(/[a-z0-9]/)) || (upper && previous.match?(/[A-Z]/) && following.match?(/[a-z]/))
+            result << current
+            current = +""
+          end
+        end
+        current << c
+      end
+      result << current
+    end
+    result
   end
 
   # ============================================================================
@@ -1274,7 +1327,8 @@ class Generator < Xdrgen::Generators::Base
     render_json_public_methods(struct_name, out)
 
     case struct_name
-    when "MuxedEd25519Account"
+    when "MuxedEd25519Account", "MuxedAccountMed25519"
+      # Both are an ed25519 key with an ID, written as an M... strkey.
       out.puts <<-EOS.strip_heredoc
         Object toJsonObject() {
             try {
@@ -1284,10 +1338,10 @@ class Generator < Xdrgen::Generators::Base
                 this.id.encode(xdrOut);
                 return StrKey.encodeMed25519PublicKey(baos.toByteArray());
             } catch (IOException e) {
-                throw new IllegalArgumentException("Failed to encode MuxedEd25519Account", e);
+                throw new IllegalArgumentException("Failed to encode #{struct_name}", e);
             }
         }
-        static MuxedEd25519Account fromJsonObject(Object json) {
+        static #{struct_name} fromJsonObject(Object json) {
             String strKey = (String) json;
             try {
                 byte[] raw = StrKey.decodeMed25519PublicKey(strKey);
@@ -1295,18 +1349,56 @@ class Generator < Xdrgen::Generators::Base
                 XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
                 Uint256 ed25519 = Uint256.decode(xdrIn);
                 Uint64 id = Uint64.decode(xdrIn);
-                MuxedEd25519Account instance = new MuxedEd25519Account();
+                #{struct_name} instance = new #{struct_name}();
                 instance.id = id;
                 instance.ed25519 = ed25519;
                 return instance;
             } catch (IOException e) {
-                throw new IllegalArgumentException("Failed to decode MuxedEd25519Account", e);
+                throw new IllegalArgumentException("Failed to decode #{struct_name}", e);
+            }
+        }
+      EOS
+    when "MuxedContract"
+      # A W... strkey holds the contract ID first and then the ID, the other way round
+      # from the XDR struct.
+      out.puts <<-EOS.strip_heredoc
+        Object toJsonObject() {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
+                this.contractId.encode(xdrOut);
+                this.id.encode(xdrOut);
+                return StrKey.encodeMuxedContract(baos.toByteArray());
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Failed to encode MuxedContract", e);
+            }
+        }
+        static MuxedContract fromJsonObject(Object json) {
+            String strKey = (String) json;
+            try {
+                byte[] raw = StrKey.decodeMuxedContract(strKey);
+                ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+                XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
+                ContractID contractId = ContractID.decode(xdrIn);
+                Uint64 id = Uint64.decode(xdrIn);
+                MuxedContract instance = new MuxedContract();
+                instance.id = id;
+                instance.contractId = contractId;
+                return instance;
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Failed to decode MuxedContract", e);
             }
         }
       EOS
     when "SignerKeyEd25519SignedPayload"
       out.puts <<-EOS.strip_heredoc
         Object toJsonObject() {
+            // XDR allows an empty payload, but a P... strkey needs 1 to 64 bytes, so such a
+            // value has no SEP-51 representation.
+            if (this.payload.length == 0) {
+                throw new IllegalArgumentException(
+                    "SignerKeyEd25519SignedPayload with an empty payload has no SEP-51 representation");
+            }
             try {
                 return StrKey.encodeSignedPayload(this.toXdrByteArray());
             } catch (IOException e) {
@@ -1548,6 +1640,9 @@ class Generator < Xdrgen::Generators::Base
             if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_LIQUIDITY_POOL) {
                 return this.liquidityPoolId.toJsonObject();
             }
+            if (this.discriminant == SCAddressType.SC_ADDRESS_TYPE_MUXED_CONTRACT) {
+                return this.muxedContract.toJsonObject();
+            }
             throw new IllegalArgumentException("Unknown SCAddress type: " + this.discriminant);
         }
         static SCAddress fromJsonObject(Object json) {
@@ -1595,6 +1690,11 @@ class Generator < Xdrgen::Generators::Base
                 instance.liquidityPoolId = PoolID.fromJsonObject(strKey);
                 return instance;
             }
+            if (strKey.startsWith("W")) {
+                instance.discriminant = SCAddressType.SC_ADDRESS_TYPE_MUXED_CONTRACT;
+                instance.muxedContract = MuxedContract.fromJsonObject(strKey);
+                return instance;
+            }
             throw new IllegalArgumentException("Invalid SCAddress strkey: " + strKey);
         }
       EOS
@@ -1611,14 +1711,7 @@ class Generator < Xdrgen::Generators::Base
                 return StrKey.encodeSha256Hash(this.hashX.getUint256());
             }
             if (this.discriminant == SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD) {
-                try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
-                    this.ed25519SignedPayload.encode(xdrOut);
-                    return StrKey.encodeSignedPayload(baos.toByteArray());
-                } catch (IOException e) {
-                    throw new IllegalArgumentException("Failed to encode SignerKey", e);
-                }
+                return this.ed25519SignedPayload.toJsonObject();
             }
             throw new IllegalArgumentException("Unknown SignerKey type: " + this.discriminant);
         }
@@ -1647,19 +1740,40 @@ class Generator < Xdrgen::Generators::Base
                 return instance;
             }
             if (strKey.startsWith("P")) {
-                try {
-                    byte[] raw = StrKey.decodeSignedPayload(strKey);
-                    ByteArrayInputStream bais = new ByteArrayInputStream(raw);
-                    XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
-                    SignerKeyEd25519SignedPayload payload = SignerKeyEd25519SignedPayload.decode(xdrIn);
-                    instance.discriminant = SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
-                    instance.ed25519SignedPayload = payload;
-                } catch (IOException e) {
-                    throw new IllegalArgumentException("Failed to decode SignerKey", e);
-                }
+                instance.discriminant = SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
+                instance.ed25519SignedPayload = SignerKeyEd25519SignedPayload.fromJsonObject(strKey);
                 return instance;
             }
             throw new IllegalArgumentException("Invalid SignerKey strkey: " + strKey);
+        }
+      EOS
+    when "AssetCode"
+      # Written as the bare code of its arm. An AssetCode12 always keeps at least 5
+      # bytes, so the length of the string tells the two arms apart.
+      out.puts <<-EOS.strip_heredoc
+        Object toJsonObject() {
+            if (this.discriminant == AssetType.ASSET_TYPE_CREDIT_ALPHANUM4) {
+                return this.assetCode4.toJsonObject();
+            }
+            if (this.discriminant == AssetType.ASSET_TYPE_CREDIT_ALPHANUM12) {
+                return this.assetCode12.toJsonObject();
+            }
+            throw new IllegalArgumentException("Unknown AssetCode type: " + this.discriminant);
+        }
+        static AssetCode fromJsonObject(Object json) {
+            if (!(json instanceof String)) {
+                throw new IllegalArgumentException("Expected a string for AssetCode, got: " + json);
+            }
+            String value = (String) json;
+            AssetCode instance = new AssetCode();
+            if (XdrElement.escapedAsciiToBytes(value).length <= 4) {
+                instance.discriminant = AssetType.ASSET_TYPE_CREDIT_ALPHANUM4;
+                instance.assetCode4 = AssetCode4.fromJsonObject(value);
+            } else {
+                instance.discriminant = AssetType.ASSET_TYPE_CREDIT_ALPHANUM12;
+                instance.assetCode12 = AssetCode12.fromJsonObject(value);
+            }
+            return instance;
         }
       EOS
     when "ClaimableBalanceID"

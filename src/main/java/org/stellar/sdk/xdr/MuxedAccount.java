@@ -6,7 +6,6 @@ package org.stellar.sdk.xdr;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -235,19 +234,32 @@ public class MuxedAccount implements XdrElement {
     }
 
     Object toJsonObject() {
-      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-      jsonMap.put("id", id.toJsonObject());
-      jsonMap.put("ed25519", ed25519.toJsonObject());
-      return jsonMap;
+      try {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
+        this.ed25519.encode(xdrOut);
+        this.id.encode(xdrOut);
+        return StrKey.encodeMed25519PublicKey(baos.toByteArray());
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to encode MuxedAccountMed25519", e);
+      }
     }
 
-    @SuppressWarnings("unchecked")
     static MuxedAccountMed25519 fromJsonObject(Object json) {
-      java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
-      MuxedAccountMed25519 instance = new MuxedAccountMed25519();
-      instance.id = Uint64.fromJsonObject(jsonMap.get("id"));
-      instance.ed25519 = Uint256.fromJsonObject(jsonMap.get("ed25519"));
-      return instance;
+      String strKey = (String) json;
+      try {
+        byte[] raw = StrKey.decodeMed25519PublicKey(strKey);
+        ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+        XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
+        Uint256 ed25519 = Uint256.decode(xdrIn);
+        Uint64 id = Uint64.decode(xdrIn);
+        MuxedAccountMed25519 instance = new MuxedAccountMed25519();
+        instance.id = id;
+        instance.ed25519 = ed25519;
+        return instance;
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to decode MuxedAccountMed25519", e);
+      }
     }
   }
 }

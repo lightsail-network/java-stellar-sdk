@@ -241,6 +241,8 @@ class XdrJsonSep51Test :
           }
         val extensionPoint = ExtensionPoint(0)
 
+        // SEP-51 writes an AssetCode as the bare code of its arm.
+        assetCode.toJson() shouldBe "\"LONGASSET\""
         AssetCode.fromJson(assetCode.toJson()) shouldBe assetCode
         ExtensionPoint.fromJson(extensionPoint.toJson()) shouldBe extensionPoint
 
@@ -250,7 +252,7 @@ class XdrJsonSep51Test :
         }
 
         shouldThrow<IllegalArgumentException> {
-            AssetCode.fromJson("""{"credit_alphanum4":"USD","credit_alphanum12":"LONGASSET"}""")
+            LedgerKey.fromJson("""{"account":{},"trustline":{}}""")
           }
           .message!! shouldContain "Expected a single-key object"
       }

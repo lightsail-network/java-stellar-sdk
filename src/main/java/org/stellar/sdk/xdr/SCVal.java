@@ -539,12 +539,12 @@ public class SCVal implements XdrElement {
     }
     if (discriminant == SCValType.SCV_VEC) {
       LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-      jsonMap.put("vec", vec.toJsonObject());
+      jsonMap.put("vec", vec != null ? vec.toJsonObject() : null);
       return jsonMap;
     }
     if (discriminant == SCValType.SCV_MAP) {
       LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-      jsonMap.put("map", map.toJsonObject());
+      jsonMap.put("map", map != null ? map.toJsonObject() : null);
       return jsonMap;
     }
     if (discriminant == SCValType.SCV_ADDRESS) {
@@ -687,13 +687,13 @@ public class SCVal implements XdrElement {
     if (key.equals("vec")) {
       SCVal instance = new SCVal();
       instance.discriminant = discriminant;
-      instance.vec = SCVec.fromJsonObject(jsonMap.get("vec"));
+      instance.vec = jsonMap.get("vec") != null ? SCVec.fromJsonObject(jsonMap.get("vec")) : null;
       return instance;
     }
     if (key.equals("map")) {
       SCVal instance = new SCVal();
       instance.discriminant = discriminant;
-      instance.map = SCMap.fromJsonObject(jsonMap.get("map"));
+      instance.map = jsonMap.get("map") != null ? SCMap.fromJsonObject(jsonMap.get("map")) : null;
       return instance;
     }
     if (key.equals("address")) {

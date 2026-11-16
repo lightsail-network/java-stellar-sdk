@@ -1,0 +1,2741 @@
+{
+  "AccountEntry": [
+    "account_id",
+    "balance",
+    "ext",
+    "flags",
+    "home_domain",
+    "inflation_dest",
+    "num_sub_entries",
+    "seq_num",
+    "signers",
+    "thresholds"
+  ],
+  "AccountEntryExt": [
+    "v0",
+    "v1"
+  ],
+  "AccountEntryExtensionV1": [
+    "ext",
+    "liabilities"
+  ],
+  "AccountEntryExtensionV1Ext": [
+    "v0",
+    "v2"
+  ],
+  "AccountEntryExtensionV2": [
+    "ext",
+    "num_sponsored",
+    "num_sponsoring",
+    "signer_sponsoring_i_ds"
+  ],
+  "AccountEntryExtensionV2Ext": [
+    "v0",
+    "v3"
+  ],
+  "AccountEntryExtensionV3": [
+    "ext",
+    "seq_ledger",
+    "seq_time"
+  ],
+  "AccountFlags": [
+    "clawback_enabled_flag",
+    "immutable_flag",
+    "required_flag",
+    "revocable_flag"
+  ],
+  "AccountMergeResult": [
+    "dest_full",
+    "has_sub_entries",
+    "immutable_set",
+    "is_sponsor",
+    "malformed",
+    "no_account",
+    "seqnum_too_far",
+    "success"
+  ],
+  "AccountMergeResultCode": [
+    "dest_full",
+    "has_sub_entries",
+    "immutable_set",
+    "is_sponsor",
+    "malformed",
+    "no_account",
+    "seqnum_too_far",
+    "success"
+  ],
+  "AllowTrustOp": [
+    "asset",
+    "authorize",
+    "trustor"
+  ],
+  "AllowTrustResult": [
+    "cant_revoke",
+    "low_reserve",
+    "malformed",
+    "no_trust_line",
+    "self_not_allowed",
+    "success",
+    "trust_not_required"
+  ],
+  "AllowTrustResultCode": [
+    "cant_revoke",
+    "low_reserve",
+    "malformed",
+    "no_trust_line",
+    "self_not_allowed",
+    "success",
+    "trust_not_required"
+  ],
+  "AlphaNum12": [
+    "asset_code",
+    "issuer"
+  ],
+  "AlphaNum4": [
+    "asset_code",
+    "issuer"
+  ],
+  "Asset": [
+    "credit_alphanum12",
+    "credit_alphanum4",
+    "native"
+  ],
+  "AssetType": [
+    "credit_alphanum12",
+    "credit_alphanum4",
+    "native",
+    "pool_share"
+  ],
+  "Auth": [
+    "flags"
+  ],
+  "AuthCert": [
+    "expiration",
+    "pubkey",
+    "sig"
+  ],
+  "AuthenticatedMessage": [
+    "v0"
+  ],
+  "AuthenticatedMessageV0": [
+    "mac",
+    "message",
+    "sequence"
+  ],
+  "BeginSponsoringFutureReservesOp": [
+    "sponsored_id"
+  ],
+  "BeginSponsoringFutureReservesResult": [
+    "already_sponsored",
+    "malformed",
+    "recursive",
+    "success"
+  ],
+  "BeginSponsoringFutureReservesResultCode": [
+    "already_sponsored",
+    "malformed",
+    "recursive",
+    "success"
+  ],
+  "BinaryFuseFilterType": [
+    "b16_bit",
+    "b32_bit",
+    "b8_bit"
+  ],
+  "BucketEntry": [
+    "deadentry",
+    "initentry",
+    "liveentry",
+    "metaentry"
+  ],
+  "BucketEntryType": [
+    "deadentry",
+    "initentry",
+    "liveentry",
+    "metaentry"
+  ],
+  "BucketListType": [
+    "hot_archive",
+    "live"
+  ],
+  "BucketMetadata": [
+    "ext",
+    "ledger_version"
+  ],
+  "BucketMetadataExt": [
+    "v0",
+    "v1"
+  ],
+  "BumpSequenceOp": [
+    "bump_to"
+  ],
+  "BumpSequenceResult": [
+    "bad_seq",
+    "success"
+  ],
+  "BumpSequenceResultCode": [
+    "bad_seq",
+    "success"
+  ],
+  "ChangeTrustAsset": [
+    "credit_alphanum12",
+    "credit_alphanum4",
+    "native",
+    "pool_share"
+  ],
+  "ChangeTrustOp": [
+    "limit",
+    "line"
+  ],
+  "ChangeTrustResult": [
+    "cannot_delete",
+    "invalid_limit",
+    "low_reserve",
+    "malformed",
+    "no_issuer",
+    "not_auth_maintain_liabilities",
+    "self_not_allowed",
+    "success",
+    "trust_line_missing"
+  ],
+  "ChangeTrustResultCode": [
+    "cannot_delete",
+    "invalid_limit",
+    "low_reserve",
+    "malformed",
+    "no_issuer",
+    "not_auth_maintain_liabilities",
+    "self_not_allowed",
+    "success",
+    "trust_line_missing"
+  ],
+  "ClaimAtom": [
+    "liquidity_pool",
+    "order_book",
+    "v0"
+  ],
+  "ClaimAtomType": [
+    "liquidity_pool",
+    "order_book",
+    "v0"
+  ],
+  "ClaimClaimableBalanceOp": [
+    "balance_id"
+  ],
+  "ClaimClaimableBalanceResult": [
+    "cannot_claim",
+    "does_not_exist",
+    "line_full",
+    "no_trust",
+    "not_authorized",
+    "success",
+    "trustline_frozen"
+  ],
+  "ClaimClaimableBalanceResultCode": [
+    "cannot_claim",
+    "does_not_exist",
+    "line_full",
+    "no_trust",
+    "not_authorized",
+    "success",
+    "trustline_frozen"
+  ],
+  "ClaimLiquidityAtom": [
+    "amount_bought",
+    "amount_sold",
+    "asset_bought",
+    "asset_sold",
+    "liquidity_pool_id"
+  ],
+  "ClaimOfferAtom": [
+    "amount_bought",
+    "amount_sold",
+    "asset_bought",
+    "asset_sold",
+    "offer_id",
+    "seller_id"
+  ],
+  "ClaimOfferAtomV0": [
+    "amount_bought",
+    "amount_sold",
+    "asset_bought",
+    "asset_sold",
+    "offer_id",
+    "seller_ed25519"
+  ],
+  "ClaimPredicate": [
+    "and",
+    "before_absolute_time",
+    "before_relative_time",
+    "not",
+    "or",
+    "unconditional"
+  ],
+  "ClaimPredicateType": [
+    "and",
+    "before_absolute_time",
+    "before_relative_time",
+    "not",
+    "or",
+    "unconditional"
+  ],
+  "ClaimableBalanceEntry": [
+    "amount",
+    "asset",
+    "balance_id",
+    "claimants",
+    "ext"
+  ],
+  "ClaimableBalanceEntryExt": [
+    "v0",
+    "v1"
+  ],
+  "ClaimableBalanceEntryExtensionV1": [
+    "ext",
+    "flags"
+  ],
+  "ClaimableBalanceEntryExtensionV1Ext": [
+    "v0"
+  ],
+  "ClaimableBalanceFlags": [
+    "claimable_balance_clawback_enabled_flag"
+  ],
+  "ClaimableBalanceIdType": [
+    "claimable_balance_id_type_v0"
+  ],
+  "Claimant": [
+    "claimant_type_v0"
+  ],
+  "ClaimantType": [
+    "claimant_type_v0"
+  ],
+  "ClaimantV0": [
+    "destination",
+    "predicate"
+  ],
+  "ClawbackClaimableBalanceOp": [
+    "balance_id"
+  ],
+  "ClawbackClaimableBalanceResult": [
+    "does_not_exist",
+    "not_clawback_enabled",
+    "not_issuer",
+    "success"
+  ],
+  "ClawbackClaimableBalanceResultCode": [
+    "does_not_exist",
+    "not_clawback_enabled",
+    "not_issuer",
+    "success"
+  ],
+  "ClawbackOp": [
+    "amount",
+    "asset",
+    "from"
+  ],
+  "ClawbackResult": [
+    "malformed",
+    "no_trust",
+    "not_clawback_enabled",
+    "success",
+    "underfunded"
+  ],
+  "ClawbackResultCode": [
+    "malformed",
+    "no_trust",
+    "not_clawback_enabled",
+    "success",
+    "underfunded"
+  ],
+  "ConfigSettingContractBandwidthV0": [
+    "fee_tx_size1_kb",
+    "ledger_max_txs_size_bytes",
+    "tx_max_size_bytes"
+  ],
+  "ConfigSettingContractComputeV0": [
+    "fee_rate_per_instructions_increment",
+    "ledger_max_instructions",
+    "tx_max_instructions",
+    "tx_memory_limit"
+  ],
+  "ConfigSettingContractEventsV0": [
+    "fee_contract_events1_kb",
+    "tx_max_contract_events_size_bytes"
+  ],
+  "ConfigSettingContractExecutionLanesV0": [
+    "ledger_max_tx_count"
+  ],
+  "ConfigSettingContractHistoricalDataV0": [
+    "fee_historical1_kb"
+  ],
+  "ConfigSettingContractLedgerCostExtV0": [
+    "fee_write1_kb",
+    "tx_max_footprint_entries"
+  ],
+  "ConfigSettingContractLedgerCostV0": [
+    "fee_disk_read1_kb",
+    "fee_disk_read_ledger_entry",
+    "fee_write_ledger_entry",
+    "ledger_max_disk_read_bytes",
+    "ledger_max_disk_read_entries",
+    "ledger_max_write_bytes",
+    "ledger_max_write_ledger_entries",
+    "rent_fee1_kb_soroban_state_size_high",
+    "rent_fee1_kb_soroban_state_size_low",
+    "soroban_state_rent_fee_growth_factor",
+    "soroban_state_target_size_bytes",
+    "tx_max_disk_read_bytes",
+    "tx_max_disk_read_entries",
+    "tx_max_write_bytes",
+    "tx_max_write_ledger_entries"
+  ],
+  "ConfigSettingContractParallelComputeV0": [
+    "ledger_max_dependent_tx_clusters"
+  ],
+  "ConfigSettingEntry": [
+    "contract_bandwidth_v0",
+    "contract_compute_v0",
+    "contract_cost_params_cpu_instructions",
+    "contract_cost_params_memory_bytes",
+    "contract_data_entry_size_bytes",
+    "contract_data_key_size_bytes",
+    "contract_events_v0",
+    "contract_execution_lanes",
+    "contract_historical_data_v0",
+    "contract_ledger_cost_ext_v0",
+    "contract_ledger_cost_v0",
+    "contract_max_size_bytes",
+    "contract_parallel_compute_v0",
+    "eviction_iterator",
+    "freeze_bypass_txs",
+    "freeze_bypass_txs_delta",
+    "frozen_ledger_keys",
+    "frozen_ledger_keys_delta",
+    "live_soroban_state_size_window",
+    "scp_timing",
+    "state_archival"
+  ],
+  "ConfigSettingId": [
+    "contract_bandwidth_v0",
+    "contract_compute_v0",
+    "contract_cost_params_cpu_instructions",
+    "contract_cost_params_memory_bytes",
+    "contract_data_entry_size_bytes",
+    "contract_data_key_size_bytes",
+    "contract_events_v0",
+    "contract_execution_lanes",
+    "contract_historical_data_v0",
+    "contract_ledger_cost_ext_v0",
+    "contract_ledger_cost_v0",
+    "contract_max_size_bytes",
+    "contract_parallel_compute_v0",
+    "eviction_iterator",
+    "freeze_bypass_txs",
+    "freeze_bypass_txs_delta",
+    "frozen_ledger_keys",
+    "frozen_ledger_keys_delta",
+    "live_soroban_state_size_window",
+    "scp_timing",
+    "state_archival"
+  ],
+  "ConfigSettingScpTiming": [
+    "ballot_timeout_increment_milliseconds",
+    "ballot_timeout_initial_milliseconds",
+    "ledger_target_close_time_milliseconds",
+    "nomination_timeout_increment_milliseconds",
+    "nomination_timeout_initial_milliseconds"
+  ],
+  "ConfigUpgradeSet": [
+    "updated_entry"
+  ],
+  "ConfigUpgradeSetKey": [
+    "content_hash",
+    "contract_id"
+  ],
+  "ContractCodeCostInputs": [
+    "ext",
+    "n_data_segment_bytes",
+    "n_data_segments",
+    "n_elem_segments",
+    "n_exports",
+    "n_functions",
+    "n_globals",
+    "n_imports",
+    "n_instructions",
+    "n_table_entries",
+    "n_types"
+  ],
+  "ContractCodeEntry": [
+    "code",
+    "ext",
+    "hash"
+  ],
+  "ContractCodeEntryExt": [
+    "v0",
+    "v1"
+  ],
+  "ContractCodeEntryV1": [
+    "cost_inputs",
+    "ext"
+  ],
+  "ContractCostParamEntry": [
+    "const_term",
+    "ext",
+    "linear_term"
+  ],
+  "ContractCostType": [
+    "bls12381_decode_fp",
+    "bls12381_encode_fp",
+    "bls12381_fr_add_sub",
+    "bls12381_fr_from_u256",
+    "bls12381_fr_inv",
+    "bls12381_fr_mul",
+    "bls12381_fr_pow",
+    "bls12381_fr_to_u256",
+    "bls12381_g1_add",
+    "bls12381_g1_check_point_in_subgroup",
+    "bls12381_g1_check_point_on_curve",
+    "bls12381_g1_msm",
+    "bls12381_g1_mul",
+    "bls12381_g1_projective_to_affine",
+    "bls12381_g2_add",
+    "bls12381_g2_check_point_in_subgroup",
+    "bls12381_g2_check_point_on_curve",
+    "bls12381_g2_msm",
+    "bls12381_g2_mul",
+    "bls12381_g2_projective_to_affine",
+    "bls12381_hash_to_g1",
+    "bls12381_hash_to_g2",
+    "bls12381_map_fp2_to_g2",
+    "bls12381_map_fp_to_g1",
+    "bls12381_pairing",
+    "bn254_decode_fp",
+    "bn254_encode_fp",
+    "bn254_fr_add_sub",
+    "bn254_fr_from_u256",
+    "bn254_fr_inv",
+    "bn254_fr_mul",
+    "bn254_fr_pow",
+    "bn254_fr_to_u256",
+    "bn254_g1_add",
+    "bn254_g1_check_point_on_curve",
+    "bn254_g1_msm",
+    "bn254_g1_mul",
+    "bn254_g1_projective_to_affine",
+    "bn254_g2_check_point_in_subgroup",
+    "bn254_g2_check_point_on_curve",
+    "bn254_pairing",
+    "cha_cha20_draw_bytes",
+    "compute_ed25519_pub_key",
+    "compute_keccak256_hash",
+    "compute_sha256_hash",
+    "decode_ecdsa_curve256_sig",
+    "dispatch_host_function",
+    "instantiate_wasm_data_segment_bytes",
+    "instantiate_wasm_data_segments",
+    "instantiate_wasm_elem_segments",
+    "instantiate_wasm_exports",
+    "instantiate_wasm_functions",
+    "instantiate_wasm_globals",
+    "instantiate_wasm_imports",
+    "instantiate_wasm_instructions",
+    "instantiate_wasm_table_entries",
+    "instantiate_wasm_types",
+    "int256_add_sub",
+    "int256_div",
+    "int256_mul",
+    "int256_pow",
+    "int256_shift",
+    "invoke_vm_function",
+    "mem_alloc",
+    "mem_cmp",
+    "mem_cpy",
+    "ml_dsa44_decode_signature",
+    "ml_dsa44_decode_verifying_key",
+    "ml_dsa65_decode_signature",
+    "ml_dsa65_decode_verifying_key",
+    "ml_dsa87_decode_signature",
+    "ml_dsa87_decode_verifying_key",
+    "parse_wasm_data_segment_bytes",
+    "parse_wasm_data_segments",
+    "parse_wasm_elem_segments",
+    "parse_wasm_exports",
+    "parse_wasm_functions",
+    "parse_wasm_globals",
+    "parse_wasm_imports",
+    "parse_wasm_instructions",
+    "parse_wasm_table_entries",
+    "parse_wasm_types",
+    "recover_ecdsa_secp256k1_key",
+    "sec1_decode_point_uncompressed",
+    "val_deser",
+    "val_ser",
+    "verify_ecdsa_secp256r1_sig",
+    "verify_ed25519_sig",
+    "verify_ml_dsa44_sig",
+    "verify_ml_dsa65_sig",
+    "verify_ml_dsa87_sig",
+    "visit_object",
+    "vm_cached_instantiation",
+    "vm_instantiation",
+    "wasm_insn_exec"
+  ],
+  "ContractDataDurability": [
+    "persistent",
+    "temporary"
+  ],
+  "ContractDataEntry": [
+    "contract",
+    "durability",
+    "ext",
+    "key",
+    "val"
+  ],
+  "ContractEvent": [
+    "body",
+    "contract_id",
+    "ext",
+    "type"
+  ],
+  "ContractEventBody": [
+    "v0"
+  ],
+  "ContractEventType": [
+    "contract",
+    "diagnostic",
+    "system"
+  ],
+  "ContractEventV0": [
+    "data",
+    "topics"
+  ],
+  "ContractExecutable": [
+    "external_ref",
+    "stellar_asset",
+    "wasm"
+  ],
+  "ContractExecutableExternalRef": [
+    "executable_owner",
+    "tag"
+  ],
+  "ContractExecutableType": [
+    "external_ref",
+    "stellar_asset",
+    "wasm"
+  ],
+  "ContractIdPreimage": [
+    "address",
+    "asset"
+  ],
+  "ContractIdPreimageFromAddress": [
+    "address",
+    "salt"
+  ],
+  "ContractIdPreimageType": [
+    "address",
+    "asset"
+  ],
+  "CreateAccountOp": [
+    "destination",
+    "starting_balance"
+  ],
+  "CreateAccountResult": [
+    "already_exist",
+    "low_reserve",
+    "malformed",
+    "success",
+    "underfunded"
+  ],
+  "CreateAccountResultCode": [
+    "already_exist",
+    "low_reserve",
+    "malformed",
+    "success",
+    "underfunded"
+  ],
+  "CreateClaimableBalanceOp": [
+    "amount",
+    "asset",
+    "claimants"
+  ],
+  "CreateClaimableBalanceResult": [
+    "low_reserve",
+    "malformed",
+    "no_trust",
+    "not_authorized",
+    "success",
+    "underfunded"
+  ],
+  "CreateClaimableBalanceResultCode": [
+    "low_reserve",
+    "malformed",
+    "no_trust",
+    "not_authorized",
+    "success",
+    "underfunded"
+  ],
+  "CreateContractArgs": [
+    "contract_id_preimage",
+    "executable"
+  ],
+  "CreateContractArgsV2": [
+    "constructor_args",
+    "contract_id_preimage",
+    "executable"
+  ],
+  "CreatePassiveSellOfferOp": [
+    "amount",
+    "buying",
+    "price",
+    "selling"
+  ],
+  "CryptoKeyType": [
+    "ed25519",
+    "ed25519_signed_payload",
+    "hash_x",
+    "muxed_ed25519",
+    "pre_auth_tx"
+  ],
+  "Curve25519Public": [
+    "key"
+  ],
+  "Curve25519Secret": [
+    "key"
+  ],
+  "DataEntry": [
+    "account_id",
+    "data_name",
+    "data_value",
+    "ext"
+  ],
+  "DataEntryExt": [
+    "v0"
+  ],
+  "DecoratedSignature": [
+    "hint",
+    "signature"
+  ],
+  "DiagnosticEvent": [
+    "event",
+    "in_successful_contract_call"
+  ],
+  "DontHave": [
+    "req_hash",
+    "type"
+  ],
+  "EndSponsoringFutureReservesResult": [
+    "not_sponsored",
+    "success"
+  ],
+  "EndSponsoringFutureReservesResultCode": [
+    "not_sponsored",
+    "success"
+  ],
+  "EnvelopeType": [
+    "auth",
+    "contract_id",
+    "op_id",
+    "pool_revoke_op_id",
+    "scp",
+    "scpvalue",
+    "soroban_authorization",
+    "soroban_authorization_with_address",
+    "tx",
+    "tx_fee_bump",
+    "tx_v0"
+  ],
+  "ErrorCode": [
+    "auth",
+    "conf",
+    "data",
+    "load",
+    "misc"
+  ],
+  "EvictionIterator": [
+    "bucket_file_offset",
+    "bucket_list_level",
+    "is_curr_bucket"
+  ],
+  "ExtendFootprintTtlOp": [
+    "ext",
+    "extend_to"
+  ],
+  "ExtendFootprintTtlResult": [
+    "insufficient_refundable_fee",
+    "malformed",
+    "resource_limit_exceeded",
+    "success"
+  ],
+  "ExtendFootprintTtlResultCode": [
+    "insufficient_refundable_fee",
+    "malformed",
+    "resource_limit_exceeded",
+    "success"
+  ],
+  "ExtensionPoint": [
+    "v0"
+  ],
+  "FeeBumpTransaction": [
+    "ext",
+    "fee",
+    "fee_source",
+    "inner_tx"
+  ],
+  "FeeBumpTransactionEnvelope": [
+    "signatures",
+    "tx"
+  ],
+  "FeeBumpTransactionExt": [
+    "v0"
+  ],
+  "FeeBumpTransactionInnerTx": [
+    "tx"
+  ],
+  "FloodAdvert": [
+    "tx_hashes"
+  ],
+  "FloodDemand": [
+    "tx_hashes"
+  ],
+  "FreezeBypassTxs": [
+    "tx_hashes"
+  ],
+  "FreezeBypassTxsDelta": [
+    "add_txs",
+    "remove_txs"
+  ],
+  "FrozenLedgerKeys": [
+    "keys"
+  ],
+  "FrozenLedgerKeysDelta": [
+    "keys_to_freeze",
+    "keys_to_unfreeze"
+  ],
+  "GeneralizedTransactionSet": [
+    "v1"
+  ],
+  "HashIdPreimage": [
+    "contract_id",
+    "op_id",
+    "pool_revoke_op_id",
+    "soroban_authorization",
+    "soroban_authorization_with_address"
+  ],
+  "HashIdPreimageContractId": [
+    "contract_id_preimage",
+    "network_id"
+  ],
+  "HashIdPreimageOperationId": [
+    "op_num",
+    "seq_num",
+    "source_account"
+  ],
+  "HashIdPreimageRevokeId": [
+    "asset",
+    "liquidity_pool_id",
+    "op_num",
+    "seq_num",
+    "source_account"
+  ],
+  "HashIdPreimageSorobanAuthorization": [
+    "invocation",
+    "network_id",
+    "nonce",
+    "signature_expiration_ledger"
+  ],
+  "HashIdPreimageSorobanAuthorizationWithAddress": [
+    "address",
+    "invocation",
+    "network_id",
+    "nonce",
+    "signature_expiration_ledger"
+  ],
+  "Hello": [
+    "cert",
+    "ledger_version",
+    "listening_port",
+    "network_id",
+    "nonce",
+    "overlay_min_version",
+    "overlay_version",
+    "peer_id",
+    "version_str"
+  ],
+  "HmacSha256Key": [
+    "key"
+  ],
+  "HmacSha256Mac": [
+    "mac"
+  ],
+  "HostFunction": [
+    "create_contract",
+    "create_contract_v2",
+    "invoke_contract",
+    "upload_contract_wasm"
+  ],
+  "HostFunctionType": [
+    "create_contract",
+    "create_contract_v2",
+    "invoke_contract",
+    "upload_contract_wasm"
+  ],
+  "HotArchiveBucketEntry": [
+    "archived",
+    "live",
+    "metaentry"
+  ],
+  "HotArchiveBucketEntryType": [
+    "archived",
+    "live",
+    "metaentry"
+  ],
+  "InflationPayout": [
+    "amount",
+    "destination"
+  ],
+  "InflationResult": [
+    "not_time",
+    "success"
+  ],
+  "InflationResultCode": [
+    "not_time",
+    "success"
+  ],
+  "InnerTransactionResult": [
+    "ext",
+    "fee_charged",
+    "result"
+  ],
+  "InnerTransactionResultExt": [
+    "v0"
+  ],
+  "InnerTransactionResultPair": [
+    "result",
+    "transaction_hash"
+  ],
+  "InnerTransactionResultResult": [
+    "tx_bad_auth",
+    "tx_bad_auth_extra",
+    "tx_bad_min_seq_age_or_gap",
+    "tx_bad_seq",
+    "tx_bad_sponsorship",
+    "tx_failed",
+    "tx_frozen_key_accessed",
+    "tx_insufficient_balance",
+    "tx_insufficient_fee",
+    "tx_internal_error",
+    "tx_malformed",
+    "tx_missing_operation",
+    "tx_no_account",
+    "tx_not_supported",
+    "tx_soroban_invalid",
+    "tx_success",
+    "tx_too_early",
+    "tx_too_late"
+  ],
+  "InvokeContractArgs": [
+    "args",
+    "contract_address",
+    "function_name"
+  ],
+  "InvokeHostFunctionOp": [
+    "auth",
+    "host_function"
+  ],
+  "InvokeHostFunctionResult": [
+    "entry_archived",
+    "insufficient_refundable_fee",
+    "malformed",
+    "resource_limit_exceeded",
+    "success",
+    "trapped"
+  ],
+  "InvokeHostFunctionResultCode": [
+    "entry_archived",
+    "insufficient_refundable_fee",
+    "malformed",
+    "resource_limit_exceeded",
+    "success",
+    "trapped"
+  ],
+  "InvokeHostFunctionSuccessPreImage": [
+    "events",
+    "return_value"
+  ],
+  "IpAddrType": [
+    "i_pv4",
+    "i_pv6"
+  ],
+  "LedgerBounds": [
+    "max_ledger",
+    "min_ledger"
+  ],
+  "LedgerCloseMeta": [
+    "v0",
+    "v1",
+    "v2"
+  ],
+  "LedgerCloseMetaBatch": [
+    "end_sequence",
+    "ledger_close_metas",
+    "start_sequence"
+  ],
+  "LedgerCloseMetaExt": [
+    "v0",
+    "v1"
+  ],
+  "LedgerCloseMetaExtV1": [
+    "ext",
+    "soroban_fee_write1_kb"
+  ],
+  "LedgerCloseMetaV0": [
+    "ledger_header",
+    "scp_info",
+    "tx_processing",
+    "tx_set",
+    "upgrades_processing"
+  ],
+  "LedgerCloseMetaV1": [
+    "evicted_keys",
+    "ext",
+    "ledger_header",
+    "scp_info",
+    "total_byte_size_of_live_soroban_state",
+    "tx_processing",
+    "tx_set",
+    "unused",
+    "upgrades_processing"
+  ],
+  "LedgerCloseMetaV2": [
+    "evicted_keys",
+    "ext",
+    "ledger_header",
+    "scp_info",
+    "total_byte_size_of_live_soroban_state",
+    "tx_processing",
+    "tx_set",
+    "upgrades_processing"
+  ],
+  "LedgerCloseValueSignature": [
+    "node_id",
+    "signature"
+  ],
+  "LedgerEntry": [
+    "data",
+    "ext",
+    "last_modified_ledger_seq"
+  ],
+  "LedgerEntryChange": [
+    "created",
+    "removed",
+    "restored",
+    "state",
+    "updated"
+  ],
+  "LedgerEntryChangeType": [
+    "created",
+    "removed",
+    "restored",
+    "state",
+    "updated"
+  ],
+  "LedgerEntryData": [
+    "account",
+    "claimable_balance",
+    "config_setting",
+    "contract_code",
+    "contract_data",
+    "data",
+    "liquidity_pool",
+    "offer",
+    "trustline",
+    "ttl"
+  ],
+  "LedgerEntryExt": [
+    "v0",
+    "v1"
+  ],
+  "LedgerEntryExtensionV1": [
+    "ext",
+    "sponsoring_id"
+  ],
+  "LedgerEntryExtensionV1Ext": [
+    "v0"
+  ],
+  "LedgerEntryType": [
+    "account",
+    "claimable_balance",
+    "config_setting",
+    "contract_code",
+    "contract_data",
+    "data",
+    "liquidity_pool",
+    "offer",
+    "trustline",
+    "ttl"
+  ],
+  "LedgerFootprint": [
+    "read_only",
+    "read_write"
+  ],
+  "LedgerHeader": [
+    "base_fee",
+    "base_reserve",
+    "bucket_list_hash",
+    "ext",
+    "fee_pool",
+    "id_pool",
+    "inflation_seq",
+    "ledger_seq",
+    "ledger_version",
+    "max_tx_set_size",
+    "previous_ledger_hash",
+    "scp_value",
+    "skip_list",
+    "total_coins",
+    "tx_set_result_hash"
+  ],
+  "LedgerHeaderExt": [
+    "v0",
+    "v1"
+  ],
+  "LedgerHeaderExtensionV1": [
+    "ext",
+    "flags"
+  ],
+  "LedgerHeaderExtensionV1Ext": [
+    "v0"
+  ],
+  "LedgerHeaderFlags": [
+    "deposit_flag",
+    "trading_flag",
+    "withdrawal_flag"
+  ],
+  "LedgerHeaderHistoryEntry": [
+    "ext",
+    "hash",
+    "header"
+  ],
+  "LedgerHeaderHistoryEntryExt": [
+    "v0"
+  ],
+  "LedgerKey": [
+    "account",
+    "claimable_balance",
+    "config_setting",
+    "contract_code",
+    "contract_data",
+    "data",
+    "liquidity_pool",
+    "offer",
+    "trustline",
+    "ttl"
+  ],
+  "LedgerKeyAccount": [
+    "account_id"
+  ],
+  "LedgerKeyClaimableBalance": [
+    "balance_id"
+  ],
+  "LedgerKeyConfigSetting": [
+    "config_setting_id"
+  ],
+  "LedgerKeyContractCode": [
+    "hash"
+  ],
+  "LedgerKeyContractData": [
+    "contract",
+    "durability",
+    "key"
+  ],
+  "LedgerKeyData": [
+    "account_id",
+    "data_name"
+  ],
+  "LedgerKeyLiquidityPool": [
+    "liquidity_pool_id"
+  ],
+  "LedgerKeyOffer": [
+    "offer_id",
+    "seller_id"
+  ],
+  "LedgerKeyTrustLine": [
+    "account_id",
+    "asset"
+  ],
+  "LedgerKeyTtl": [
+    "key_hash"
+  ],
+  "LedgerScpMessages": [
+    "ledger_seq",
+    "messages"
+  ],
+  "LedgerUpgrade": [
+    "base_fee",
+    "base_reserve",
+    "config",
+    "flags",
+    "max_soroban_tx_set_size",
+    "max_tx_set_size",
+    "version"
+  ],
+  "LedgerUpgradeType": [
+    "base_fee",
+    "base_reserve",
+    "config",
+    "flags",
+    "max_soroban_tx_set_size",
+    "max_tx_set_size",
+    "version"
+  ],
+  "Liabilities": [
+    "buying",
+    "selling"
+  ],
+  "LiquidityPoolConstantProductParameters": [
+    "asset_a",
+    "asset_b",
+    "fee"
+  ],
+  "LiquidityPoolDepositOp": [
+    "liquidity_pool_id",
+    "max_amount_a",
+    "max_amount_b",
+    "max_price",
+    "min_price"
+  ],
+  "LiquidityPoolDepositResult": [
+    "bad_price",
+    "line_full",
+    "malformed",
+    "no_trust",
+    "not_authorized",
+    "pool_full",
+    "success",
+    "trustline_frozen",
+    "underfunded"
+  ],
+  "LiquidityPoolDepositResultCode": [
+    "bad_price",
+    "line_full",
+    "malformed",
+    "no_trust",
+    "not_authorized",
+    "pool_full",
+    "success",
+    "trustline_frozen",
+    "underfunded"
+  ],
+  "LiquidityPoolEntry": [
+    "body",
+    "liquidity_pool_id"
+  ],
+  "LiquidityPoolEntryBody": [
+    "liquidity_pool_constant_product"
+  ],
+  "LiquidityPoolEntryConstantProduct": [
+    "params",
+    "pool_shares_trust_line_count",
+    "reserve_a",
+    "reserve_b",
+    "total_pool_shares"
+  ],
+  "LiquidityPoolParameters": [
+    "liquidity_pool_constant_product"
+  ],
+  "LiquidityPoolType": [
+    "liquidity_pool_constant_product"
+  ],
+  "LiquidityPoolWithdrawOp": [
+    "amount",
+    "liquidity_pool_id",
+    "min_amount_a",
+    "min_amount_b"
+  ],
+  "LiquidityPoolWithdrawResult": [
+    "line_full",
+    "malformed",
+    "no_trust",
+    "success",
+    "trustline_frozen",
+    "under_minimum",
+    "underfunded"
+  ],
+  "LiquidityPoolWithdrawResultCode": [
+    "line_full",
+    "malformed",
+    "no_trust",
+    "success",
+    "trustline_frozen",
+    "under_minimum",
+    "underfunded"
+  ],
+  "ManageBuyOfferOp": [
+    "buy_amount",
+    "buying",
+    "offer_id",
+    "price",
+    "selling"
+  ],
+  "ManageBuyOfferResult": [
+    "buy_no_issuer",
+    "buy_no_trust",
+    "buy_not_authorized",
+    "cross_self",
+    "line_full",
+    "low_reserve",
+    "malformed",
+    "not_found",
+    "sell_no_issuer",
+    "sell_no_trust",
+    "sell_not_authorized",
+    "success",
+    "underfunded"
+  ],
+  "ManageBuyOfferResultCode": [
+    "buy_no_issuer",
+    "buy_no_trust",
+    "buy_not_authorized",
+    "cross_self",
+    "line_full",
+    "low_reserve",
+    "malformed",
+    "not_found",
+    "sell_no_issuer",
+    "sell_no_trust",
+    "sell_not_authorized",
+    "success",
+    "underfunded"
+  ],
+  "ManageDataOp": [
+    "data_name",
+    "data_value"
+  ],
+  "ManageDataResult": [
+    "invalid_name",
+    "low_reserve",
+    "name_not_found",
+    "not_supported_yet",
+    "success"
+  ],
+  "ManageDataResultCode": [
+    "invalid_name",
+    "low_reserve",
+    "name_not_found",
+    "not_supported_yet",
+    "success"
+  ],
+  "ManageOfferEffect": [
+    "created",
+    "deleted",
+    "updated"
+  ],
+  "ManageOfferSuccessResult": [
+    "offer",
+    "offers_claimed"
+  ],
+  "ManageOfferSuccessResultOffer": [
+    "created",
+    "deleted",
+    "updated"
+  ],
+  "ManageSellOfferOp": [
+    "amount",
+    "buying",
+    "offer_id",
+    "price",
+    "selling"
+  ],
+  "ManageSellOfferResult": [
+    "buy_no_issuer",
+    "buy_no_trust",
+    "buy_not_authorized",
+    "cross_self",
+    "line_full",
+    "low_reserve",
+    "malformed",
+    "not_found",
+    "sell_no_issuer",
+    "sell_no_trust",
+    "sell_not_authorized",
+    "success",
+    "underfunded"
+  ],
+  "ManageSellOfferResultCode": [
+    "buy_no_issuer",
+    "buy_no_trust",
+    "buy_not_authorized",
+    "cross_self",
+    "line_full",
+    "low_reserve",
+    "malformed",
+    "not_found",
+    "sell_no_issuer",
+    "sell_no_trust",
+    "sell_not_authorized",
+    "success",
+    "underfunded"
+  ],
+  "Memo": [
+    "hash",
+    "id",
+    "none",
+    "return",
+    "text"
+  ],
+  "MemoType": [
+    "hash",
+    "id",
+    "none",
+    "return",
+    "text"
+  ],
+  "MessageType": [
+    "auth",
+    "dont_have",
+    "error_msg",
+    "flood_advert",
+    "flood_demand",
+    "generalized_tx_set",
+    "get_scp_quorumset",
+    "get_scp_state",
+    "get_tx_set",
+    "hello",
+    "peers",
+    "scp_message",
+    "scp_quorumset",
+    "send_more",
+    "send_more_extended",
+    "time_sliced_survey_request",
+    "time_sliced_survey_response",
+    "time_sliced_survey_start_collecting",
+    "time_sliced_survey_stop_collecting",
+    "transaction",
+    "tx_set"
+  ],
+  "OfferEntry": [
+    "amount",
+    "buying",
+    "ext",
+    "flags",
+    "offer_id",
+    "price",
+    "seller_id",
+    "selling"
+  ],
+  "OfferEntryExt": [
+    "v0"
+  ],
+  "OfferEntryFlags": [
+    "passive_flag"
+  ],
+  "Operation": [
+    "body",
+    "source_account"
+  ],
+  "OperationBody": [
+    "account_merge",
+    "allow_trust",
+    "begin_sponsoring_future_reserves",
+    "bump_sequence",
+    "change_trust",
+    "claim_claimable_balance",
+    "clawback",
+    "clawback_claimable_balance",
+    "create_account",
+    "create_claimable_balance",
+    "create_passive_sell_offer",
+    "end_sponsoring_future_reserves",
+    "extend_footprint_ttl",
+    "inflation",
+    "invoke_host_function",
+    "liquidity_pool_deposit",
+    "liquidity_pool_withdraw",
+    "manage_buy_offer",
+    "manage_data",
+    "manage_sell_offer",
+    "path_payment_strict_receive",
+    "path_payment_strict_send",
+    "payment",
+    "restore_footprint",
+    "revoke_sponsorship",
+    "set_options",
+    "set_trust_line_flags"
+  ],
+  "OperationMeta": [
+    "changes"
+  ],
+  "OperationMetaV2": [
+    "changes",
+    "events",
+    "ext"
+  ],
+  "OperationResult": [
+    "op_bad_auth",
+    "op_exceeded_work_limit",
+    "op_inner",
+    "op_no_account",
+    "op_not_supported",
+    "op_too_many_sponsoring",
+    "op_too_many_subentries"
+  ],
+  "OperationResultCode": [
+    "op_bad_auth",
+    "op_exceeded_work_limit",
+    "op_inner",
+    "op_no_account",
+    "op_not_supported",
+    "op_too_many_sponsoring",
+    "op_too_many_subentries"
+  ],
+  "OperationResultTr": [
+    "account_merge",
+    "allow_trust",
+    "begin_sponsoring_future_reserves",
+    "bump_sequence",
+    "change_trust",
+    "claim_claimable_balance",
+    "clawback",
+    "clawback_claimable_balance",
+    "create_account",
+    "create_claimable_balance",
+    "create_passive_sell_offer",
+    "end_sponsoring_future_reserves",
+    "extend_footprint_ttl",
+    "inflation",
+    "invoke_host_function",
+    "liquidity_pool_deposit",
+    "liquidity_pool_withdraw",
+    "manage_buy_offer",
+    "manage_data",
+    "manage_sell_offer",
+    "path_payment_strict_receive",
+    "path_payment_strict_send",
+    "payment",
+    "restore_footprint",
+    "revoke_sponsorship",
+    "set_options",
+    "set_trust_line_flags"
+  ],
+  "OperationType": [
+    "account_merge",
+    "allow_trust",
+    "begin_sponsoring_future_reserves",
+    "bump_sequence",
+    "change_trust",
+    "claim_claimable_balance",
+    "clawback",
+    "clawback_claimable_balance",
+    "create_account",
+    "create_claimable_balance",
+    "create_passive_sell_offer",
+    "end_sponsoring_future_reserves",
+    "extend_footprint_ttl",
+    "inflation",
+    "invoke_host_function",
+    "liquidity_pool_deposit",
+    "liquidity_pool_withdraw",
+    "manage_buy_offer",
+    "manage_data",
+    "manage_sell_offer",
+    "path_payment_strict_receive",
+    "path_payment_strict_send",
+    "payment",
+    "restore_footprint",
+    "revoke_sponsorship",
+    "set_options",
+    "set_trust_line_flags"
+  ],
+  "ParallelTxsComponent": [
+    "base_fee",
+    "execution_stages"
+  ],
+  "PathPaymentStrictReceiveOp": [
+    "dest_amount",
+    "dest_asset",
+    "destination",
+    "path",
+    "send_asset",
+    "send_max"
+  ],
+  "PathPaymentStrictReceiveResult": [
+    "line_full",
+    "malformed",
+    "no_destination",
+    "no_issuer",
+    "no_trust",
+    "not_authorized",
+    "offer_cross_self",
+    "over_sendmax",
+    "src_no_trust",
+    "src_not_authorized",
+    "success",
+    "too_few_offers",
+    "underfunded"
+  ],
+  "PathPaymentStrictReceiveResultCode": [
+    "line_full",
+    "malformed",
+    "no_destination",
+    "no_issuer",
+    "no_trust",
+    "not_authorized",
+    "offer_cross_self",
+    "over_sendmax",
+    "src_no_trust",
+    "src_not_authorized",
+    "success",
+    "too_few_offers",
+    "underfunded"
+  ],
+  "PathPaymentStrictReceiveResultSuccess": [
+    "last",
+    "offers"
+  ],
+  "PathPaymentStrictSendOp": [
+    "dest_asset",
+    "dest_min",
+    "destination",
+    "path",
+    "send_amount",
+    "send_asset"
+  ],
+  "PathPaymentStrictSendResult": [
+    "line_full",
+    "malformed",
+    "no_destination",
+    "no_issuer",
+    "no_trust",
+    "not_authorized",
+    "offer_cross_self",
+    "src_no_trust",
+    "src_not_authorized",
+    "success",
+    "too_few_offers",
+    "under_destmin",
+    "underfunded"
+  ],
+  "PathPaymentStrictSendResultCode": [
+    "line_full",
+    "malformed",
+    "no_destination",
+    "no_issuer",
+    "no_trust",
+    "not_authorized",
+    "offer_cross_self",
+    "src_no_trust",
+    "src_not_authorized",
+    "success",
+    "too_few_offers",
+    "under_destmin",
+    "underfunded"
+  ],
+  "PathPaymentStrictSendResultSuccess": [
+    "last",
+    "offers"
+  ],
+  "PaymentOp": [
+    "amount",
+    "asset",
+    "destination"
+  ],
+  "PaymentResult": [
+    "line_full",
+    "malformed",
+    "no_destination",
+    "no_issuer",
+    "no_trust",
+    "not_authorized",
+    "src_no_trust",
+    "src_not_authorized",
+    "success",
+    "underfunded"
+  ],
+  "PaymentResultCode": [
+    "line_full",
+    "malformed",
+    "no_destination",
+    "no_issuer",
+    "no_trust",
+    "not_authorized",
+    "src_no_trust",
+    "src_not_authorized",
+    "success",
+    "underfunded"
+  ],
+  "PeerAddress": [
+    "ip",
+    "num_failures",
+    "port"
+  ],
+  "PeerAddressIp": [
+    "i_pv4",
+    "i_pv6"
+  ],
+  "PeerStats": [
+    "bytes_read",
+    "bytes_written",
+    "duplicate_fetch_bytes_recv",
+    "duplicate_fetch_message_recv",
+    "duplicate_flood_bytes_recv",
+    "duplicate_flood_message_recv",
+    "id",
+    "messages_read",
+    "messages_written",
+    "seconds_connected",
+    "unique_fetch_bytes_recv",
+    "unique_fetch_message_recv",
+    "unique_flood_bytes_recv",
+    "unique_flood_message_recv",
+    "version_str"
+  ],
+  "PersistedScpState": [
+    "v0",
+    "v1"
+  ],
+  "PersistedScpStateV0": [
+    "quorum_sets",
+    "scp_envelopes",
+    "tx_sets"
+  ],
+  "PersistedScpStateV1": [
+    "quorum_sets",
+    "scp_envelopes"
+  ],
+  "PreconditionType": [
+    "none",
+    "time",
+    "v2"
+  ],
+  "Preconditions": [
+    "none",
+    "time",
+    "v2"
+  ],
+  "PreconditionsV2": [
+    "extra_signers",
+    "ledger_bounds",
+    "min_seq_age",
+    "min_seq_ledger_gap",
+    "min_seq_num",
+    "time_bounds"
+  ],
+  "Price": [
+    "d",
+    "n"
+  ],
+  "PublicKeyType": [
+    "public_key_type_ed25519"
+  ],
+  "RestoreFootprintOp": [
+    "ext"
+  ],
+  "RestoreFootprintResult": [
+    "insufficient_refundable_fee",
+    "malformed",
+    "resource_limit_exceeded",
+    "success"
+  ],
+  "RestoreFootprintResultCode": [
+    "insufficient_refundable_fee",
+    "malformed",
+    "resource_limit_exceeded",
+    "success"
+  ],
+  "RevokeSponsorshipOp": [
+    "ledger_entry",
+    "signer"
+  ],
+  "RevokeSponsorshipOpSigner": [
+    "account_id",
+    "signer_key"
+  ],
+  "RevokeSponsorshipResult": [
+    "does_not_exist",
+    "low_reserve",
+    "malformed",
+    "not_sponsor",
+    "only_transferable",
+    "success"
+  ],
+  "RevokeSponsorshipResultCode": [
+    "does_not_exist",
+    "low_reserve",
+    "malformed",
+    "not_sponsor",
+    "only_transferable",
+    "success"
+  ],
+  "RevokeSponsorshipType": [
+    "ledger_entry",
+    "signer"
+  ],
+  "SError": [
+    "code",
+    "msg"
+  ],
+  "ScAddressType": [
+    "account",
+    "claimable_balance",
+    "contract",
+    "liquidity_pool",
+    "muxed_account",
+    "muxed_contract"
+  ],
+  "ScContractInstance": [
+    "executable",
+    "storage"
+  ],
+  "ScEnvMetaEntry": [
+    "sc_env_meta_kind_interface_version"
+  ],
+  "ScEnvMetaEntryInterfaceVersion": [
+    "pre_release",
+    "protocol"
+  ],
+  "ScEnvMetaKind": [
+    "sc_env_meta_kind_interface_version"
+  ],
+  "ScError": [
+    "auth",
+    "budget",
+    "context",
+    "contract",
+    "crypto",
+    "events",
+    "object",
+    "storage",
+    "value",
+    "wasm_vm"
+  ],
+  "ScErrorCode": [
+    "arith_domain",
+    "exceeded_limit",
+    "existing_value",
+    "index_bounds",
+    "internal_error",
+    "invalid_action",
+    "invalid_input",
+    "missing_value",
+    "unexpected_size",
+    "unexpected_type"
+  ],
+  "ScErrorType": [
+    "auth",
+    "budget",
+    "context",
+    "contract",
+    "crypto",
+    "events",
+    "object",
+    "storage",
+    "value",
+    "wasm_vm"
+  ],
+  "ScMapEntry": [
+    "key",
+    "val"
+  ],
+  "ScMetaEntry": [
+    "sc_meta_v0"
+  ],
+  "ScMetaKind": [
+    "sc_meta_v0"
+  ],
+  "ScMetaV0": [
+    "key",
+    "val"
+  ],
+  "ScNonceKey": [
+    "nonce"
+  ],
+  "ScSpecEntry": [
+    "event_v0",
+    "function_v0",
+    "udt_enum_v0",
+    "udt_error_enum_v0",
+    "udt_struct_v0",
+    "udt_union_v0"
+  ],
+  "ScSpecEntryKind": [
+    "event_v0",
+    "function_v0",
+    "udt_enum_v0",
+    "udt_error_enum_v0",
+    "udt_struct_v0",
+    "udt_union_v0"
+  ],
+  "ScSpecEventDataFormat": [
+    "map",
+    "single_value",
+    "vec"
+  ],
+  "ScSpecEventParamLocationV0": [
+    "data",
+    "topic_list"
+  ],
+  "ScSpecEventParamV0": [
+    "doc",
+    "location",
+    "name",
+    "type"
+  ],
+  "ScSpecEventV0": [
+    "data_format",
+    "doc",
+    "lib",
+    "name",
+    "params",
+    "prefix_topics"
+  ],
+  "ScSpecFunctionInputV0": [
+    "doc",
+    "name",
+    "type"
+  ],
+  "ScSpecFunctionV0": [
+    "doc",
+    "inputs",
+    "name",
+    "outputs"
+  ],
+  "ScSpecType": [
+    "address",
+    "bool",
+    "bytes",
+    "bytes_n",
+    "duration",
+    "error",
+    "i128",
+    "i256",
+    "i32",
+    "i64",
+    "map",
+    "muxed_address",
+    "option",
+    "result",
+    "string",
+    "symbol",
+    "timepoint",
+    "tuple",
+    "u128",
+    "u256",
+    "u32",
+    "u64",
+    "udt",
+    "val",
+    "vec",
+    "void"
+  ],
+  "ScSpecTypeBytesN": [
+    "n"
+  ],
+  "ScSpecTypeDef": [
+    "address",
+    "bool",
+    "bytes",
+    "bytes_n",
+    "duration",
+    "error",
+    "i128",
+    "i256",
+    "i32",
+    "i64",
+    "map",
+    "muxed_address",
+    "option",
+    "result",
+    "string",
+    "symbol",
+    "timepoint",
+    "tuple",
+    "u128",
+    "u256",
+    "u32",
+    "u64",
+    "udt",
+    "val",
+    "vec",
+    "void"
+  ],
+  "ScSpecTypeMap": [
+    "key_type",
+    "value_type"
+  ],
+  "ScSpecTypeOption": [
+    "value_type"
+  ],
+  "ScSpecTypeResult": [
+    "error_type",
+    "ok_type"
+  ],
+  "ScSpecTypeTuple": [
+    "value_types"
+  ],
+  "ScSpecTypeUdt": [
+    "name"
+  ],
+  "ScSpecTypeVec": [
+    "element_type"
+  ],
+  "ScSpecUdtEnumCaseV0": [
+    "doc",
+    "name",
+    "value"
+  ],
+  "ScSpecUdtEnumV0": [
+    "cases",
+    "doc",
+    "lib",
+    "name"
+  ],
+  "ScSpecUdtErrorEnumCaseV0": [
+    "doc",
+    "name",
+    "value"
+  ],
+  "ScSpecUdtErrorEnumV0": [
+    "cases",
+    "doc",
+    "lib",
+    "name"
+  ],
+  "ScSpecUdtStructFieldV0": [
+    "doc",
+    "name",
+    "type"
+  ],
+  "ScSpecUdtStructV0": [
+    "doc",
+    "fields",
+    "lib",
+    "name"
+  ],
+  "ScSpecUdtUnionCaseTupleV0": [
+    "doc",
+    "name",
+    "type"
+  ],
+  "ScSpecUdtUnionCaseV0": [
+    "tuple_v0",
+    "void_v0"
+  ],
+  "ScSpecUdtUnionCaseV0Kind": [
+    "tuple_v0",
+    "void_v0"
+  ],
+  "ScSpecUdtUnionCaseVoidV0": [
+    "doc",
+    "name"
+  ],
+  "ScSpecUdtUnionV0": [
+    "cases",
+    "doc",
+    "lib",
+    "name"
+  ],
+  "ScVal": [
+    "address",
+    "bool",
+    "bytes",
+    "contract_instance",
+    "duration",
+    "error",
+    "executable_tag",
+    "i128",
+    "i256",
+    "i32",
+    "i64",
+    "ledger_key_contract_instance",
+    "ledger_key_nonce",
+    "map",
+    "string",
+    "symbol",
+    "timepoint",
+    "u128",
+    "u256",
+    "u32",
+    "u64",
+    "vec",
+    "void"
+  ],
+  "ScValType": [
+    "address",
+    "bool",
+    "bytes",
+    "contract_instance",
+    "duration",
+    "error",
+    "executable_tag",
+    "i128",
+    "i256",
+    "i32",
+    "i64",
+    "ledger_key_contract_instance",
+    "ledger_key_nonce",
+    "map",
+    "string",
+    "symbol",
+    "timepoint",
+    "u128",
+    "u256",
+    "u32",
+    "u64",
+    "vec",
+    "void"
+  ],
+  "ScpBallot": [
+    "counter",
+    "value"
+  ],
+  "ScpEnvelope": [
+    "signature",
+    "statement"
+  ],
+  "ScpHistoryEntry": [
+    "v0"
+  ],
+  "ScpHistoryEntryV0": [
+    "ledger_messages",
+    "quorum_sets"
+  ],
+  "ScpNomination": [
+    "accepted",
+    "quorum_set_hash",
+    "votes"
+  ],
+  "ScpQuorumSet": [
+    "inner_sets",
+    "threshold",
+    "validators"
+  ],
+  "ScpStatement": [
+    "node_id",
+    "pledges",
+    "slot_index"
+  ],
+  "ScpStatementConfirm": [
+    "ballot",
+    "n_commit",
+    "n_h",
+    "n_prepared",
+    "quorum_set_hash"
+  ],
+  "ScpStatementExternalize": [
+    "commit",
+    "commit_quorum_set_hash",
+    "n_h"
+  ],
+  "ScpStatementPledges": [
+    "confirm",
+    "externalize",
+    "nominate",
+    "prepare"
+  ],
+  "ScpStatementPrepare": [
+    "ballot",
+    "n_c",
+    "n_h",
+    "prepared",
+    "prepared_prime",
+    "quorum_set_hash"
+  ],
+  "ScpStatementType": [
+    "confirm",
+    "externalize",
+    "nominate",
+    "prepare"
+  ],
+  "SendMore": [
+    "num_messages"
+  ],
+  "SendMoreExtended": [
+    "num_bytes",
+    "num_messages"
+  ],
+  "SerializedBinaryFuseFilter": [
+    "filter_seed",
+    "fingerprint_length",
+    "fingerprints",
+    "input_hash_seed",
+    "segement_length_mask",
+    "segment_count",
+    "segment_count_length",
+    "segment_length",
+    "type"
+  ],
+  "SetOptionsOp": [
+    "clear_flags",
+    "high_threshold",
+    "home_domain",
+    "inflation_dest",
+    "low_threshold",
+    "master_weight",
+    "med_threshold",
+    "set_flags",
+    "signer"
+  ],
+  "SetOptionsResult": [
+    "auth_revocable_required",
+    "bad_flags",
+    "bad_signer",
+    "cant_change",
+    "invalid_home_domain",
+    "invalid_inflation",
+    "low_reserve",
+    "success",
+    "threshold_out_of_range",
+    "too_many_signers",
+    "unknown_flag"
+  ],
+  "SetOptionsResultCode": [
+    "auth_revocable_required",
+    "bad_flags",
+    "bad_signer",
+    "cant_change",
+    "invalid_home_domain",
+    "invalid_inflation",
+    "low_reserve",
+    "success",
+    "threshold_out_of_range",
+    "too_many_signers",
+    "unknown_flag"
+  ],
+  "SetTrustLineFlagsOp": [
+    "asset",
+    "clear_flags",
+    "set_flags",
+    "trustor"
+  ],
+  "SetTrustLineFlagsResult": [
+    "cant_revoke",
+    "invalid_state",
+    "low_reserve",
+    "malformed",
+    "no_trust_line",
+    "success"
+  ],
+  "SetTrustLineFlagsResultCode": [
+    "cant_revoke",
+    "invalid_state",
+    "low_reserve",
+    "malformed",
+    "no_trust_line",
+    "success"
+  ],
+  "ShortHashSeed": [
+    "seed"
+  ],
+  "SignedTimeSlicedSurveyRequestMessage": [
+    "request",
+    "request_signature"
+  ],
+  "SignedTimeSlicedSurveyResponseMessage": [
+    "response",
+    "response_signature"
+  ],
+  "SignedTimeSlicedSurveyStartCollectingMessage": [
+    "signature",
+    "start_collecting"
+  ],
+  "SignedTimeSlicedSurveyStopCollectingMessage": [
+    "signature",
+    "stop_collecting"
+  ],
+  "Signer": [
+    "key",
+    "weight"
+  ],
+  "SignerKeyType": [
+    "ed25519",
+    "ed25519_signed_payload",
+    "hash_x",
+    "pre_auth_tx"
+  ],
+  "SimplePaymentResult": [
+    "amount",
+    "asset",
+    "destination"
+  ],
+  "SorobanAddressCredentials": [
+    "address",
+    "nonce",
+    "signature",
+    "signature_expiration_ledger"
+  ],
+  "SorobanAddressCredentialsWithDelegates": [
+    "address_credentials",
+    "delegates"
+  ],
+  "SorobanAuthorizationEntry": [
+    "credentials",
+    "root_invocation"
+  ],
+  "SorobanAuthorizedFunction": [
+    "contract_fn",
+    "create_contract_host_fn",
+    "create_contract_v2_host_fn"
+  ],
+  "SorobanAuthorizedFunctionType": [
+    "contract_fn",
+    "create_contract_host_fn",
+    "create_contract_v2_host_fn"
+  ],
+  "SorobanAuthorizedInvocation": [
+    "function",
+    "sub_invocations"
+  ],
+  "SorobanCredentials": [
+    "address",
+    "address_v2",
+    "address_with_delegates",
+    "source_account"
+  ],
+  "SorobanCredentialsType": [
+    "address",
+    "address_v2",
+    "address_with_delegates",
+    "source_account"
+  ],
+  "SorobanDelegateSignature": [
+    "address",
+    "nested_delegates",
+    "signature"
+  ],
+  "SorobanResources": [
+    "disk_read_bytes",
+    "footprint",
+    "instructions",
+    "write_bytes"
+  ],
+  "SorobanResourcesExtV0": [
+    "archived_soroban_entries"
+  ],
+  "SorobanTransactionData": [
+    "ext",
+    "resource_fee",
+    "resources"
+  ],
+  "SorobanTransactionDataExt": [
+    "v0",
+    "v1"
+  ],
+  "SorobanTransactionMeta": [
+    "diagnostic_events",
+    "events",
+    "ext",
+    "return_value"
+  ],
+  "SorobanTransactionMetaExt": [
+    "v0",
+    "v1"
+  ],
+  "SorobanTransactionMetaExtV1": [
+    "ext",
+    "rent_fee_charged",
+    "total_non_refundable_resource_fee_charged",
+    "total_refundable_resource_fee_charged"
+  ],
+  "SorobanTransactionMetaV2": [
+    "ext",
+    "return_value"
+  ],
+  "StateArchivalSettings": [
+    "eviction_scan_size",
+    "live_soroban_state_size_window_sample_period",
+    "live_soroban_state_size_window_sample_size",
+    "max_entries_to_archive",
+    "max_entry_ttl",
+    "min_persistent_ttl",
+    "min_temporary_ttl",
+    "persistent_rent_rate_denominator",
+    "starting_eviction_scan_level",
+    "temp_rent_rate_denominator"
+  ],
+  "StellarMessage": [
+    "auth",
+    "dont_have",
+    "error_msg",
+    "flood_advert",
+    "flood_demand",
+    "generalized_tx_set",
+    "get_scp_quorumset",
+    "get_scp_state",
+    "get_tx_set",
+    "hello",
+    "peers",
+    "scp_message",
+    "scp_quorumset",
+    "send_more",
+    "send_more_extended",
+    "time_sliced_survey_request",
+    "time_sliced_survey_response",
+    "time_sliced_survey_start_collecting",
+    "time_sliced_survey_stop_collecting",
+    "transaction",
+    "tx_set"
+  ],
+  "StellarValue": [
+    "close_time",
+    "ext",
+    "tx_set_hash",
+    "upgrades"
+  ],
+  "StellarValueExt": [
+    "basic",
+    "empty_tx_set",
+    "empty_tx_set_ms",
+    "signed",
+    "signed_ms"
+  ],
+  "StellarValueProposedMsValue": [
+    "close_time_ms",
+    "lc_value_signature",
+    "previous_ledger_hash",
+    "previous_ledger_version",
+    "tx_set_hash"
+  ],
+  "StellarValueProposedValue": [
+    "lc_value_signature",
+    "previous_ledger_hash",
+    "previous_ledger_version",
+    "tx_set_hash"
+  ],
+  "StellarValueSignedMsValue": [
+    "close_time_ms",
+    "lc_value_signature"
+  ],
+  "StellarValueType": [
+    "basic",
+    "empty_tx_set",
+    "empty_tx_set_ms",
+    "signed",
+    "signed_ms"
+  ],
+  "StoredDebugTransactionSet": [
+    "ledger_seq",
+    "scp_value",
+    "tx_set"
+  ],
+  "StoredTransactionSet": [
+    "v0",
+    "v1"
+  ],
+  "SurveyMessageCommandType": [
+    "time_sliced_survey_topology"
+  ],
+  "SurveyMessageResponseType": [
+    "survey_topology_response_v2"
+  ],
+  "SurveyRequestMessage": [
+    "command_type",
+    "encryption_key",
+    "ledger_num",
+    "surveyed_peer_id",
+    "surveyor_peer_id"
+  ],
+  "SurveyResponseBody": [
+    "survey_topology_response_v2"
+  ],
+  "SurveyResponseMessage": [
+    "command_type",
+    "encrypted_body",
+    "ledger_num",
+    "surveyed_peer_id",
+    "surveyor_peer_id"
+  ],
+  "ThresholdIndexes": [
+    "high",
+    "low",
+    "master_weight",
+    "med"
+  ],
+  "TimeBounds": [
+    "max_time",
+    "min_time"
+  ],
+  "TimeSlicedNodeData": [
+    "added_authenticated_peers",
+    "dropped_authenticated_peers",
+    "is_validator",
+    "lost_sync_count",
+    "max_inbound_peer_count",
+    "max_outbound_peer_count",
+    "p75_scp_first_to_self_latency_ms",
+    "p75_scp_self_to_other_latency_ms",
+    "total_inbound_peer_count",
+    "total_outbound_peer_count"
+  ],
+  "TimeSlicedPeerData": [
+    "average_latency_ms",
+    "peer_stats"
+  ],
+  "TimeSlicedSurveyRequestMessage": [
+    "inbound_peers_index",
+    "nonce",
+    "outbound_peers_index",
+    "request"
+  ],
+  "TimeSlicedSurveyResponseMessage": [
+    "nonce",
+    "response"
+  ],
+  "TimeSlicedSurveyStartCollectingMessage": [
+    "ledger_num",
+    "nonce",
+    "surveyor_id"
+  ],
+  "TimeSlicedSurveyStopCollectingMessage": [
+    "ledger_num",
+    "nonce",
+    "surveyor_id"
+  ],
+  "TopologyResponseBodyV2": [
+    "inbound_peers",
+    "node_data",
+    "outbound_peers"
+  ],
+  "Transaction": [
+    "cond",
+    "ext",
+    "fee",
+    "memo",
+    "operations",
+    "seq_num",
+    "source_account"
+  ],
+  "TransactionEnvelope": [
+    "tx",
+    "tx_fee_bump",
+    "tx_v0"
+  ],
+  "TransactionEvent": [
+    "event",
+    "stage"
+  ],
+  "TransactionEventStage": [
+    "after_all_txs",
+    "after_tx",
+    "before_all_txs"
+  ],
+  "TransactionExt": [
+    "v0",
+    "v1"
+  ],
+  "TransactionHistoryEntry": [
+    "ext",
+    "ledger_seq",
+    "tx_set"
+  ],
+  "TransactionHistoryEntryExt": [
+    "v0",
+    "v1"
+  ],
+  "TransactionHistoryResultEntry": [
+    "ext",
+    "ledger_seq",
+    "tx_result_set"
+  ],
+  "TransactionHistoryResultEntryExt": [
+    "v0"
+  ],
+  "TransactionMeta": [
+    "v0",
+    "v1",
+    "v2",
+    "v3",
+    "v4"
+  ],
+  "TransactionMetaV1": [
+    "operations",
+    "tx_changes"
+  ],
+  "TransactionMetaV2": [
+    "operations",
+    "tx_changes_after",
+    "tx_changes_before"
+  ],
+  "TransactionMetaV3": [
+    "ext",
+    "operations",
+    "soroban_meta",
+    "tx_changes_after",
+    "tx_changes_before"
+  ],
+  "TransactionMetaV4": [
+    "diagnostic_events",
+    "events",
+    "ext",
+    "operations",
+    "soroban_meta",
+    "tx_changes_after",
+    "tx_changes_before"
+  ],
+  "TransactionPhase": [
+    "v0",
+    "v1"
+  ],
+  "TransactionResult": [
+    "ext",
+    "fee_charged",
+    "result"
+  ],
+  "TransactionResultCode": [
+    "tx_bad_auth",
+    "tx_bad_auth_extra",
+    "tx_bad_min_seq_age_or_gap",
+    "tx_bad_seq",
+    "tx_bad_sponsorship",
+    "tx_failed",
+    "tx_fee_bump_inner_failed",
+    "tx_fee_bump_inner_success",
+    "tx_frozen_key_accessed",
+    "tx_insufficient_balance",
+    "tx_insufficient_fee",
+    "tx_internal_error",
+    "tx_malformed",
+    "tx_missing_operation",
+    "tx_no_account",
+    "tx_not_supported",
+    "tx_soroban_invalid",
+    "tx_success",
+    "tx_too_early",
+    "tx_too_late"
+  ],
+  "TransactionResultExt": [
+    "v0"
+  ],
+  "TransactionResultMeta": [
+    "fee_processing",
+    "result",
+    "tx_apply_processing"
+  ],
+  "TransactionResultMetaV1": [
+    "ext",
+    "fee_processing",
+    "post_tx_apply_fee_processing",
+    "result",
+    "tx_apply_processing"
+  ],
+  "TransactionResultPair": [
+    "result",
+    "transaction_hash"
+  ],
+  "TransactionResultResult": [
+    "tx_bad_auth",
+    "tx_bad_auth_extra",
+    "tx_bad_min_seq_age_or_gap",
+    "tx_bad_seq",
+    "tx_bad_sponsorship",
+    "tx_failed",
+    "tx_fee_bump_inner_failed",
+    "tx_fee_bump_inner_success",
+    "tx_frozen_key_accessed",
+    "tx_insufficient_balance",
+    "tx_insufficient_fee",
+    "tx_internal_error",
+    "tx_malformed",
+    "tx_missing_operation",
+    "tx_no_account",
+    "tx_not_supported",
+    "tx_soroban_invalid",
+    "tx_success",
+    "tx_too_early",
+    "tx_too_late"
+  ],
+  "TransactionResultSet": [
+    "results"
+  ],
+  "TransactionSet": [
+    "previous_ledger_hash",
+    "txs"
+  ],
+  "TransactionSetV1": [
+    "phases",
+    "previous_ledger_hash"
+  ],
+  "TransactionSignaturePayload": [
+    "network_id",
+    "tagged_transaction"
+  ],
+  "TransactionSignaturePayloadTaggedTransaction": [
+    "tx",
+    "tx_fee_bump"
+  ],
+  "TransactionV0": [
+    "ext",
+    "fee",
+    "memo",
+    "operations",
+    "seq_num",
+    "source_account_ed25519",
+    "time_bounds"
+  ],
+  "TransactionV0Envelope": [
+    "signatures",
+    "tx"
+  ],
+  "TransactionV0Ext": [
+    "v0"
+  ],
+  "TransactionV1Envelope": [
+    "signatures",
+    "tx"
+  ],
+  "TrustLineAsset": [
+    "credit_alphanum12",
+    "credit_alphanum4",
+    "native",
+    "pool_share"
+  ],
+  "TrustLineEntry": [
+    "account_id",
+    "asset",
+    "balance",
+    "ext",
+    "flags",
+    "limit"
+  ],
+  "TrustLineEntryExt": [
+    "v0",
+    "v1"
+  ],
+  "TrustLineEntryExtensionV2": [
+    "ext",
+    "liquidity_pool_use_count"
+  ],
+  "TrustLineEntryExtensionV2Ext": [
+    "v0"
+  ],
+  "TrustLineEntryV1": [
+    "ext",
+    "liabilities"
+  ],
+  "TrustLineEntryV1Ext": [
+    "v0",
+    "v2"
+  ],
+  "TrustLineFlags": [
+    "authorized_flag",
+    "authorized_to_maintain_liabilities_flag",
+    "trustline_clawback_enabled_flag"
+  ],
+  "TtlEntry": [
+    "key_hash",
+    "live_until_ledger_seq"
+  ],
+  "TxSetComponent": [
+    "txset_comp_txs_maybe_discounted_fee"
+  ],
+  "TxSetComponentTxsMaybeDiscountedFee": [
+    "base_fee",
+    "txs"
+  ],
+  "TxSetComponentType": [
+    "txset_comp_txs_maybe_discounted_fee"
+  ],
+  "UpgradeEntryMeta": [
+    "changes",
+    "upgrade"
+  ]
+}

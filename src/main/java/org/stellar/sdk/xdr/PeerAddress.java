@@ -236,12 +236,12 @@ public class PeerAddress implements XdrElement {
     Object toJsonObject() {
       if (discriminant == IPAddrType.IPv4) {
         LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-        jsonMap.put("ipv4", XdrElement.bytesToHex(ipv4));
+        jsonMap.put("i_pv4", XdrElement.bytesToHex(ipv4));
         return jsonMap;
       }
       if (discriminant == IPAddrType.IPv6) {
         LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-        jsonMap.put("ipv6", XdrElement.bytesToHex(ipv6));
+        jsonMap.put("i_pv6", XdrElement.bytesToHex(ipv6));
         return jsonMap;
       }
       throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
@@ -260,16 +260,16 @@ public class PeerAddress implements XdrElement {
       }
       String key = jsonMap.keySet().iterator().next();
       IPAddrType discriminant = IPAddrType.fromJsonObject(key);
-      if (key.equals("ipv4")) {
+      if (key.equals("i_pv4")) {
         PeerAddressIp instance = new PeerAddressIp();
         instance.discriminant = discriminant;
-        instance.ipv4 = XdrElement.hexToBytes((String) jsonMap.get("ipv4"));
+        instance.ipv4 = XdrElement.hexToBytes((String) jsonMap.get("i_pv4"));
         return instance;
       }
-      if (key.equals("ipv6")) {
+      if (key.equals("i_pv6")) {
         PeerAddressIp instance = new PeerAddressIp();
         instance.discriminant = discriminant;
-        instance.ipv6 = XdrElement.hexToBytes((String) jsonMap.get("ipv6"));
+        instance.ipv6 = XdrElement.hexToBytes((String) jsonMap.get("i_pv6"));
         return instance;
       }
       throw new IllegalArgumentException("Unknown key '" + key + "' for PeerAddressIp");

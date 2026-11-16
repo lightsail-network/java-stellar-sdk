@@ -177,26 +177,26 @@ public class OperationResult implements XdrElement {
   Object toJsonObject() {
     if (discriminant == OperationResultCode.opINNER) {
       LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-      jsonMap.put("opinner", tr.toJsonObject());
+      jsonMap.put("op_inner", tr.toJsonObject());
       return jsonMap;
     }
     if (discriminant == OperationResultCode.opBAD_AUTH) {
-      return "opbad_auth";
+      return "op_bad_auth";
     }
     if (discriminant == OperationResultCode.opNO_ACCOUNT) {
-      return "opno_account";
+      return "op_no_account";
     }
     if (discriminant == OperationResultCode.opNOT_SUPPORTED) {
-      return "opnot_supported";
+      return "op_not_supported";
     }
     if (discriminant == OperationResultCode.opTOO_MANY_SUBENTRIES) {
-      return "optoo_many_subentries";
+      return "op_too_many_subentries";
     }
     if (discriminant == OperationResultCode.opEXCEEDED_WORK_LIMIT) {
-      return "opexceeded_work_limit";
+      return "op_exceeded_work_limit";
     }
     if (discriminant == OperationResultCode.opTOO_MANY_SPONSORING) {
-      return "optoo_many_sponsoring";
+      return "op_too_many_sponsoring";
     }
     throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
   }
@@ -205,12 +205,12 @@ public class OperationResult implements XdrElement {
   static OperationResult fromJsonObject(Object json) {
     if (json instanceof String) {
       String strVal = (String) json;
-      if (!(strVal.equals("opbad_auth")
-          || strVal.equals("opno_account")
-          || strVal.equals("opnot_supported")
-          || strVal.equals("optoo_many_subentries")
-          || strVal.equals("opexceeded_work_limit")
-          || strVal.equals("optoo_many_sponsoring"))) {
+      if (!(strVal.equals("op_bad_auth")
+          || strVal.equals("op_no_account")
+          || strVal.equals("op_not_supported")
+          || strVal.equals("op_too_many_subentries")
+          || strVal.equals("op_exceeded_work_limit")
+          || strVal.equals("op_too_many_sponsoring"))) {
         throw new IllegalArgumentException(
             "Unexpected string '" + strVal + "' for OperationResult");
       }
@@ -229,10 +229,10 @@ public class OperationResult implements XdrElement {
     }
     String key = jsonMap.keySet().iterator().next();
     OperationResultCode discriminant = OperationResultCode.fromJsonObject(key);
-    if (key.equals("opinner")) {
+    if (key.equals("op_inner")) {
       OperationResult instance = new OperationResult();
       instance.discriminant = discriminant;
-      instance.tr = OperationResultTr.fromJsonObject(jsonMap.get("opinner"));
+      instance.tr = OperationResultTr.fromJsonObject(jsonMap.get("op_inner"));
       return instance;
     }
     throw new IllegalArgumentException("Unknown key '" + key + "' for OperationResult");

@@ -3,6 +3,11 @@
 ## Pending
 
 ### Update
+- fix: XDR-JSON (`toJson()`/`fromJson()`) now matches SEP-51 and the output of rs-stellar-xdr, js-stellar-sdk, and py-stellar-xdr, checked against about 3,900 reference vectors. JSON in the old forms no longer reads back. ([#835](https://github.com/lightsail-network/java-stellar-sdk/issues/835))
+  - Enum members and union arms are split into words: `txSUCCESS` is `tx_success` instead of `txsuccess`, `opINNER` is `op_inner`, `WasmInsnExec` is `wasm_insn_exec`, `IPv4` is `i_pv4`, and `BINARY_FUSE_FILTER_8_BIT` is `b8_bit` instead of `8_bit`.
+  - `AssetCode` (`AllowTrustOp.asset`) is the bare code, such as `"FIL"`, instead of `{"credit_alphanum4":"FIL"}`. `MuxedAccount.MuxedAccountMed25519` is an `M...` strkey and `MuxedContract` a `W...` strkey, instead of objects.
+  - Values that used to throw are now written: an `SCAddress` holding a muxed contract (`W...`), and an absent optional union arm, such as an `SCVal` vec or map or the `not` of a `ClaimPredicate`, which is `null` instead of a `NullPointerException`.
+  - An ed25519 signed payload signer with an empty payload has no SEP-51 form, so `toJson()` throws `IllegalArgumentException` instead of writing a `P...` strkey that `fromJson` can't read back.
 - fix: `Asset.compareTo` orders same-code assets by the issuers' raw Ed25519 key bytes instead of their strkey text, matching the order the network requires.
 
 ## 6.0.0

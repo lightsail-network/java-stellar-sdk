@@ -154,45 +154,45 @@ public enum TransactionResultCode implements XdrElement {
   Object toJsonObject() {
     switch (this) {
       case txFEE_BUMP_INNER_SUCCESS:
-        return "txfee_bump_inner_success";
+        return "tx_fee_bump_inner_success";
       case txSUCCESS:
-        return "txsuccess";
+        return "tx_success";
       case txFAILED:
-        return "txfailed";
+        return "tx_failed";
       case txTOO_EARLY:
-        return "txtoo_early";
+        return "tx_too_early";
       case txTOO_LATE:
-        return "txtoo_late";
+        return "tx_too_late";
       case txMISSING_OPERATION:
-        return "txmissing_operation";
+        return "tx_missing_operation";
       case txBAD_SEQ:
-        return "txbad_seq";
+        return "tx_bad_seq";
       case txBAD_AUTH:
-        return "txbad_auth";
+        return "tx_bad_auth";
       case txINSUFFICIENT_BALANCE:
-        return "txinsufficient_balance";
+        return "tx_insufficient_balance";
       case txNO_ACCOUNT:
-        return "txno_account";
+        return "tx_no_account";
       case txINSUFFICIENT_FEE:
-        return "txinsufficient_fee";
+        return "tx_insufficient_fee";
       case txBAD_AUTH_EXTRA:
-        return "txbad_auth_extra";
+        return "tx_bad_auth_extra";
       case txINTERNAL_ERROR:
-        return "txinternal_error";
+        return "tx_internal_error";
       case txNOT_SUPPORTED:
-        return "txnot_supported";
+        return "tx_not_supported";
       case txFEE_BUMP_INNER_FAILED:
-        return "txfee_bump_inner_failed";
+        return "tx_fee_bump_inner_failed";
       case txBAD_SPONSORSHIP:
-        return "txbad_sponsorship";
+        return "tx_bad_sponsorship";
       case txBAD_MIN_SEQ_AGE_OR_GAP:
-        return "txbad_min_seq_age_or_gap";
+        return "tx_bad_min_seq_age_or_gap";
       case txMALFORMED:
-        return "txmalformed";
+        return "tx_malformed";
       case txSOROBAN_INVALID:
-        return "txsoroban_invalid";
+        return "tx_soroban_invalid";
       case txFROZEN_KEY_ACCESSED:
-        return "txfrozen_key_accessed";
+        return "tx_frozen_key_accessed";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -201,45 +201,45 @@ public enum TransactionResultCode implements XdrElement {
   static TransactionResultCode fromJsonObject(Object json) {
     String value = (String) json;
     switch (value) {
-      case "txfee_bump_inner_success":
+      case "tx_fee_bump_inner_success":
         return txFEE_BUMP_INNER_SUCCESS;
-      case "txsuccess":
+      case "tx_success":
         return txSUCCESS;
-      case "txfailed":
+      case "tx_failed":
         return txFAILED;
-      case "txtoo_early":
+      case "tx_too_early":
         return txTOO_EARLY;
-      case "txtoo_late":
+      case "tx_too_late":
         return txTOO_LATE;
-      case "txmissing_operation":
+      case "tx_missing_operation":
         return txMISSING_OPERATION;
-      case "txbad_seq":
+      case "tx_bad_seq":
         return txBAD_SEQ;
-      case "txbad_auth":
+      case "tx_bad_auth":
         return txBAD_AUTH;
-      case "txinsufficient_balance":
+      case "tx_insufficient_balance":
         return txINSUFFICIENT_BALANCE;
-      case "txno_account":
+      case "tx_no_account":
         return txNO_ACCOUNT;
-      case "txinsufficient_fee":
+      case "tx_insufficient_fee":
         return txINSUFFICIENT_FEE;
-      case "txbad_auth_extra":
+      case "tx_bad_auth_extra":
         return txBAD_AUTH_EXTRA;
-      case "txinternal_error":
+      case "tx_internal_error":
         return txINTERNAL_ERROR;
-      case "txnot_supported":
+      case "tx_not_supported":
         return txNOT_SUPPORTED;
-      case "txfee_bump_inner_failed":
+      case "tx_fee_bump_inner_failed":
         return txFEE_BUMP_INNER_FAILED;
-      case "txbad_sponsorship":
+      case "tx_bad_sponsorship":
         return txBAD_SPONSORSHIP;
-      case "txbad_min_seq_age_or_gap":
+      case "tx_bad_min_seq_age_or_gap":
         return txBAD_MIN_SEQ_AGE_OR_GAP;
-      case "txmalformed":
+      case "tx_malformed":
         return txMALFORMED;
-      case "txsoroban_invalid":
+      case "tx_soroban_invalid":
         return txSOROBAN_INVALID;
-      case "txfrozen_key_accessed":
+      case "tx_frozen_key_accessed":
         return txFROZEN_KEY_ACCESSED;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);
