@@ -835,7 +835,9 @@ class Generator < Xdrgen::Generators::Base
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
-        return decode(xdrDataInputStream);
+        #{return_type} decoded = decode(xdrDataInputStream);
+        xdrDataInputStream.requireEndOfInput();
+        return decoded;
       }
     EOS
   end

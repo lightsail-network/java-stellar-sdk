@@ -100,7 +100,9 @@ public class SorobanTransactionData implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    SorobanTransactionData decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override
@@ -210,7 +212,9 @@ public class SorobanTransactionData implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      SorobanTransactionDataExt decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override

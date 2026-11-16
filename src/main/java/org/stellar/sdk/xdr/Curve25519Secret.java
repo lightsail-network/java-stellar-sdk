@@ -69,7 +69,9 @@ public class Curve25519Secret implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    Curve25519Secret decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override

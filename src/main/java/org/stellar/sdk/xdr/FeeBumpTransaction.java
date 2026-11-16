@@ -106,7 +106,9 @@ public class FeeBumpTransaction implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    FeeBumpTransaction decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override
@@ -211,7 +213,9 @@ public class FeeBumpTransaction implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      FeeBumpTransactionInnerTx decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -318,7 +322,9 @@ public class FeeBumpTransaction implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      FeeBumpTransactionExt decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override

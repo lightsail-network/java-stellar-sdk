@@ -3,6 +3,7 @@
 ## Pending
 
 ### Update
+- fix: `fromXdrBase64` and `fromXdrByteArray` on the XDR classes throw `IOException` when bytes are left after the value, instead of ignoring them, so `AbstractTransaction.fromEnvelopeXdr` rejects an envelope with extra bytes, as the network does. ([#833](https://github.com/lightsail-network/java-stellar-sdk/issues/833))
 - fix: XDR-JSON (`toJson()`/`fromJson()`) now matches SEP-51 and the output of rs-stellar-xdr, js-stellar-sdk, and py-stellar-xdr, checked against about 3,900 reference vectors. JSON in the old forms no longer reads back. ([#835](https://github.com/lightsail-network/java-stellar-sdk/issues/835))
   - Enum members and union arms are split into words: `txSUCCESS` is `tx_success` instead of `txsuccess`, `opINNER` is `op_inner`, `WasmInsnExec` is `wasm_insn_exec`, `IPv4` is `i_pv4`, and `BINARY_FUSE_FILTER_8_BIT` is `b8_bit` instead of `8_bit`.
   - `AssetCode` (`AllowTrustOp.asset`) is the bare code, such as `"FIL"`, instead of `{"credit_alphanum4":"FIL"}`. `MuxedAccount.MuxedAccountMed25519` is an `M...` strkey and `MuxedContract` a `W...` strkey, instead of objects.

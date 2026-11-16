@@ -51,6 +51,24 @@ public class XdrDataInputStream extends DataInputStream {
     }
 
     /**
+     * Throws when bytes are left after a value decoded from a byte array of known length.
+     * An XDR value must use all of its input, as stellar-core and the other SDKs require;
+     * otherwise different inputs would decode to the same value. The streaming
+     * {@code decode} methods don't call this, since a stream can hold several values.
+     *
+     * @throws IOException if any input is left
+     */
+    void requireEndOfInput() throws IOException {
+        if (maxInputLen < 0) {
+            throw new IllegalStateException("The input length is unknown");
+        }
+        int remaining = getRemainingInputLen();
+        if (remaining != 0) {
+            throw new IOException("Input has " + remaining + " bytes left after the value");
+        }
+    }
+
+    /**
      * Reads an XDR boolean value from the stream.
      * Per RFC 4506, a boolean is encoded as an integer that must be 0 (FALSE) or 1 (TRUE).
      *

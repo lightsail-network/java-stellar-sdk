@@ -140,7 +140,9 @@ public class TrustLineEntry implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    TrustLineEntry decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override
@@ -267,7 +269,9 @@ public class TrustLineEntry implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      TrustLineEntryExt decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -393,7 +397,9 @@ public class TrustLineEntry implements XdrElement {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
-        return decode(xdrDataInputStream);
+        TrustLineEntryV1 decoded = decode(xdrDataInputStream);
+        xdrDataInputStream.requireEndOfInput();
+        return decoded;
       }
 
       @Override
@@ -500,7 +506,9 @@ public class TrustLineEntry implements XdrElement {
           ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
           XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
           xdrDataInputStream.setMaxInputLen(xdr.length);
-          return decode(xdrDataInputStream);
+          TrustLineEntryV1Ext decoded = decode(xdrDataInputStream);
+          xdrDataInputStream.requireEndOfInput();
+          return decoded;
         }
 
         @Override

@@ -104,7 +104,9 @@ public class ManageOfferSuccessResult implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    ManageOfferSuccessResult decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override
@@ -222,7 +224,9 @@ public class ManageOfferSuccessResult implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      ManageOfferSuccessResultOffer decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override

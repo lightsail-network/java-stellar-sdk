@@ -269,7 +269,9 @@ public class LedgerKey implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    LedgerKey decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override
@@ -463,7 +465,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyAccount decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -552,7 +556,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyTrustLine decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -643,7 +649,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyOffer decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -733,7 +741,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyData decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -813,7 +823,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyClaimableBalance decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -891,7 +903,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyLiquidityPool decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -991,7 +1005,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyContractData decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -1073,7 +1089,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyContractCode decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -1151,7 +1169,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyConfigSetting decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -1229,7 +1249,9 @@ public class LedgerKey implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      LedgerKeyTtl decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override

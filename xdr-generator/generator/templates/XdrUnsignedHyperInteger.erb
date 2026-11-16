@@ -157,6 +157,9 @@ public class XdrUnsignedHyperInteger implements XdrElement {
   public static XdrUnsignedHyperInteger fromXdrByteArray(byte[] xdr) throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
-    return decode(xdrDataInputStream);
+    xdrDataInputStream.setMaxInputLen(xdr.length);
+    XdrUnsignedHyperInteger decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 }

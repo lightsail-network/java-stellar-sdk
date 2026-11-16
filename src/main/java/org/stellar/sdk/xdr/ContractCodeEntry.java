@@ -107,7 +107,9 @@ public class ContractCodeEntry implements XdrElement {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
     XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
     xdrDataInputStream.setMaxInputLen(xdr.length);
-    return decode(xdrDataInputStream);
+    ContractCodeEntry decoded = decode(xdrDataInputStream);
+    xdrDataInputStream.requireEndOfInput();
+    return decoded;
   }
 
   @Override
@@ -220,7 +222,9 @@ public class ContractCodeEntry implements XdrElement {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
       XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
       xdrDataInputStream.setMaxInputLen(xdr.length);
-      return decode(xdrDataInputStream);
+      ContractCodeEntryExt decoded = decode(xdrDataInputStream);
+      xdrDataInputStream.requireEndOfInput();
+      return decoded;
     }
 
     @Override
@@ -338,7 +342,9 @@ public class ContractCodeEntry implements XdrElement {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
         XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
         xdrDataInputStream.setMaxInputLen(xdr.length);
-        return decode(xdrDataInputStream);
+        ContractCodeEntryV1 decoded = decode(xdrDataInputStream);
+        xdrDataInputStream.requireEndOfInput();
+        return decoded;
       }
 
       @Override
