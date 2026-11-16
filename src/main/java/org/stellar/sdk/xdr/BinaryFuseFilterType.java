@@ -82,11 +82,11 @@ public enum BinaryFuseFilterType implements XdrElement {
   Object toJsonObject() {
     switch (this) {
       case BINARY_FUSE_FILTER_8_BIT:
-        return "8_bit";
+        return "b8_bit";
       case BINARY_FUSE_FILTER_16_BIT:
-        return "16_bit";
+        return "b16_bit";
       case BINARY_FUSE_FILTER_32_BIT:
-        return "32_bit";
+        return "b32_bit";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -95,11 +95,11 @@ public enum BinaryFuseFilterType implements XdrElement {
   static BinaryFuseFilterType fromJsonObject(Object json) {
     String value = (String) json;
     switch (value) {
-      case "8_bit":
+      case "b8_bit":
         return BINARY_FUSE_FILTER_8_BIT;
-      case "16_bit":
+      case "b16_bit":
         return BINARY_FUSE_FILTER_16_BIT;
-      case "32_bit":
+      case "b32_bit":
         return BINARY_FUSE_FILTER_32_BIT;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);

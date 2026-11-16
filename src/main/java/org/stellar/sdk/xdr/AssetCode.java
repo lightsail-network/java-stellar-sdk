@@ -5,7 +5,6 @@ package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -116,44 +115,28 @@ public class AssetCode implements XdrElement {
   }
 
   Object toJsonObject() {
-    if (discriminant == AssetType.ASSET_TYPE_CREDIT_ALPHANUM4) {
-      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-      jsonMap.put("credit_alphanum4", assetCode4.toJsonObject());
-      return jsonMap;
+    if (this.discriminant == AssetType.ASSET_TYPE_CREDIT_ALPHANUM4) {
+      return this.assetCode4.toJsonObject();
     }
-    if (discriminant == AssetType.ASSET_TYPE_CREDIT_ALPHANUM12) {
-      LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-      jsonMap.put("credit_alphanum12", assetCode12.toJsonObject());
-      return jsonMap;
+    if (this.discriminant == AssetType.ASSET_TYPE_CREDIT_ALPHANUM12) {
+      return this.assetCode12.toJsonObject();
     }
-    throw new IllegalArgumentException("Unknown discriminant: " + discriminant);
+    throw new IllegalArgumentException("Unknown AssetCode type: " + this.discriminant);
   }
 
-  @SuppressWarnings("unchecked")
   static AssetCode fromJsonObject(Object json) {
-    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
-    if (jsonMap.containsKey("$schema")) {
-      jsonMap = new LinkedHashMap<>(jsonMap);
-      jsonMap.remove("$schema");
+    if (!(json instanceof String)) {
+      throw new IllegalArgumentException("Expected a string for AssetCode, got: " + json);
     }
-    if (jsonMap.size() != 1) {
-      throw new IllegalArgumentException(
-          "Expected a single-key object for AssetCode, got: " + json);
+    String value = (String) json;
+    AssetCode instance = new AssetCode();
+    if (XdrElement.escapedAsciiToBytes(value).length <= 4) {
+      instance.discriminant = AssetType.ASSET_TYPE_CREDIT_ALPHANUM4;
+      instance.assetCode4 = AssetCode4.fromJsonObject(value);
+    } else {
+      instance.discriminant = AssetType.ASSET_TYPE_CREDIT_ALPHANUM12;
+      instance.assetCode12 = AssetCode12.fromJsonObject(value);
     }
-    String key = jsonMap.keySet().iterator().next();
-    AssetType discriminant = AssetType.fromJsonObject(key);
-    if (key.equals("credit_alphanum4")) {
-      AssetCode instance = new AssetCode();
-      instance.discriminant = discriminant;
-      instance.assetCode4 = AssetCode4.fromJsonObject(jsonMap.get("credit_alphanum4"));
-      return instance;
-    }
-    if (key.equals("credit_alphanum12")) {
-      AssetCode instance = new AssetCode();
-      instance.discriminant = discriminant;
-      instance.assetCode12 = AssetCode12.fromJsonObject(jsonMap.get("credit_alphanum12"));
-      return instance;
-    }
-    throw new IllegalArgumentException("Unknown key '" + key + "' for AssetCode");
+    return instance;
   }
 }

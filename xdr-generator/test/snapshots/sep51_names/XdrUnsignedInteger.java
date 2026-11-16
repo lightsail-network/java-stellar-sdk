@@ -1,0 +1,149 @@
+package org.stellar.sdk.xdr;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import lombok.Value;
+import org.stellar.sdk.Base64Factory;
+
+/**
+ * Represents XDR Unsigned Integer.
+ *
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc4506#section-4.2">XDR: External Data
+ *     Representation Standard</a>
+ */
+@Value
+public class XdrUnsignedInteger implements XdrElement {
+  /** Largest value representable by XDR unsigned integer. */
+  public static final long MAX_VALUE = (1L << 32) - 1;
+  /** Smallest value representable by XDR unsigned integer. */
+  public static final long MIN_VALUE = 0;
+
+  /**
+   * Numeric value stored by this XDR unsigned integer.
+   *
+   * @return the unsigned 32-bit value as a {@link Long}
+   */
+  Long number;
+
+  /**
+   * Creates an {@link XdrUnsignedInteger} from a {@link Long}.
+   *
+   * @param number the unsigned 32-bit value
+   * @throws IllegalArgumentException if {@code number} is outside the valid range
+   */
+  public XdrUnsignedInteger(Long number) {
+    if (number < MIN_VALUE || number > MAX_VALUE) {
+      throw new IllegalArgumentException("number must be between 0 and 2^32 - 1 inclusive");
+    }
+    this.number = number;
+  }
+
+  /**
+   * Creates an {@link XdrUnsignedInteger} from a non-negative {@link Integer}.
+   *
+   * @param number the unsigned 32-bit value
+   * @throws IllegalArgumentException if {@code number} is negative
+   */
+  public XdrUnsignedInteger(Integer number) {
+    if (number < 0) {
+      throw new IllegalArgumentException(
+          "number must be greater than or equal to 0 if you want to construct it from Integer");
+    }
+    this.number = number.longValue();
+  }
+
+  /**
+   * Decodes an {@link XdrUnsignedInteger} from the provided stream.
+   *
+   * @param stream the source XDR input stream
+   * @param maxDepth the maximum decoding depth, ignored for this leaf type
+   * @return the decoded {@link XdrUnsignedInteger}
+   * @throws IOException if an I/O error occurs while reading the value
+   */
+  public static XdrUnsignedInteger decode(XdrDataInputStream stream, int maxDepth) throws IOException {
+    // maxDepth is intentionally not checked - XdrUnsignedInteger is a leaf type with no recursive decoding
+    int intValue = stream.readInt();
+    long uint32Value = Integer.toUnsignedLong(intValue);
+    return new XdrUnsignedInteger(uint32Value);
+  }
+
+  /**
+   * Decodes an {@link XdrUnsignedInteger} from the provided stream using the default maximum depth.
+   *
+   * @param stream the source XDR input stream
+   * @return the decoded {@link XdrUnsignedInteger}
+   * @throws IOException if an I/O error occurs while reading the value
+   */
+  public static XdrUnsignedInteger decode(XdrDataInputStream stream) throws IOException {
+    return decode(stream, XdrDataInputStream.DEFAULT_MAX_DEPTH);
+  }
+
+  /**
+   * Encodes this value to XDR.
+   *
+   * @param stream the destination XDR output stream
+   * @throws IOException if an I/O error occurs while writing the value
+   */
+  @Override
+  public void encode(XdrDataOutputStream stream) throws IOException {
+    stream.writeInt(number.intValue());
+  }
+
+  /**
+   * Serializes this value to JSON.
+   *
+   * @return the JSON representation of this value
+   */
+  @Override
+  public String toJson() {
+    return XdrElement.gson.toJson(toJsonObject());
+  }
+
+  Object toJsonObject() {
+    return this.number;
+  }
+
+  /**
+   * Parses an {@link XdrUnsignedInteger} from JSON.
+   *
+   * @param json the JSON representation
+   * @return the parsed {@link XdrUnsignedInteger}, or {@code null} if the input is {@code null}
+   * @throws IllegalArgumentException if the JSON value is invalid
+   */
+  public static XdrUnsignedInteger fromJson(String json) {
+    return fromJsonObject(XdrElement.gson.fromJson(json, Object.class));
+  }
+
+  static XdrUnsignedInteger fromJsonObject(Object json) {
+    if (json == null) {
+      return null;
+    }
+    return new XdrUnsignedInteger(XdrElement.jsonToLong(json));
+  }
+
+  /**
+   * Decodes an {@link XdrUnsignedInteger} from a base64-encoded XDR string.
+   *
+   * @param xdr the base64-encoded XDR string
+   * @return the decoded {@link XdrUnsignedInteger}
+   * @throws IOException if the input is invalid or cannot be decoded
+   */
+  public static XdrUnsignedInteger fromXdrBase64(String xdr) throws IOException {
+    byte[] bytes = Base64Factory.getInstance().decode(xdr);
+    return fromXdrByteArray(bytes);
+  }
+
+  /**
+   * Decodes an {@link XdrUnsignedInteger} from raw XDR bytes.
+   *
+   * @param xdr the raw XDR bytes
+   * @return the decoded {@link XdrUnsignedInteger}
+   * @throws IOException if the input is invalid or cannot be decoded
+   */
+  public static XdrUnsignedInteger fromXdrByteArray(byte[] xdr) throws IOException {
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xdr);
+    XdrDataInputStream xdrDataInputStream = new XdrDataInputStream(byteArrayInputStream);
+    return decode(xdrDataInputStream);
+  }
+}

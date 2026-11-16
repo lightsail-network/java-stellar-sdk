@@ -99,19 +99,19 @@ public enum OperationResultCode implements XdrElement {
   Object toJsonObject() {
     switch (this) {
       case opINNER:
-        return "opinner";
+        return "op_inner";
       case opBAD_AUTH:
-        return "opbad_auth";
+        return "op_bad_auth";
       case opNO_ACCOUNT:
-        return "opno_account";
+        return "op_no_account";
       case opNOT_SUPPORTED:
-        return "opnot_supported";
+        return "op_not_supported";
       case opTOO_MANY_SUBENTRIES:
-        return "optoo_many_subentries";
+        return "op_too_many_subentries";
       case opEXCEEDED_WORK_LIMIT:
-        return "opexceeded_work_limit";
+        return "op_exceeded_work_limit";
       case opTOO_MANY_SPONSORING:
-        return "optoo_many_sponsoring";
+        return "op_too_many_sponsoring";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -120,19 +120,19 @@ public enum OperationResultCode implements XdrElement {
   static OperationResultCode fromJsonObject(Object json) {
     String value = (String) json;
     switch (value) {
-      case "opinner":
+      case "op_inner":
         return opINNER;
-      case "opbad_auth":
+      case "op_bad_auth":
         return opBAD_AUTH;
-      case "opno_account":
+      case "op_no_account":
         return opNO_ACCOUNT;
-      case "opnot_supported":
+      case "op_not_supported":
         return opNOT_SUPPORTED;
-      case "optoo_many_subentries":
+      case "op_too_many_subentries":
         return opTOO_MANY_SUBENTRIES;
-      case "opexceeded_work_limit":
+      case "op_exceeded_work_limit":
         return opEXCEEDED_WORK_LIMIT;
-      case "optoo_many_sponsoring":
+      case "op_too_many_sponsoring":
         return opTOO_MANY_SPONSORING;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);

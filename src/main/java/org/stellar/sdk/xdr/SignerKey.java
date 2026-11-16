@@ -4,7 +4,6 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -165,14 +164,7 @@ public class SignerKey implements XdrElement {
       return StrKey.encodeSha256Hash(this.hashX.getUint256());
     }
     if (this.discriminant == SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD) {
-      try {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
-        this.ed25519SignedPayload.encode(xdrOut);
-        return StrKey.encodeSignedPayload(baos.toByteArray());
-      } catch (IOException e) {
-        throw new IllegalArgumentException("Failed to encode SignerKey", e);
-      }
+      return this.ed25519SignedPayload.toJsonObject();
     }
     throw new IllegalArgumentException("Unknown SignerKey type: " + this.discriminant);
   }
@@ -202,16 +194,8 @@ public class SignerKey implements XdrElement {
       return instance;
     }
     if (strKey.startsWith("P")) {
-      try {
-        byte[] raw = StrKey.decodeSignedPayload(strKey);
-        ByteArrayInputStream bais = new ByteArrayInputStream(raw);
-        XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
-        SignerKeyEd25519SignedPayload payload = SignerKeyEd25519SignedPayload.decode(xdrIn);
-        instance.discriminant = SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
-        instance.ed25519SignedPayload = payload;
-      } catch (IOException e) {
-        throw new IllegalArgumentException("Failed to decode SignerKey", e);
-      }
+      instance.discriminant = SignerKeyType.SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD;
+      instance.ed25519SignedPayload = SignerKeyEd25519SignedPayload.fromJsonObject(strKey);
       return instance;
     }
     throw new IllegalArgumentException("Invalid SignerKey strkey: " + strKey);
@@ -317,6 +301,12 @@ public class SignerKey implements XdrElement {
     }
 
     Object toJsonObject() {
+      // XDR allows an empty payload, but a P... strkey needs 1 to 64 bytes, so such a
+      // value has no SEP-51 representation.
+      if (this.payload.length == 0) {
+        throw new IllegalArgumentException(
+            "SignerKeyEd25519SignedPayload with an empty payload has no SEP-51 representation");
+      }
       try {
         return StrKey.encodeSignedPayload(this.toXdrByteArray());
       } catch (IOException e) {

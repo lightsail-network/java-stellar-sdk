@@ -4,13 +4,14 @@
 package org.stellar.sdk.xdr;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.stellar.sdk.Base64Factory;
+import org.stellar.sdk.StrKey;
 
 /**
  * MuxedContract's original definition in the XDR file is:
@@ -86,18 +87,31 @@ public class MuxedContract implements XdrElement {
   }
 
   Object toJsonObject() {
-    LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-    jsonMap.put("id", id.toJsonObject());
-    jsonMap.put("contract_id", contractId.toJsonObject());
-    return jsonMap;
+    try {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      XdrDataOutputStream xdrOut = new XdrDataOutputStream(baos);
+      this.contractId.encode(xdrOut);
+      this.id.encode(xdrOut);
+      return StrKey.encodeMuxedContract(baos.toByteArray());
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Failed to encode MuxedContract", e);
+    }
   }
 
-  @SuppressWarnings("unchecked")
   static MuxedContract fromJsonObject(Object json) {
-    java.util.Map<String, Object> jsonMap = (java.util.Map<String, Object>) json;
-    MuxedContract instance = new MuxedContract();
-    instance.id = Uint64.fromJsonObject(jsonMap.get("id"));
-    instance.contractId = ContractID.fromJsonObject(jsonMap.get("contract_id"));
-    return instance;
+    String strKey = (String) json;
+    try {
+      byte[] raw = StrKey.decodeMuxedContract(strKey);
+      ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+      XdrDataInputStream xdrIn = new XdrDataInputStream(bais);
+      ContractID contractId = ContractID.decode(xdrIn);
+      Uint64 id = Uint64.decode(xdrIn);
+      MuxedContract instance = new MuxedContract();
+      instance.id = id;
+      instance.contractId = contractId;
+      return instance;
+    } catch (IOException e) {
+      throw new IllegalArgumentException("Failed to decode MuxedContract", e);
+    }
   }
 }

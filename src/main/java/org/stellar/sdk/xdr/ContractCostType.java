@@ -555,195 +555,195 @@ public enum ContractCostType implements XdrElement {
   Object toJsonObject() {
     switch (this) {
       case WasmInsnExec:
-        return "wasminsnexec";
+        return "wasm_insn_exec";
       case MemAlloc:
-        return "memalloc";
+        return "mem_alloc";
       case MemCpy:
-        return "memcpy";
+        return "mem_cpy";
       case MemCmp:
-        return "memcmp";
+        return "mem_cmp";
       case DispatchHostFunction:
-        return "dispatchhostfunction";
+        return "dispatch_host_function";
       case VisitObject:
-        return "visitobject";
+        return "visit_object";
       case ValSer:
-        return "valser";
+        return "val_ser";
       case ValDeser:
-        return "valdeser";
+        return "val_deser";
       case ComputeSha256Hash:
-        return "computesha256hash";
+        return "compute_sha256_hash";
       case ComputeEd25519PubKey:
-        return "computeed25519pubkey";
+        return "compute_ed25519_pub_key";
       case VerifyEd25519Sig:
-        return "verifyed25519sig";
+        return "verify_ed25519_sig";
       case VmInstantiation:
-        return "vminstantiation";
+        return "vm_instantiation";
       case VmCachedInstantiation:
-        return "vmcachedinstantiation";
+        return "vm_cached_instantiation";
       case InvokeVmFunction:
-        return "invokevmfunction";
+        return "invoke_vm_function";
       case ComputeKeccak256Hash:
-        return "computekeccak256hash";
+        return "compute_keccak256_hash";
       case DecodeEcdsaCurve256Sig:
-        return "decodeecdsacurve256sig";
+        return "decode_ecdsa_curve256_sig";
       case RecoverEcdsaSecp256k1Key:
-        return "recoverecdsasecp256k1key";
+        return "recover_ecdsa_secp256k1_key";
       case Int256AddSub:
-        return "int256addsub";
+        return "int256_add_sub";
       case Int256Mul:
-        return "int256mul";
+        return "int256_mul";
       case Int256Div:
-        return "int256div";
+        return "int256_div";
       case Int256Pow:
-        return "int256pow";
+        return "int256_pow";
       case Int256Shift:
-        return "int256shift";
+        return "int256_shift";
       case ChaCha20DrawBytes:
-        return "chacha20drawbytes";
+        return "cha_cha20_draw_bytes";
       case ParseWasmInstructions:
-        return "parsewasminstructions";
+        return "parse_wasm_instructions";
       case ParseWasmFunctions:
-        return "parsewasmfunctions";
+        return "parse_wasm_functions";
       case ParseWasmGlobals:
-        return "parsewasmglobals";
+        return "parse_wasm_globals";
       case ParseWasmTableEntries:
-        return "parsewasmtableentries";
+        return "parse_wasm_table_entries";
       case ParseWasmTypes:
-        return "parsewasmtypes";
+        return "parse_wasm_types";
       case ParseWasmDataSegments:
-        return "parsewasmdatasegments";
+        return "parse_wasm_data_segments";
       case ParseWasmElemSegments:
-        return "parsewasmelemsegments";
+        return "parse_wasm_elem_segments";
       case ParseWasmImports:
-        return "parsewasmimports";
+        return "parse_wasm_imports";
       case ParseWasmExports:
-        return "parsewasmexports";
+        return "parse_wasm_exports";
       case ParseWasmDataSegmentBytes:
-        return "parsewasmdatasegmentbytes";
+        return "parse_wasm_data_segment_bytes";
       case InstantiateWasmInstructions:
-        return "instantiatewasminstructions";
+        return "instantiate_wasm_instructions";
       case InstantiateWasmFunctions:
-        return "instantiatewasmfunctions";
+        return "instantiate_wasm_functions";
       case InstantiateWasmGlobals:
-        return "instantiatewasmglobals";
+        return "instantiate_wasm_globals";
       case InstantiateWasmTableEntries:
-        return "instantiatewasmtableentries";
+        return "instantiate_wasm_table_entries";
       case InstantiateWasmTypes:
-        return "instantiatewasmtypes";
+        return "instantiate_wasm_types";
       case InstantiateWasmDataSegments:
-        return "instantiatewasmdatasegments";
+        return "instantiate_wasm_data_segments";
       case InstantiateWasmElemSegments:
-        return "instantiatewasmelemsegments";
+        return "instantiate_wasm_elem_segments";
       case InstantiateWasmImports:
-        return "instantiatewasmimports";
+        return "instantiate_wasm_imports";
       case InstantiateWasmExports:
-        return "instantiatewasmexports";
+        return "instantiate_wasm_exports";
       case InstantiateWasmDataSegmentBytes:
-        return "instantiatewasmdatasegmentbytes";
+        return "instantiate_wasm_data_segment_bytes";
       case Sec1DecodePointUncompressed:
-        return "sec1decodepointuncompressed";
+        return "sec1_decode_point_uncompressed";
       case VerifyEcdsaSecp256r1Sig:
-        return "verifyecdsasecp256r1sig";
+        return "verify_ecdsa_secp256r1_sig";
       case Bls12381EncodeFp:
-        return "bls12381encodefp";
+        return "bls12381_encode_fp";
       case Bls12381DecodeFp:
-        return "bls12381decodefp";
+        return "bls12381_decode_fp";
       case Bls12381G1CheckPointOnCurve:
-        return "bls12381g1checkpointoncurve";
+        return "bls12381_g1_check_point_on_curve";
       case Bls12381G1CheckPointInSubgroup:
-        return "bls12381g1checkpointinsubgroup";
+        return "bls12381_g1_check_point_in_subgroup";
       case Bls12381G2CheckPointOnCurve:
-        return "bls12381g2checkpointoncurve";
+        return "bls12381_g2_check_point_on_curve";
       case Bls12381G2CheckPointInSubgroup:
-        return "bls12381g2checkpointinsubgroup";
+        return "bls12381_g2_check_point_in_subgroup";
       case Bls12381G1ProjectiveToAffine:
-        return "bls12381g1projectivetoaffine";
+        return "bls12381_g1_projective_to_affine";
       case Bls12381G2ProjectiveToAffine:
-        return "bls12381g2projectivetoaffine";
+        return "bls12381_g2_projective_to_affine";
       case Bls12381G1Add:
-        return "bls12381g1add";
+        return "bls12381_g1_add";
       case Bls12381G1Mul:
-        return "bls12381g1mul";
+        return "bls12381_g1_mul";
       case Bls12381G1Msm:
-        return "bls12381g1msm";
+        return "bls12381_g1_msm";
       case Bls12381MapFpToG1:
-        return "bls12381mapfptog1";
+        return "bls12381_map_fp_to_g1";
       case Bls12381HashToG1:
-        return "bls12381hashtog1";
+        return "bls12381_hash_to_g1";
       case Bls12381G2Add:
-        return "bls12381g2add";
+        return "bls12381_g2_add";
       case Bls12381G2Mul:
-        return "bls12381g2mul";
+        return "bls12381_g2_mul";
       case Bls12381G2Msm:
-        return "bls12381g2msm";
+        return "bls12381_g2_msm";
       case Bls12381MapFp2ToG2:
-        return "bls12381mapfp2tog2";
+        return "bls12381_map_fp2_to_g2";
       case Bls12381HashToG2:
-        return "bls12381hashtog2";
+        return "bls12381_hash_to_g2";
       case Bls12381Pairing:
-        return "bls12381pairing";
+        return "bls12381_pairing";
       case Bls12381FrFromU256:
-        return "bls12381frfromu256";
+        return "bls12381_fr_from_u256";
       case Bls12381FrToU256:
-        return "bls12381frtou256";
+        return "bls12381_fr_to_u256";
       case Bls12381FrAddSub:
-        return "bls12381fraddsub";
+        return "bls12381_fr_add_sub";
       case Bls12381FrMul:
-        return "bls12381frmul";
+        return "bls12381_fr_mul";
       case Bls12381FrPow:
-        return "bls12381frpow";
+        return "bls12381_fr_pow";
       case Bls12381FrInv:
-        return "bls12381frinv";
+        return "bls12381_fr_inv";
       case Bn254EncodeFp:
-        return "bn254encodefp";
+        return "bn254_encode_fp";
       case Bn254DecodeFp:
-        return "bn254decodefp";
+        return "bn254_decode_fp";
       case Bn254G1CheckPointOnCurve:
-        return "bn254g1checkpointoncurve";
+        return "bn254_g1_check_point_on_curve";
       case Bn254G2CheckPointOnCurve:
-        return "bn254g2checkpointoncurve";
+        return "bn254_g2_check_point_on_curve";
       case Bn254G2CheckPointInSubgroup:
-        return "bn254g2checkpointinsubgroup";
+        return "bn254_g2_check_point_in_subgroup";
       case Bn254G1ProjectiveToAffine:
-        return "bn254g1projectivetoaffine";
+        return "bn254_g1_projective_to_affine";
       case Bn254G1Add:
-        return "bn254g1add";
+        return "bn254_g1_add";
       case Bn254G1Mul:
-        return "bn254g1mul";
+        return "bn254_g1_mul";
       case Bn254Pairing:
-        return "bn254pairing";
+        return "bn254_pairing";
       case Bn254FrFromU256:
-        return "bn254frfromu256";
+        return "bn254_fr_from_u256";
       case Bn254FrToU256:
-        return "bn254frtou256";
+        return "bn254_fr_to_u256";
       case Bn254FrAddSub:
-        return "bn254fraddsub";
+        return "bn254_fr_add_sub";
       case Bn254FrMul:
-        return "bn254frmul";
+        return "bn254_fr_mul";
       case Bn254FrPow:
-        return "bn254frpow";
+        return "bn254_fr_pow";
       case Bn254FrInv:
-        return "bn254frinv";
+        return "bn254_fr_inv";
       case Bn254G1Msm:
-        return "bn254g1msm";
+        return "bn254_g1_msm";
       case MlDsa44DecodeVerifyingKey:
-        return "mldsa44decodeverifyingkey";
+        return "ml_dsa44_decode_verifying_key";
       case MlDsa65DecodeVerifyingKey:
-        return "mldsa65decodeverifyingkey";
+        return "ml_dsa65_decode_verifying_key";
       case MlDsa87DecodeVerifyingKey:
-        return "mldsa87decodeverifyingkey";
+        return "ml_dsa87_decode_verifying_key";
       case MlDsa44DecodeSignature:
-        return "mldsa44decodesignature";
+        return "ml_dsa44_decode_signature";
       case MlDsa65DecodeSignature:
-        return "mldsa65decodesignature";
+        return "ml_dsa65_decode_signature";
       case MlDsa87DecodeSignature:
-        return "mldsa87decodesignature";
+        return "ml_dsa87_decode_signature";
       case VerifyMlDsa44Sig:
-        return "verifymldsa44sig";
+        return "verify_ml_dsa44_sig";
       case VerifyMlDsa65Sig:
-        return "verifymldsa65sig";
+        return "verify_ml_dsa65_sig";
       case VerifyMlDsa87Sig:
-        return "verifymldsa87sig";
+        return "verify_ml_dsa87_sig";
       default:
         throw new IllegalArgumentException("Unknown enum value: " + this.value);
     }
@@ -752,195 +752,195 @@ public enum ContractCostType implements XdrElement {
   static ContractCostType fromJsonObject(Object json) {
     String value = (String) json;
     switch (value) {
-      case "wasminsnexec":
+      case "wasm_insn_exec":
         return WasmInsnExec;
-      case "memalloc":
+      case "mem_alloc":
         return MemAlloc;
-      case "memcpy":
+      case "mem_cpy":
         return MemCpy;
-      case "memcmp":
+      case "mem_cmp":
         return MemCmp;
-      case "dispatchhostfunction":
+      case "dispatch_host_function":
         return DispatchHostFunction;
-      case "visitobject":
+      case "visit_object":
         return VisitObject;
-      case "valser":
+      case "val_ser":
         return ValSer;
-      case "valdeser":
+      case "val_deser":
         return ValDeser;
-      case "computesha256hash":
+      case "compute_sha256_hash":
         return ComputeSha256Hash;
-      case "computeed25519pubkey":
+      case "compute_ed25519_pub_key":
         return ComputeEd25519PubKey;
-      case "verifyed25519sig":
+      case "verify_ed25519_sig":
         return VerifyEd25519Sig;
-      case "vminstantiation":
+      case "vm_instantiation":
         return VmInstantiation;
-      case "vmcachedinstantiation":
+      case "vm_cached_instantiation":
         return VmCachedInstantiation;
-      case "invokevmfunction":
+      case "invoke_vm_function":
         return InvokeVmFunction;
-      case "computekeccak256hash":
+      case "compute_keccak256_hash":
         return ComputeKeccak256Hash;
-      case "decodeecdsacurve256sig":
+      case "decode_ecdsa_curve256_sig":
         return DecodeEcdsaCurve256Sig;
-      case "recoverecdsasecp256k1key":
+      case "recover_ecdsa_secp256k1_key":
         return RecoverEcdsaSecp256k1Key;
-      case "int256addsub":
+      case "int256_add_sub":
         return Int256AddSub;
-      case "int256mul":
+      case "int256_mul":
         return Int256Mul;
-      case "int256div":
+      case "int256_div":
         return Int256Div;
-      case "int256pow":
+      case "int256_pow":
         return Int256Pow;
-      case "int256shift":
+      case "int256_shift":
         return Int256Shift;
-      case "chacha20drawbytes":
+      case "cha_cha20_draw_bytes":
         return ChaCha20DrawBytes;
-      case "parsewasminstructions":
+      case "parse_wasm_instructions":
         return ParseWasmInstructions;
-      case "parsewasmfunctions":
+      case "parse_wasm_functions":
         return ParseWasmFunctions;
-      case "parsewasmglobals":
+      case "parse_wasm_globals":
         return ParseWasmGlobals;
-      case "parsewasmtableentries":
+      case "parse_wasm_table_entries":
         return ParseWasmTableEntries;
-      case "parsewasmtypes":
+      case "parse_wasm_types":
         return ParseWasmTypes;
-      case "parsewasmdatasegments":
+      case "parse_wasm_data_segments":
         return ParseWasmDataSegments;
-      case "parsewasmelemsegments":
+      case "parse_wasm_elem_segments":
         return ParseWasmElemSegments;
-      case "parsewasmimports":
+      case "parse_wasm_imports":
         return ParseWasmImports;
-      case "parsewasmexports":
+      case "parse_wasm_exports":
         return ParseWasmExports;
-      case "parsewasmdatasegmentbytes":
+      case "parse_wasm_data_segment_bytes":
         return ParseWasmDataSegmentBytes;
-      case "instantiatewasminstructions":
+      case "instantiate_wasm_instructions":
         return InstantiateWasmInstructions;
-      case "instantiatewasmfunctions":
+      case "instantiate_wasm_functions":
         return InstantiateWasmFunctions;
-      case "instantiatewasmglobals":
+      case "instantiate_wasm_globals":
         return InstantiateWasmGlobals;
-      case "instantiatewasmtableentries":
+      case "instantiate_wasm_table_entries":
         return InstantiateWasmTableEntries;
-      case "instantiatewasmtypes":
+      case "instantiate_wasm_types":
         return InstantiateWasmTypes;
-      case "instantiatewasmdatasegments":
+      case "instantiate_wasm_data_segments":
         return InstantiateWasmDataSegments;
-      case "instantiatewasmelemsegments":
+      case "instantiate_wasm_elem_segments":
         return InstantiateWasmElemSegments;
-      case "instantiatewasmimports":
+      case "instantiate_wasm_imports":
         return InstantiateWasmImports;
-      case "instantiatewasmexports":
+      case "instantiate_wasm_exports":
         return InstantiateWasmExports;
-      case "instantiatewasmdatasegmentbytes":
+      case "instantiate_wasm_data_segment_bytes":
         return InstantiateWasmDataSegmentBytes;
-      case "sec1decodepointuncompressed":
+      case "sec1_decode_point_uncompressed":
         return Sec1DecodePointUncompressed;
-      case "verifyecdsasecp256r1sig":
+      case "verify_ecdsa_secp256r1_sig":
         return VerifyEcdsaSecp256r1Sig;
-      case "bls12381encodefp":
+      case "bls12381_encode_fp":
         return Bls12381EncodeFp;
-      case "bls12381decodefp":
+      case "bls12381_decode_fp":
         return Bls12381DecodeFp;
-      case "bls12381g1checkpointoncurve":
+      case "bls12381_g1_check_point_on_curve":
         return Bls12381G1CheckPointOnCurve;
-      case "bls12381g1checkpointinsubgroup":
+      case "bls12381_g1_check_point_in_subgroup":
         return Bls12381G1CheckPointInSubgroup;
-      case "bls12381g2checkpointoncurve":
+      case "bls12381_g2_check_point_on_curve":
         return Bls12381G2CheckPointOnCurve;
-      case "bls12381g2checkpointinsubgroup":
+      case "bls12381_g2_check_point_in_subgroup":
         return Bls12381G2CheckPointInSubgroup;
-      case "bls12381g1projectivetoaffine":
+      case "bls12381_g1_projective_to_affine":
         return Bls12381G1ProjectiveToAffine;
-      case "bls12381g2projectivetoaffine":
+      case "bls12381_g2_projective_to_affine":
         return Bls12381G2ProjectiveToAffine;
-      case "bls12381g1add":
+      case "bls12381_g1_add":
         return Bls12381G1Add;
-      case "bls12381g1mul":
+      case "bls12381_g1_mul":
         return Bls12381G1Mul;
-      case "bls12381g1msm":
+      case "bls12381_g1_msm":
         return Bls12381G1Msm;
-      case "bls12381mapfptog1":
+      case "bls12381_map_fp_to_g1":
         return Bls12381MapFpToG1;
-      case "bls12381hashtog1":
+      case "bls12381_hash_to_g1":
         return Bls12381HashToG1;
-      case "bls12381g2add":
+      case "bls12381_g2_add":
         return Bls12381G2Add;
-      case "bls12381g2mul":
+      case "bls12381_g2_mul":
         return Bls12381G2Mul;
-      case "bls12381g2msm":
+      case "bls12381_g2_msm":
         return Bls12381G2Msm;
-      case "bls12381mapfp2tog2":
+      case "bls12381_map_fp2_to_g2":
         return Bls12381MapFp2ToG2;
-      case "bls12381hashtog2":
+      case "bls12381_hash_to_g2":
         return Bls12381HashToG2;
-      case "bls12381pairing":
+      case "bls12381_pairing":
         return Bls12381Pairing;
-      case "bls12381frfromu256":
+      case "bls12381_fr_from_u256":
         return Bls12381FrFromU256;
-      case "bls12381frtou256":
+      case "bls12381_fr_to_u256":
         return Bls12381FrToU256;
-      case "bls12381fraddsub":
+      case "bls12381_fr_add_sub":
         return Bls12381FrAddSub;
-      case "bls12381frmul":
+      case "bls12381_fr_mul":
         return Bls12381FrMul;
-      case "bls12381frpow":
+      case "bls12381_fr_pow":
         return Bls12381FrPow;
-      case "bls12381frinv":
+      case "bls12381_fr_inv":
         return Bls12381FrInv;
-      case "bn254encodefp":
+      case "bn254_encode_fp":
         return Bn254EncodeFp;
-      case "bn254decodefp":
+      case "bn254_decode_fp":
         return Bn254DecodeFp;
-      case "bn254g1checkpointoncurve":
+      case "bn254_g1_check_point_on_curve":
         return Bn254G1CheckPointOnCurve;
-      case "bn254g2checkpointoncurve":
+      case "bn254_g2_check_point_on_curve":
         return Bn254G2CheckPointOnCurve;
-      case "bn254g2checkpointinsubgroup":
+      case "bn254_g2_check_point_in_subgroup":
         return Bn254G2CheckPointInSubgroup;
-      case "bn254g1projectivetoaffine":
+      case "bn254_g1_projective_to_affine":
         return Bn254G1ProjectiveToAffine;
-      case "bn254g1add":
+      case "bn254_g1_add":
         return Bn254G1Add;
-      case "bn254g1mul":
+      case "bn254_g1_mul":
         return Bn254G1Mul;
-      case "bn254pairing":
+      case "bn254_pairing":
         return Bn254Pairing;
-      case "bn254frfromu256":
+      case "bn254_fr_from_u256":
         return Bn254FrFromU256;
-      case "bn254frtou256":
+      case "bn254_fr_to_u256":
         return Bn254FrToU256;
-      case "bn254fraddsub":
+      case "bn254_fr_add_sub":
         return Bn254FrAddSub;
-      case "bn254frmul":
+      case "bn254_fr_mul":
         return Bn254FrMul;
-      case "bn254frpow":
+      case "bn254_fr_pow":
         return Bn254FrPow;
-      case "bn254frinv":
+      case "bn254_fr_inv":
         return Bn254FrInv;
-      case "bn254g1msm":
+      case "bn254_g1_msm":
         return Bn254G1Msm;
-      case "mldsa44decodeverifyingkey":
+      case "ml_dsa44_decode_verifying_key":
         return MlDsa44DecodeVerifyingKey;
-      case "mldsa65decodeverifyingkey":
+      case "ml_dsa65_decode_verifying_key":
         return MlDsa65DecodeVerifyingKey;
-      case "mldsa87decodeverifyingkey":
+      case "ml_dsa87_decode_verifying_key":
         return MlDsa87DecodeVerifyingKey;
-      case "mldsa44decodesignature":
+      case "ml_dsa44_decode_signature":
         return MlDsa44DecodeSignature;
-      case "mldsa65decodesignature":
+      case "ml_dsa65_decode_signature":
         return MlDsa65DecodeSignature;
-      case "mldsa87decodesignature":
+      case "ml_dsa87_decode_signature":
         return MlDsa87DecodeSignature;
-      case "verifymldsa44sig":
+      case "verify_ml_dsa44_sig":
         return VerifyMlDsa44Sig;
-      case "verifymldsa65sig":
+      case "verify_ml_dsa65_sig":
         return VerifyMlDsa65Sig;
-      case "verifymldsa87sig":
+      case "verify_ml_dsa87_sig":
         return VerifyMlDsa87Sig;
       default:
         throw new IllegalArgumentException("Unknown JSON value: " + value);

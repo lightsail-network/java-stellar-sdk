@@ -246,7 +246,7 @@ public class ClaimPredicate implements XdrElement {
     }
     if (discriminant == ClaimPredicateType.CLAIM_PREDICATE_NOT) {
       LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-      jsonMap.put("not", notPredicate.toJsonObject());
+      jsonMap.put("not", notPredicate != null ? notPredicate.toJsonObject() : null);
       return jsonMap;
     }
     if (discriminant == ClaimPredicateType.CLAIM_PREDICATE_BEFORE_ABSOLUTE_TIME) {
@@ -307,7 +307,8 @@ public class ClaimPredicate implements XdrElement {
     if (key.equals("not")) {
       ClaimPredicate instance = new ClaimPredicate();
       instance.discriminant = discriminant;
-      instance.notPredicate = ClaimPredicate.fromJsonObject(jsonMap.get("not"));
+      instance.notPredicate =
+          jsonMap.get("not") != null ? ClaimPredicate.fromJsonObject(jsonMap.get("not")) : null;
       return instance;
     }
     if (key.equals("before_absolute_time")) {
