@@ -13,6 +13,7 @@
   - An ed25519 signed payload signer with an empty payload has no SEP-51 form, so `toJson()` throws `IllegalArgumentException` instead of writing a `P...` strkey that `fromJson` can't read back.
 - fix: `Asset.compareTo` orders same-code assets by the issuers' raw Ed25519 key bytes instead of their strkey text, matching the order the network requires.
 - fix: `FeeBumpTransaction.createWithBaseFee` and `createWithFee` wrap a V0 inner transaction as its exact V1 equivalent, with the same fee, hash and signatures. A V0 transaction with more than one operation no longer gets a different fee that invalidates its signatures, one without time bounds no longer throws `IllegalStateException`, and `createWithFee` no longer builds a fee bump whose `hash()`, `sign(KeyPair)` and `toEnvelopeXdrBase64()` throw `NullPointerException`.
+- fix: `Sep45Challenge.readChallengeAuthorizationEntries`, and so `verifyChallengeAuthorizationEntries`, throw `InvalidSep45ChallengeException` instead of `IllegalArgumentException` or `NullPointerException` for malformed input: an unknown XDR enum value, a string that isn't base64, a map argument without its map, and an argument that should be a string but isn't. ([#834](https://github.com/lightsail-network/java-stellar-sdk/issues/834))
 
 ## 6.0.0
 

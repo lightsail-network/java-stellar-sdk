@@ -326,6 +326,14 @@ public class Sep45Challenge {
     return new SorobanAuthorizationEntries(signedEntries.toArray(new SorobanAuthorizationEntry[0]));
   }
 
+  /** Reads a challenge argument that must be a string. */
+  private static String stringArgument(String key, SCVal value) {
+    if (value.getDiscriminant() != SCValType.SCV_STRING) {
+      throw new InvalidSep45ChallengeException("Argument " + key + " must be a string");
+    }
+    return new String(Scv.fromString(value), StandardCharsets.UTF_8);
+  }
+
   /**
    * Reads and validates a SEP-45 challenge authorization entries without verifying signatures.
    *
@@ -371,7 +379,7 @@ public class Sep45Challenge {
       org.stellar.sdk.xdr.SorobanAuthorizationEntries xdrEntries =
           org.stellar.sdk.xdr.SorobanAuthorizationEntries.fromXdrBase64(authorizationEntriesXdr);
       entries = Arrays.asList(xdrEntries.getSorobanAuthorizationEntries());
-    } catch (IOException e) {
+    } catch (IOException | IllegalArgumentException e) {
       throw new InvalidSep45ChallengeException("Failed to parse authorization entries XDR", e);
     }
 
@@ -425,7 +433,7 @@ public class Sep45Challenge {
     }
 
     SCVal argsVal = args[0];
-    if (argsVal.getDiscriminant() != SCValType.SCV_MAP) {
+    if (argsVal.getDiscriminant() != SCValType.SCV_MAP || argsVal.getMap() == null) {
       throw new InvalidSep45ChallengeException("Expected Map argument in contract function call");
     }
 
@@ -451,25 +459,25 @@ public class Sep45Challenge {
 
       switch (key) {
         case "account":
-          account = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
+          account = stringArgument(key, valueVal);
           break;
         case "home_domain":
-          homeDomain = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
+          homeDomain = stringArgument(key, valueVal);
           break;
         case "nonce":
-          nonce = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
+          nonce = stringArgument(key, valueVal);
           break;
         case "web_auth_domain":
-          webAuthDomainValue = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
+          webAuthDomainValue = stringArgument(key, valueVal);
           break;
         case "web_auth_domain_account":
-          webAuthDomainAccount = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
+          webAuthDomainAccount = stringArgument(key, valueVal);
           break;
         case "client_domain":
-          clientDomain = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
+          clientDomain = stringArgument(key, valueVal);
           break;
         case "client_domain_account":
-          clientDomainAccount = new String(Scv.fromString(valueVal), StandardCharsets.UTF_8);
+          clientDomainAccount = stringArgument(key, valueVal);
           break;
         default:
           // Unknown argument, ignore
