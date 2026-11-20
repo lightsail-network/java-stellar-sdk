@@ -13,9 +13,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -169,6 +171,46 @@ public class Sep45ChallengeTest {
     }
 
     return entries;
+  }
+
+  @Test
+  public void testReadChallengeRejectsMalformedInputWithTheDocumentedException() {
+    // An SCV_MAP argument without its map, and an argument value that isn't a string.
+    SorobanAuthorizedInvocation noMap = buildValidInvocation(false);
+    noMap
+        .getFunction()
+        .getContractFn()
+        .setArgs(new SCVal[] {SCVal.builder().discriminant(SCValType.SCV_MAP).build()});
+    Map<SCVal, SCVal> args = new LinkedHashMap<>();
+    args.put(Scv.toSymbol("account"), Scv.toUint32(1));
+    SorobanAuthorizedInvocation notAString = buildValidInvocation(false);
+    notAString.getFunction().getContractFn().setArgs(new SCVal[] {Scv.toMap(args)});
+
+    // Each input, and the reason it must be rejected for.
+    Map<String, String> inputs = new LinkedHashMap<>();
+    for (SorobanAuthorizedInvocation invocation : Arrays.asList(noMap, notAString)) {
+      List<SorobanAuthorizationEntry> entries = new ArrayList<>();
+      entries.add(buildAuthorizationEntry(CLIENT_CONTRACT, invocation));
+      entries.add(buildAuthorizationEntry(SERVER_ACCOUNT, invocation));
+      inputs.put(
+          authorizationEntriesToXdr(entries),
+          invocation == noMap
+              ? "Expected Map argument in contract function call"
+              : "Argument account must be a string");
+    }
+    // A SorobanCredentials arm that doesn't exist, and input that isn't base64 (#834).
+    inputs.put("AAAAAQAAAAU=", "Failed to parse authorization entries XDR");
+    inputs.put("not base64!", "Failed to parse authorization entries XDR");
+
+    for (Map.Entry<String, String> input : inputs.entrySet()) {
+      try {
+        Sep45Challenge.readChallengeAuthorizationEntries(
+            input.getKey(), SERVER_ACCOUNT, WEB_AUTH_CONTRACT, HOME_DOMAIN, WEB_AUTH_DOMAIN);
+        fail("expected InvalidSep45ChallengeException for " + input.getKey());
+      } catch (InvalidSep45ChallengeException e) {
+        assertEquals(input.getValue(), e.getMessage());
+      }
+    }
   }
 
   @Test
