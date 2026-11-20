@@ -30,6 +30,12 @@ public class GetLedgerEntriesResponse {
      */
     String xdr;
 
+    /**
+     * The field can be parsed as {@link org.stellar.sdk.xdr.LedgerEntry.LedgerEntryExt} object,
+     * which names the entry's sponsor, if any.
+     */
+    String extXdr;
+
     @SerializedName("lastModifiedLedgerSeq")
     Long lastModifiedLedger;
 
@@ -54,6 +60,16 @@ public class GetLedgerEntriesResponse {
      */
     public LedgerEntry.LedgerEntryData parseXdr() {
       return Util.parseXdr(xdr, LedgerEntry.LedgerEntryData::fromXdrBase64);
+    }
+
+    /**
+     * Parses the {@code extXdr} field from a string to an {@link
+     * org.stellar.sdk.xdr.LedgerEntry.LedgerEntryExt} object.
+     *
+     * @return the parsed {@link org.stellar.sdk.xdr.LedgerEntry.LedgerEntryExt} object
+     */
+    public LedgerEntry.LedgerEntryExt parseExtXdr() {
+      return Util.parseXdr(extXdr, LedgerEntry.LedgerEntryExt::fromXdrBase64);
     }
   }
 }

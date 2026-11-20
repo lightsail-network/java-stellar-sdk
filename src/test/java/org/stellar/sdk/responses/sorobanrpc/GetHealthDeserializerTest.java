@@ -21,7 +21,9 @@ public class GetHealthDeserializerTest {
             .fromJson(json, new TypeToken<SorobanRpcResponse<GetHealthResponse>>() {}.getType());
     assertEquals(getHealthResponse.getResult().getStatus(), "healthy");
     assertEquals(getHealthResponse.getResult().getLatestLedger().longValue(), 50000L);
+    assertEquals(getHealthResponse.getResult().getLatestLedgerCloseTime().longValue(), 1795159084L);
     assertEquals(getHealthResponse.getResult().getOldestLedger().longValue(), 1L);
+    assertEquals(getHealthResponse.getResult().getOldestLedgerCloseTime().longValue(), 1794554287L);
     assertEquals(getHealthResponse.getResult().getLedgerRetentionWindow().longValue(), 10000L);
   }
 }

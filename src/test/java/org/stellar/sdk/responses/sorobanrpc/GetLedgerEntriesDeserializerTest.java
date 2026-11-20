@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.Test;
+import org.stellar.sdk.KeyPair;
 import org.stellar.sdk.responses.gson.GsonSingleton;
+import org.stellar.sdk.xdr.LedgerEntry;
 
 public class GetLedgerEntriesDeserializerTest {
 
@@ -45,6 +47,16 @@ public class GetLedgerEntriesDeserializerTest {
     assertEquals(
         getLedgerEntriesResponse.getResult().getEntries().get(0).parseKey().toXdrBase64(),
         getLedgerEntriesResponse.getResult().getEntries().get(0).getKey());
+
+    // The entry is sponsored, which only its extension says.
+    LedgerEntry.LedgerEntryExt ext =
+        getLedgerEntriesResponse.getResult().getEntries().get(0).parseExtXdr();
+    assertEquals(ext.getDiscriminant().intValue(), 1);
+    assertEquals(
+        KeyPair.fromXdrPublicKey(
+                ext.getV1().getSponsoringID().getSponsorshipDescriptor().getAccountID())
+            .getAccountId(),
+        "GCZJ46F2ENQAEEZVVY4RKTGVXWZNETKZBZ4LIW5CMUF7AHP6M7BEV464");
   }
 
   @Test
