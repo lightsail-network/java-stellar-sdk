@@ -10,6 +10,7 @@
   - Values that used to throw are now written: an `SCAddress` holding a muxed contract (`W...`), and an absent optional union arm, such as an `SCVal` vec or map or the `not` of a `ClaimPredicate`, which is `null` instead of a `NullPointerException`.
   - An ed25519 signed payload signer with an empty payload has no SEP-51 form, so `toJson()` throws `IllegalArgumentException` instead of writing a `P...` strkey that `fromJson` can't read back.
 - fix: `Asset.compareTo` orders same-code assets by the issuers' raw Ed25519 key bytes instead of their strkey text, matching the order the network requires.
+- fix: `FeeBumpTransaction.createWithBaseFee` and `createWithFee` wrap a V0 inner transaction as its exact V1 equivalent, with the same fee, hash and signatures. A V0 transaction with more than one operation no longer gets a different fee that invalidates its signatures, one without time bounds no longer throws `IllegalStateException`, and `createWithFee` no longer builds a fee bump whose `hash()`, `sign(KeyPair)` and `toEnvelopeXdrBase64()` throw `NullPointerException`.
 
 ## 6.0.0
 
