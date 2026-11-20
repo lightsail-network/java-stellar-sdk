@@ -4,7 +4,9 @@
   "result": {
     "status": "healthy",
     "latestLedger": 50000,
+    "latestLedgerCloseTime": "1795159084",
     "oldestLedger": 1,
+    "oldestLedgerCloseTime": "1794554287",
     "ledgerRetentionWindow": 10000
   }
 }
