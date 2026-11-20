@@ -62,7 +62,7 @@ public class FeeBumpTransaction extends AbstractTransaction {
    */
   public static FeeBumpTransaction createWithFee(
       @NonNull String feeSource, long fee, @NonNull Transaction innerTransaction) {
-    return new FeeBumpTransaction(feeSource, fee, innerTransaction);
+    return new FeeBumpTransaction(feeSource, fee, toV1(innerTransaction));
   }
 
   /**
@@ -104,29 +104,31 @@ public class FeeBumpTransaction extends AbstractTransaction {
       throw new IllegalArgumentException("fee overflows 64 bit int");
     }
 
-    // set inner transaction
-    Transaction tx;
-    EnvelopeType txType = innerTransaction.toEnvelopeXdr().getDiscriminant();
-    if (txType == EnvelopeType.ENVELOPE_TYPE_TX_V0) {
-      tx =
-          new TransactionBuilder(
-                  new Account(
-                      innerTransaction.getSourceAccount(),
-                      innerTransaction.getSequenceNumber() - 1),
-                  innerTransaction.getNetwork())
-              .setBaseFee((int) innerTransaction.getFee())
-              .addOperations(Arrays.asList(innerTransaction.getOperations()))
-              .addMemo(innerTransaction.getMemo())
-              .addPreconditions(
-                  new TransactionPreconditions.TransactionPreconditionsBuilder()
-                      .timeBounds(innerTransaction.getTimeBounds())
-                      .build())
-              .build();
-      tx.signatures = new ArrayList<>(innerTransaction.signatures);
-    } else {
-      tx = innerTransaction;
+    return new FeeBumpTransaction(feeSource, maxFee, toV1(innerTransaction));
+  }
+
+  /**
+   * Returns the V1 equivalent of a V0 transaction, which has the same hash, so its signatures stay
+   * valid. Any other transaction is returned as it is.
+   */
+  private static Transaction toV1(Transaction innerTransaction) {
+    if (innerTransaction.getEnvelopeType() != EnvelopeType.ENVELOPE_TYPE_TX_V0) {
+      return innerTransaction;
     }
-    return new FeeBumpTransaction(feeSource, maxFee, tx);
+    // A V0 transaction can only have time bounds. New preconditions keep the fee bump independent
+    // of later changes to the V0 transaction's own, which are mutable.
+    Transaction tx =
+        new Transaction(
+            innerTransaction.getSourceAccount(),
+            innerTransaction.getFee(),
+            innerTransaction.getSequenceNumber(),
+            innerTransaction.getOperations().clone(),
+            innerTransaction.getMemo(),
+            TransactionPreconditions.builder().timeBounds(innerTransaction.getTimeBounds()).build(),
+            null,
+            innerTransaction.getNetwork());
+    tx.signatures = new ArrayList<>(innerTransaction.signatures);
+    return tx;
   }
 
   public static FeeBumpTransaction fromFeeBumpTransactionEnvelope(

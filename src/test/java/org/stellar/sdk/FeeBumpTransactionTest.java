@@ -1,12 +1,17 @@
 package org.stellar.sdk;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.junit.Test;
 import org.stellar.sdk.operations.InvokeHostFunctionOperation;
 import org.stellar.sdk.operations.PaymentOperation;
@@ -24,6 +29,8 @@ import org.stellar.sdk.xdr.LedgerFootprint;
 import org.stellar.sdk.xdr.LedgerKey;
 import org.stellar.sdk.xdr.SorobanResources;
 import org.stellar.sdk.xdr.SorobanTransactionData;
+import org.stellar.sdk.xdr.TransactionEnvelope;
+import org.stellar.sdk.xdr.TransactionV0Envelope;
 import org.stellar.sdk.xdr.Uint256;
 import org.stellar.sdk.xdr.Uint32;
 import org.stellar.sdk.xdr.XdrUnsignedInteger;
@@ -168,6 +175,67 @@ public class FeeBumpTransactionTest {
 
     assertEquals(1, feeBump.getSignatures().size());
     signer.verify(feeBump.hash(), feeBump.getSignatures().get(0).getSignature().getSignature());
+  }
+
+  // A signed testnet V0 transaction with two ManageData operations and a total fee of 200 stroops.
+  private static final String V0_TWO_OPERATIONS =
+      "AAAAADtqJ7zOtqQtYqOo0CpvDXNlMhV3HeJDpjrASKGLWdopAAAAyAAAAAAAAAAHAAAAAQAA"
+          + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAKAAAAAWEAAAAAAAABAAAAAQEAAAAAAAAA"
+          + "AAAACgAAAAFiAAAAAAAAAQAAAAECAAAAAAAAAAAAAAGLWdopAAAAQHVrg/FHbL++jigA2PDp"
+          + "KnxLVhRNcejEaj+QMmlAEt1tSXKtZ81U9F5nbvr2u6hBC5DD4G5LD+IQA2Zb3Q52cQE=";
+
+  @Test
+  public void testFeeBumpKeepsTheFeeAndSignaturesOfAMultiOperationV0Transaction() {
+    Transaction v0 =
+        (Transaction) AbstractTransaction.fromEnvelopeXdr(V0_TWO_OPERATIONS, Network.TESTNET);
+    String source = v0.getSourceAccount();
+
+    for (FeeBumpTransaction feeBump :
+        Arrays.asList(
+            FeeBumpTransaction.createWithBaseFee(source, 200, v0),
+            FeeBumpTransaction.createWithFee(source, 600, v0))) {
+      Transaction inner = feeBump.getInnerTransaction();
+      assertEquals(EnvelopeType.ENVELOPE_TYPE_TX, inner.toEnvelopeXdr().getDiscriminant());
+      assertEquals(200, inner.getFee());
+      assertEquals(600, feeBump.getFee());
+      assertArrayEquals(v0.hash(), inner.hash());
+      // The inner transaction carries the original signature, and it still verifies.
+      assertEquals(1, inner.getSignatures().size());
+      assertEquals(v0.getSignatures(), inner.getSignatures());
+      assertTrue(
+          KeyPair.fromAccountId(source)
+              .verify(inner.hash(), inner.getSignatures().get(0).getSignature().getSignature()));
+      assertEquals(
+          feeBump,
+          AbstractTransaction.fromEnvelopeXdr(feeBump.toEnvelopeXdrBase64(), Network.TESTNET));
+    }
+  }
+
+  @Test
+  public void testFeeBumpDoesNotShareThePreconditionsOfAV0Transaction() {
+    Transaction v0 =
+        (Transaction) AbstractTransaction.fromEnvelopeXdr(V0_TWO_OPERATIONS, Network.TESTNET);
+    Transaction inner =
+        FeeBumpTransaction.createWithBaseFee(v0.getSourceAccount(), 200, v0).getInnerTransaction();
+    byte[] hash = inner.hash();
+
+    v0.getPreconditions()
+        .getExtraSigners()
+        .add(SignerKey.fromEd25519PublicKey(KeyPair.random().getAccountId()));
+
+    assertArrayEquals(hash, inner.hash());
+  }
+
+  @Test
+  public void testFeeBumpV0TransactionWithoutTimeBounds() throws IOException {
+    TransactionV0Envelope envelope = TransactionEnvelope.fromXdrBase64(V0_TWO_OPERATIONS).getV0();
+    envelope.getTx().setTimeBounds(null);
+    Transaction v0 = Transaction.fromV0EnvelopeXdr(envelope, Network.TESTNET);
+
+    Transaction inner =
+        FeeBumpTransaction.createWithBaseFee(v0.getSourceAccount(), 200, v0).getInnerTransaction();
+    assertNull(inner.getTimeBounds());
+    assertArrayEquals(v0.hash(), inner.hash());
   }
 
   @Test

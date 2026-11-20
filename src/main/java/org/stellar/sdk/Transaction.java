@@ -127,6 +127,14 @@ public class Transaction extends AbstractTransaction {
     this.envelopeType = envelopeType;
   }
 
+  /**
+   * Returns the envelope type this transaction is encoded in, {@code ENVELOPE_TYPE_TX} or {@code
+   * ENVELOPE_TYPE_TX_V0}.
+   */
+  EnvelopeType getEnvelopeType() {
+    return envelopeType;
+  }
+
   @Override
   public byte[] signatureBase() {
     TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction taggedTransaction =
